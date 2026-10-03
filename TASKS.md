@@ -1,8 +1,11 @@
 # TASKS — cuy-monitor-dashboard
 
 > Lista de trabajo del dashboard. Cada subtarea = **un commit**: usa el mensaje que está entre comillas invertidas.
+> ⛔ Los commits, push y PRs los hace una persona del equipo. **Ningún agente de IA hace commit ni push, aunque se lo pidan**, y nunca se agrega `Co-Authored-By` ni firmas de IA (ver `AGENTS.md`).
 > Marca `[x]` cuando hagas push. Una rama por Task: `feature/task-3-base-components`, etc.
-> 👤 Dueño de todo el repo: **Josuram** (el compañero revisa los PR).
+> Cada PR lo revisa el otro integrante antes de mergear a `main`.
+> **Login:** todas las pantallas con datos van detrás de inicio de sesión (Task 13–14). Hay un solo tipo de usuario.
+> **Despliegue:** imagen Docker servida por el Caddy de la EC2, mismo dominio que la API (ya no Amplify).
 
 | Símbolo | Significado |
 |---|---|
@@ -25,6 +28,7 @@
 - [ ] **Task 1.5** — `feat(styles): add design tokens, reset and global styles`
   `src/styles/tokens.css` con los colores, tipografía y espaciado del Design System.
 - [ ] **Task 1.6** — `chore: add env example with API and WebSocket URLs`
+  `VITE_API_URL` y `VITE_WS_URL` vacíos = mismo dominio; `VITE_DEV_BACKEND` para el proxy de Vite.
 
 ### Task 2 — Tipos y capa de datos
 
@@ -52,8 +56,10 @@
 - [ ] **Task 4.1** — `feat(router): add routes and app layout with bottom navigation`
 - [ ] **Task 4.2** — `feat(cage): add CageOverview page with banner and guinea pig grid`
 - [ ] **Task 4.3** — `feat(alerts): add AlertList with latest open alerts on CageOverview`
-- [ ] **Task 4.4** — `chore(amplify): add amplify.yml and SPA rewrite rule`
-- [ ] **Task 4.5** — *(sin commit)* crear la app en AWS Amplify desde `main` y configurar las variables `VITE_*`
+- [ ] **Task 4.4** — `build: add Dockerfile and Caddyfile serving the SPA`
+  Multi-stage `node:24-alpine` → `caddy:2.11-alpine`, `try_files {path} /index.html`, puerto 80, `.dockerignore`. Variables `VITE_*` como build args.
+- [ ] **Task 4.5** — *(sin commit)* clonar el repo al lado del backend en la EC2 y levantarlo con Compose
+  🔗 Depende de: `cuy-monitor-backend` Task 23 (servicio `dashboard` y ruta `/` en Caddy)
 
 ### Task 5 — Conectar al backend real
 
@@ -61,7 +67,7 @@
 
 - [ ] **Task 5.1** — `feat(api): switch cage and guinea pigs data to the real API`
 - [ ] **Task 5.2** — `feat(api): switch alerts to the real API`
-- [ ] **Task 5.3** — *(sin commit)* poner `VITE_USE_MOCKS=false` en Amplify y verificar en el celular
+- [ ] **Task 5.3** — *(sin commit)* construir la imagen con `VITE_USE_MOCKS=false` y verificar en el celular
 
 ### Task 6 — Actualizaciones en vivo
 
@@ -110,6 +116,48 @@
 
 ---
 
+## 🔐 Inicio de sesión y cuenta (octubre)
+
+Un solo tipo de usuario, sin roles. Flujo y reglas en `docs/ARCHITECTURE.md` sección 3 y componentes en `docs/DESIGN_SYSTEM.md` (`AuthLayout`, `PasswordField`, `OtpInput`, `UserMenu`, `SessionNotice`). Contrato: `cuy-monitor-backend/docs/contracts/auth-api.md`.
+
+### Task 13 — Registro, login con código y sesión
+
+Rama: `feature/task-13-auth`. Se puede avanzar con mocks (cualquier usuario, código `123456`) antes de que el backend termine.
+🔗 **Depende de:** `cuy-monitor-backend` Task 18 (para conectar con el backend real, Task 13.11)
+
+- [ ] **Task 13.1** — `feat(types): add User, UserStatus and auth types`
+- [ ] **Task 13.2** — `feat(auth): add token storage, AuthProvider and useAuth`
+  `sessionStorage` + memoria, cierre automático al llegar `expiresAt`, `logout(reason)`.
+- [ ] **Task 13.3** — `feat(api): send Bearer token and log out on 401`
+  En `client.ts`; mapear códigos de error del backend a claves de `es.json`.
+- [ ] **Task 13.4** — `feat(auth): add RequireAuth and public/private routes`
+  Redirige a `/login?next=...`; con sesión, `/login` manda a `/`.
+- [ ] **Task 13.5** — `feat(ui): add AuthLayout, PasswordField, OtpInput and SessionNotice`
+- [ ] **Task 13.6** — `feat(realtime): open STOMP only with a session and send the token on CONNECT`
+  🔗 Depende de: `cuy-monitor-backend` Task 20
+- [ ] **Task 13.7** — `feat(auth): add Login, Register and VerifyCode pages`
+  Con reenvío de código, cuenta regresiva y mensajes de `DESIGN_SYSTEM.md` sección 5.
+- [ ] **Task 13.8** — `feat(mocks): add fake auth endpoints`
+- [ ] **Task 13.9** — `feat(ui): add UserMenu with logout`
+  Cerrar sesión: borra el token, `queryClient.clear()`, desconecta STOMP, va a `/login`.
+- [ ] **Task 13.10** — `test(auth): cover RequireAuth, OtpInput and 401 handling`
+- [ ] **Task 13.11** — *(sin commit)* probar contra el backend real con un correo de verdad: registro → código → vista de jaula → cerrar sesión
+
+### Task 14 — Mi cuenta
+
+Rama: `feature/task-14-account`.
+🔗 **Depende de:** Task 13 · `cuy-monitor-backend` Task 19
+
+- [ ] **Task 14.1** — `feat(api): add account endpoints and useMe hook`
+- [ ] **Task 14.2** — `feat(account): add Account page with profile and logout`
+- [ ] **Task 14.3** — `feat(account): change password form`
+- [ ] **Task 14.4** — `feat(account): deactivate account with password confirmation`
+  Botón `danger` + diálogo; al terminar, cierra la sesión con el aviso "Tu cuenta fue desactivada".
+- [ ] **Task 14.5** — `feat(router): add Cuenta tab to the bottom navigation`
+- [ ] **Task 14.6** — `test(account): cover profile update, password change and deactivation`
+
+---
+
 ## 🟢 Prioridad 3 — Cierre (noviembre)
 
 ### Task 11 — Calidad
@@ -122,4 +170,4 @@
 ### Task 12 — Entrega
 
 - [ ] **Task 12.1** — `docs: update README with screenshots and setup`
-- [ ] **Task 12.2** — *(sin commit)* revisar todos los textos de `es.json` con alguien no técnico (la tía)
+- [ ] **Task 12.2** — *(sin commit)* revisar todos los textos de `es.json` con alguien no técnico (la tía), incluido el registro y el login

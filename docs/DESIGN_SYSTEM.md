@@ -2,7 +2,7 @@
 
 > Visual language, UI components and design rules for the farmer-facing dashboard.
 > Stack: React 19 · TypeScript 6 · Vite 8 · CSS Modules + CSS custom properties · Recharts 3 · i18next
-> Last reviewed: 2026-09-26
+> Last reviewed: 2026-10-03 (adds login, registration, verification code and account screens)
 
 ---
 
@@ -14,6 +14,7 @@
 4. **Honest about uncertainty.** If there is no data or the live connection is down, say so. Unknown is never displayed as "Normal".
 5. **Mobile-first, outdoor-friendly.** Designed for a 360 px phone in daylight: high contrast, large tap targets, few elements per screen.
 6. **Calm by default.** Strong colors are reserved for `ALERT` and `CRITICAL`. A healthy cage looks quiet.
+7. **Getting in is easy.** Login, registration and the verification code are short, forgiving forms with big fields; errors say what to do, never blame the user and never reveal whether an account exists.
 
 ---
 
@@ -107,7 +108,8 @@ System font stack (no web fonts to download on slow rural connections):
 
 - Page padding: 16 px on mobile, 24 px from tablet.
 - Max content width: 1200 px.
-- Bottom navigation bar on mobile (Jaula · Alertas · Registrar); top bar from tablet.
+- Bottom navigation bar on mobile (Jaula · Alertas · Registrar · Cuenta); top bar from tablet, with `UserMenu` on the right.
+- Public screens (login, registration, code) use `AuthLayout`: no navigation bar, single centered column, max width 400 px.
 
 ### 2.7 Motion
 
@@ -200,7 +202,7 @@ New live alert of level `ALERT` or `CRITICAL` → toast at the top (mobile) or b
 | `primary` | One per screen: "Registrar cuy", "Guardar" |
 | `secondary` | "Marcar como revisada", "Ver detalle" |
 | `ghost` | Navigation, "Cancelar" |
-| `danger` | Destructive (deactivate a guinea pig) — always with confirmation |
+| `danger` | Destructive (deactivate a guinea pig, deactivate my account) — always with confirmation |
 
 Min height 44 px, `--radius-md`, visible focus ring.
 
@@ -209,6 +211,71 @@ Min height 44 px, `--radius-md`, visible focus ring.
 - Label always visible above the field (no placeholder-only labels).
 - Mark color picker: grid of `MarkColorDot` buttons; colors already used in the cage are disabled with the text "En uso".
 - Errors in `--status-critical-fg` below the field, with an icon.
+
+### AuthLayout
+
+Shell for `/login`, `/register` and `/verify`.
+
+```
+┌──────────────────────────────┐
+│        [logo] Cuy Monitor    │   app name in --text-h1, small logo (no status colors)
+│   Cuida a tus cuyes a tiempo │   --text-body, --color-text-muted
+│ ┌──────────────────────────┐ │
+│ │  form card (--surface)   │ │   --radius-lg, --shadow-card, padding --space-5
+│ └──────────────────────────┘ │
+│  ¿No tienes cuenta? Regístrate│  secondary link below the card
+└──────────────────────────────┘
+```
+
+- Background `--color-bg`; the card is the only surface. One `primary` button per screen.
+- Shows `SessionNotice` above the card when the user arrives after a logout or an expired session.
+
+### TextField / PasswordField
+
+- Built on the rules of "Form fields" below. Height 48 px, `--text-body` (16 px, so iOS doesn't zoom).
+- `PasswordField` adds a ghost icon button "Mostrar / Ocultar" (eye / eye-off) with `aria-pressed`; never shows the password by default.
+- On `/register`, the password rule is visible under the field before typing ("Entre 8 y 72 caracteres") and turns into an error only after blur or submit.
+- Proper `autocomplete`: `username`, `name`, `email`, `current-password`, `new-password`.
+
+### OtpInput
+
+Six boxes for the verification code.
+
+```
+Te enviamos un código a j•••@gmail.com
+┌──┐┌──┐┌──┐ ┌──┐┌──┐┌──┐
+│ 4││ 8││ 1│ │  ││  ││  │         each box 48 × 56 px, --text-h1, tabular-nums
+└──┘└──┘└──┘ └──┘└──┘└──┘
+Vence en 4:32 · Reenviar código     countdown in --text-small; resend enabled after 30 s
+```
+
+| Prop | Type | Default |
+|---|---|---|
+| `length` | `number` | `6` |
+| `value` / `onChange` | `string` | — |
+| `onComplete` | `(code: string) => void` | submits automatically when all boxes are filled |
+| `error` | `string \| undefined` | — |
+
+- One logical `<input inputMode="numeric" autocomplete="one-time-code">` (so phones offer the code from the email/SMS) rendered as boxes; paste of the full code works.
+- Focus moves to the next box on type and back on Backspace.
+- Error state: boxes get a `--status-critical-fg` border + message below; the value is cleared.
+- When the code expires: message "El código venció" + primary "Enviar un código nuevo".
+
+### UserMenu
+
+- Top bar (tablet+): avatar circle with the user's initials (`--color-primary` on `--color-surface`, not a status color) → menu with full name, "Mi cuenta" and "Cerrar sesión".
+- Mobile: same options live in the "Cuenta" tab (`/account`); "Cerrar sesión" is a `secondary` button at the bottom of that page.
+- Logout needs no confirmation (it's harmless and quick to undo).
+
+### SessionNotice
+
+Neutral banner (`--color-surface`, `--color-border`, info icon) on `/login`:
+
+| Reason | Text |
+|---|---|
+| `expired` | "Tu sesión terminó. Vuelve a entrar para seguir viendo tus cuyes." |
+| `logout` | "Cerraste sesión." |
+| `disabled` | "Tu cuenta fue desactivada." |
 
 ### EmptyState / ErrorState / Loading
 
@@ -237,6 +304,19 @@ Min height 44 px, `--radius-md`, visible focus ring.
 
 - Spanish, short sentences, no jargon. Address the farmer with neutral forms ("Revisar alerta", "Registrar cuy").
 - Buttons are verbs: "Registrar", "Marcar como revisada", "Ver detalle".
+- Account words: "Iniciar sesión", "Crear cuenta", "Cerrar sesión", "Código de verificación", "Mi cuenta". Never "login", "token", "OTP", "JWT".
+- Auth messages:
+
+| Situation | On screen |
+|---|---|
+| Wrong username or password (or disabled account) | "Usuario o contraseña incorrectos." |
+| Wrong code | "El código no es correcto. Revisa el correo e inténtalo otra vez." |
+| Code expired / too many attempts | "El código venció. Te enviamos uno nuevo." (after resend) |
+| Username or email already used | "Ese usuario o correo ya está registrado." |
+| Weak password | "La contraseña debe tener entre 8 y 72 caracteres." |
+| Code sent | "Te enviamos un código a j•••@gmail.com. Puede tardar un minuto; revisa también el correo no deseado." |
+| Deactivate account (confirmation) | "¿Desactivar tu cuenta? Ya no podrás entrar. Escribe tu contraseña para confirmar." |
+
 - Translate model outputs into behavior:
 
 | Data | On screen |
@@ -247,7 +327,7 @@ Min height 44 px, `--radius-md`, visible focus ring.
 | `AUDIO DISTRESS` | "Se escucharon chillidos de angustia en la jaula" |
 
 - Relative times: "hace 2 min", "hace 1 h", then absolute date after 24 h.
-- Never hardcode strings in JSX. Keys in English, grouped by screen: `cage.headline.allGood`, `guineaPig.lastSeen`, `alerts.markReviewed`, `status.OBSERVED`, `markColor.RED`.
+- Never hardcode strings in JSX. Keys in English, grouped by screen: `cage.headline.allGood`, `guineaPig.lastSeen`, `alerts.markReviewed`, `status.OBSERVED`, `markColor.RED`, `auth.login.title`, `auth.verify.resend`, `auth.error.invalidCredentials`, `account.logout`.
 
 ---
 
@@ -261,6 +341,10 @@ Min height 44 px, `--radius-md`, visible focus ring.
 - [ ] Charts have a text alternative.
 - [ ] Works at 200% zoom and 360 px width without horizontal scroll.
 - [ ] `lang="es"` on `<html>`.
+- [ ] Every form field has a visible `<label>`; errors linked with `aria-describedby` and announced (`aria-live="polite"`).
+- [ ] `OtpInput` is one input for screen readers ("Código de verificación, 6 dígitos"), not six unlabeled boxes.
+- [ ] Password managers and phone code autofill work (`autocomplete` attributes).
+- [ ] After login, focus goes to the page title; after logout, to the `SessionNotice`.
 
 ---
 
