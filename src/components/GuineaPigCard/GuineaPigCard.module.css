@@ -1,0 +1,65 @@
+.card {
+  position: relative;
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+  gap: var(--space-2);
+  min-height: 88px;
+  padding: var(--space-4) var(--space-6) var(--space-4) var(--space-4);
+  border: 1px solid var(--color-border);
+  border-left: 4px solid var(--status-unknown-accent);
+  border-radius: var(--radius-md);
+  background: var(--color-surface);
+  box-shadow: var(--shadow-card);
+  text-decoration: none;
+  transition: border-color var(--transition-default);
+}
+
+.NORMAL {
+  border-left-color: var(--status-normal-accent);
+}
+
+.OBSERVED {
+  border-left-color: var(--status-observed-accent);
+}
+
+.ALERT {
+  border-left-color: var(--status-alert-accent);
+}
+
+.CRITICAL {
+  border-left-color: var(--status-critical-accent);
+}
+
+.header {
+  display: flex;
+  align-items: center;
+  gap: var(--space-3);
+  color: var(--color-text-muted);
+  font-size: var(--text-small-size);
+  line-height: var(--text-small-line);
+}
+
+.name {
+  color: var(--color-text);
+  font-size: var(--text-h2-size);
+  line-height: var(--text-h2-line);
+  font-weight: var(--text-h2-weight);
+}
+
+.summary {
+  font-size: var(--text-body-size);
+}
+
+.lastSeen {
+  color: var(--color-text-muted);
+  font-size: var(--text-small-size);
+  line-height: var(--text-small-line);
+}
+
+.chevron {
+  position: absolute;
+  right: var(--space-3);
+  bottom: var(--space-4);
+  color: var(--color-text-muted);
+}

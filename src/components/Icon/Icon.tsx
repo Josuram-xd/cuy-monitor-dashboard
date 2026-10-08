@@ -35,6 +35,7 @@ const PATHS = {
       <line x1="12" y1="17" x2="12.01" y2="17" />
     </>
   ),
+  'chevron-right': <polyline points="9 18 15 12 9 6" />,
 }
 
 export type IconName = keyof typeof PATHS

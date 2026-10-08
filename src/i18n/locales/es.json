@@ -19,6 +19,16 @@
     "BLACK": "Negro",
     "WHITE": "Blanco"
   },
+  "time": {
+    "justNow": "hace un momento",
+    "minutesAgo": "hace {{count}} min",
+    "hoursAgo": "hace {{count}} h"
+  },
+  "guineaPig": {
+    "still": "Quieto {{seconds}} de los últimos 60 s",
+    "lastSeen": "Visto {{time}}",
+    "notSeen": "No se ha visto {{time}}"
+  },
   "auth": {
     "error": {
       "invalidCredentials": "Usuario o contraseña incorrectos.",
