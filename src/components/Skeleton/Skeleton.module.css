@@ -1,0 +1,21 @@
+.list {
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-3);
+}
+
+/* static on purpose: the design avoids looping animations */
+.block {
+  background: var(--color-border);
+  opacity: 0.6;
+}
+
+.card {
+  min-height: 88px;
+  border-radius: var(--radius-md);
+}
+
+.line {
+  height: var(--text-body-line);
+  border-radius: var(--radius-sm);
+}

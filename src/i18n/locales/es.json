@@ -2,6 +2,10 @@
   "app": {
     "title": "Monitor de Salud de Cuyes"
   },
+  "common": {
+    "loading": "Cargando…",
+    "retry": "Intentar de nuevo"
+  },
   "status": {
     "NORMAL": "Normal",
     "OBSERVED": "En observación",
