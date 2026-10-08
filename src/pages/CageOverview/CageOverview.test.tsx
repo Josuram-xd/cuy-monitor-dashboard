@@ -1,4 +1,4 @@
-import { screen } from '@testing-library/react'
+import { screen, within } from '@testing-library/react'
 import { beforeEach, describe, expect, it, vi } from 'vitest'
 import { ApiError } from '../../api/ApiError'
 import { getDashboardApi } from '../../api/apiProvider'
@@ -23,9 +23,27 @@ describe('CageOverview', () => {
     renderWithProviders(<CageOverview />)
 
     expect(await screen.findByText('1 cuy en alerta')).toBeInTheDocument()
+    const grid = await screen.findByRole('list', { name: 'Tus cuyes' })
     for (const name of ['Canela', 'Pelusa', 'Copito', 'Chispa']) {
-      expect(await screen.findByText(name)).toBeInTheDocument()
+      expect(within(grid).getByText(name)).toBeInTheDocument()
     }
+  })
+
+  it('lists the open alerts next to the cage', async () => {
+    renderWithProviders(<CageOverview />)
+
+    expect(await screen.findByText(/quieta de lo normal/)).toBeInTheDocument()
+    expect(screen.getByRole('link', { name: 'Ver todas' })).toHaveAttribute('href', '/alerts')
+  })
+
+  it('stays calm when there are no open alerts', async () => {
+    const db = new MockDatabase()
+    db.alerts.length = 0
+    setApi(createMockApi(db, 0))
+
+    renderWithProviders(<CageOverview />)
+
+    expect(await screen.findByText('No hay alertas abiertas.')).toBeInTheDocument()
   })
 
   it('invites to register a guinea pig when the cage is empty', async () => {

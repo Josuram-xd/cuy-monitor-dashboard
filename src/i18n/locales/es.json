@@ -66,6 +66,15 @@
     "countsLabel": "Cuyes por estado",
     "updated": "Actualizado {{time}}"
   },
+  "alerts": {
+    "openTitle": "Alertas abiertas",
+    "seeAll": "Ver todas",
+    "noneOpen": "No hay alertas abiertas.",
+    "loadError": "No pudimos cargar las alertas.",
+    "wholeCage": "Toda la jaula",
+    "unknownGuineaPig": "Cuy",
+    "markReviewed": "Marcar como revisada"
+  },
   "guineaPig": {
     "still": "Quieto {{seconds}} de los últimos 60 s",
     "lastSeen": "Visto {{time}}",
