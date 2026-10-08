@@ -1,10 +1,25 @@
 {
   "app": {
-    "title": "Monitor de Salud de Cuyes"
+    "title": "Monitor de Salud de Cuyes",
+    "shortTitle": "Monitor de Cuyes"
   },
   "common": {
     "loading": "Cargando…",
-    "retry": "Intentar de nuevo"
+    "retry": "Intentar de nuevo",
+    "skipToContent": "Saltar al contenido"
+  },
+  "nav": {
+    "label": "Navegación principal",
+    "cage": "Jaula",
+    "alerts": "Alertas",
+    "register": "Registrar"
+  },
+  "comingSoon": {
+    "message": "Esta sección estará lista pronto."
+  },
+  "notFound": {
+    "message": "No encontramos esta página.",
+    "back": "Volver a la jaula"
   },
   "status": {
     "NORMAL": "Normal",
@@ -29,6 +44,11 @@
     "hoursAgo": "hace {{count}} h"
   },
   "cage": {
+    "title": "Tu jaula",
+    "guineaPigs": "Tus cuyes",
+    "guineaPigsError": "No pudimos cargar los cuyes. Revisa la conexión e inténtalo otra vez.",
+    "empty": "Aún no hay cuyes registrados",
+    "registerGuineaPig": "Registrar cuy",
     "headline": {
       "allGood": "Todo bien en la jaula",
       "unknown": "Aún no hay datos de la jaula",
@@ -45,6 +65,15 @@
     },
     "countsLabel": "Cuyes por estado",
     "updated": "Actualizado {{time}}"
+  },
+  "alerts": {
+    "openTitle": "Alertas abiertas",
+    "seeAll": "Ver todas",
+    "noneOpen": "No hay alertas abiertas.",
+    "loadError": "No pudimos cargar las alertas.",
+    "wholeCage": "Toda la jaula",
+    "unknownGuineaPig": "Cuy",
+    "markReviewed": "Marcar como revisada"
   },
   "guineaPig": {
     "still": "Quieto {{seconds}} de los últimos 60 s",
