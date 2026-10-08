@@ -1,4 +1,5 @@
 import { t } from '../../i18n'
+import { Button } from '../Button/Button'
 import { Icon } from '../Icon/Icon'
 import styles from './ErrorState.module.css'
 
@@ -13,11 +14,7 @@ export function ErrorState({ message, onRetry }: ErrorStateProps) {
     <div className={styles.error} role="alert">
       <Icon name="alert-circle" size={32} className={styles.icon} />
       <p>{message}</p>
-      {onRetry && (
-        <button type="button" className={styles.retry} onClick={onRetry}>
-          {t('common.retry')}
-        </button>
-      )}
+      {onRetry && <Button onClick={onRetry}>{t('common.retry')}</Button>}
     </div>
   )
 }

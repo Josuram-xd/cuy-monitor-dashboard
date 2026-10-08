@@ -10,13 +10,3 @@
 .icon {
   color: var(--color-text-muted);
 }
-
-.retry {
-  min-height: var(--touch-target);
-  padding: 0 var(--space-5);
-  border: 1px solid var(--color-border);
-  border-radius: var(--radius-md);
-  background: var(--color-surface);
-  color: var(--color-primary);
-  font-weight: 600;
-}
