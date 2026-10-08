@@ -19,9 +19,10 @@ export abstract class MockResource {
     return new Promise((resolve) => setTimeout(() => resolve(structuredClone(data)), this.delayMs))
   }
 
-  protected fail(status: number, code: string): Promise<never> {
+  // fields: failing fields of a validation error, like the backend's 400
+  protected fail(status: number, code: string, fields?: Record<string, string>): Promise<never> {
     return new Promise((_, reject) =>
-      setTimeout(() => reject(new ApiError(status, code)), this.delayMs),
+      setTimeout(() => reject(new ApiError(status, code, undefined, fields)), this.delayMs),
     )
   }
 

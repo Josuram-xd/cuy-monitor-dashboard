@@ -1,4 +1,11 @@
 import type { Alert, AlertStatus } from '../types/Alert'
+import type {
+  AuthToken,
+  LoginChallenge,
+  LoginRequest,
+  RegisterRequest,
+  VerifyOtpRequest,
+} from '../types/Auth'
 import type { CageHealth } from '../types/CageHealth'
 import type { DateRange } from '../types/DateRange'
 import type { GuineaPig, GuineaPigHistory, NewGuineaPig } from '../types/GuineaPig'
@@ -23,7 +30,16 @@ export interface AlertApi {
   markReviewed(id: number): Promise<Alert>
 }
 
+// public endpoints: no token, a 401 here means wrong credentials or wrong code
+export interface AuthApi {
+  register(body: RegisterRequest): Promise<LoginChallenge>
+  // also resends the code of an account that was never verified
+  login(body: LoginRequest): Promise<LoginChallenge>
+  verifyOtp(body: VerifyOtpRequest): Promise<AuthToken>
+}
+
 export interface DashboardApi {
+  auth: AuthApi
   cages: CageApi
   guineaPigs: GuineaPigApi
   alerts: AlertApi

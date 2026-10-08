@@ -2,6 +2,7 @@ import { tokenStorage } from '../auth/tokenStorage'
 import { config } from '../config'
 import type { DashboardApi } from './DashboardApi'
 import { HttpAlertApi } from './http/HttpAlertApi'
+import { HttpAuthApi } from './http/HttpAuthApi'
 import { HttpCageApi } from './http/HttpCageApi'
 import { HttpGuineaPigApi } from './http/HttpGuineaPigApi'
 import { HttpClient } from './HttpClient'
@@ -15,6 +16,7 @@ function createHttpApi(): DashboardApi {
     onUnauthorized: (error) => unauthorizedNotifier.notify(error),
   })
   return {
+    auth: new HttpAuthApi(http),
     cages: new HttpCageApi(http),
     guineaPigs: new HttpGuineaPigApi(http),
     alerts: new HttpAlertApi(http),
