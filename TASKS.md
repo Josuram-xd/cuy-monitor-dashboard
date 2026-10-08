@@ -34,12 +34,12 @@
 
 🔗 **Depende de:** seguir con las Task 3.2–3.4 del repo `cuy-monitor-backend` (contratos)
 
-- [ ] **Task 2.1** — `feat(types): add HealthStatus, MarkColor, AlertStatus and domain types`
-- [ ] **Task 2.2** — `feat(api): add fetch client with base URL and error handling`
-- [ ] **Task 2.3** — `feat(mocks): add fake cage, guinea pigs and alerts data`
-- [ ] **Task 2.4** — `feat(api): add cages, guinea pigs and alerts endpoints with mock switch`
+- [x] **Task 2.1** — `feat(types): add HealthStatus, MarkColor, AlertStatus and domain types`
+- [x] **Task 2.2** — `feat(api): add fetch client with base URL and error handling`
+- [x] **Task 2.3** — `feat(mocks): add fake cage, guinea pigs and alerts data`
+- [x] **Task 2.4** — `feat(api): add cages, guinea pigs and alerts endpoints with mock switch`
   `VITE_USE_MOCKS=true` devuelve los mocks.
-- [ ] **Task 2.5** — `feat(hooks): add TanStack Query hooks for cage health, guinea pigs and alerts`
+- [x] **Task 2.5** — `feat(hooks): add TanStack Query hooks for cage health, guinea pigs and alerts`
 
 ### Task 3 — Componentes base
 
