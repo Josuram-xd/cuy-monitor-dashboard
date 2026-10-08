@@ -1,0 +1,56 @@
+.badge {
+  display: inline-flex;
+  align-items: center;
+  gap: var(--space-1);
+  border-radius: var(--radius-full);
+  font-weight: 600;
+  white-space: nowrap;
+  /* thin ring in the badge's own color so it doesn't melt into a tinted background */
+  box-shadow: inset 0 0 0 1px color-mix(in srgb, currentColor 22%, transparent);
+  transition:
+    color var(--transition-default),
+    background-color var(--transition-default);
+}
+
+.sm {
+  padding: 2px var(--space-2);
+  font-size: var(--text-caption-size);
+  line-height: var(--text-caption-line);
+}
+
+.md {
+  padding: var(--space-1) var(--space-3);
+  font-size: var(--text-small-size);
+  line-height: var(--text-small-line);
+}
+
+.lg {
+  padding: var(--space-2) var(--space-4);
+  font-size: var(--text-body-size);
+  line-height: var(--text-body-line);
+}
+
+.NORMAL {
+  color: var(--status-normal-fg);
+  background: var(--status-normal-bg);
+}
+
+.OBSERVED {
+  color: var(--status-observed-fg);
+  background: var(--status-observed-bg);
+}
+
+.ALERT {
+  color: var(--status-alert-fg);
+  background: var(--status-alert-bg);
+}
+
+.CRITICAL {
+  color: var(--status-critical-fg);
+  background: var(--status-critical-bg);
+}
+
+.UNKNOWN {
+  color: var(--status-unknown-fg);
+  background: var(--status-unknown-bg);
+}

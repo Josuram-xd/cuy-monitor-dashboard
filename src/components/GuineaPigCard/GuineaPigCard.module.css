@@ -1,0 +1,124 @@
+/* each status sets the colors the card uses */
+.NORMAL {
+  --accent: var(--status-normal-accent);
+  --tint: var(--status-normal-bg);
+  --fg: var(--status-normal-fg);
+}
+
+.OBSERVED {
+  --accent: var(--status-observed-accent);
+  --tint: var(--status-observed-bg);
+  --fg: var(--status-observed-fg);
+}
+
+.ALERT {
+  --accent: var(--status-alert-accent);
+  --tint: var(--status-alert-bg);
+  --fg: var(--status-alert-fg);
+}
+
+.CRITICAL {
+  --accent: var(--status-critical-accent);
+  --tint: var(--status-critical-bg);
+  --fg: var(--status-critical-fg);
+}
+
+.UNKNOWN {
+  --accent: var(--status-unknown-accent);
+  --tint: var(--status-unknown-bg);
+  --fg: var(--status-unknown-fg);
+}
+
+.card {
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-3);
+  height: 100%;
+  min-height: 88px;
+  padding: var(--space-4);
+  border: 1px solid var(--color-border);
+  border-left: 4px solid var(--accent);
+  border-radius: var(--radius-lg);
+  background: linear-gradient(150deg, var(--tint) 0%, var(--color-surface) 45%);
+  box-shadow: var(--shadow-card);
+  text-decoration: none;
+  transition:
+    transform var(--transition-default),
+    box-shadow var(--transition-default);
+}
+
+.card:hover {
+  transform: translateY(-2px);
+  box-shadow: var(--shadow-overlay);
+}
+
+.card:active {
+  transform: translateY(0);
+}
+
+.top {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: var(--space-2);
+}
+
+.name {
+  overflow: hidden;
+  font-size: var(--text-h2-size);
+  line-height: var(--text-h2-line);
+  font-weight: var(--text-h1-weight);
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+.chevron {
+  color: var(--color-text-muted);
+  transition: transform var(--transition-default);
+}
+
+.card:hover .chevron {
+  transform: translateX(2px);
+}
+
+.meta {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: var(--space-2) var(--space-3);
+}
+
+.mark {
+  color: var(--color-text-muted);
+  font-size: var(--text-small-size);
+  line-height: var(--text-small-line);
+}
+
+.details {
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-1);
+  margin-top: auto;
+  padding-top: var(--space-3);
+  border-top: 1px solid var(--color-border);
+}
+
+.detail {
+  display: flex;
+  align-items: center;
+  gap: var(--space-2);
+  font-size: var(--text-small-size);
+  line-height: var(--text-small-line);
+}
+
+.detailIcon {
+  color: var(--fg);
+}
+
+.muted {
+  color: var(--color-text-muted);
+}
+
+.muted .detailIcon {
+  color: inherit;
+}

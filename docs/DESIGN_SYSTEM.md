@@ -167,6 +167,10 @@ The main building block of the cage view.
 - Shows at most one behavior summary line, translated to plain words.
 - If last seen > 10 min → status `UNKNOWN` and text "No se ha visto hace X min".
 
+### GuineaPigGrid
+
+List of `GuineaPigCard`s (`<ul>`/`<li>`). 1 column on mobile, 2 from 640 px, auto-fill columns of at least 260 px from 1024 px. Cards in a row share the same height.
+
 ### CageStatusBanner
 
 Traffic light at the top of the cage view, driven by `GET /api/cages/{id}/health`.
@@ -174,6 +178,8 @@ Traffic light at the top of the cage view, driven by `GET /api/cages/{id}/health
 - Headline in `--text-display`: "Todo bien en la jaula" / "1 cuy en observación" / "2 cuyes en alerta".
 - Background `--status-*-bg` of the worst status in the cage.
 - Includes `LiveIndicator`.
+- Below the headline: one chip per status with its guinea pig count (worst first, zeros hidden) and "Actualizado hace X".
+- Status icon in a white circle and a 4 px stripe on top in `--status-*-accent`.
 
 ### LiveIndicator
 

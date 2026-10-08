@@ -1,0 +1,55 @@
+import type { GuineaPigApi } from '../api/DashboardApi'
+import type { DateRange } from '../types/DateRange'
+import type { GuineaPig, GuineaPigHistory, NewGuineaPig } from '../types/GuineaPig'
+import { mockTransitions, mockWindows } from './data'
+import { MockResource } from './MockResource'
+
+const MAX_NAME_LENGTH = 100
+
+export class MockGuineaPigApi extends MockResource implements GuineaPigApi {
+  list(cageId: string): Promise<GuineaPig[]> {
+    if (!this.db.hasCage(cageId)) {
+      return this.notFound()
+    }
+    return this.respond(this.db.guineaPigs)
+  }
+
+  register(cageId: string, body: NewGuineaPig): Promise<GuineaPig> {
+    if (!this.db.hasCage(cageId)) {
+      return this.notFound()
+    }
+    const name = body.name.trim()
+    if (name.length === 0 || name.length > MAX_NAME_LENGTH) {
+      return this.fail(400, 'bad_request')
+    }
+    if (this.db.guineaPigs.some((g) => g.markColor === body.markColor)) {
+      return this.fail(409, 'conflict')
+    }
+    const created: GuineaPig = {
+      id: this.db.nextGuineaPigId(),
+      name,
+      markColor: body.markColor,
+      status: 'NORMAL',
+      statusSince: new Date().toISOString(),
+    }
+    this.db.guineaPigs.push(created)
+    return this.respond(created)
+  }
+
+  getHistory(id: number, range?: DateRange): Promise<GuineaPigHistory> {
+    if (!this.db.findGuineaPig(id)) {
+      return this.notFound()
+    }
+    const { from, to } = this.resolveRange(range)
+    if (Date.parse(to) <= Date.parse(from)) {
+      return this.fail(400, 'bad_request')
+    }
+    return this.respond({
+      guineaPigId: id,
+      from,
+      to,
+      transitions: (mockTransitions[id] ?? []).filter((t) => this.inRange(t.occurredAt, from, to)),
+      windows: mockWindows(id).filter((w) => this.inRange(w.occurredAt, from, to)),
+    })
+  }
+}

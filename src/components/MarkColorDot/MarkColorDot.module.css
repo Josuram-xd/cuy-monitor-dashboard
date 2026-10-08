@@ -1,0 +1,47 @@
+.wrapper {
+  display: inline-flex;
+  align-items: center;
+  gap: var(--space-2);
+}
+
+/* the ring keeps white and black dots visible on any surface */
+.dot {
+  display: inline-block;
+  flex-shrink: 0;
+  width: 14px;
+  height: 14px;
+  border-radius: var(--radius-full);
+  box-shadow: 0 0 0 1px var(--color-border);
+}
+
+.RED {
+  background: var(--mark-red);
+}
+
+.BLUE {
+  background: var(--mark-blue);
+}
+
+.GREEN {
+  background: var(--mark-green);
+}
+
+.YELLOW {
+  background: var(--mark-yellow);
+}
+
+.ORANGE {
+  background: var(--mark-orange);
+}
+
+.PURPLE {
+  background: var(--mark-purple);
+}
+
+.BLACK {
+  background: var(--mark-black);
+}
+
+.WHITE {
+  background: var(--mark-white);
+}

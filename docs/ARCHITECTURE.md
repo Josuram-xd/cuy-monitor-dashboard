@@ -13,7 +13,7 @@ Browser (farmer's phone / PC)
    ▼
 Caddy (EC2, public :443)
    ├── /                 ──► dashboard container (static files, SPA fallback to index.html)
-   ├── /api/auth/**      ──► backend   (public: register, login, verify code)
+   ├── /api/v1/auth/**   ──► backend   (public: register, login, verify code)
    ├── /api/**           ──► backend   (Authorization: Bearer <jwt>)
    └── /ws               ──► backend   (STOMP; JWT in the CONNECT frame)
                                 subscribe /topic/cages/{cageId}
@@ -47,19 +47,19 @@ cuy-monitor-dashboard/
     │   ├── RequireAuth.tsx    redirects to /login?next=<path> when there's no session
     │   └── tokenStorage.ts    sessionStorage + memory (the only place that touches the token)
     ├── api/
-    │   ├── client.ts       fetch wrapper: base URL, JSON, Bearer header, 401 → logout, error normalization
-    │   ├── auth.ts         register, login, verifyOtp
-    │   ├── account.ts      getMe, updateProfile, changePassword, deactivate
-    │   ├── cages.ts
-    │   ├── guineaPigs.ts
-    │   └── alerts.ts
+    │   ├── HttpClient.ts   class: base URL, JSON, error normalization (Bearer header + 401 → logout in Task 13)
+    │   ├── ApiError.ts     error with the backend code (conflict, not_found…), network_error, unknown_error
+    │   ├── DashboardApi.ts interfaces CageApi, GuineaPigApi, AlertApi (auth/account added in Tasks 13–14)
+    │   ├── http/           HttpCageApi, HttpGuineaPigApi, HttpAlertApi: call the backend through HttpClient
+    │   └── apiProvider.ts  getDashboardApi(): picks HTTP or mocks once (VITE_USE_MOCKS)
     ├── hooks/              useCageHealth, useGuineaPigs, useGuineaPigHistory, useAlerts, useMe (TanStack Query)
     ├── realtime/
     │   └── useLiveCage.ts  STOMP client (only with a session), token in connectHeaders, updates the query cache
     ├── pages/              Login, Register, VerifyCode, CageOverview, GuineaPigDetail, Alerts,
     │                       RegisterGuineaPig, Weight, Account
     ├── components/         see DESIGN_SYSTEM.md
-    ├── mocks/              fake responses used when VITE_USE_MOCKS=true (incl. fake auth, code 123456)
+    ├── mocks/              MockCageApi, MockGuineaPigApi, MockAlertApi (extend MockResource) over a shared
+    │                       MockDatabase; used when VITE_USE_MOCKS=true (incl. fake auth, code 123456)
     └── styles/             tokens.css, reset.css, global.css
 ```
 
@@ -70,10 +70,10 @@ One kind of user, no roles. Contract: `cuy-monitor-backend/docs/contracts/auth-a
 ### 3.1 Flows
 
 ```
-/register  ─POST /api/auth/register─►  201 {challengeId, expiresAt}  ─► /verify (state: challengeId, masked email, "register")
-/login     ─POST /api/auth/login────►  200 {challengeId, expiresAt}  ─► /verify (state: challengeId, "login")
-/verify    ─POST /api/auth/otp/verify►  200 {accessToken, expiresAt} ─► save session ─► navigate(next ?? "/")
-           "Reenviar código" = repeat POST /api/auth/login with the same credentials held in memory
+/register  ─POST /api/v1/auth/register─►  201 {challengeId, expiresAt}  ─► /verify (state: challengeId, masked email, "register")
+/login     ─POST /api/v1/auth/login────►  200 {challengeId, expiresAt}  ─► /verify (state: challengeId, "login")
+/verify    ─POST /api/v1/auth/otp/verify►  200 {accessToken, expiresAt} ─► save session ─► navigate(next ?? "/")
+           "Reenviar código" = repeat POST /api/v1/auth/login with the same credentials held in memory
            (for register: login with the username/password just entered; the account stays PENDING until verified)
 ```
 
@@ -103,9 +103,11 @@ One kind of user, no roles. Contract: `cuy-monitor-backend/docs/contracts/auth-a
 ### 4.1 Server state (REST)
 
 - All REST data goes through **TanStack Query**. Components never call `fetch` directly.
-- One hook per resource in `src/hooks/`, one function per endpoint in `src/api/`.
+- One hook per resource in `src/hooks/`, one method per endpoint in the `src/api/` interfaces.
+- The hooks only depend on the interfaces in `DashboardApi.ts`. `getDashboardApi()` decides once whether they talk to the backend (`Http*Api`) or to the fake data (`Mock*Api`): Strategy + a small factory, the same "ports" idea as the backend. The mocks are loaded with a dynamic import, so they are not in the production bundle.
+- Classes are only used in this data layer. Components stay as function components with hooks (React 19 style).
 - Query keys: `['me']`, `['cage', cageId, 'health']`, `['cage', cageId, 'guinea-pigs']`, `['guinea-pig', id, 'history', range]`, `['alerts', status]`, `['cage', cageId, 'weight', range]`.
-- Mutations: register guinea pig (`POST`), mark alert reviewed (`PATCH`), update profile / change password / deactivate (`PUT`/`DELETE` on `/api/users/me`). On success, invalidate the related keys. Deactivate → logout.
+- Mutations: register guinea pig (`POST`), mark alert reviewed (`PATCH`), update profile / change password / deactivate (`PUT`/`DELETE` on `/api/v1/users/me`). On success, invalidate the related keys. Deactivate → logout.
 - Queries are only enabled when there is a session (`enabled: isAuthenticated`).
 
 ### 4.2 Live updates (WebSocket)
@@ -153,18 +155,18 @@ export interface User { id: string; username: string; fullName: string; email: s
 
 | Screen | Endpoint | Auth |
 |---|---|---|
-| Register | `POST /api/auth/register` | public |
-| Login | `POST /api/auth/login` | public |
-| VerifyCode | `POST /api/auth/otp/verify` (and `POST /api/auth/login` to resend) | public |
-| Account | `GET/PUT /api/users/me`, `PUT /api/users/me/password`, `DELETE /api/users/me` | JWT |
-| CageOverview | `GET /api/cages/{id}/health`, `GET /api/cages/{id}/guinea-pigs`, `GET /api/alerts?status=OPEN` | JWT |
-| GuineaPigDetail | `GET /api/guinea-pigs/{id}/history?from=&to=` | JWT |
-| Alerts | `GET /api/alerts?status=`, `PATCH /api/alerts/{id}` | JWT |
-| RegisterGuineaPig | `POST /api/cages/{id}/guinea-pigs` | JWT |
-| Weight | `GET /api/cages/{id}/weight?from=&to=` | JWT |
+| Register | `POST /api/v1/auth/register` | public |
+| Login | `POST /api/v1/auth/login` | public |
+| VerifyCode | `POST /api/v1/auth/otp/verify` (and `POST /api/v1/auth/login` to resend) | public |
+| Account | `GET/PUT /api/v1/users/me`, `PUT /api/v1/users/me/password`, `DELETE /api/v1/users/me` | JWT |
+| CageOverview | `GET /api/v1/cages/{id}/health`, `GET /api/v1/cages/{id}/guinea-pigs`, `GET /api/v1/alerts?status=OPEN` | JWT |
+| GuineaPigDetail | `GET /api/v1/guinea-pigs/{id}/history?from=&to=` | JWT |
+| Alerts | `GET /api/v1/alerts?status=`, `PATCH /api/v1/alerts/{id}` | JWT |
+| RegisterGuineaPig | `POST /api/v1/cages/{id}/guinea-pigs` | JWT |
+| Weight | `GET /api/v1/cages/{id}/weight?from=&to=` | JWT |
 | All private pages | `WS /ws` → `/topic/cages/{id}` | JWT on `CONNECT` |
 
-As of 2026-10-03 the backend has `/actuator/health`, `/api/system/*` and the ingestion endpoint; auth (Task 18–20) and the dashboard API are in progress. Use `VITE_USE_MOCKS=true` until they are ready.
+As of 2026-10-03 the backend has `/actuator/health`, `/api/v1/system/*` and the ingestion endpoint; auth (Task 18–20) and the dashboard API are in progress. Use `VITE_USE_MOCKS=true` until they are ready.
 
 ## 7. Configuration
 
