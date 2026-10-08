@@ -13,16 +13,29 @@ interface RequestOptions {
 interface ErrorBody {
   error?: unknown
   message?: unknown
+  fields?: unknown
+}
+
+export interface HttpClientOptions {
+  // injected so tests don't need to touch the global fetch
+  fetchFn?: FetchFn
+  // current access token, or null without a session
+  getToken?: () => string | null
+  // a call that carried a token got 401: the session is over
+  onUnauthorized?: (error: ApiError) => void
 }
 
 export class HttpClient {
   private readonly baseUrl: string
   private readonly fetchFn: FetchFn
+  private readonly getToken: () => string | null
+  private readonly onUnauthorized: (error: ApiError) => void
 
-  // fetch is injected so tests don't need to touch the global one
-  constructor(baseUrl: string, fetchFn: FetchFn = (input, init) => fetch(input, init)) {
+  constructor(baseUrl: string, options: HttpClientOptions = {}) {
     this.baseUrl = baseUrl
-    this.fetchFn = fetchFn
+    this.fetchFn = options.fetchFn ?? ((input, init) => fetch(input, init))
+    this.getToken = options.getToken ?? (() => null)
+    this.onUnauthorized = options.onUnauthorized ?? (() => {})
   }
 
   get<T>(path: string, options: Omit<RequestOptions, 'body'> = {}): Promise<T> {
@@ -51,6 +64,10 @@ export class HttpClient {
     if (body !== undefined) {
       headers['Content-Type'] = 'application/json'
     }
+    const token = this.getToken()
+    if (token) {
+      headers.Authorization = `Bearer ${token}`
+    }
 
     let response: Response
     try {
@@ -69,7 +86,12 @@ export class HttpClient {
     }
 
     if (!response.ok) {
-      throw await this.toApiError(response)
+      const error = await this.toApiError(response)
+      // without a token a 401 is just "wrong credentials" (login, verify): not a lost session
+      if (error.isUnauthorized && token) {
+        this.onUnauthorized(error)
+      }
+      throw error
     }
     if (response.status === 204) {
       return undefined as T
@@ -93,11 +115,22 @@ export class HttpClient {
       const body = (await response.json()) as ErrorBody
       if (typeof body.error === 'string') {
         const message = typeof body.message === 'string' ? body.message : undefined
-        return new ApiError(response.status, body.error, message)
+        return new ApiError(response.status, body.error, message, this.toFields(body.fields))
       }
     } catch {
       // not JSON, e.g. a 502 page from Caddy
     }
     return new ApiError(response.status, 'unknown_error')
+  }
+
+  private toFields(fields: unknown): Record<string, string> {
+    if (typeof fields !== 'object' || fields === null) {
+      return {}
+    }
+    return Object.fromEntries(
+      Object.entries(fields).filter(
+        (entry): entry is [string, string] => typeof entry[1] === 'string',
+      ),
+    )
   }
 }

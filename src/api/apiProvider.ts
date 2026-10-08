@@ -1,14 +1,19 @@
+import { tokenStorage } from '../auth/tokenStorage'
 import { config } from '../config'
 import type { DashboardApi } from './DashboardApi'
 import { HttpAlertApi } from './http/HttpAlertApi'
 import { HttpCageApi } from './http/HttpCageApi'
 import { HttpGuineaPigApi } from './http/HttpGuineaPigApi'
 import { HttpClient } from './HttpClient'
+import { unauthorizedNotifier } from './UnauthorizedNotifier'
 
 let api: Promise<DashboardApi> | undefined
 
 function createHttpApi(): DashboardApi {
-  const http = new HttpClient(config.apiUrl)
+  const http = new HttpClient(config.apiUrl, {
+    getToken: () => tokenStorage.read()?.accessToken ?? null,
+    onUnauthorized: (error) => unauthorizedNotifier.notify(error),
+  })
   return {
     cages: new HttpCageApi(http),
     guineaPigs: new HttpGuineaPigApi(http),
