@@ -11,7 +11,9 @@ interface EmptyStateProps {
 export function EmptyState({ message, icon = 'inbox', action }: EmptyStateProps) {
   return (
     <div className={styles.empty}>
-      <Icon name={icon} size={32} className={styles.icon} />
+      <span className={styles.iconWrap}>
+        <Icon name={icon} size={30} />
+      </span>
       <p className={styles.message}>{message}</p>
       {action}
     </div>

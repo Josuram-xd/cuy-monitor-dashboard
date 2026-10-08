@@ -2,9 +2,11 @@ import type { ReactNode } from 'react'
 import { t } from '../../i18n'
 import type { CageHealth } from '../../types/CageHealth'
 import type { DisplayStatus } from '../../types/HealthStatus'
-import { StatusBadge } from '../StatusBadge/StatusBadge'
-import styles from './CageStatusBanner.module.css'
 import { cx } from '../../utils/cx'
+import { Icon } from '../Icon/Icon'
+import { StatusBadge } from '../StatusBadge/StatusBadge'
+import { STATUS_ICONS } from '../StatusBadge/statusIcons'
+import styles from './CageStatusBanner.module.css'
 
 interface CageStatusBannerProps {
   // undefined while loading or when the data couldn't be fetched
@@ -32,13 +34,18 @@ export function CageStatusBanner({ health, liveIndicator }: CageStatusBannerProp
 
   return (
     <section className={cx(styles.banner, styles[status])}>
-      <div className={styles.top}>
-        <StatusBadge status={status} size="lg" />
-        {liveIndicator}
+      <span className={styles.iconWrap}>
+        <Icon name={STATUS_ICONS[status]} size={28} />
+      </span>
+      <div className={styles.body}>
+        <div className={styles.top}>
+          <StatusBadge status={status} />
+          {liveIndicator}
+        </div>
+        <p className={styles.headline} aria-live={status === 'CRITICAL' ? 'assertive' : 'polite'}>
+          {headline(status, health)}
+        </p>
       </div>
-      <p className={styles.headline} aria-live={status === 'CRITICAL' ? 'assertive' : 'polite'}>
-        {headline(status, health)}
-      </p>
     </section>
   )
 }

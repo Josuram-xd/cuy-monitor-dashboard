@@ -12,8 +12,10 @@ interface ErrorStateProps {
 export function ErrorState({ message, onRetry }: ErrorStateProps) {
   return (
     <div className={styles.error} role="alert">
-      <Icon name="alert-circle" size={32} className={styles.icon} />
-      <p>{message}</p>
+      <span className={styles.iconWrap}>
+        <Icon name="alert-circle" size={30} />
+      </span>
+      <p className={styles.message}>{message}</p>
       {onRetry && <Button onClick={onRetry}>{t('common.retry')}</Button>}
     </div>
   )

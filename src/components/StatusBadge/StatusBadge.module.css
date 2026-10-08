@@ -5,6 +5,8 @@
   border-radius: var(--radius-full);
   font-weight: 600;
   white-space: nowrap;
+  /* thin ring in the badge's own color so it doesn't melt into a tinted background */
+  box-shadow: inset 0 0 0 1px color-mix(in srgb, currentColor 22%, transparent);
   transition:
     color var(--transition-default),
     background-color var(--transition-default);
