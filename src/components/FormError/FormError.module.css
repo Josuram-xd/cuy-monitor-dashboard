@@ -1,0 +1,11 @@
+.error {
+  display: flex;
+  align-items: flex-start;
+  gap: var(--space-2);
+  padding: var(--space-3);
+  border-radius: var(--radius-md);
+  background: var(--status-critical-bg);
+  color: var(--status-critical-fg);
+  font-size: var(--text-small-size);
+  line-height: var(--text-small-line);
+}
