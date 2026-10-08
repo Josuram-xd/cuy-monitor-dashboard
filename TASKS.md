@@ -53,10 +53,10 @@
 
 ### Task 4 — Vista de jaula (con mocks)
 
-- [ ] **Task 4.1** — `feat(router): add routes and app layout with bottom navigation`
-- [ ] **Task 4.2** — `feat(cage): add CageOverview page with banner and guinea pig grid`
-- [ ] **Task 4.3** — `feat(alerts): add AlertList with latest open alerts on CageOverview`
-- [ ] **Task 4.4** — `build: add Dockerfile and Caddyfile serving the SPA`
+- [x] **Task 4.1** — `feat(router): add routes and app layout with bottom navigation`
+- [x] **Task 4.2** — `feat(cage): add CageOverview page with banner and guinea pig grid`
+- [x] **Task 4.3** — `feat(alerts): add AlertList with latest open alerts on CageOverview`
+- [x] **Task 4.4** — `build: add Dockerfile and Caddyfile serving the SPA`
   Multi-stage `node:24-alpine` → `caddy:2.11-alpine`, `try_files {path} /index.html`, puerto 80, `.dockerignore`. Variables `VITE_*` como build args.
 - [ ] **Task 4.5** — *(sin commit)* clonar el repo al lado del backend en la EC2 y levantarlo con Compose
   🔗 Depende de: `cuy-monitor-backend` Task 23 (servicio `dashboard` y ruta `/` en Caddy)
