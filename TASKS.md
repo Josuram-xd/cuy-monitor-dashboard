@@ -43,13 +43,13 @@
 
 ### Task 3 — Componentes base
 
-- [ ] **Task 3.1** — `feat(ui): add StatusBadge with icon and label`
-- [ ] **Task 3.2** — `feat(ui): add MarkColorDot`
-- [ ] **Task 3.3** — `feat(ui): add GuineaPigCard`
-- [ ] **Task 3.4** — `feat(ui): add CageStatusBanner`
-- [ ] **Task 3.5** — `feat(ui): add EmptyState, ErrorState and skeleton loaders`
-- [ ] **Task 3.6** — `feat(ui): add Button variants`
-- [ ] **Task 3.7** — `test(ui): cover StatusBadge and GuineaPigCard`
+- [x] **Task 3.1** — `feat(ui): add StatusBadge with icon and label`
+- [x] **Task 3.2** — `feat(ui): add MarkColorDot`
+- [x] **Task 3.3** — `feat(ui): add GuineaPigCard`
+- [x] **Task 3.4** — `feat(ui): add CageStatusBanner`
+- [x] **Task 3.5** — `feat(ui): add EmptyState, ErrorState and skeleton loaders`
+- [x] **Task 3.6** — `feat(ui): add Button variants`
+- [x] **Task 3.7** — `test(ui): cover StatusBadge and GuineaPigCard`
 
 ### Task 4 — Vista de jaula (con mocks)
 
