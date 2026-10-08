@@ -1,4 +1,5 @@
 import styles from './Icon.module.css'
+import { cx } from '../../utils/cx'
 
 // Feather-style outline icons, drawn inline so we don't need an icon library.
 const PATHS = {
@@ -63,7 +64,7 @@ interface IconProps {
 export function Icon({ name, size = 20, className }: IconProps) {
   return (
     <svg
-      className={className ? `${styles.icon} ${className}` : styles.icon}
+      className={cx(styles.icon, className)}
       width={size}
       height={size}
       viewBox="0 0 24 24"

@@ -7,6 +7,7 @@ import { Icon } from '../Icon/Icon'
 import { MarkColorDot } from '../MarkColorDot/MarkColorDot'
 import { StatusBadge } from '../StatusBadge/StatusBadge'
 import styles from './GuineaPigCard.module.css'
+import { cx } from '../../utils/cx'
 
 const STALE_AFTER_MINUTES = 10
 
@@ -24,7 +25,7 @@ export function GuineaPigCard({ guineaPig, lastWindow, now }: GuineaPigCardProps
   const status: DisplayStatus = stale ? 'UNKNOWN' : guineaPig.status
 
   return (
-    <Link to={`/guinea-pigs/${guineaPig.id}`} className={`${styles.card} ${styles[status]}`}>
+    <Link to={`/guinea-pigs/${guineaPig.id}`} className={cx(styles.card, styles[status])}>
       <span className={styles.header}>
         <MarkColorDot color={guineaPig.markColor} />
         <span className={styles.name}>{guineaPig.name}</span>

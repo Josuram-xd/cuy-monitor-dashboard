@@ -2,6 +2,7 @@ import { t } from '../../i18n'
 import type { DisplayStatus } from '../../types/HealthStatus'
 import { Icon, type IconName } from '../Icon/Icon'
 import styles from './StatusBadge.module.css'
+import { cx } from '../../utils/cx'
 
 const ICONS: Record<DisplayStatus, IconName> = {
   NORMAL: 'check-circle',
@@ -20,7 +21,7 @@ interface StatusBadgeProps {
 
 export function StatusBadge({ status, size = 'md' }: StatusBadgeProps) {
   return (
-    <span className={`${styles.badge} ${styles[size]} ${styles[status]}`} data-status={status}>
+    <span className={cx(styles.badge, styles[size], styles[status])} data-status={status}>
       <Icon name={ICONS[status]} size={ICON_SIZES[size]} />
       {t(`status.${status}`)}
     </span>

@@ -4,6 +4,7 @@ import type { CageHealth } from '../../types/CageHealth'
 import type { DisplayStatus } from '../../types/HealthStatus'
 import { StatusBadge } from '../StatusBadge/StatusBadge'
 import styles from './CageStatusBanner.module.css'
+import { cx } from '../../utils/cx'
 
 interface CageStatusBannerProps {
   // undefined while loading or when the data couldn't be fetched
@@ -30,7 +31,7 @@ export function CageStatusBanner({ health, liveIndicator }: CageStatusBannerProp
   const status: DisplayStatus = health?.status ?? 'UNKNOWN'
 
   return (
-    <section className={`${styles.banner} ${styles[status]}`}>
+    <section className={cx(styles.banner, styles[status])}>
       <div className={styles.top}>
         <StatusBadge status={status} size="lg" />
         {liveIndicator}
