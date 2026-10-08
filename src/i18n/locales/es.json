@@ -1,0 +1,34 @@
+{
+  "app": {
+    "title": "Monitor de Salud de Cuyes"
+  },
+  "status": {
+    "NORMAL": "Normal",
+    "OBSERVED": "En observación",
+    "ALERT": "Alerta",
+    "CRITICAL": "Crítico",
+    "UNKNOWN": "Sin datos"
+  },
+  "markColor": {
+    "RED": "Rojo",
+    "BLUE": "Azul",
+    "GREEN": "Verde",
+    "YELLOW": "Amarillo",
+    "ORANGE": "Naranja",
+    "PURPLE": "Morado",
+    "BLACK": "Negro",
+    "WHITE": "Blanco"
+  },
+  "auth": {
+    "error": {
+      "invalidCredentials": "Usuario o contraseña incorrectos.",
+      "invalidCode": "El código no es correcto. Revisa el correo e inténtalo otra vez.",
+      "expiredCode": "El código venció. Te enviamos uno nuevo.",
+      "userExists": "Ese usuario o correo ya está registrado.",
+      "weakPassword": "La contraseña debe tener entre 8 y 72 caracteres."
+    }
+  },
+  "account": {
+    "logout": "Cerrar sesión"
+  }
+}

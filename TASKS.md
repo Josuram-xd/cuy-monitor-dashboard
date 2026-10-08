@@ -20,14 +20,14 @@
 
 ### Task 1 — Proyecto base
 
-- [ ] **Task 1.1** — `chore: scaffold Vite 8 + React 19 + TypeScript 6 project`
+- [x] **Task 1.1** — `chore: scaffold Vite 8 + React 19 + TypeScript 6 project`
   `npm create vite@latest` (React + TS), `"engines": { "node": ">=24" }`.
-- [ ] **Task 1.2** — `chore: configure strict TypeScript, ESLint and Prettier`
+- [x] **Task 1.2** — `chore: configure strict TypeScript, ESLint and Prettier`
 - [x] **Task 1.3** — `docs: add PRD, DESIGN_SYSTEM, ARCHITECTURE and AGENTS`
-- [ ] **Task 1.4** — `feat(i18n): set up i18next with es.json as default language`
-- [ ] **Task 1.5** — `feat(styles): add design tokens, reset and global styles`
+- [x] **Task 1.4** — `feat(i18n): set up i18next with es.json as default language`
+- [x] **Task 1.5** — `feat(styles): add design tokens, reset and global styles`
   `src/styles/tokens.css` con los colores, tipografía y espaciado del Design System.
-- [ ] **Task 1.6** — `chore: add env example with API and WebSocket URLs`
+- [x] **Task 1.6** — `chore: add env example with API and WebSocket URLs`
   `VITE_API_URL` y `VITE_WS_URL` vacíos = mismo dominio; `VITE_DEV_BACKEND` para el proxy de Vite.
 
 ### Task 2 — Tipos y capa de datos
