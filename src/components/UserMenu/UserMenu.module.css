@@ -1,0 +1,74 @@
+.root {
+  position: relative;
+}
+
+/* primary on surface, never a status color */
+.avatar {
+  display: grid;
+  place-items: center;
+  width: var(--touch-target);
+  height: var(--touch-target);
+  border: 2px solid var(--color-primary);
+  border-radius: var(--radius-full);
+  background: var(--color-surface);
+  color: var(--color-primary);
+  font-size: var(--text-small-size);
+  font-weight: 700;
+  transition: background-color var(--transition-default);
+}
+
+.avatar:hover {
+  background: var(--color-bg);
+}
+
+.panel {
+  position: absolute;
+  top: calc(100% + var(--space-2));
+  right: 0;
+  z-index: 30;
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-2);
+  width: 260px;
+  max-width: calc(100vw - 2 * var(--page-padding));
+  padding: var(--space-3);
+  border: 1px solid var(--color-border);
+  border-radius: var(--radius-lg);
+  background: var(--color-surface);
+  box-shadow: var(--shadow-overlay);
+}
+
+.who {
+  padding: var(--space-1) var(--space-2) var(--space-3);
+  border-bottom: 1px solid var(--color-border);
+}
+
+.name {
+  overflow: hidden;
+  font-weight: 700;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+.email {
+  overflow: hidden;
+  color: var(--color-text-muted);
+  font-size: var(--text-small-size);
+  line-height: var(--text-small-line);
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+.item {
+  display: flex;
+  align-items: center;
+  min-height: var(--touch-target);
+  padding: 0 var(--space-2);
+  border-radius: var(--radius-md);
+  color: var(--color-text);
+  text-decoration: none;
+}
+
+.item:hover {
+  background: var(--color-bg);
+}

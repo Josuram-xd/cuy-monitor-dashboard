@@ -13,7 +13,7 @@ function clientAnswering(response: Response | Error) {
   const fetchFn = vi.fn<FetchFn>(() =>
     response instanceof Error ? Promise.reject(response) : Promise.resolve(response),
   )
-  return { client: new HttpClient('', fetchFn), fetchFn }
+  return { client: new HttpClient('', { fetchFn }), fetchFn }
 }
 
 describe('HttpClient', () => {
@@ -25,7 +25,7 @@ describe('HttpClient', () => {
 
   it('prefixes the base URL', async () => {
     const fetchFn = vi.fn<FetchFn>(() => Promise.resolve(jsonResponse(200, [])))
-    const client = new HttpClient('https://api.example.com', fetchFn)
+    const client = new HttpClient('https://api.example.com', { fetchFn })
 
     await client.get('/api/v1/alerts')
 

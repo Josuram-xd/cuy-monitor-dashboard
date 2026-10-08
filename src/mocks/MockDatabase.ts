@@ -1,5 +1,6 @@
 import type { Alert } from '../types/Alert'
 import type { GuineaPig } from '../types/GuineaPig'
+import type { User } from '../types/User'
 import type { WeightReading } from '../types/WeightReading'
 import { mockAlerts, mockCageId, mockGuineaPigs, mockWeightReadings } from './data'
 
@@ -10,6 +11,11 @@ export class MockDatabase {
   readonly guineaPigs: GuineaPig[] = structuredClone(mockGuineaPigs)
   readonly alerts: Alert[] = structuredClone(mockAlerts)
   readonly weightReadings: WeightReading[] = mockWeightReadings()
+  readonly users: User[] = []
+  // challengeId -> username of the pending code
+  readonly challenges = new Map<string, { username: string; expiresAt: string }>()
+  // last user that entered the code, answers "who am I" in the mocks
+  signedInUserId: string | null = null
 
   hasCage(cageId: string): boolean {
     return cageId === this.cageId
@@ -17,6 +23,10 @@ export class MockDatabase {
 
   findGuineaPig(id: number): GuineaPig | undefined {
     return this.guineaPigs.find((g) => g.id === id)
+  }
+
+  findUser(username: string): User | undefined {
+    return this.users.find((u) => u.username === username)
   }
 
   nextGuineaPigId(): number {

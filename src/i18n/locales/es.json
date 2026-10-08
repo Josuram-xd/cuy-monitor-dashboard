@@ -8,6 +8,11 @@
     "retry": "Intentar de nuevo",
     "skipToContent": "Saltar al contenido"
   },
+  "errors": {
+    "network": "No hay conexión con el servidor. Revisa tu internet e inténtalo otra vez.",
+    "invalidData": "Revisa los datos e inténtalo otra vez.",
+    "generic": "Algo salió mal. Inténtalo otra vez en un momento."
+  },
   "nav": {
     "label": "Navegación principal",
     "cage": "Jaula",
@@ -81,6 +86,51 @@
     "notSeen": "No se ha visto {{time}}"
   },
   "auth": {
+    "tagline": "Cuida a tus cuyes a tiempo",
+    "fields": {
+      "username": "Usuario",
+      "fullName": "Nombre completo",
+      "email": "Correo",
+      "password": "Contraseña"
+    },
+    "login": {
+      "title": "Iniciar sesión",
+      "submit": "Entrar",
+      "submitting": "Entrando…",
+      "noAccount": "¿No tienes cuenta?",
+      "toRegister": "Regístrate"
+    },
+    "register": {
+      "title": "Crear cuenta",
+      "submit": "Crear cuenta",
+      "submitting": "Creando la cuenta…",
+      "passwordHint": "Entre 8 y 72 caracteres",
+      "required": "Este dato es obligatorio.",
+      "invalidEmail": "Escribe un correo válido, por ejemplo nombre@gmail.com.",
+      "haveAccount": "¿Ya tienes cuenta?",
+      "toLogin": "Inicia sesión"
+    },
+    "password": {
+      "show": "Mostrar contraseña"
+    },
+    "verify": {
+      "title": "Código de verificación",
+      "codeLabel": "Código de verificación, {{length}} dígitos",
+      "sentTo": "Te enviamos un código a {{email}}. Puede tardar un minuto; revisa también el correo no deseado.",
+      "sentToYourEmail": "Te enviamos un código a tu correo. Puede tardar un minuto; revisa también el correo no deseado.",
+      "expiresIn": "Vence en {{time}}",
+      "resend": "Reenviar código",
+      "resendIn": "Reenviar en {{seconds}} s",
+      "resent": "Te enviamos un código nuevo.",
+      "expired": "El código venció.",
+      "sendNew": "Enviar un código nuevo",
+      "otherAccount": "Entrar con otra cuenta"
+    },
+    "notice": {
+      "expired": "Tu sesión terminó. Vuelve a entrar para seguir viendo tus cuyes.",
+      "logout": "Cerraste sesión.",
+      "disabled": "Tu cuenta fue desactivada."
+    },
     "error": {
       "invalidCredentials": "Usuario o contraseña incorrectos.",
       "invalidCode": "El código no es correcto. Revisa el correo e inténtalo otra vez.",
@@ -90,6 +140,8 @@
     }
   },
   "account": {
+    "menu": "Menú de la cuenta",
+    "myAccount": "Mi cuenta",
     "logout": "Cerrar sesión"
   }
 }

@@ -1,7 +1,15 @@
 import type { Alert, AlertStatus } from '../types/Alert'
+import type {
+  AuthToken,
+  LoginChallenge,
+  LoginRequest,
+  RegisterRequest,
+  VerifyOtpRequest,
+} from '../types/Auth'
 import type { CageHealth } from '../types/CageHealth'
 import type { DateRange } from '../types/DateRange'
 import type { GuineaPig, GuineaPigHistory, NewGuineaPig } from '../types/GuineaPig'
+import type { User } from '../types/User'
 import type { CageWeight } from '../types/WeightReading'
 
 // One interface per resource. The hooks only know these, never whether the answer
@@ -23,7 +31,22 @@ export interface AlertApi {
   markReviewed(id: number): Promise<Alert>
 }
 
+// public endpoints: no token, a 401 here means wrong credentials or wrong code
+export interface AuthApi {
+  register(body: RegisterRequest): Promise<LoginChallenge>
+  // also resends the code of an account that was never verified
+  login(body: LoginRequest): Promise<LoginChallenge>
+  verifyOtp(body: VerifyOtpRequest): Promise<AuthToken>
+}
+
+// the account of the token's user; the rest of the account CRUD comes in Task 14.1
+export interface AccountApi {
+  getMe(signal?: AbortSignal): Promise<User>
+}
+
 export interface DashboardApi {
+  auth: AuthApi
+  account: AccountApi
   cages: CageApi
   guineaPigs: GuineaPigApi
   alerts: AlertApi
