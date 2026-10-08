@@ -1,0 +1,21 @@
+/* neutral on purpose: no status colors on the login screens */
+.notice {
+  display: flex;
+  align-items: flex-start;
+  gap: var(--space-3);
+  padding: var(--space-3) var(--space-4);
+  border: 1px solid var(--color-border);
+  border-radius: var(--radius-md);
+  background: var(--color-surface);
+  font-size: var(--text-small-size);
+  line-height: var(--text-small-line);
+}
+
+.notice:focus {
+  outline: none;
+}
+
+.icon {
+  margin-top: 2px;
+  color: var(--color-primary);
+}

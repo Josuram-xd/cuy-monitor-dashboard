@@ -86,6 +86,18 @@
     "notSeen": "No se ha visto {{time}}"
   },
   "auth": {
+    "tagline": "Cuida a tus cuyes a tiempo",
+    "password": {
+      "show": "Mostrar contraseña"
+    },
+    "verify": {
+      "codeLabel": "Código de verificación, {{length}} dígitos"
+    },
+    "notice": {
+      "expired": "Tu sesión terminó. Vuelve a entrar para seguir viendo tus cuyes.",
+      "logout": "Cerraste sesión.",
+      "disabled": "Tu cuenta fue desactivada."
+    },
     "error": {
       "invalidCredentials": "Usuario o contraseña incorrectos.",
       "invalidCode": "El código no es correcto. Revisa el correo e inténtalo otra vez.",

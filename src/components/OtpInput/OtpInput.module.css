@@ -1,0 +1,82 @@
+.wrapper {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: var(--space-2);
+}
+
+.field {
+  position: relative;
+}
+
+.boxes {
+  display: flex;
+  gap: var(--space-1);
+}
+
+/* a small gap in the middle: 3 + 3 digits are easier to read */
+.box:nth-child(4) {
+  margin-left: var(--space-2);
+}
+
+.box {
+  display: grid;
+  place-items: center;
+  /* 6 boxes have to fit in the card at 360px */
+  width: 40px;
+  height: 56px;
+  border: 1px solid var(--color-border);
+  border-radius: var(--radius-md);
+  background: var(--color-surface);
+  font-size: var(--text-h1-size);
+  font-weight: var(--text-h1-weight);
+  font-variant-numeric: tabular-nums;
+  transition: border-color var(--transition-default);
+}
+
+.active {
+  border-color: var(--color-primary);
+  outline: 2px solid var(--color-focus);
+  outline-offset: 1px;
+}
+
+.invalid {
+  border-color: var(--status-critical-fg);
+}
+
+/* the real input covers the boxes: tapping anywhere focuses it, its text stays invisible */
+.input {
+  position: absolute;
+  inset: 0;
+  width: 100%;
+  border: 0;
+  background: transparent;
+  color: transparent;
+  caret-color: transparent;
+  font-size: var(--text-body-size);
+  opacity: 0.01;
+}
+
+.input:focus {
+  outline: none;
+}
+
+.error {
+  display: flex;
+  align-items: center;
+  gap: var(--space-1);
+  color: var(--status-critical-fg);
+  font-size: var(--text-small-size);
+  line-height: var(--text-small-line);
+  text-align: center;
+}
+
+@media (min-width: 400px) {
+  .boxes {
+    gap: var(--space-2);
+  }
+
+  .box {
+    width: 48px;
+  }
+}
