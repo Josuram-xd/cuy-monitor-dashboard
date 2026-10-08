@@ -44,6 +44,11 @@
     "hoursAgo": "hace {{count}} h"
   },
   "cage": {
+    "title": "Tu jaula",
+    "guineaPigs": "Tus cuyes",
+    "guineaPigsError": "No pudimos cargar los cuyes. Revisa la conexión e inténtalo otra vez.",
+    "empty": "Aún no hay cuyes registrados",
+    "registerGuineaPig": "Registrar cuy",
     "headline": {
       "allGood": "Todo bien en la jaula",
       "unknown": "Aún no hay datos de la jaula",

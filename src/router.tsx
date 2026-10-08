@@ -1,5 +1,6 @@
 import { createBrowserRouter, type RouteObject } from 'react-router'
 import { AppLayout } from './components/AppLayout/AppLayout'
+import { CageOverview } from './pages/CageOverview/CageOverview'
 import { ComingSoon } from './pages/ComingSoon/ComingSoon'
 import { NotFound } from './pages/NotFound/NotFound'
 
@@ -8,7 +9,7 @@ export const routes: RouteObject[] = [
   {
     element: <AppLayout />,
     children: [
-      { index: true, element: <ComingSoon /> },
+      { index: true, element: <CageOverview /> },
       { path: 'alerts', element: <ComingSoon /> },
       { path: 'guinea-pigs/new', element: <ComingSoon /> },
       { path: 'guinea-pigs/:id', element: <ComingSoon /> },
