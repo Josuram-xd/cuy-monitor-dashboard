@@ -1,10 +1,25 @@
 {
   "app": {
-    "title": "Monitor de Salud de Cuyes"
+    "title": "Monitor de Salud de Cuyes",
+    "shortTitle": "Monitor de Cuyes"
   },
   "common": {
     "loading": "Cargando…",
-    "retry": "Intentar de nuevo"
+    "retry": "Intentar de nuevo",
+    "skipToContent": "Saltar al contenido"
+  },
+  "nav": {
+    "label": "Navegación principal",
+    "cage": "Jaula",
+    "alerts": "Alertas",
+    "register": "Registrar"
+  },
+  "comingSoon": {
+    "message": "Esta sección estará lista pronto."
+  },
+  "notFound": {
+    "message": "No encontramos esta página.",
+    "back": "Volver a la jaula"
   },
   "status": {
     "NORMAL": "Normal",
