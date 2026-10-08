@@ -107,3 +107,32 @@
   width: 55%;
   height: 55%;
 }
+
+.counts {
+  display: flex;
+  flex-wrap: wrap;
+  gap: var(--space-2);
+  margin: var(--space-1) 0 0;
+  padding: 0;
+  list-style: none;
+}
+
+.count {
+  display: inline-flex;
+  align-items: center;
+  gap: var(--space-1);
+  padding: 2px var(--space-1) 2px var(--space-2);
+  border-radius: var(--radius-full);
+  background: var(--color-surface);
+  box-shadow: var(--shadow-card);
+}
+
+.countNumber {
+  font-weight: var(--text-h1-weight);
+}
+
+.updated {
+  color: var(--color-text-muted);
+  font-size: var(--text-small-size);
+  line-height: var(--text-small-line);
+}

@@ -42,7 +42,9 @@
       "CRITICAL_one": "{{count}} cuy en estado crítico",
       "CRITICAL_many": "{{count}} cuyes en estado crítico",
       "CRITICAL_other": "{{count}} cuyes en estado crítico"
-    }
+    },
+    "countsLabel": "Cuyes por estado",
+    "updated": "Actualizado {{time}}"
   },
   "guineaPig": {
     "still": "Quieto {{seconds}} de los últimos 60 s",

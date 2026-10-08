@@ -1,8 +1,9 @@
 import type { ReactNode } from 'react'
 import { t } from '../../i18n'
 import type { CageHealth } from '../../types/CageHealth'
-import type { DisplayStatus } from '../../types/HealthStatus'
+import { HEALTH_STATUSES, type DisplayStatus, type HealthStatus } from '../../types/HealthStatus'
 import { cx } from '../../utils/cx'
+import { formatRelative } from '../../utils/time'
 import { Icon } from '../Icon/Icon'
 import { StatusBadge } from '../StatusBadge/StatusBadge'
 import { STATUS_ICONS } from '../StatusBadge/statusIcons'
@@ -12,6 +13,8 @@ interface CageStatusBannerProps {
   // undefined while loading or when the data couldn't be fetched
   health?: CageHealth
   liveIndicator?: ReactNode
+  // from useNow() in the page; without it the "updated" line is hidden
+  now?: number
 }
 
 function headline(status: DisplayStatus, health?: CageHealth): string {
@@ -29,8 +32,20 @@ function headline(status: DisplayStatus, health?: CageHealth): string {
   return t(`cage.headline.${status}`, { count })
 }
 
-export function CageStatusBanner({ health, liveIndicator }: CageStatusBannerProps) {
+// worst first, only the statuses that have at least one guinea pig
+function countByStatus(health: CageHealth): [HealthStatus, number][] {
+  return [...HEALTH_STATUSES]
+    .reverse()
+    .map((status): [HealthStatus, number] => [
+      status,
+      health.guineaPigs.filter((g) => g.status === status).length,
+    ])
+    .filter(([, count]) => count > 0)
+}
+
+export function CageStatusBanner({ health, liveIndicator, now }: CageStatusBannerProps) {
   const status: DisplayStatus = health?.status ?? 'UNKNOWN'
+  const counts = health ? countByStatus(health) : []
 
   return (
     <section className={cx(styles.banner, styles[status])}>
@@ -45,6 +60,21 @@ export function CageStatusBanner({ health, liveIndicator }: CageStatusBannerProp
         <p className={styles.headline} aria-live={status === 'CRITICAL' ? 'assertive' : 'polite'}>
           {headline(status, health)}
         </p>
+        {counts.length > 0 && (
+          <ul className={styles.counts} aria-label={t('cage.countsLabel')}>
+            {counts.map(([countStatus, count]) => (
+              <li key={countStatus} className={styles.count}>
+                <span className={styles.countNumber}>{count}</span>
+                <StatusBadge status={countStatus} size="sm" />
+              </li>
+            ))}
+          </ul>
+        )}
+        {health && now !== undefined && (
+          <p className={styles.updated}>
+            {t('cage.updated', { time: formatRelative(health.updatedAt, now) })}
+          </p>
+        )}
       </div>
     </section>
   )
