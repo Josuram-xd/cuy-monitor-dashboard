@@ -125,23 +125,25 @@ Un solo tipo de usuario, sin roles. Flujo y reglas en `docs/ARCHITECTURE.md` sec
 Rama: `feature/task-13-auth`. Se puede avanzar con mocks (cualquier usuario, código `123456`) antes de que el backend termine.
 🔗 **Depende de:** `cuy-monitor-backend` Task 18 (para conectar con el backend real, Task 13.11)
 
-- [ ] **Task 13.1** — `feat(types): add User, UserStatus and auth types`
-- [ ] **Task 13.2** — `feat(auth): add token storage, AuthProvider and useAuth`
+- [x] **Task 13.1** — `feat(types): add User, UserStatus and auth types`
+- [x] **Task 13.2** — `feat(auth): add token storage, AuthProvider and useAuth`
   `sessionStorage` + memoria, cierre automático al llegar `expiresAt`, `logout(reason)`.
-- [ ] **Task 13.3** — `feat(api): send Bearer token and log out on 401`
+- [x] **Task 13.3** — `feat(api): send Bearer token and log out on 401`
   En `client.ts`; mapear códigos de error del backend a claves de `es.json`.
-- [ ] **Task 13.4** — `feat(auth): add RequireAuth and public/private routes`
+- [x] **Task 13.4** — `feat(auth): add RequireAuth and public/private routes`
   Redirige a `/login?next=...`; con sesión, `/login` manda a `/`.
-- [ ] **Task 13.5** — `feat(ui): add AuthLayout, PasswordField, OtpInput and SessionNotice`
-- [ ] **Task 13.6** — `feat(realtime): open STOMP only with a session and send the token on CONNECT`
+- [x] **Task 13.5** — `feat(ui): add AuthLayout, PasswordField, OtpInput and SessionNotice`
+- [x] **Task 13.6** — `feat(realtime): open STOMP only with a session and send the token on CONNECT`
   🔗 Depende de: `cuy-monitor-backend` Task 20
-- [ ] **Task 13.7** — `feat(auth): add Login, Register and VerifyCode pages`
+- [x] **Task 13.7** — `feat(auth): add Login, Register and VerifyCode pages`
   Con reenvío de código, cuenta regresiva y mensajes de `DESIGN_SYSTEM.md` sección 5.
-- [ ] **Task 13.8** — `feat(mocks): add fake auth endpoints`
-- [ ] **Task 13.9** — `feat(ui): add UserMenu with logout`
+- [x] **Task 13.8** — `feat(mocks): add fake auth endpoints`
+  Entró en el commit `feat(api): add auth endpoints with fake ones for the mocks` (interfaz `AuthApi` con su versión HTTP y la falsa juntas, antes de las páginas).
+- [x] **Task 13.9** — `feat(ui): add UserMenu with logout`
   Cerrar sesión: borra el token, `queryClient.clear()`, desconecta STOMP, va a `/login`.
-- [ ] **Task 13.10** — `test(auth): cover RequireAuth, OtpInput and 401 handling`
+- [x] **Task 13.10** — `test(auth): cover RequireAuth, OtpInput and 401 handling`
 - [ ] **Task 13.11** — *(sin commit)* probar contra el backend real con un correo de verdad: registro → código → vista de jaula → cerrar sesión
+  ⏸️ Pendiente: falta el Gmail del proyecto en el `.env` de la EC2 (`MAIL_*`); sin él no llega el código.
 
 ### Task 14 — Mi cuenta
 
