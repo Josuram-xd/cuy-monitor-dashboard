@@ -24,6 +24,22 @@
     "minutesAgo": "hace {{count}} min",
     "hoursAgo": "hace {{count}} h"
   },
+  "cage": {
+    "headline": {
+      "allGood": "Todo bien en la jaula",
+      "unknown": "Aún no hay datos de la jaula",
+      "cageLevel": "Revisa la jaula",
+      "OBSERVED_one": "{{count}} cuy en observación",
+      "OBSERVED_many": "{{count}} cuyes en observación",
+      "OBSERVED_other": "{{count}} cuyes en observación",
+      "ALERT_one": "{{count}} cuy en alerta",
+      "ALERT_many": "{{count}} cuyes en alerta",
+      "ALERT_other": "{{count}} cuyes en alerta",
+      "CRITICAL_one": "{{count}} cuy en estado crítico",
+      "CRITICAL_many": "{{count}} cuyes en estado crítico",
+      "CRITICAL_other": "{{count}} cuyes en estado crítico"
+    }
+  },
   "guineaPig": {
     "still": "Quieto {{seconds}} de los últimos 60 s",
     "lastSeen": "Visto {{time}}",
