@@ -1,6 +1,7 @@
 import { tokenStorage } from '../auth/tokenStorage'
 import { config } from '../config'
 import type { DashboardApi } from './DashboardApi'
+import { HttpAccountApi } from './http/HttpAccountApi'
 import { HttpAlertApi } from './http/HttpAlertApi'
 import { HttpAuthApi } from './http/HttpAuthApi'
 import { HttpCageApi } from './http/HttpCageApi'
@@ -17,6 +18,7 @@ function createHttpApi(): DashboardApi {
   })
   return {
     auth: new HttpAuthApi(http),
+    account: new HttpAccountApi(http),
     cages: new HttpCageApi(http),
     guineaPigs: new HttpGuineaPigApi(http),
     alerts: new HttpAlertApi(http),

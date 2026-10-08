@@ -140,6 +140,8 @@
     }
   },
   "account": {
+    "menu": "Menú de la cuenta",
+    "myAccount": "Mi cuenta",
     "logout": "Cerrar sesión"
   }
 }

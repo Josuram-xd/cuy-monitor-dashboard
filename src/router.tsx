@@ -30,6 +30,8 @@ export const routes: RouteObject[] = [
           { path: 'alerts', element: <ComingSoon /> },
           { path: 'guinea-pigs/new', element: <ComingSoon /> },
           { path: 'guinea-pigs/:id', element: <ComingSoon /> },
+          // Task 14
+          { path: 'account', element: <ComingSoon /> },
           { path: '*', element: <NotFound /> },
         ],
       },

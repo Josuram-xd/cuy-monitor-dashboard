@@ -9,6 +9,7 @@ import type {
 import type { CageHealth } from '../types/CageHealth'
 import type { DateRange } from '../types/DateRange'
 import type { GuineaPig, GuineaPigHistory, NewGuineaPig } from '../types/GuineaPig'
+import type { User } from '../types/User'
 import type { CageWeight } from '../types/WeightReading'
 
 // One interface per resource. The hooks only know these, never whether the answer
@@ -38,8 +39,14 @@ export interface AuthApi {
   verifyOtp(body: VerifyOtpRequest): Promise<AuthToken>
 }
 
+// the account of the token's user; the rest of the account CRUD comes in Task 14.1
+export interface AccountApi {
+  getMe(signal?: AbortSignal): Promise<User>
+}
+
 export interface DashboardApi {
   auth: AuthApi
+  account: AccountApi
   cages: CageApi
   guineaPigs: GuineaPigApi
   alerts: AlertApi
