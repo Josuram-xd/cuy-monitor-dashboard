@@ -1,32 +1,35 @@
-# React + TypeScript + Vite
+# Monitor de Cuyes — dashboard
 
-This template provides a minimal setup to get React working in Vite with HMR and some Oxlint rules.
+![Monitor de Cuyes](docs/assets/hero.jpg)
 
-Currently, two official plugins are available:
+Panel web del **Monitor de Salud de Cuyes**: estado de la jaula en vivo, alertas, registro de cada cuy (raza, pelaje, peso y notas) y la cuenta del usuario. Habla solo con el backend (`cuy-monitor-backend`); nunca con la base de datos.
 
-- [@vitejs/plugin-react](https://github.com/vitejs/vite-plugin-react/blob/main/packages/plugin-react) uses [Oxc](https://oxc.rs)
-- [@vitejs/plugin-react-swc](https://github.com/vitejs/vite-plugin-react/blob/main/packages/plugin-react-swc) uses [SWC](https://swc.rs/)
+React + TypeScript + Vite, React Query, CSS Modules con tokens de diseño. Más detalle en [`docs/ARCHITECTURE.md`](docs/ARCHITECTURE.md) y [`docs/DESIGN_SYSTEM.md`](docs/DESIGN_SYSTEM.md).
 
-## React Compiler
+## Comandos
 
-The React Compiler is not enabled on this template because of its impact on dev & build performances. To add it, see [this documentation](https://react.dev/learn/react-compiler/installation).
-
-## Expanding the Oxlint configuration
-
-If you are developing a production application, we recommend enabling type-aware lint rules by installing `oxlint-tsgolint` and editing `.oxlintrc.json`:
-
-```json
-{
-  "$schema": "./node_modules/oxlint/configuration_schema.json",
-  "plugins": ["react", "typescript", "oxc"],
-  "options": {
-    "typeAware": true
-  },
-  "rules": {
-    "react/rules-of-hooks": "error",
-    "react/only-export-components": ["warn", { "allowConstantExport": true }]
-  }
-}
+```bash
+npm install
+npm run dev          # http://localhost:5173, /api y /ws van al backend (VITE_DEV_BACKEND)
+npm run test         # vitest
+npm run typecheck    # tsc -b
+npm run lint         # eslint
+npm run build        # tsc -b && vite build
 ```
 
-See the [Oxlint rules documentation](https://oxc.rs/docs/guide/usage/linter/rules) for the full list of rules and categories.
+Sin backend, `VITE_USE_MOCKS=true npm run dev` sirve datos y un inicio de sesión falsos (cualquier usuario, código `123456`, botón de Google de demostración).
+
+## Variables
+
+Todas son públicas (acaban en el bundle del navegador): nunca pongas secretos. Ver `.env.example`.
+
+| Variable | Para qué |
+|---|---|
+| `VITE_API_URL`, `VITE_WS_URL` | Vacías = mismo origen (Caddy en producción, proxy de Vite en desarrollo) |
+| `VITE_CAGE_ID` | Código de la jaula piloto (`cage-1`) |
+| `VITE_USE_MOCKS` | `true` = datos falsos desde `src/mocks/` |
+| `VITE_GOOGLE_CLIENT_ID` | Client ID público de Google para "Continuar con Google"; vacío oculta el botón |
+
+## Despliegue
+
+La imagen del `Dockerfile` compila la SPA y la sirve con Caddy en el puerto 80, detrás del Caddy principal de la EC2 (ver `infra/` del backend).
