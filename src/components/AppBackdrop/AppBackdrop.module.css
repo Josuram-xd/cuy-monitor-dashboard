@@ -1,0 +1,145 @@
+/* behind everything, over the page color: the app content sits above it (z-index 1) */
+.backdrop {
+  position: fixed;
+  inset: 0;
+  z-index: 0;
+  overflow: hidden;
+  pointer-events: none;
+}
+
+/* every piece sits in a layer that is moved by the scroll and the mouse; the piece inside drifts on its own,
+   so the two movements never fight over the same transform */
+.layer {
+  position: absolute;
+  transform: translate3d(
+    calc(var(--mx, 0) * var(--depth, 0.5) * -26px),
+    calc(var(--scroll, 0) * var(--depth, 0.5) * -0.35px + var(--my, 0) * var(--depth, 0.5) * -18px),
+    0
+  );
+  transition: transform 160ms ease-out;
+  will-change: transform;
+}
+
+.blob {
+  position: absolute;
+  width: 46vmax;
+  height: 46vmax;
+  border-radius: var(--radius-full);
+  filter: blur(70px);
+  opacity: 0.5;
+  transform: translate3d(
+    calc(var(--mx, 0) * var(--depth, 0.2) * -60px),
+    calc(var(--scroll, 0) * var(--depth, 0.2) * -0.3px + var(--my, 0) * var(--depth, 0.2) * -40px),
+    0
+  );
+  transition: transform 220ms ease-out;
+  animation: breathe 18s ease-in-out infinite;
+}
+
+.blob[data-tone='mint'] {
+  top: -14vmax;
+  left: -12vmax;
+  background: var(--pastel-mint);
+}
+
+.blob[data-tone='sun'] {
+  right: -16vmax;
+  top: 28vh;
+  background: var(--pastel-sun);
+  animation-delay: -6s;
+}
+
+.blob[data-tone='peach'] {
+  bottom: -18vmax;
+  left: 24vw;
+  background: var(--pastel-peach);
+  animation-delay: -12s;
+}
+
+.cloud {
+  position: absolute;
+  left: -220px;
+  width: 150px;
+  height: 44px;
+  border-radius: var(--radius-full);
+  background: rgb(255 255 255 / 0.85);
+  box-shadow: 0 6px 18px rgb(45 106 79 / 0.08);
+  scale: var(--scale, 1);
+  animation: cross 80s linear infinite;
+}
+
+.cloud::before,
+.cloud::after {
+  content: '';
+  position: absolute;
+  bottom: 18px;
+  border-radius: var(--radius-full);
+  background: inherit;
+}
+
+.cloud::before {
+  left: 22px;
+  width: 62px;
+  height: 56px;
+}
+
+.cloud::after {
+  left: 64px;
+  width: 48px;
+  height: 44px;
+}
+
+.sprite {
+  display: block;
+  color: var(--color-primary);
+  opacity: 0.1;
+  animation: float 14s ease-in-out infinite;
+}
+
+.sprite svg {
+  display: block;
+  width: 100%;
+  height: 100%;
+}
+
+@keyframes cross {
+  from {
+    translate: 0 0;
+  }
+  to {
+    translate: calc(100vw + 480px) 0;
+  }
+}
+
+@keyframes float {
+  0%,
+  100% {
+    transform: translateY(0) rotate(-8deg);
+  }
+  50% {
+    transform: translateY(-22px) rotate(10deg);
+  }
+}
+
+@keyframes breathe {
+  50% {
+    scale: 1.12;
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .cloud {
+    animation: none;
+    translate: 30vw 0;
+  }
+
+  .sprite,
+  .blob {
+    animation: none;
+  }
+
+  .layer,
+  .blob {
+    transition: none;
+  }
+}

@@ -143,6 +143,7 @@ The app is friendly on purpose, without changing the palette. Titles and buttons
 - **Drifters**: translucent clouds drifting behind a green section.
 - **Reveal**: fades and lifts its content the first time it scrolls into view (`delay` staggers a row). Without `IntersectionObserver` the content is just visible.
 - **CountUp**: a number that counts to its value; the real value is always the accessible text.
+- **AppBackdrop**: a fixed picture behind every private page (blobs of pastel color, clouds, leaves, paws and carrots at different depths). Scrolling and moving the mouse shift the layers by different amounts (parallax, through `--scroll`, `--mx` and `--my`) and every piece also drifts on its own. It ignores pointer events, is hidden from screen readers and stands still with `prefers-reduced-motion`.
 - **GuineaPigCard** shows an avatar: the initial inside a ring of the coat color.
 - Everything that moves is switched off by `prefers-reduced-motion` (global rule in `global.css` plus each animation).
 
