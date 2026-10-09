@@ -2,10 +2,13 @@ import { createBrowserRouter, type RouteObject } from 'react-router'
 import { PublicOnlyRoute } from './auth/PublicOnlyRoute'
 import { RequireAuth } from './auth/RequireAuth'
 import { AppLayout } from './components/AppLayout/AppLayout'
+import { Account } from './pages/Account/Account'
+import { Alerts } from './pages/Alerts/Alerts'
 import { CageOverview } from './pages/CageOverview/CageOverview'
 import { ComingSoon } from './pages/ComingSoon/ComingSoon'
 import { Login } from './pages/Login/Login'
 import { NotFound } from './pages/NotFound/NotFound'
+import { RegisterGuineaPig } from './pages/RegisterGuineaPig/RegisterGuineaPig'
 import { Register } from './pages/Register/Register'
 import { VerifyCode } from './pages/VerifyCode/VerifyCode'
 
@@ -27,11 +30,10 @@ export const routes: RouteObject[] = [
         element: <AppLayout />,
         children: [
           { index: true, element: <CageOverview /> },
-          { path: 'alerts', element: <ComingSoon /> },
-          { path: 'guinea-pigs/new', element: <ComingSoon /> },
+          { path: 'alerts', element: <Alerts /> },
+          { path: 'guinea-pigs/new', element: <RegisterGuineaPig /> },
           { path: 'guinea-pigs/:id', element: <ComingSoon /> },
-          // Task 14
-          { path: 'account', element: <ComingSoon /> },
+          { path: 'account', element: <Account /> },
           { path: '*', element: <NotFound /> },
         ],
       },

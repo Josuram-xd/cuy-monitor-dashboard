@@ -6,6 +6,7 @@
   "common": {
     "loading": "Cargando…",
     "retry": "Intentar de nuevo",
+    "cancel": "Cancelar",
     "skipToContent": "Saltar al contenido"
   },
   "errors": {
@@ -17,7 +18,8 @@
     "label": "Navegación principal",
     "cage": "Jaula",
     "alerts": "Alertas",
-    "register": "Registrar"
+    "register": "Registrar",
+    "account": "Cuenta"
   },
   "comingSoon": {
     "message": "Esta sección estará lista pronto."
@@ -50,10 +52,13 @@
   },
   "cage": {
     "title": "Tu jaula",
+    "greeting": "Hola, {{name}}",
+    "greetingFallback": "Hola",
     "guineaPigs": "Tus cuyes",
     "guineaPigsError": "No pudimos cargar los cuyes. Revisa la conexión e inténtalo otra vez.",
     "empty": "Aún no hay cuyes registrados",
     "registerGuineaPig": "Registrar cuy",
+    "newGuineaPig": "Nuevo cuy",
     "headline": {
       "allGood": "Todo bien en la jaula",
       "unknown": "Aún no hay datos de la jaula",
@@ -72,7 +77,13 @@
     "updated": "Actualizado {{time}}"
   },
   "alerts": {
+    "title": "Alertas",
+    "intro": "Cuando un cuy se comporta distinto a lo normal, aparece aquí. Márcala como revisada cuando ya lo viste.",
     "openTitle": "Alertas abiertas",
+    "reviewedTitle": "Alertas revisadas",
+    "count": "{{count}} alertas",
+    "noneReviewed": "Todavía no has revisado ninguna alerta.",
+    "markError": "No pudimos marcar la alerta como revisada. Inténtalo otra vez.",
     "seeAll": "Ver todas",
     "noneOpen": "No hay alertas abiertas.",
     "loadError": "No pudimos cargar las alertas.",
@@ -89,10 +100,32 @@
   "guineaPig": {
     "still": "Quieto {{seconds}} de los últimos 60 s",
     "lastSeen": "Visto {{time}}",
-    "notSeen": "No se ha visto {{time}}"
+    "notSeen": "No se ha visto {{time}}",
+    "register": {
+      "title": "Registrar un cuy",
+      "intro": "Ponle un nombre y elige el color de la marca que lleva en el lomo. La cámara lo reconoce por ese color.",
+      "name": "Nombre",
+      "nameRequired": "Escribe el nombre del cuy.",
+      "nameTooLong": "El nombre es demasiado largo.",
+      "color": "Color de la marca",
+      "colorRequired": "Elige el color de la marca.",
+      "usedBy": "Lo lleva {{name}}",
+      "submit": "Registrar cuy",
+      "submitting": "Registrando…",
+      "allUsed": "Ya hay un cuy con cada color de marca. No se pueden registrar más en esta jaula."
+    },
+    "error": {
+      "colorTaken": "Otro cuy ya lleva ese color. Elige uno libre."
+    }
   },
   "auth": {
     "tagline": "Cuida a tus cuyes a tiempo",
+    "hero": {
+      "title": "Tus cuyes, siempre a la vista",
+      "point1": "Sabes al instante si un cuy no está bien",
+      "point2": "Alertas en vivo, sin recargar la página",
+      "point3": "Historial y peso de tu jaula en un solo lugar"
+    },
     "fields": {
       "username": "Usuario",
       "fullName": "Nombre completo",
@@ -148,6 +181,38 @@
   "account": {
     "menu": "Menú de la cuenta",
     "myAccount": "Mi cuenta",
-    "logout": "Cerrar sesión"
+    "logout": "Cerrar sesión",
+    "profile": {
+      "title": "Tus datos",
+      "fullName": "Nombre completo",
+      "username": "Usuario",
+      "usernameHint": "El usuario no se puede cambiar.",
+      "nameRequired": "Escribe tu nombre.",
+      "nameTooLong": "El nombre es demasiado largo.",
+      "save": "Guardar cambios",
+      "saving": "Guardando…",
+      "saved": "Listo, guardamos tu nombre."
+    },
+    "password": {
+      "title": "Cambiar contraseña",
+      "current": "Contraseña actual",
+      "new": "Contraseña nueva",
+      "hint": "Entre 8 y 72 caracteres.",
+      "submit": "Cambiar contraseña",
+      "submitting": "Cambiando…",
+      "done": "Listo, tu contraseña cambió."
+    },
+    "danger": {
+      "title": "Desactivar cuenta",
+      "text": "Si desactivas tu cuenta ya no podrás entrar. Tus datos no se muestran a nadie más.",
+      "open": "Desactivar mi cuenta",
+      "confirmTitle": "¿Desactivar tu cuenta?",
+      "confirmText": "Escribe tu contraseña para confirmar. Después saldrás de la sesión.",
+      "password": "Tu contraseña",
+      "confirm": "Sí, desactivar"
+    },
+    "error": {
+      "wrongPassword": "La contraseña actual no es correcta."
+    }
   }
 }

@@ -2,23 +2,26 @@
   position: relative;
 }
 
-/* primary on surface, never a status color */
+/* a white badge on the green header */
 .avatar {
   display: grid;
   place-items: center;
   width: var(--touch-target);
   height: var(--touch-target);
-  border: 2px solid var(--color-primary);
+  border: 2px solid rgb(255 255 255 / 0.9);
   border-radius: var(--radius-full);
   background: var(--color-surface);
   color: var(--color-primary);
   font-size: var(--text-small-size);
   font-weight: 700;
-  transition: background-color var(--transition-default);
+  transition:
+    box-shadow var(--transition-default),
+    transform var(--transition-default);
 }
 
 .avatar:hover {
-  background: var(--color-bg);
+  box-shadow: 0 0 0 4px rgb(255 255 255 / 0.28);
+  transform: translateY(-1px);
 }
 
 .panel {

@@ -2,6 +2,7 @@ import { Link, Outlet } from 'react-router'
 import { t } from '../../i18n'
 import { LiveConnectionProvider } from '../../realtime/LiveConnectionProvider'
 import { BottomNav } from '../BottomNav/BottomNav'
+import { Logo } from '../Logo/Logo'
 import { UserMenu } from '../UserMenu/UserMenu'
 import styles from './AppLayout.module.css'
 
@@ -18,7 +19,7 @@ export function AppLayout() {
         <header className={styles.header}>
           <div className={styles.headerInner}>
             <Link to="/" className={styles.brand}>
-              <span className={styles.logo} aria-hidden="true" />
+              <Logo size={32} tone="light" />
               {t('app.shortTitle')}
             </Link>
             <div className={styles.actions}>

@@ -1,10 +1,73 @@
 .page {
   display: flex;
-  justify-content: center;
   min-height: 100vh;
-  padding: var(--space-6) var(--page-padding);
-  background:
-    radial-gradient(circle at top, var(--color-surface) 0%, transparent 60%), var(--color-bg);
+  flex-direction: column;
+}
+
+/* green welcome panel: a band on phones, a full side on wide screens */
+.hero {
+  position: relative;
+  overflow: hidden;
+  padding: var(--space-6) var(--page-padding) var(--space-7);
+  background: var(--gradient-brand);
+  color: var(--color-surface);
+}
+
+.hero::before,
+.hero::after {
+  content: '';
+  position: absolute;
+  border-radius: var(--radius-full);
+  background: rgb(255 255 255 / 0.07);
+}
+
+.hero::before {
+  top: -90px;
+  right: -70px;
+  width: 260px;
+  height: 260px;
+}
+
+.hero::after {
+  bottom: -110px;
+  left: -60px;
+  width: 220px;
+  height: 220px;
+}
+
+.heroInner {
+  position: relative;
+  z-index: 1;
+  display: flex;
+  max-width: 440px;
+  flex-direction: column;
+  align-items: center;
+  gap: var(--space-1);
+  margin: 0 auto;
+  text-align: center;
+}
+
+.appName {
+  margin-top: var(--space-3);
+  font-size: var(--text-display-size);
+  line-height: var(--text-display-line);
+  font-weight: var(--text-display-weight);
+}
+
+.tagline {
+  color: rgb(255 255 255 / 0.85);
+}
+
+.pitch,
+.points {
+  display: none;
+}
+
+.formArea {
+  display: flex;
+  flex: 1;
+  justify-content: center;
+  padding: 0 var(--page-padding) var(--space-6);
 }
 
 .column {
@@ -13,51 +76,36 @@
   gap: var(--space-4);
   width: 100%;
   max-width: var(--auth-max-width);
-}
-
-.brand {
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-  gap: var(--space-1);
-  margin-bottom: var(--space-2);
-  text-align: center;
-}
-
-/* brand mark in the primary color, never a status color */
-.logo {
-  width: 48px;
-  height: 48px;
-  margin-bottom: var(--space-2);
-  border-radius: var(--radius-md);
-  background: linear-gradient(135deg, var(--color-primary), var(--color-primary-hover));
-  box-shadow: var(--shadow-card);
-}
-
-.appName {
-  font-size: var(--text-h1-size);
-  line-height: var(--text-h1-line);
-  font-weight: var(--text-h1-weight);
-}
-
-.tagline {
-  color: var(--color-text-muted);
+  /* the card overlaps the green band on phones */
+  margin-top: calc(-1 * var(--space-6));
 }
 
 .card {
+  position: relative;
   display: flex;
   flex-direction: column;
   gap: var(--space-4);
+  overflow: hidden;
   padding: var(--space-5);
   border: 1px solid var(--color-border);
   border-radius: var(--radius-lg);
   background: var(--color-surface);
-  box-shadow: var(--shadow-card);
+  box-shadow: var(--shadow-lift);
+  animation: rise var(--rise-duration) both;
+}
+
+.card::before {
+  content: '';
+  position: absolute;
+  inset: 0 0 auto;
+  height: 4px;
+  background: var(--gradient-brand);
 }
 
 .title {
-  font-size: var(--text-h2-size);
-  line-height: var(--text-h2-line);
+  padding-top: var(--space-1);
+  font-size: var(--text-h1-size);
+  line-height: var(--text-h1-line);
   font-weight: var(--text-h1-weight);
 }
 
@@ -65,8 +113,77 @@
   text-align: center;
 }
 
-@media (min-width: 640px) {
+@keyframes rise {
+  from {
+    opacity: 0;
+    transform: translateY(14px);
+  }
+}
+
+@media (min-width: 900px) {
   .page {
+    flex-direction: row;
+  }
+
+  .hero {
+    display: flex;
+    flex: 1 1 52%;
     align-items: center;
+    padding: var(--space-8) var(--space-7);
+  }
+
+  .heroInner {
+    align-items: flex-start;
+    gap: var(--space-2);
+    margin: 0 auto 0 0;
+    text-align: left;
+  }
+
+  .tagline {
+    font-size: var(--text-h2-size);
+    line-height: var(--text-h2-line);
+  }
+
+  .pitch {
+    display: block;
+    margin-top: var(--space-6);
+    font-size: var(--text-h1-size);
+    line-height: var(--text-h1-line);
+    font-weight: var(--text-h1-weight);
+  }
+
+  .points {
+    display: flex;
+    flex-direction: column;
+    gap: var(--space-3);
+    margin: var(--space-4) 0 0;
+    padding: 0;
+    list-style: none;
+  }
+
+  .point {
+    display: flex;
+    align-items: center;
+    gap: var(--space-3);
+  }
+
+  .pointIcon {
+    display: grid;
+    flex-shrink: 0;
+    place-items: center;
+    width: 40px;
+    height: 40px;
+    border-radius: var(--radius-full);
+    background: rgb(255 255 255 / 0.16);
+  }
+
+  .formArea {
+    flex: 1 1 48%;
+    align-items: center;
+    padding: var(--space-6) var(--space-7);
+  }
+
+  .column {
+    margin-top: 0;
   }
 }

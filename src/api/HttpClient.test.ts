@@ -186,6 +186,22 @@ describe('HttpClient session cookies', () => {
     expect(refreshes).toHaveLength(1)
   })
 
+  it('does not end the session when the current password is wrong', async () => {
+    const fetchFn = backend({
+      'PUT /api/v1/account/password': [
+        jsonResponse(401, { error: 'unauthorized', message: 'invalid credentials' }),
+      ],
+    })
+    const onUnauthorized = vi.fn()
+    const client = new HttpClient('', { fetchFn, onUnauthorized })
+
+    await expect(client.put('/api/v1/account/password', {})).rejects.toMatchObject({ status: 401 })
+
+    // no refresh attempt and no logout: the user just typed the wrong password
+    expect(fetchFn).toHaveBeenCalledTimes(1)
+    expect(onUnauthorized).not.toHaveBeenCalled()
+  })
+
   it('does not refresh on /api/v1/auth/*: there a 401 is just a wrong password', async () => {
     const fetchFn = backend({
       'POST /api/v1/auth/login': [unauthorized()],

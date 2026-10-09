@@ -31,13 +31,18 @@
   font-size: var(--text-h1-size);
   font-weight: var(--text-h1-weight);
   font-variant-numeric: tabular-nums;
-  transition: border-color var(--transition-default);
+  transition:
+    border-color var(--transition-default),
+    box-shadow var(--transition-default),
+    transform var(--transition-default);
 }
 
 .active {
   border-color: var(--color-primary);
+  box-shadow: var(--ring-focus);
   outline: 2px solid var(--color-focus);
   outline-offset: 1px;
+  transform: translateY(-2px);
 }
 
 .invalid {
