@@ -7,6 +7,7 @@ import { pendingVerification } from '../../auth/pendingVerification'
 import { AuthLayout } from '../../components/AuthLayout/AuthLayout'
 import { Button } from '../../components/Button/Button'
 import { FormError } from '../../components/FormError/FormError'
+import { GoogleSignIn } from '../../components/GoogleButton/GoogleSignIn'
 import { PasswordChecklist } from '../../components/PasswordChecklist/PasswordChecklist'
 import { PasswordField } from '../../components/PasswordField/PasswordField'
 import { TextField } from '../../components/TextField/TextField'
@@ -139,6 +140,7 @@ export function Register() {
           {register.isPending ? t('auth.register.submitting') : t('auth.register.submit')}
         </Button>
       </form>
+      <GoogleSignIn text="signup_with" />
     </AuthLayout>
   )
 }

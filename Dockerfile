@@ -12,6 +12,7 @@ ARG VITE_API_URL=
 ARG VITE_WS_URL=
 ARG VITE_CAGE_ID=cage-1
 ARG VITE_USE_MOCKS=false
+ARG VITE_GOOGLE_CLIENT_ID=
 RUN npm run build
 
 # Serve: Caddy on port 80, behind the main Caddy of the EC2

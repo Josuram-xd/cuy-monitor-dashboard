@@ -167,6 +167,11 @@
     "password": {
       "show": "Mostrar contraseña"
     },
+    "google": {
+      "or": "o",
+      "demo": "Continuar con Google (demo)",
+      "unavailable": "No pudimos cargar el acceso con Google. Revisa tu conexión o usa tu usuario y contraseña."
+    },
     "verify": {
       "title": "Código de verificación",
       "codeLabel": "Código de verificación, {{length}} dígitos",
@@ -190,7 +195,9 @@
       "invalidCode": "El código no es correcto. Revisa el correo e inténtalo otra vez.",
       "expiredCode": "El código venció. Te enviamos uno nuevo.",
       "userExists": "Ese usuario o correo ya está registrado.",
-      "weakPassword": "La contraseña no cumple todos los requisitos."
+      "weakPassword": "La contraseña no cumple todos los requisitos.",
+      "googleFailed": "No pudimos entrar con Google. Inténtalo otra vez.",
+      "googleOff": "El acceso con Google no está disponible por ahora."
     }
   },
   "account": {
@@ -214,7 +221,10 @@
       "new": "Contraseña nueva",
       "submit": "Cambiar contraseña",
       "submitting": "Cambiando…",
-      "done": "Listo, tu contraseña cambió."
+      "done": "Listo, tu contraseña cambió.",
+      "createTitle": "Crear contraseña",
+      "googleOnly": "Entras con Google y todavía no tienes contraseña. Si quieres, crea una para entrar también con tu usuario.",
+      "createSubmit": "Crear contraseña"
     },
     "danger": {
       "title": "Desactivar cuenta",
@@ -222,6 +232,7 @@
       "open": "Desactivar mi cuenta",
       "confirmTitle": "¿Desactivar tu cuenta?",
       "confirmText": "Escribe tu contraseña para confirmar. Después saldrás de la sesión.",
+      "confirmTextGoogle": "Después saldrás de la sesión y ya no podrás entrar con Google a esta cuenta.",
       "password": "Tu contraseña",
       "confirm": "Sí, desactivar"
     },

@@ -3,4 +3,6 @@
 export interface User {
   username: string
   fullName: string
+  // false for an account made with Google that never set one: there is no password to ask for
+  hasPassword: boolean
 }

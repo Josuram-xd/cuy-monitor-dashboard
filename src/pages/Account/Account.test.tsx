@@ -5,6 +5,7 @@ import { getDashboardApi } from '../../api/apiProvider'
 import type { DashboardApi } from '../../api/DashboardApi'
 import { AuthContext, type AuthContextValue } from '../../auth/AuthContext'
 import { createMockApi } from '../../mocks/createMockApi'
+import { MOCK_GOOGLE_TOKEN } from '../../mocks/googleToken'
 import { mockSession } from '../../mocks/mockSession'
 import { MOCK_OTP_CODE } from '../../mocks/MockAuthApi'
 import { MockDatabase } from '../../mocks/MockDatabase'
@@ -71,6 +72,7 @@ describe('Account', () => {
     await expect(api.account.getProfile()).resolves.toEqual({
       username: 'ana',
       fullName: 'Ana Ruiz',
+      hasPassword: true,
     })
   })
 
@@ -154,5 +156,39 @@ describe('Account', () => {
     await userEvent.click(await screen.findByRole('button', { name: 'Cerrar sesión' }))
 
     expect(logout).toHaveBeenCalledWith('logout')
+  })
+
+  describe('an account made with Google', () => {
+    async function googleApi(): Promise<DashboardApi> {
+      const api = createMockApi(new MockDatabase(), 0)
+      await api.auth.googleLogin({ idToken: MOCK_GOOGLE_TOKEN })
+      return api
+    }
+
+    it('creates its first password without asking for an old one', async () => {
+      const api = await googleApi()
+      renderAccount(api)
+
+      expect(await screen.findByRole('heading', { name: 'Crear contraseña' })).toBeInTheDocument()
+      expect(screen.queryByLabelText('Contraseña actual')).not.toBeInTheDocument()
+
+      await userEvent.type(screen.getByLabelText('Contraseña nueva'), 'Otra-clave-456!')
+      await userEvent.click(screen.getByRole('button', { name: 'Crear contraseña' }))
+
+      expect(await screen.findByText('Listo, tu contraseña cambió.')).toBeInTheDocument()
+      await expect(api.account.getProfile()).resolves.toMatchObject({ hasPassword: true })
+    })
+
+    it('deactivates the account without typing a password', async () => {
+      const api = await googleApi()
+      const { logout } = renderAccount(api)
+
+      await userEvent.click(await screen.findByRole('button', { name: 'Desactivar mi cuenta' }))
+      const dialog = screen.getByRole('dialog')
+      expect(within(dialog).queryByLabelText('Tu contraseña')).not.toBeInTheDocument()
+      await userEvent.click(within(dialog).getByRole('button', { name: 'Sí, desactivar' }))
+
+      await waitFor(() => expect(logout).toHaveBeenCalledWith('disabled'))
+    })
   })
 })

@@ -7,6 +7,7 @@ import { useAuth } from '../../auth/useAuth'
 import { AuthLayout } from '../../components/AuthLayout/AuthLayout'
 import { Button } from '../../components/Button/Button'
 import { FormError } from '../../components/FormError/FormError'
+import { GoogleSignIn } from '../../components/GoogleButton/GoogleSignIn'
 import { PasswordField } from '../../components/PasswordField/PasswordField'
 import { SessionNotice } from '../../components/SessionNotice/SessionNotice'
 import { TextField } from '../../components/TextField/TextField'
@@ -71,6 +72,7 @@ export function Login() {
           {login.isPending ? t('auth.login.submitting') : t('auth.login.submit')}
         </Button>
       </form>
+      <GoogleSignIn text="signin_with" />
     </AuthLayout>
   )
 }

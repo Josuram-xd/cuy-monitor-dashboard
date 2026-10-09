@@ -32,7 +32,7 @@ cuy-monitor-dashboard/
 ├── Dockerfile              node:24 build → caddy:2.11 serving dist/
 ├── Caddyfile               file_server + try_files {path} /index.html (inside the image, port 80)
 ├── .dockerignore
-├── .env.example            VITE_API_URL, VITE_WS_URL, VITE_CAGE_ID, VITE_USE_MOCKS, VITE_DEV_BACKEND
+├── .env.example            VITE_API_URL, VITE_WS_URL, VITE_CAGE_ID, VITE_USE_MOCKS, VITE_GOOGLE_CLIENT_ID, VITE_DEV_BACKEND
 └── src/
     ├── main.tsx            QueryClientProvider, AuthProvider, RouterProvider, i18n init
     ├── App.tsx             routes (public + RequireAuth)
@@ -177,6 +177,7 @@ As of 2026-10-03 the backend has `/actuator/health`, `/api/v1/system/*` and the 
 | `VITE_API_URL` | *(empty)* | Empty = same origin (prod and dev with proxy). Only set it to point at another backend |
 | `VITE_WS_URL` | *(empty)* | Empty = `wss://<current host>/ws` |
 | `VITE_CAGE_ID` | `cage-1` | Single pilot cage (the cage `code`) |
+| `VITE_GOOGLE_CLIENT_ID` | empty | Public OAuth client id for "Continuar con Google" (not a secret). Empty hides the button |
 | `VITE_USE_MOCKS` | `false` | `true` serves data (and a fake login) from `src/mocks/` |
 | `VITE_DEV_BACKEND` | `http://localhost:8080` | Only for the Vite dev proxy |
 
@@ -196,6 +197,7 @@ RUN npm ci
 COPY . .
 ARG VITE_CAGE_ID=cage-1
 ARG VITE_USE_MOCKS=false
+ARG VITE_GOOGLE_CLIENT_ID=
 RUN npm run build
 
 FROM caddy:2.11-alpine

@@ -1,12 +1,22 @@
 import type { AuthApi } from '../api/DashboardApi'
-import type { LoginChallenge, LoginRequest, RegisterRequest, VerifyOtpRequest } from '../types/Auth'
+import type {
+  GoogleLoginRequest,
+  LoginChallenge,
+  LoginRequest,
+  RegisterRequest,
+  VerifyOtpRequest,
+} from '../types/Auth'
 import { passwordProblems } from '../auth/passwordRules'
+import { MOCK_GOOGLE_TOKEN } from './googleToken'
 import type { MockUser } from './MockDatabase'
 import { mockSession } from './mockSession'
 import { MockResource } from './MockResource'
 
 // the fake login accepts any user; the code is always this one
 export const MOCK_OTP_CODE = '123456'
+
+// the account the demo "Continuar con Google" button opens
+const GOOGLE_DEMO = { username: 'ana.demo', fullName: 'Ana Demo', email: 'ana.demo@gmail.com' }
 
 const CODE_TTL_MS = 5 * 60_000
 
@@ -38,10 +48,26 @@ export class MockAuthApi extends MockResource implements AuthApi {
   login(body: LoginRequest): Promise<LoginChallenge> {
     const username = body.username.trim().toLowerCase()
     const user = this.db.findUser(username) ?? this.createActiveUser(username, body.password)
-    if (user.status === 'DISABLED') {
+    // an account made with Google has no password to log in with
+    if (user.status === 'DISABLED' || user.password === null) {
       return this.fail(401, 'unauthorized')
     }
     return this.respond(this.newChallenge(username))
+  }
+
+  googleLogin(body: GoogleLoginRequest): Promise<void> {
+    if (body.idToken !== MOCK_GOOGLE_TOKEN) {
+      return this.fail(401, 'unauthorized')
+    }
+    let user = this.db.users.find((u) => u.email === GOOGLE_DEMO.email)
+    if (!user) {
+      // first visit: an active account without password, like the backend
+      user = { id: crypto.randomUUID(), ...GOOGLE_DEMO, password: null, status: 'ACTIVE' }
+      this.db.users.push(user)
+    }
+    this.db.signedInUserId = user.id
+    mockSession.start()
+    return this.respond(undefined)
   }
 
   verifyOtp(body: VerifyOtpRequest): Promise<void> {

@@ -134,6 +134,15 @@ Supported through `prefers-color-scheme` by redefining the tokens in section 2.1
 
 All components live in `src/components/`, one folder per component with `Component.tsx` + `Component.module.css`. Props in English, visible text via `t()`.
 
+### GoogleButton / GoogleSignIn
+
+"Continuar con Google" under the login and register forms, after an "o" divider. With `VITE_GOOGLE_CLIENT_ID` it is Google's own button (Google Identity Services draws it; the page only receives a signed ID token and never the Google password). With `VITE_USE_MOCKS=true` it is a plain demo button; with neither, nothing is drawn. `GoogleSignIn` adds the request (`POST /api/v1/auth/google`), the error message and the session start: there is no code step because Google already proved the email.
+
+```tsx
+<GoogleSignIn text="signin_with" />   // /login
+<GoogleSignIn text="signup_with" />   // /register
+```
+
 ### PasswordChecklist
 
 Rules of a new password, ticked while the user types, with a bar that fills as they are met. Used under the password field of the registration form and in "Cambiar contraseña". The five main rules (10 to 64 characters, lowercase, uppercase, digit, special character) are always listed; "sin espacios", "no es una contraseña muy común" and "no incluye tu usuario ni tu correo" appear only when they are the problem. The rules live in `src/auth/passwordRules.ts` and mirror the backend's `PasswordPolicy`, which has the last word. Never says "strong": it only says which requirements are met.

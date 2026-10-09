@@ -4,7 +4,13 @@ import type {
   UpdateProfileRequest,
 } from '../types/Account'
 import type { Alert, AlertStatus } from '../types/Alert'
-import type { LoginChallenge, LoginRequest, RegisterRequest, VerifyOtpRequest } from '../types/Auth'
+import type {
+  GoogleLoginRequest,
+  LoginChallenge,
+  LoginRequest,
+  RegisterRequest,
+  VerifyOtpRequest,
+} from '../types/Auth'
 import type { CageHealth } from '../types/CageHealth'
 import type { DateRange } from '../types/DateRange'
 import type { GuineaPig, GuineaPigHistory, NewGuineaPig } from '../types/GuineaPig'
@@ -35,6 +41,8 @@ export interface AuthApi {
   register(body: RegisterRequest): Promise<LoginChallenge>
   // also resends the code of an account that was never verified
   login(body: LoginRequest): Promise<LoginChallenge>
+  // sign in or sign up with the ID token of Google's button; no code, the session arrives as cookies
+  googleLogin(body: GoogleLoginRequest): Promise<void>
   // the answer is empty: the session arrives as HttpOnly cookies the page cannot read
   verifyOtp(body: VerifyOtpRequest): Promise<void>
   // ends the session on the server; it expires the cookies and revokes the tokens
