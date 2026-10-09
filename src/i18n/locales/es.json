@@ -177,6 +177,7 @@
   "auth": {
     "tagline": "Cuida a tus cuyes a tiempo",
     "hero": {
+      "imageAlt": "Cuchi, un cuy contento, junto a un celular que muestra la jaula en estado Todo tranquilo",
       "title": "Tus cuyes, siempre a la vista",
       "point1": "Sabes al instante si un cuy no está bien",
       "point2": "Alertas en vivo, sin recargar la página",

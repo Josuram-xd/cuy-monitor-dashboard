@@ -202,12 +202,35 @@
   line-height: 0;
 }
 
+.illustration {
+  display: none;
+}
+
 @media (min-width: 900px) {
+  /* the picture already has the cuy: the drawn mascot is for phones */
   .mascot {
-    width: 220px;
+    display: none;
+  }
+
+  .illustration {
+    display: block;
+    width: 100%;
+    max-width: 520px;
+    height: auto;
+    margin-bottom: var(--space-3);
+    border-radius: var(--radius-lg);
+    box-shadow: var(--shadow-pop);
+    animation: pop-in 640ms var(--ease-bounce) both;
   }
 
   .wave {
     display: none;
+  }
+}
+
+@keyframes pop-in {
+  from {
+    opacity: 0;
+    transform: translateY(18px) scale(0.96);
   }
 }
