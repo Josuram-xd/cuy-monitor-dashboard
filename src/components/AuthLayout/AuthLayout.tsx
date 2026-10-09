@@ -1,7 +1,9 @@
 import type { ReactNode } from 'react'
 import { t } from '../../i18n'
 import { Icon, type IconName } from '../Icon/Icon'
-import { Logo } from '../Logo/Logo'
+import { Drifters } from '../Drifters/Drifters'
+import { Mascot } from '../Mascot/Mascot'
+import { Wave } from '../Wave/Wave'
 import styles from './AuthLayout.module.css'
 
 interface AuthLayoutProps {
@@ -25,8 +27,9 @@ export function AuthLayout({ title, children, notice, footer }: AuthLayoutProps)
   return (
     <div className={styles.page}>
       <aside className={styles.hero}>
+        <Drifters />
         <div className={styles.heroInner}>
-          <Logo size={56} tone="light" />
+          <Mascot size={190} className={styles.mascot} />
           <p className={styles.appName}>{t('app.shortTitle')}</p>
           <p className={styles.tagline}>{t('auth.tagline')}</p>
           <p className={styles.pitch}>{t('auth.hero.title')}</p>
@@ -41,6 +44,9 @@ export function AuthLayout({ title, children, notice, footer }: AuthLayoutProps)
             ))}
           </ul>
         </div>
+        <span className={styles.wave}>
+          <Wave />
+        </span>
       </aside>
       <main className={styles.formArea}>
         <div className={styles.column}>

@@ -24,9 +24,16 @@
   position: sticky;
   top: 0;
   z-index: 10;
-  background: var(--gradient-brand);
-  box-shadow: 0 6px 20px rgb(27 67 50 / 0.28);
+  background: linear-gradient(90deg, var(--header-from), var(--header-to));
   color: var(--color-surface);
+}
+
+/* the header ends in a soft wave instead of a straight line */
+.wave {
+  position: absolute;
+  inset: 100% 0 auto;
+  filter: drop-shadow(0 6px 8px rgb(27 67 50 / 0.22));
+  pointer-events: none;
 }
 
 .headerInner {
@@ -44,9 +51,10 @@
   display: inline-flex;
   align-items: center;
   gap: var(--space-2);
-  font-size: var(--text-h2-size);
+  font-family: var(--font-display);
+  font-size: var(--text-h1-size);
   line-height: var(--text-h2-line);
-  font-weight: var(--text-h1-weight);
+  font-weight: 700;
   text-decoration: none;
   transition: opacity var(--transition-default);
 }
@@ -64,7 +72,7 @@
 .main {
   max-width: var(--content-max-width);
   margin: 0 auto;
-  padding: var(--space-4) var(--page-padding) var(--space-6);
+  padding: var(--space-6) var(--page-padding) var(--space-6);
 }
 
 .main:focus {

@@ -134,6 +134,18 @@ Supported through `prefers-color-scheme` by redefining the tokens in section 2.1
 
 All components live in `src/components/`, one folder per component with `Component.tsx` + `Component.module.css`. Props in English, visible text via `t()`.
 
+### Playful layer: Mascot, Wave, Drifters, Reveal, CountUp
+
+The app is friendly on purpose, without changing the palette. Titles and buttons use **Fredoka** (round, chunky), text uses **Nunito**; both come from `@fontsource-variable/*`, so the page makes no request to Google Fonts. Radii are larger (`--radius-lg` 24px), buttons are pills that bounce (`--ease-bounce`) and cards lift and tilt on hover. Pastel accents (`--pastel-*`) are decoration only: **status is still carried by the status tokens, the badge and the text**.
+
+- **Mascot** (`mood`: `happy`, `worried`, `alarm`, `sleepy`): "Cuchi". Its face follows the worst status of the cage in `CageStatusBanner` (NORMAL happy, OBSERVED worried, ALERT/CRITICAL alarm, unknown sleepy), and it greets in the login hero, empty states, 404 and the session loader. Decorative unless a `label` is given; the mood is never the only signal.
+- **Wave**: soft wavy edge. Under the header it continues the header's left-to-right gradient (`--header-from` / `--header-to`); under the login hero on phones it is the page color.
+- **Drifters**: translucent clouds drifting behind a green section.
+- **Reveal**: fades and lifts its content the first time it scrolls into view (`delay` staggers a row). Without `IntersectionObserver` the content is just visible.
+- **CountUp**: a number that counts to its value; the real value is always the accessible text.
+- **GuineaPigCard** shows an avatar: the initial inside a ring of the coat color.
+- Everything that moves is switched off by `prefers-reduced-motion` (global rule in `global.css` plus each animation).
+
 ### GoogleButton / GoogleSignIn
 
 "Continuar con Google" under the login and register forms, after an "o" divider. With `VITE_GOOGLE_CLIENT_ID` it is Google's own button (Google Identity Services draws it; the page only receives a signed ID token and never the Google password). With `VITE_USE_MOCKS=true` it is a plain demo button; with neither, nothing is drawn. `GoogleSignIn` adds the request (`POST /api/v1/auth/google`), the error message and the session start: there is no code step because Google already proved the email.

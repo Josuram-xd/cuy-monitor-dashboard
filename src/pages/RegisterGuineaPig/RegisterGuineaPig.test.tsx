@@ -1,4 +1,4 @@
-import { screen } from '@testing-library/react'
+import { screen, within } from '@testing-library/react'
 import userEvent from '@testing-library/user-event'
 import { Route, Routes } from 'react-router'
 import { beforeEach, describe, expect, it, vi } from 'vitest'
@@ -96,5 +96,67 @@ describe('RegisterGuineaPig', () => {
 
     expect(await screen.findByText(/Ya hay un cuy con cada color/)).toBeInTheDocument()
     expect(screen.queryByRole('radio')).not.toBeInTheDocument()
+  })
+
+  it('sends the breed, coat, weight and notes when they are filled', async () => {
+    renderPage(api)
+
+    await userEvent.type(await screen.findByLabelText('Nombre'), 'Manchas')
+    await userEvent.click(screen.getByRole('button', { name: 'Teddy' }))
+    await userEvent.click(screen.getByRole('button', { name: 'Crema' }))
+    await userEvent.type(screen.getByLabelText(/Peso al llegar/), '875')
+    await userEvent.type(screen.getByLabelText('Notas'), '  Come mucha zanahoria ')
+    await userEvent.click(screen.getByRole('radio', { name: /Verde/ }))
+    await userEvent.click(screen.getByRole('button', { name: 'Registrar cuy' }))
+
+    expect(await screen.findByText('cage view')).toBeInTheDocument()
+    expect(db.guineaPigs.find((g) => g.name === 'Manchas')).toMatchObject({
+      breed: 'TEDDY',
+      coatColor: 'CREAM',
+      initialWeightGrams: 875,
+      notes: 'Come mucha zanahoria',
+    })
+  })
+
+  it('keeps them optional: a cuy can still be registered with only a name and a color', async () => {
+    renderPage(api)
+
+    await userEvent.type(await screen.findByLabelText('Nombre'), 'Simple')
+    await userEvent.click(screen.getByRole('radio', { name: /Verde/ }))
+    await userEvent.click(screen.getByRole('button', { name: 'Registrar cuy' }))
+
+    expect(await screen.findByText('cage view')).toBeInTheDocument()
+    expect(db.guineaPigs.find((g) => g.name === 'Simple')).toMatchObject({
+      breed: null,
+      initialWeightGrams: null,
+    })
+  })
+
+  it('does not send a weight outside the limits', async () => {
+    const register = vi.spyOn(api.guineaPigs, 'register')
+    renderPage(api)
+
+    await userEvent.type(await screen.findByLabelText('Nombre'), 'Manchas')
+    await userEvent.click(screen.getByRole('radio', { name: /Verde/ }))
+    await userEvent.type(screen.getByLabelText(/Peso al llegar/), '5')
+    await userEvent.click(screen.getByRole('button', { name: 'Registrar cuy' }))
+
+    expect(await screen.findByText('Escribe un peso entre 50 y 2000 g.')).toBeInTheDocument()
+    expect(register).not.toHaveBeenCalled()
+  })
+
+  it('shows the preview growing with what is typed', async () => {
+    renderPage(api)
+
+    const preview = await screen.findByRole('complementary', { name: 'Así se verá' })
+    expect(within(preview).getByText('Su nombre')).toBeInTheDocument()
+
+    await userEvent.type(screen.getByLabelText('Nombre'), 'Manchas')
+    await userEvent.click(screen.getByRole('button', { name: 'Abisinio' }))
+    await userEvent.type(screen.getByLabelText(/Peso al llegar/), '900')
+
+    expect(within(preview).getByText('Manchas')).toBeInTheDocument()
+    expect(within(preview).getByText('Abisinio')).toBeInTheDocument()
+    expect(within(preview).getByText('900 g')).toBeInTheDocument()
   })
 })

@@ -43,7 +43,7 @@
   box-shadow: var(--shadow-card);
   text-decoration: none;
   transition:
-    transform var(--transition-lift),
+    transform 320ms var(--ease-bounce),
     box-shadow var(--transition-lift);
   /* the cards come in one after another (--i is the position in the grid) */
   animation: rise var(--rise-duration) both;
@@ -51,8 +51,8 @@
 }
 
 .card:hover {
-  transform: translateY(-4px);
-  box-shadow: var(--shadow-lift);
+  transform: translateY(-6px) rotate(-0.8deg);
+  box-shadow: var(--shadow-pop);
 }
 
 .card:hover .name {
@@ -67,7 +67,7 @@
 }
 
 .card:active {
-  transform: translateY(0);
+  transform: scale(0.97);
 }
 
 .top {
@@ -78,6 +78,7 @@
 }
 
 .name {
+  flex: 1;
   overflow: hidden;
   font-size: var(--text-h2-size);
   line-height: var(--text-h2-line);
@@ -136,4 +137,56 @@
 
 .muted .detailIcon {
   color: inherit;
+}
+
+.about {
+  color: var(--color-text-muted);
+  font-size: var(--text-small-size);
+  line-height: var(--text-small-line);
+}
+
+/* the fur color is a ring around the initial: the owner recognizes the cuy at a glance */
+.avatar {
+  position: relative;
+  display: grid;
+  flex-shrink: 0;
+  width: 44px;
+  height: 44px;
+  place-items: center;
+}
+
+.avatar > span:first-child {
+  position: absolute;
+  inset: 0;
+  width: 100% !important;
+  height: 100% !important;
+}
+
+.initial {
+  position: relative;
+  display: grid;
+  width: 32px;
+  height: 32px;
+  place-items: center;
+  border-radius: var(--radius-full);
+  background: var(--color-surface);
+  color: var(--fg);
+  font-family: var(--font-display);
+  font-size: 18px;
+  font-weight: 700;
+  line-height: 1;
+  box-shadow: 0 0 0 1px var(--color-border);
+}
+
+.card:hover .avatar {
+  animation: wobble 520ms ease-in-out;
+}
+
+@keyframes wobble {
+  25% {
+    transform: rotate(-12deg) scale(1.08);
+  }
+  60% {
+    transform: rotate(9deg) scale(1.08);
+  }
 }

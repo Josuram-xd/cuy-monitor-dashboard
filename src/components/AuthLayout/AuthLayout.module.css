@@ -187,3 +187,27 @@
     margin-top: 0;
   }
 }
+
+.mascot {
+  width: 130px;
+  height: auto;
+  filter: drop-shadow(0 8px 14px rgb(0 0 0 / 0.18));
+}
+
+/* on a phone the green band ends in a wave; on a wide screen the panel is a full side */
+.wave {
+  position: absolute;
+  inset: auto 0 -1px;
+  z-index: 1;
+  line-height: 0;
+}
+
+@media (min-width: 900px) {
+  .mascot {
+    width: 220px;
+  }
+
+  .wave {
+    display: none;
+  }
+}

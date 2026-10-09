@@ -3,6 +3,7 @@ import { t } from '../../i18n'
 import { LiveConnectionProvider } from '../../realtime/LiveConnectionProvider'
 import { BottomNav } from '../BottomNav/BottomNav'
 import { Logo } from '../Logo/Logo'
+import { Wave } from '../Wave/Wave'
 import { UserMenu } from '../UserMenu/UserMenu'
 import styles from './AppLayout.module.css'
 
@@ -27,6 +28,9 @@ export function AppLayout() {
               <UserMenu />
             </div>
           </div>
+          <span className={styles.wave}>
+            <Wave gradient={{ from: 'var(--header-from)', to: 'var(--header-to)' }} />
+          </span>
         </header>
         <main id={MAIN_ID} className={styles.main} tabIndex={-1}>
           <Outlet />

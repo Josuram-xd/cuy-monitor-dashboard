@@ -4,9 +4,9 @@ import type { CageHealth } from '../../types/CageHealth'
 import { HEALTH_STATUSES, type DisplayStatus, type HealthStatus } from '../../types/HealthStatus'
 import { cx } from '../../utils/cx'
 import { formatRelative } from '../../utils/time'
-import { Icon } from '../Icon/Icon'
+import { CountUp } from '../CountUp/CountUp'
+import { Mascot, type MascotMood } from '../Mascot/Mascot'
 import { StatusBadge } from '../StatusBadge/StatusBadge'
-import { STATUS_ICONS } from '../StatusBadge/statusIcons'
 import styles from './CageStatusBanner.module.css'
 
 interface CageStatusBannerProps {
@@ -15,6 +15,15 @@ interface CageStatusBannerProps {
   liveIndicator?: ReactNode
   // from useNow() in the page; without it the "updated" line is hidden
   now?: number
+}
+
+// the face of the mascot follows the worst status: the mood is a bonus, the badge and the text say it too
+const MOODS: Record<DisplayStatus, MascotMood> = {
+  NORMAL: 'happy',
+  OBSERVED: 'worried',
+  ALERT: 'alarm',
+  CRITICAL: 'alarm',
+  UNKNOWN: 'sleepy',
 }
 
 function headline(status: DisplayStatus, health?: CageHealth): string {
@@ -49,8 +58,8 @@ export function CageStatusBanner({ health, liveIndicator, now }: CageStatusBanne
 
   return (
     <section className={cx(styles.banner, styles[status])}>
-      <span className={styles.iconWrap}>
-        <Icon name={STATUS_ICONS[status]} size={28} />
+      <span className={styles.mascotWrap}>
+        <Mascot mood={MOODS[status]} size={150} className={styles.mascot} />
       </span>
       <div className={styles.body}>
         <div className={styles.top}>
@@ -64,7 +73,9 @@ export function CageStatusBanner({ health, liveIndicator, now }: CageStatusBanne
           <ul className={styles.counts} aria-label={t('cage.countsLabel')}>
             {counts.map(([countStatus, count]) => (
               <li key={countStatus} className={styles.count}>
-                <span className={styles.countNumber}>{count}</span>
+                <span className={styles.countNumber}>
+                  <CountUp value={count} />
+                </span>
                 <StatusBadge status={countStatus} size="sm" />
               </li>
             ))}

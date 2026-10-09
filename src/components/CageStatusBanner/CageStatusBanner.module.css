@@ -31,8 +31,8 @@
 .banner {
   position: relative;
   display: flex;
-  align-items: flex-start;
-  gap: var(--space-4);
+  align-items: center;
+  gap: var(--space-3);
   overflow: hidden;
   padding: var(--space-5) var(--page-padding);
   border: 1px solid var(--color-border);
@@ -57,21 +57,6 @@
   inset: 0 0 auto;
   height: 6px;
   background: var(--accent);
-}
-
-.iconWrap {
-  display: grid;
-  flex-shrink: 0;
-  place-items: center;
-  width: 52px;
-  height: 52px;
-  border-radius: var(--radius-full);
-  background: var(--color-surface);
-  /* a halo in the status color: the first thing the eye finds */
-  box-shadow:
-    var(--shadow-card),
-    0 0 0 6px color-mix(in srgb, var(--accent) 22%, transparent);
-  color: var(--fg);
 }
 
 .body {
@@ -103,20 +88,10 @@
     padding: var(--space-6);
   }
 
-  .iconWrap {
-    width: 72px;
-    height: 72px;
-  }
-
   .headline {
     font-size: var(--text-display-size);
     line-height: var(--text-display-line);
   }
-}
-
-.iconWrap svg {
-  width: 55%;
-  height: 55%;
 }
 
 .counts {
@@ -146,4 +121,32 @@
   color: var(--color-text-muted);
   font-size: var(--text-small-size);
   line-height: var(--text-small-line);
+}
+
+/* the mascot sits in a soft bubble of the status color */
+.mascotWrap {
+  display: grid;
+  flex-shrink: 0;
+  place-items: center;
+  width: 96px;
+  height: 96px;
+  border-radius: var(--radius-full);
+  background: color-mix(in srgb, var(--accent) 18%, var(--color-surface));
+  box-shadow: 0 0 0 6px color-mix(in srgb, var(--accent) 16%, transparent);
+}
+
+.mascot {
+  width: 86px;
+  height: auto;
+}
+
+@media (min-width: 640px) {
+  .mascotWrap {
+    width: 150px;
+    height: 150px;
+  }
+
+  .mascot {
+    width: 136px;
+  }
 }
