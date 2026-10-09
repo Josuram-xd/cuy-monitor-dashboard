@@ -1,4 +1,7 @@
 .layout {
+  /* above the animated backdrop (z-index 0) */
+  position: relative;
+  z-index: 1;
   min-height: 100vh;
   /* room for the fixed bottom nav on phones */
   padding-bottom: calc(60px + env(safe-area-inset-bottom));
