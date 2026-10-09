@@ -188,8 +188,11 @@ Shows the WebSocket state.
 | State | Look | Text |
 |---|---|---|
 | connected | green dot | "En vivo" |
+| connecting | yellow dot | "Conectando…" |
 | reconnecting | yellow dot, subtle pulse | "Reconectando…" |
 | disconnected | gray dot | "Sin conexión en vivo — los datos pueden estar desactualizados" |
+
+The state is announced with `aria-live="polite"`. The reconnect pulse is disabled when reduced motion is preferred.
 
 ### AlertList / AlertItem
 

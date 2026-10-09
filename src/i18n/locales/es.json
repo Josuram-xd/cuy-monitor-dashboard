@@ -80,6 +80,12 @@
     "unknownGuineaPig": "Cuy",
     "markReviewed": "Marcar como revisada"
   },
+  "realtime": {
+    "connecting": "Conectando…",
+    "connected": "En vivo",
+    "reconnecting": "Reconectando…",
+    "disconnected": "Sin conexión en vivo — los datos pueden estar desactualizados"
+  },
   "guineaPig": {
     "still": "Quieto {{seconds}} de los últimos 60 s",
     "lastSeen": "Visto {{time}}",

@@ -5,6 +5,7 @@ import { EmptyState } from '../../components/EmptyState/EmptyState'
 import { ErrorState } from '../../components/ErrorState/ErrorState'
 import { GuineaPigCard } from '../../components/GuineaPigCard/GuineaPigCard'
 import { GuineaPigGrid, GuineaPigGridItem } from '../../components/GuineaPigGrid/GuineaPigGrid'
+import { LiveIndicator } from '../../components/LiveIndicator/LiveIndicator'
 import { Skeleton } from '../../components/Skeleton/Skeleton'
 import { useAlerts } from '../../hooks/useAlerts'
 import { useCageHealth } from '../../hooks/useCageHealth'
@@ -81,7 +82,7 @@ export function CageOverview() {
     <div className={styles.page}>
       <h1 className={styles.title}>{t('cage.title')}</h1>
       {/* no data or failed request: the banner shows UNKNOWN, never "Normal" */}
-      <CageStatusBanner health={health.data} now={now} />
+      <CageStatusBanner health={health.data} now={now} liveIndicator={<LiveIndicator />} />
       <div className={styles.columns}>
         <section className={styles.section} aria-labelledby="guinea-pigs-heading">
           <h2 id="guinea-pigs-heading">{t('cage.guineaPigs')}</h2>
