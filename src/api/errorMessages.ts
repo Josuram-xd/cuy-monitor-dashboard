@@ -30,6 +30,9 @@ export function errorMessageKey(error: unknown, context: ErrorContext = 'general
   if (error.status === 400 && context === 'account' && 'password' in error.fields) {
     return 'auth.error.weakPassword'
   }
+  if (error.status === 404 && context === 'guineaPig') {
+    return 'guineaPig.error.alreadyGone'
+  }
   if (error.status === 409 && context === 'guineaPig') {
     return 'guineaPig.error.colorTaken'
   }

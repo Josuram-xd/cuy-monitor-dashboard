@@ -170,8 +170,15 @@
       "submitting": "Registrando…",
       "allUsed": "Ya hay un cuy con cada color de marca. No se pueden registrar más en esta jaula."
     },
+    "delete": {
+      "open": "Eliminar a {{name}}",
+      "title": "¿Eliminar a {{name}}?",
+      "text": "Dejará de aparecer en tu jaula y su color de marca quedará libre para otro cuy. Su historial se conserva.",
+      "confirm": "Sí, eliminar"
+    },
     "error": {
-      "colorTaken": "Otro cuy ya lleva ese color. Elige uno libre."
+      "colorTaken": "Otro cuy ya lleva ese color. Elige uno libre.",
+      "alreadyGone": "Este cuy ya no existe. Actualiza la página."
     }
   },
   "auth": {

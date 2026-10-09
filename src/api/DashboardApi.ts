@@ -29,6 +29,8 @@ export interface GuineaPigApi {
   list(cageId: string, signal?: AbortSignal): Promise<GuineaPig[]>
   register(cageId: string, body: NewGuineaPig): Promise<GuineaPig>
   getHistory(id: number, range?: DateRange, signal?: AbortSignal): Promise<GuineaPigHistory>
+  // soft delete: it leaves the cage and frees its mark color, its history is kept. 404 if it is already gone
+  remove(cageId: string, id: number): Promise<void>
 }
 
 export interface AlertApi {

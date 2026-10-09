@@ -2,6 +2,7 @@ import { AlertList } from '../../components/AlertList/AlertList'
 import { ButtonLink } from '../../components/Button/Button'
 import { CageStatusBanner } from '../../components/CageStatusBanner/CageStatusBanner'
 import { Mascot } from '../../components/Mascot/Mascot'
+import { DeleteGuineaPig } from '../../components/DeleteGuineaPig/DeleteGuineaPig'
 import { EmptyState } from '../../components/EmptyState/EmptyState'
 import { ErrorState } from '../../components/ErrorState/ErrorState'
 import { GuineaPigCard } from '../../components/GuineaPigCard/GuineaPigCard'
@@ -49,6 +50,7 @@ function GuineaPigsSection({ now }: { now: number }) {
       {guineaPigs.data.map((guineaPig, index) => (
         <GuineaPigGridItem key={guineaPig.id} index={index}>
           <GuineaPigCard guineaPig={guineaPig} now={now} />
+          <DeleteGuineaPig guineaPig={guineaPig} />
         </GuineaPigGridItem>
       ))}
     </GuineaPigGrid>
