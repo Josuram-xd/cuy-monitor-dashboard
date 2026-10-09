@@ -1,4 +1,5 @@
 import type { ReactNode } from 'react'
+import heroImage from '../../assets/hero.jpg'
 import { t } from '../../i18n'
 import { Icon, type IconName } from '../Icon/Icon'
 import { Drifters } from '../Drifters/Drifters'
@@ -30,6 +31,15 @@ export function AuthLayout({ title, children, notice, footer }: AuthLayoutProps)
         <Drifters />
         <div className={styles.heroInner}>
           <Mascot size={190} className={styles.mascot} />
+          {/* wide screens only: the phone band keeps the small mascot */}
+          <img
+            className={styles.illustration}
+            src={heroImage}
+            alt={t('auth.hero.imageAlt')}
+            width={1376}
+            height={768}
+            decoding="async"
+          />
           <p className={styles.appName}>{t('app.shortTitle')}</p>
           <p className={styles.tagline}>{t('auth.tagline')}</p>
           <p className={styles.pitch}>{t('auth.hero.title')}</p>

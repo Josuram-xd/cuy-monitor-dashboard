@@ -1,0 +1,14 @@
+{
+  "name": "Monitor de Cuyes",
+  "short_name": "Monitor de Cuyes",
+  "description": "Cuida la salud de tus cuyes a tiempo",
+  "lang": "es",
+  "start_url": "/",
+  "display": "standalone",
+  "background_color": "#f7f5f0",
+  "theme_color": "#2d6a4f",
+  "icons": [
+    { "src": "/icon-192.png", "sizes": "192x192", "type": "image/png" },
+    { "src": "/icon-512.png", "sizes": "512x512", "type": "image/png" }
+  ]
+}
