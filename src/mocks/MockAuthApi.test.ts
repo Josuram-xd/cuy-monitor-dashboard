@@ -69,7 +69,7 @@ describe('mock auth', () => {
       username: ' Ana ',
       fullName: 'Ana Ruiz',
       email: 'ANA@mail.com',
-      password: 'secret-pass',
+      password: 'Secret-pass-1',
     })
     expect(db.findUser('ana')).toMatchObject({
       status: 'PENDING_VERIFICATION',
@@ -86,7 +86,7 @@ describe('mock auth', () => {
       username: 'ana',
       fullName: 'Ana',
       email: 'ana@mail.com',
-      password: 'secret-pass',
+      password: 'Secret-pass-1',
     }
     await api.auth.register(body)
 

@@ -1,10 +1,12 @@
 import { useState, type FormEvent } from 'react'
 import { errorMessageKey } from '../../api/errorMessages'
+import { passwordProblems } from '../../auth/passwordRules'
 import { useAuth } from '../../auth/useAuth'
 import { Button } from '../../components/Button/Button'
 import { ConfirmDialog } from '../../components/ConfirmDialog/ConfirmDialog'
 import { ErrorState } from '../../components/ErrorState/ErrorState'
 import { FormError } from '../../components/FormError/FormError'
+import { PasswordChecklist } from '../../components/PasswordChecklist/PasswordChecklist'
 import { PasswordField } from '../../components/PasswordField/PasswordField'
 import { Skeleton } from '../../components/Skeleton/Skeleton'
 import { TextField } from '../../components/TextField/TextField'
@@ -19,13 +21,6 @@ import { initials } from '../../utils/initials'
 import styles from './Account.module.css'
 
 const MAX_NAME_LENGTH = 150
-const MIN_PASSWORD_BYTES = 8
-const MAX_PASSWORD_BYTES = 72
-
-function passwordIsValid(password: string): boolean {
-  const bytes = new TextEncoder().encode(password).length
-  return bytes >= MIN_PASSWORD_BYTES && bytes <= MAX_PASSWORD_BYTES
-}
 
 function ProfileCard({ fullName, username }: { fullName: string; username: string }) {
   const update = useUpdateProfileMutation()
@@ -90,19 +85,19 @@ function ProfileCard({ fullName, username }: { fullName: string; username: strin
   )
 }
 
-function PasswordCard() {
+function PasswordCard({ username }: { username: string }) {
   const change = useChangePasswordMutation()
   const [current, setCurrent] = useState('')
   const [next, setNext] = useState('')
   const [touched, setTouched] = useState(false)
   const [done, setDone] = useState(false)
-  const newPasswordError =
-    touched && !passwordIsValid(next) ? t('auth.error.weakPassword') : undefined
+  const problems = passwordProblems(next, { username })
+  const newPasswordError = touched && problems.length > 0 ? t('auth.error.weakPassword') : undefined
 
   function handleSubmit(event: FormEvent) {
     event.preventDefault()
     setTouched(true)
-    if (!current || !passwordIsValid(next)) {
+    if (!current || problems.length > 0) {
       return
     }
     setDone(false)
@@ -139,7 +134,6 @@ function PasswordCard() {
           label={t('account.password.new')}
           name="newPassword"
           autoComplete="new-password"
-          hint={t('account.password.hint')}
           error={newPasswordError}
           value={next}
           onChange={(e) => {
@@ -148,6 +142,7 @@ function PasswordCard() {
           }}
           onBlur={() => setTouched(true)}
         />
+        <PasswordChecklist password={next} username={username} />
         {change.isError && <FormError message={t(errorMessageKey(change.error, 'account'))} />}
         {done && (
           <p className={styles.success} role="status">
@@ -245,7 +240,7 @@ export function Account() {
       </header>
       <div className={styles.grid}>
         <ProfileCard fullName={profile.data.fullName} username={profile.data.username} />
-        <PasswordCard />
+        <PasswordCard username={profile.data.username} />
         <DangerCard />
       </div>
     </div>

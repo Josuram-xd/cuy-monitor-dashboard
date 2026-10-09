@@ -20,7 +20,7 @@ export function errorMessageKey(error: unknown, context: ErrorContext = 'general
   if (error.isUnauthorized && context === 'account') {
     return 'account.error.wrongPassword'
   }
-  if (error.status === 400 && context === 'account' && 'newPassword' in error.fields) {
+  if (error.status === 400 && context === 'account' && 'password' in error.fields) {
     return 'auth.error.weakPassword'
   }
   if (error.status === 409 && context === 'guineaPig') {

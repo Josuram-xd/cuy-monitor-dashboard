@@ -79,7 +79,7 @@ describe('Account', () => {
     renderAccount(api)
 
     await userEvent.type(await screen.findByLabelText('Contraseña actual'), PASSWORD)
-    await userEvent.type(screen.getByLabelText('Contraseña nueva'), 'otra-clave-456')
+    await userEvent.type(screen.getByLabelText('Contraseña nueva'), 'Otra-clave-456!')
     await userEvent.click(screen.getByRole('button', { name: 'Cambiar contraseña' }))
 
     expect(await screen.findByText('Listo, tu contraseña cambió.')).toBeInTheDocument()
@@ -91,7 +91,7 @@ describe('Account', () => {
     const { logout } = renderAccount(await signedInApi())
 
     await userEvent.type(await screen.findByLabelText('Contraseña actual'), 'no-es-esta')
-    await userEvent.type(screen.getByLabelText('Contraseña nueva'), 'otra-clave-456')
+    await userEvent.type(screen.getByLabelText('Contraseña nueva'), 'Otra-clave-456!')
     await userEvent.click(screen.getByRole('button', { name: 'Cambiar contraseña' }))
 
     expect(await screen.findByText('La contraseña actual no es correcta.')).toBeInTheDocument()
@@ -108,7 +108,7 @@ describe('Account', () => {
     await userEvent.click(screen.getByRole('button', { name: 'Cambiar contraseña' }))
 
     expect(
-      await screen.findByText('La contraseña debe tener entre 8 y 72 caracteres.'),
+      await screen.findByText('La contraseña no cumple todos los requisitos.'),
     ).toBeInTheDocument()
     expect(changePassword).not.toHaveBeenCalled()
   })

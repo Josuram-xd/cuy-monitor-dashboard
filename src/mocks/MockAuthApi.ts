@@ -1,5 +1,6 @@
 import type { AuthApi } from '../api/DashboardApi'
 import type { LoginChallenge, LoginRequest, RegisterRequest, VerifyOtpRequest } from '../types/Auth'
+import { passwordProblems } from '../auth/passwordRules'
 import type { MockUser } from './MockDatabase'
 import { mockSession } from './mockSession'
 import { MockResource } from './MockResource'
@@ -8,15 +9,17 @@ import { MockResource } from './MockResource'
 export const MOCK_OTP_CODE = '123456'
 
 const CODE_TTL_MS = 5 * 60_000
-const MIN_PASSWORD_BYTES = 8
-const MAX_PASSWORD_BYTES = 72
 
 export class MockAuthApi extends MockResource implements AuthApi {
   register(body: RegisterRequest): Promise<LoginChallenge> {
     const username = body.username.trim().toLowerCase()
     const email = body.email.trim().toLowerCase()
-    if (!this.validPassword(body.password)) {
-      return this.fail(400, 'bad_request', { password: 'size must be between 8 and 72' })
+    const problems = passwordProblems(body.password, { username, email })
+    if (problems.length > 0) {
+      // the same codes the backend sends in fields.password
+      return this.fail(400, 'bad_request', {
+        password: problems.map((rule) => (rule === 'LENGTH' ? 'MIN_LENGTH' : rule)).join(','),
+      })
     }
     if (this.db.users.some((u) => u.username === username || u.email === email)) {
       return this.fail(409, 'conflict')
@@ -93,10 +96,5 @@ export class MockAuthApi extends MockResource implements AuthApi {
     }
     this.db.users.push(user)
     return user
-  }
-
-  private validPassword(password: string): boolean {
-    const bytes = new TextEncoder().encode(password).length
-    return bytes >= MIN_PASSWORD_BYTES && bytes <= MAX_PASSWORD_BYTES
   }
 }
