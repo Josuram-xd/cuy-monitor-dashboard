@@ -94,7 +94,23 @@
   "guineaPig": {
     "still": "Quieto {{seconds}} de los últimos 60 s",
     "lastSeen": "Visto {{time}}",
-    "notSeen": "No se ha visto {{time}}"
+    "notSeen": "No se ha visto {{time}}",
+    "register": {
+      "title": "Registrar un cuy",
+      "intro": "Ponle un nombre y elige el color de la marca que lleva en el lomo. La cámara lo reconoce por ese color.",
+      "name": "Nombre",
+      "nameRequired": "Escribe el nombre del cuy.",
+      "nameTooLong": "El nombre es demasiado largo.",
+      "color": "Color de la marca",
+      "colorRequired": "Elige el color de la marca.",
+      "usedBy": "Lo lleva {{name}}",
+      "submit": "Registrar cuy",
+      "submitting": "Registrando…",
+      "allUsed": "Ya hay un cuy con cada color de marca. No se pueden registrar más en esta jaula."
+    },
+    "error": {
+      "colorTaken": "Otro cuy ya lleva ese color. Elige uno libre."
+    }
   },
   "auth": {
     "tagline": "Cuida a tus cuyes a tiempo",

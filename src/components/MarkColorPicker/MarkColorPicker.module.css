@@ -1,0 +1,129 @@
+.fieldset {
+  display: flex;
+  min-width: 0;
+  flex-direction: column;
+  gap: var(--space-2);
+  margin: 0;
+  padding: 0;
+  border: 0;
+}
+
+.legend {
+  padding: 0;
+  margin-bottom: var(--space-1);
+  font-size: var(--text-small-size);
+  line-height: var(--text-small-line);
+  font-weight: 600;
+}
+
+.grid {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: var(--space-2);
+}
+
+.option {
+  position: relative;
+  display: block;
+  cursor: pointer;
+}
+
+/* the real radio stays in the page for keyboards and screen readers, only its look is replaced */
+.input {
+  position: absolute;
+  inset: 0;
+  width: 100%;
+  height: 100%;
+  margin: 0;
+  opacity: 0;
+  cursor: inherit;
+}
+
+.card {
+  position: relative;
+  display: flex;
+  min-height: var(--touch-target);
+  flex-direction: column;
+  justify-content: center;
+  gap: 2px;
+  padding: var(--space-3) var(--space-4);
+  border: 2px solid var(--color-border);
+  border-radius: var(--radius-md);
+  background: var(--color-surface);
+  transition:
+    border-color var(--transition-default),
+    background-color var(--transition-default),
+    box-shadow var(--transition-lift),
+    transform var(--transition-lift);
+}
+
+.option:hover .card {
+  border-color: var(--color-accent);
+  box-shadow: var(--shadow-card);
+  transform: translateY(-2px);
+}
+
+.input:checked + .card {
+  border-color: var(--color-primary);
+  background: var(--color-primary-soft);
+  box-shadow: var(--ring-focus);
+}
+
+.input:focus-visible + .card {
+  outline: 2px solid var(--color-focus);
+  outline-offset: 2px;
+}
+
+.check {
+  position: absolute;
+  top: var(--space-2);
+  right: var(--space-2);
+  color: var(--color-primary);
+  opacity: 0;
+  transform: scale(0.6);
+  transition:
+    opacity var(--transition-default),
+    transform var(--transition-lift);
+}
+
+.input:checked + .card .check {
+  opacity: 1;
+  transform: scale(1);
+}
+
+.taken {
+  cursor: not-allowed;
+}
+
+.taken .card {
+  border-style: dashed;
+  background: var(--color-bg);
+  opacity: 0.55;
+}
+
+.option.taken:hover .card {
+  border-color: var(--color-border);
+  box-shadow: none;
+  transform: none;
+}
+
+.owner {
+  color: var(--color-text-muted);
+  font-size: var(--text-caption-size);
+  line-height: var(--text-caption-line);
+}
+
+.error {
+  display: flex;
+  align-items: center;
+  gap: var(--space-1);
+  color: var(--status-critical-fg);
+  font-size: var(--text-small-size);
+  line-height: var(--text-small-line);
+}
+
+@media (min-width: 640px) {
+  .grid {
+    grid-template-columns: repeat(4, minmax(0, 1fr));
+  }
+}
