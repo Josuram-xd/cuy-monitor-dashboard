@@ -40,6 +40,14 @@
   background: linear-gradient(135deg, var(--tint) 0%, var(--tint) 40%, var(--color-surface) 100%);
   box-shadow: var(--shadow-card);
   transition: background-color var(--transition-default);
+  animation: rise var(--rise-duration) both;
+}
+
+@keyframes rise {
+  from {
+    opacity: 0;
+    transform: translateY(14px);
+  }
 }
 
 /* status stripe on top */
@@ -47,7 +55,7 @@
   content: '';
   position: absolute;
   inset: 0 0 auto;
-  height: 4px;
+  height: 6px;
   background: var(--accent);
 }
 
@@ -59,7 +67,10 @@
   height: 52px;
   border-radius: var(--radius-full);
   background: var(--color-surface);
-  box-shadow: var(--shadow-card);
+  /* a halo in the status color: the first thing the eye finds */
+  box-shadow:
+    var(--shadow-card),
+    0 0 0 6px color-mix(in srgb, var(--accent) 22%, transparent);
   color: var(--fg);
 }
 

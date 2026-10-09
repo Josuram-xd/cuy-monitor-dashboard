@@ -8,12 +8,16 @@
   padding: var(--page-padding);
 }
 
+/* the mark breathes while the server answers */
 .logo {
-  display: block;
-  width: var(--space-7);
-  height: var(--space-7);
-  border-radius: var(--radius-lg);
-  background: var(--color-primary);
+  display: grid;
+  animation: breathe 1.6s ease-in-out infinite;
+}
+
+@keyframes breathe {
+  50% {
+    transform: scale(1.08);
+  }
 }
 
 .text {

@@ -43,13 +43,27 @@
   box-shadow: var(--shadow-card);
   text-decoration: none;
   transition:
-    transform var(--transition-default),
-    box-shadow var(--transition-default);
+    transform var(--transition-lift),
+    box-shadow var(--transition-lift);
+  /* the cards come in one after another (--i is the position in the grid) */
+  animation: rise var(--rise-duration) both;
+  animation-delay: calc(var(--i, 0) * 70ms);
 }
 
 .card:hover {
-  transform: translateY(-2px);
-  box-shadow: var(--shadow-overlay);
+  transform: translateY(-4px);
+  box-shadow: var(--shadow-lift);
+}
+
+.card:hover .name {
+  color: var(--color-primary);
+}
+
+@keyframes rise {
+  from {
+    opacity: 0;
+    transform: translateY(14px);
+  }
 }
 
 .card:active {
@@ -69,6 +83,7 @@
   line-height: var(--text-h2-line);
   font-weight: var(--text-h1-weight);
   text-overflow: ellipsis;
+  transition: color var(--transition-default);
   white-space: nowrap;
 }
 

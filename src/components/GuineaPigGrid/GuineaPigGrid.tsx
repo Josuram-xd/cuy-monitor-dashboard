@@ -1,4 +1,4 @@
-import type { ReactNode } from 'react'
+import type { CSSProperties, ReactNode } from 'react'
 import styles from './GuineaPigGrid.module.css'
 
 interface GuineaPigGridProps {
@@ -15,6 +15,17 @@ export function GuineaPigGrid({ children, label }: GuineaPigGridProps) {
   )
 }
 
-export function GuineaPigGridItem({ children }: { children: ReactNode }) {
-  return <li className={styles.item}>{children}</li>
+// index: position in the grid, so the cards can come in one after another
+export function GuineaPigGridItem({
+  children,
+  index = 0,
+}: {
+  children: ReactNode
+  index?: number
+}) {
+  return (
+    <li className={styles.item} style={{ '--i': index } as CSSProperties}>
+      {children}
+    </li>
+  )
 }

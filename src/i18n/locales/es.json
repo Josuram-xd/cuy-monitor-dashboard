@@ -50,10 +50,13 @@
   },
   "cage": {
     "title": "Tu jaula",
+    "greeting": "Hola, {{name}}",
+    "greetingFallback": "Hola",
     "guineaPigs": "Tus cuyes",
     "guineaPigsError": "No pudimos cargar los cuyes. Revisa la conexión e inténtalo otra vez.",
     "empty": "Aún no hay cuyes registrados",
     "registerGuineaPig": "Registrar cuy",
+    "newGuineaPig": "Nuevo cuy",
     "headline": {
       "allGood": "Todo bien en la jaula",
       "unknown": "Aún no hay datos de la jaula",
@@ -93,6 +96,12 @@
   },
   "auth": {
     "tagline": "Cuida a tus cuyes a tiempo",
+    "hero": {
+      "title": "Tus cuyes, siempre a la vista",
+      "point1": "Sabes al instante si un cuy no está bien",
+      "point2": "Alertas en vivo, sin recargar la página",
+      "point3": "Historial y peso de tu jaula en un solo lugar"
+    },
     "fields": {
       "username": "Usuario",
       "fullName": "Nombre completo",

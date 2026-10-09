@@ -1,0 +1,49 @@
+.brand,
+.light {
+  display: inline-grid;
+  flex-shrink: 0;
+  place-items: center;
+  border-radius: 28%;
+  box-shadow: var(--shadow-card);
+}
+
+/* green tile, white animal */
+.brand {
+  background: var(--gradient-brand);
+  color: var(--color-surface);
+  --detail: var(--color-primary-hover);
+  --soft: rgb(255 255 255 / 0.28);
+}
+
+/* white tile, green animal */
+.light {
+  background: var(--color-surface);
+  color: var(--color-primary);
+  --detail: var(--color-primary-hover);
+  --soft: var(--color-primary-soft);
+}
+
+.eyeWhite {
+  fill: var(--color-surface);
+}
+
+.light .eyeWhite {
+  fill: var(--color-surface);
+}
+
+.pupil {
+  fill: var(--detail);
+}
+
+.inner {
+  fill: var(--soft);
+}
+
+.belly {
+  fill: var(--soft);
+}
+
+.leaf {
+  fill: var(--color-accent);
+  opacity: 0.9;
+}
