@@ -3,6 +3,7 @@ import { cx } from '../../utils/cx'
 
 // Feather-style outline icons, drawn inline so we don't need an icon library.
 const PATHS = {
+  'chevron-left': <polyline points="15 18 9 12 15 6" />,
   trash: (
     <>
       <polyline points="3 6 5 6 21 6" />

@@ -22,9 +22,6 @@
     "register": "Registrar",
     "account": "Cuenta"
   },
-  "comingSoon": {
-    "message": "Esta sección estará lista pronto."
-  },
   "notFound": {
     "message": "No encontramos esta página.",
     "back": "Volver a la jaula"
@@ -116,6 +113,19 @@
   },
   "guineaPig": {
     "weightGrams": "{{grams}} g",
+    "detail": {
+      "back": "Volver a la jaula",
+      "since": "desde {{time}}",
+      "facts": "Datos",
+      "initialWeight": "Peso al llegar",
+      "mark": "Marca para la cámara",
+      "noData": "Sin dato",
+      "alerts": "Alertas de {{name}}",
+      "noAlerts": "{{name}} no tiene alertas. ¡Todo tranquilo!",
+      "notFound": "No encontramos a este cuy. Puede que ya lo hayas eliminado.",
+      "historyTitle": "Historial de comportamiento y peso",
+      "historySoon": "Estará disponible muy pronto."
+    },
     "breed": {
       "AMERICAN": "Americano",
       "PERUVIAN": "Peruano",

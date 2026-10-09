@@ -147,6 +147,10 @@ The app is friendly on purpose, without changing the palette. Titles and buttons
 - **GuineaPigCard** shows an avatar: the initial inside a ring of the coat color.
 - Everything that moves is switched off by `prefers-reduced-motion` (global rule in `global.css` plus each animation).
 
+### GuineaPigDetail (page `/guinea-pigs/:id`)
+
+What opens when the card of a cuy is clicked. It reads the list the cage page already loaded, so it needs no new endpoint: a hero with the avatar ring (coat color around the initial), the name, the status badge and since when; "Datos" with breed, coat, weight on arrival and mark (each one says "Sin dato" if it was not filled in) and the notes; the alerts of that cuy (the same `AlertList` as the cage page); and a dashed card that says the behavior and weight history is still to come. An unknown or deleted id shows an empty state with the way back. `AppLayout` renders `ScrollRestoration`, so every page opens at the top.
+
 ### DeleteGuineaPig
 
 A small trash button in the bottom right corner of each cuy card (outside the link that opens the cuy). It never deletes by itself: it opens a `ConfirmDialog` ("¿Eliminar a Canela?") that says the cuy leaves the cage, its mark color is free again and its history is kept. The delete is a soft delete on the server. The grid, the counter and the cage summary refresh afterwards; a 404 (already gone) is explained in the dialog.

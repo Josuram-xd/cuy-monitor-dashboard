@@ -5,7 +5,7 @@ import { AppLayout } from './components/AppLayout/AppLayout'
 import { Account } from './pages/Account/Account'
 import { Alerts } from './pages/Alerts/Alerts'
 import { CageOverview } from './pages/CageOverview/CageOverview'
-import { ComingSoon } from './pages/ComingSoon/ComingSoon'
+import { GuineaPigDetail } from './pages/GuineaPigDetail/GuineaPigDetail'
 import { Login } from './pages/Login/Login'
 import { NotFound } from './pages/NotFound/NotFound'
 import { RegisterGuineaPig } from './pages/RegisterGuineaPig/RegisterGuineaPig'
@@ -32,7 +32,7 @@ export const routes: RouteObject[] = [
           { index: true, element: <CageOverview /> },
           { path: 'alerts', element: <Alerts /> },
           { path: 'guinea-pigs/new', element: <RegisterGuineaPig /> },
-          { path: 'guinea-pigs/:id', element: <ComingSoon /> },
+          { path: 'guinea-pigs/:id', element: <GuineaPigDetail /> },
           { path: 'account', element: <Account /> },
           { path: '*', element: <NotFound /> },
         ],
