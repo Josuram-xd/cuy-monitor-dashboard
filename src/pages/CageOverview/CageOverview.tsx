@@ -5,6 +5,7 @@ import { EmptyState } from '../../components/EmptyState/EmptyState'
 import { ErrorState } from '../../components/ErrorState/ErrorState'
 import { GuineaPigCard } from '../../components/GuineaPigCard/GuineaPigCard'
 import { GuineaPigGrid, GuineaPigGridItem } from '../../components/GuineaPigGrid/GuineaPigGrid'
+import { Reveal } from '../../components/Reveal/Reveal'
 import { LiveIndicator } from '../../components/LiveIndicator/LiveIndicator'
 import { Skeleton } from '../../components/Skeleton/Skeleton'
 import { useAlerts } from '../../hooks/useAlerts'
@@ -32,6 +33,7 @@ function GuineaPigsSection({ now }: { now: number }) {
   if (guineaPigs.data.length === 0) {
     return (
       <EmptyState
+        mascot="sleepy"
         message={t('cage.empty')}
         action={
           <ButtonLink to="/guinea-pigs/new" variant="primary">
@@ -97,23 +99,27 @@ export function CageOverview() {
       {/* no data or failed request: the banner shows UNKNOWN, never "Normal" */}
       <CageStatusBanner health={health.data} now={now} liveIndicator={<LiveIndicator />} />
       <div className={styles.columns}>
-        <section className={styles.section} aria-labelledby="guinea-pigs-heading">
-          <h2 id="guinea-pigs-heading" className={styles.sectionTitle}>
-            {t('cage.guineaPigs')}
-          </h2>
-          <GuineaPigsSection now={now} />
-        </section>
-        <section className={styles.alerts} aria-labelledby="open-alerts-heading">
-          <div className={styles.sectionHeader}>
-            <h2 id="open-alerts-heading" className={styles.sectionTitle}>
-              {t('alerts.openTitle')}
+        <Reveal>
+          <section className={styles.section} aria-labelledby="guinea-pigs-heading">
+            <h2 id="guinea-pigs-heading" className={styles.sectionTitle}>
+              {t('cage.guineaPigs')}
             </h2>
-            <ButtonLink to="/alerts" variant="ghost">
-              {t('alerts.seeAll')}
-            </ButtonLink>
-          </div>
-          <OpenAlertsSection now={now} />
-        </section>
+            <GuineaPigsSection now={now} />
+          </section>
+        </Reveal>
+        <Reveal delay={120}>
+          <section className={styles.alerts} aria-labelledby="open-alerts-heading">
+            <div className={styles.sectionHeader}>
+              <h2 id="open-alerts-heading" className={styles.sectionTitle}>
+                {t('alerts.openTitle')}
+              </h2>
+              <ButtonLink to="/alerts" variant="ghost">
+                {t('alerts.seeAll')}
+              </ButtonLink>
+            </div>
+            <OpenAlertsSection now={now} />
+          </section>
+        </Reveal>
       </div>
     </div>
   )

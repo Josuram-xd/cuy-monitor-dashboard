@@ -1,0 +1,194 @@
+.mascot {
+  display: block;
+  overflow: visible;
+}
+
+.shadow {
+  fill: rgb(27 67 50 / 0.14);
+  transform-origin: 100px 150px;
+  animation: breathe-shadow 3.2s ease-in-out infinite;
+}
+
+.body {
+  transform-origin: 100px 140px;
+  animation: bob 3.2s ease-in-out infinite;
+}
+
+.fur {
+  fill: #e8b47f;
+}
+
+.patch {
+  fill: #c9803f;
+}
+
+.belly,
+.foot {
+  fill: #fbe9cf;
+}
+
+.foot {
+  fill: #f2d2a8;
+}
+
+.pink {
+  fill: #f7a8b8;
+}
+
+.cheek {
+  fill: #ff9fae;
+  opacity: 0.6;
+}
+
+.nose {
+  fill: #e86f86;
+}
+
+.pupil {
+  fill: #2b2118;
+}
+
+.shine {
+  fill: #fff;
+}
+
+.eye {
+  transform-box: fill-box;
+  transform-origin: center;
+  animation: blink 4.5s infinite;
+}
+
+.closed,
+.mouth,
+.brow,
+.whisker {
+  fill: none;
+  stroke: #2b2118;
+  stroke-linecap: round;
+  stroke-width: 3;
+}
+
+.whisker {
+  stroke: rgb(43 33 24 / 0.45);
+  stroke-width: 1.6;
+}
+
+.open {
+  fill: #7a2f3c;
+}
+
+.drop {
+  fill: #7cc4e8;
+  animation: drip 1.6s ease-in infinite;
+}
+
+.ear {
+  transform-box: fill-box;
+  transform-origin: 20% 90%;
+  animation: wiggle 5s ease-in-out infinite;
+}
+
+.z1,
+.z2 {
+  fill: var(--color-primary);
+  font-family: var(--font-display);
+  font-weight: 700;
+}
+
+.z1 {
+  font-size: 18px;
+}
+
+.z2 {
+  font-size: 26px;
+}
+
+.zzz {
+  animation: float-up 2.8s ease-in-out infinite;
+}
+
+/* an alarmed cuy shakes a little; a sleepy one breathes slowly */
+.alarm .body {
+  animation: shake 0.5s ease-in-out infinite;
+}
+
+.sleepy .body {
+  animation-duration: 5.5s;
+}
+
+.sleepy .eye {
+  animation: none;
+}
+
+@keyframes bob {
+  50% {
+    transform: translateY(-5px);
+  }
+}
+
+@keyframes breathe-shadow {
+  50% {
+    transform: scaleX(0.92);
+    opacity: 0.8;
+  }
+}
+
+@keyframes blink {
+  0%,
+  92%,
+  100% {
+    transform: scaleY(1);
+  }
+  95% {
+    transform: scaleY(0.1);
+  }
+}
+
+@keyframes wiggle {
+  0%,
+  90%,
+  100% {
+    transform: rotate(0);
+  }
+  93% {
+    transform: rotate(-8deg);
+  }
+  96% {
+    transform: rotate(5deg);
+  }
+}
+
+@keyframes shake {
+  25% {
+    transform: translateX(-2px) rotate(-1deg);
+  }
+  75% {
+    transform: translateX(2px) rotate(1deg);
+  }
+}
+
+@keyframes drip {
+  0% {
+    opacity: 0;
+    transform: translateY(-6px);
+  }
+  30% {
+    opacity: 1;
+  }
+  100% {
+    opacity: 0;
+    transform: translateY(18px);
+  }
+}
+
+@keyframes float-up {
+  0%,
+  100% {
+    opacity: 0.4;
+    transform: translateY(4px);
+  }
+  50% {
+    opacity: 1;
+    transform: translateY(-4px);
+  }
+}

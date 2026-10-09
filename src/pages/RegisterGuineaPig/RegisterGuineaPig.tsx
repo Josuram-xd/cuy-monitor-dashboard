@@ -80,6 +80,7 @@ export function RegisterGuineaPig() {
   if (allTaken) {
     return (
       <EmptyState
+        mascot="happy"
         message={t('guineaPig.register.allUsed')}
         action={
           <ButtonLink to="/" variant="primary">

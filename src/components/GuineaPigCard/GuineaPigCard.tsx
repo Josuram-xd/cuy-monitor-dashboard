@@ -4,6 +4,7 @@ import type { BehaviorWindow, GuineaPig } from '../../types/GuineaPig'
 import type { DisplayStatus } from '../../types/HealthStatus'
 import { cx } from '../../utils/cx'
 import { formatRelative, minutesSince } from '../../utils/time'
+import { CoatSwatch } from '../CoatSwatch/CoatSwatch'
 import { Icon } from '../Icon/Icon'
 import { MarkColorDot } from '../MarkColorDot/MarkColorDot'
 import { StatusBadge } from '../StatusBadge/StatusBadge'
@@ -34,6 +35,10 @@ export function GuineaPigCard({ guineaPig, lastWindow, now }: GuineaPigCardProps
   return (
     <Link to={`/guinea-pigs/${guineaPig.id}`} className={cx(styles.card, styles[status])}>
       <span className={styles.top}>
+        <span className={styles.avatar} aria-hidden="true">
+          {guineaPig.coatColor && <CoatSwatch color={guineaPig.coatColor} size={44} />}
+          <span className={styles.initial}>{guineaPig.name.charAt(0).toUpperCase()}</span>
+        </span>
         <span className={styles.name}>{guineaPig.name}</span>
         <Icon name="chevron-right" className={styles.chevron} />
       </span>

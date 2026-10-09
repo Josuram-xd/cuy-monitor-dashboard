@@ -5,7 +5,7 @@ import { EmptyState } from '../../components/EmptyState/EmptyState'
 export function NotFound() {
   return (
     <EmptyState
-      icon="help-circle"
+      mascot="worried"
       message={t('notFound.message')}
       action={
         <ButtonLink to="/" variant="primary">

@@ -5,6 +5,9 @@
   --color-primary-hover: #1b4332;
   --color-primary-soft: #e4efe8;
   --color-accent: #52796f;
+  /* the header goes left to right, so the wave under it can continue the same gradient */
+  --header-from: #3a7d5f;
+  --header-to: #1b4332;
   --gradient-brand: linear-gradient(135deg, #3a7d5f 0%, #2d6a4f 45%, #1b4332 100%);
   --color-bg: #f7f5f0;
   --color-surface: #ffffff;
@@ -42,11 +45,15 @@
   --mark-white: #ffffff;
 
   /* 2.4 Typography */
-  --font-sans: system-ui, -apple-system, 'Segoe UI', Roboto, 'Helvetica Neue', Arial, sans-serif;
+  /* round and chunky for titles and buttons, friendly for text; both are served by us (no external request) */
+  --font-display: 'Fredoka Variable', 'Nunito Variable', system-ui, sans-serif;
+  --font-sans:
+    'Nunito Variable', system-ui, -apple-system, 'Segoe UI', Roboto, 'Helvetica Neue', Arial,
+    sans-serif;
   --font-mono: ui-monospace, 'SF Mono', Consolas, monospace;
 
-  --text-display-size: 28px;
-  --text-display-line: 34px;
+  --text-display-size: 32px;
+  --text-display-line: 38px;
   --text-display-weight: 700;
   --text-h1-size: 22px;
   --text-h1-line: 28px;
@@ -74,14 +81,20 @@
   --space-7: 48px;
   --space-8: 64px;
 
-  --radius-sm: 6px;
-  --radius-md: 10px;
-  --radius-lg: 16px;
+  --radius-sm: 8px;
+  --radius-md: 14px;
+  --radius-lg: 24px;
   --radius-full: 9999px;
 
   --shadow-card: 0 1px 2px rgb(27 67 50 / 0.06), 0 4px 14px rgb(27 67 50 / 0.07);
   --shadow-lift: 0 12px 30px rgb(27 67 50 / 0.18);
   --shadow-overlay: 0 8px 24px rgb(27 67 50 / 0.2);
+  /* soft pastel accents that sit next to the green: used for decoration, never for status */
+  --pastel-mint: #d3eedd;
+  --pastel-sun: #ffe7a8;
+  --pastel-peach: #ffd9c4;
+  --pastel-sky: #cfe8f3;
+  --shadow-pop: 0 14px 34px rgb(27 67 50 / 0.2), 0 2px 6px rgb(27 67 50 / 0.1);
   --ring-focus: 0 0 0 4px rgb(45 106 79 / 0.18);
 
   /* 2.6 Layout. Custom properties can't be used inside @media: tablet = 640px, desktop = 1024px. */
@@ -95,6 +108,8 @@
   --transition-lift: 220ms cubic-bezier(0.4, 0, 0.2, 1);
   --rise-duration: 360ms;
   --pulse-duration: 600ms;
+  /* a little overshoot: things pop instead of just fading in */
+  --ease-bounce: cubic-bezier(0.34, 1.56, 0.64, 1);
 }
 
 @media (min-width: 640px) {

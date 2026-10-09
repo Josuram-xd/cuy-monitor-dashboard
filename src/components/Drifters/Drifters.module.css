@@ -1,0 +1,79 @@
+.field {
+  position: absolute;
+  inset: 0;
+  overflow: hidden;
+  pointer-events: none;
+}
+
+/* a cloud is a pill with two bumps */
+.cloud {
+  position: absolute;
+  width: 120px;
+  height: 36px;
+  border-radius: var(--radius-full);
+  background: rgb(255 255 255 / 0.13);
+  animation: drift 26s linear infinite;
+}
+
+.cloud::before,
+.cloud::after {
+  content: '';
+  position: absolute;
+  bottom: 14px;
+  border-radius: var(--radius-full);
+  background: inherit;
+}
+
+.cloud::before {
+  left: 18px;
+  width: 50px;
+  height: 46px;
+}
+
+.cloud::after {
+  left: 52px;
+  width: 38px;
+  height: 34px;
+}
+
+.cloud:nth-child(1) {
+  top: 12%;
+  animation-duration: 34s;
+}
+
+.cloud:nth-child(2) {
+  top: 38%;
+  transform: scale(1.4);
+  animation-duration: 46s;
+  animation-delay: -18s;
+}
+
+.cloud:nth-child(3) {
+  top: 64%;
+  transform: scale(0.8);
+  animation-duration: 30s;
+  animation-delay: -9s;
+}
+
+.cloud:nth-child(4) {
+  top: 82%;
+  transform: scale(1.1);
+  animation-duration: 52s;
+  animation-delay: -30s;
+}
+
+@keyframes drift {
+  from {
+    translate: -200px 0;
+  }
+  to {
+    translate: calc(100vw + 200px) 0;
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .cloud {
+    animation: none;
+    translate: 20vw 0;
+  }
+}

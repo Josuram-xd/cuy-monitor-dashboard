@@ -6,7 +6,9 @@
   min-height: var(--touch-target);
   padding: 0 var(--space-5);
   border: 1px solid transparent;
-  border-radius: var(--radius-md);
+  border-radius: var(--radius-full);
+  font-family: var(--font-display);
+  font-size: 17px;
   font-weight: 600;
   text-decoration: none;
   transition:
@@ -14,15 +16,15 @@
     border-color var(--transition-default),
     color var(--transition-default),
     box-shadow var(--transition-lift),
-    transform var(--transition-lift);
+    transform 280ms var(--ease-bounce);
 }
 
 .button:hover:not(:disabled) {
-  transform: translateY(-1px);
+  transform: translateY(-3px) scale(1.03);
 }
 
 .button:active:not(:disabled) {
-  transform: scale(0.98);
+  transform: translateY(0) scale(0.95);
 }
 
 .button:disabled {
