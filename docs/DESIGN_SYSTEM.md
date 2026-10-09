@@ -13,7 +13,7 @@
 3. **Plain Spanish.** No technical words on screen (no "probAnomaly", "event", "API"). All text lives in `src/i18n/locales/es.json`.
 4. **Honest about uncertainty.** If there is no data or the live connection is down, say so. Unknown is never displayed as "Normal".
 5. **Mobile-first, outdoor-friendly.** Designed for a 360 px phone in daylight: high contrast, large tap targets, few elements per screen.
-6. **Calm by default.** Strong colors are reserved for `ALERT` and `CRITICAL`. A healthy cage looks quiet.
+6. **Alive, but status still wins.** The brand is green and the interface reacts to the user (hover lift, press feedback, cards that come in one after another, a live dot that pulses). Within a card the strongest color is still the status: `ALERT` and `CRITICAL` look unmistakably louder than a healthy cage.
 7. **Getting in is easy.** Login, registration and the verification code are short, forgiving forms with big fields; errors say what to do, never blame the user and never reveal whether an account exists.
 
 ---
@@ -26,22 +26,25 @@ All tokens are CSS custom properties in `src/styles/tokens.css`. Components neve
 
 | Token | Light | Dark | Use |
 |---|---|---|---|
-| `--color-primary` | `#2F5D8A` | `#7FB0E0` | Primary buttons, links, main chart series |
-| `--color-primary-hover` | `#244A6F` | `#A3C8EC` | Hover/pressed |
-| `--color-bg` | `#F6F7F9` | `#121417` | Page background |
-| `--color-surface` | `#FFFFFF` | `#1C1F24` | Cards, panels |
-| `--color-border` | `#E3E6EA` | `#2E333A` | Card borders, dividers |
-| `--color-text` | `#1C1F23` | `#ECEFF3` | Main text |
-| `--color-text-muted` | `#6B7380` | `#9AA3AF` | Secondary text, timestamps |
-| `--color-focus` | `#2F5D8A` | `#7FB0E0` | Focus ring (2 px + 2 px offset) |
+| `--color-primary` | `#2D6A4F` | `#7FB89B` | Primary buttons, links, main chart series |
+| `--color-primary-hover` | `#1B4332` | `#A3D1B8` | Hover/pressed, end of the brand gradient |
+| `--color-primary-soft` | `#E4EFE8` | `#1F3329` | Tinted hover backgrounds, icon circles |
+| `--color-accent` | `#52796F` | `#8FB5AA` | Secondary green: input hover, eyebrow text, dashed borders |
+| `--gradient-brand` | `#3A7D5F → #2D6A4F → #1B4332` | same | Header, primary buttons, auth panel, logo tile |
+| `--color-bg` | `#F7F5F0` | `#121714` | Page background (warm off-white) |
+| `--color-surface` | `#FFFFFF` | `#1C221F` | Cards, panels |
+| `--color-border` | `#D6D3CD` | `#2E3631` | Card borders, dividers |
+| `--color-text` | `#1C1917` | `#ECEFED` | Main text |
+| `--color-text-muted` | `#6B6560` | `#9AA39E` | Secondary text, timestamps |
+| `--color-focus` | `#2D6A4F` | `#7FB89B` | Focus ring (2 px + 2 px offset) |
 
-The primary is blue on purpose: green, yellow, orange and red are reserved for health status.
+The brand is green (PencilPlaybook palette). It shares the hue with the `NORMAL` status, so a status is **never** shown by color alone: it always carries its icon and its word, and `NORMAL` uses a brighter green accent (`#16A34A`) than the brand. `--color-text-muted` is `#6B6560` instead of the playbook's `#78716C` to keep 4.5:1 on the warm background.
 
 ### 2.2 Color — health status
 
 | Status | Spanish label (es.json) | Icon | `--status-*-fg` | `--status-*-bg` | `--status-*-accent` |
 |---|---|---|---|---|---|
-| `NORMAL` | Normal | check-circle | `#1F7A3D` | `#E6F4EA` | `#2E9E55` |
+| `NORMAL` | Normal | check-circle | `#1F7A3D` | `#E6F4EA` | `#16A34A` |
 | `OBSERVED` | En observación | eye | `#8A6100` | `#FFF4CC` | `#F2B705` |
 | `ALERT` | Alerta | alert-triangle | `#B24A00` | `#FFE8D6` | `#F07F13` |
 | `CRITICAL` | Crítico | alert-octagon | `#B3261E` | `#FDE7E7` | `#D93025` |
@@ -95,8 +98,10 @@ System font stack (no web fonts to download on slow rural connections):
 |---|---|
 | `--space-1` … `--space-8` | 4, 8, 12, 16, 24, 32, 48, 64 px |
 | `--radius-sm` / `--radius-md` / `--radius-lg` / `--radius-full` | 6 / 10 / 16 / 9999 px |
-| `--shadow-card` | `0 1px 2px rgb(0 0 0 / 0.06), 0 1px 3px rgb(0 0 0 / 0.08)` |
-| `--shadow-overlay` | `0 8px 24px rgb(0 0 0 / 0.16)` (toasts, dialogs) |
+| `--shadow-card` | `0 1px 2px rgb(27 67 50 / 0.06), 0 4px 14px rgb(27 67 50 / 0.07)` |
+| `--shadow-lift` | `0 12px 30px rgb(27 67 50 / 0.18)` (hovered cards and buttons, auth card) |
+| `--shadow-overlay` | `0 8px 24px rgb(27 67 50 / 0.2)` (toasts, dialogs, menus) |
+| `--ring-focus` | `0 0 0 4px rgb(45 106 79 / 0.18)` (soft glow around a focused field) |
 
 ### 2.6 Layout and breakpoints
 
@@ -113,7 +118,9 @@ System font stack (no web fonts to download on slow rural connections):
 
 ### 2.7 Motion
 
-- Default transition: 150 ms `ease-out` (hover, focus, badge color change).
+- Default transition: 150 ms `ease-out` (hover, focus, badge color change). Lifts use `--transition-lift` (220 ms).
+- Entrance: cards, the cage banner and the auth card rise 14 px while fading in (`--rise-duration`, 360 ms); guinea pig cards are staggered 70 ms each.
+- The live dot pulses while the connection is up and the logo breathes on the loading screen. Everything else is still.
 - A guinea pig whose status just went up gets a single 600 ms highlight pulse on its card. No looping animations.
 - Respect `prefers-reduced-motion: reduce` (disable the pulse).
 

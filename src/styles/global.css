@@ -1,6 +1,10 @@
 body {
   min-height: 100vh;
-  background: var(--color-bg);
+  /* a soft green glow behind the header, so the page is not a flat sheet */
+  background:
+    radial-gradient(900px 320px at 50% -120px, rgb(45 106 79 / 0.14), transparent 70%),
+    var(--color-bg);
+  background-attachment: fixed;
   color: var(--color-text);
   font-family: var(--font-sans);
   font-size: var(--text-body-size);
@@ -28,4 +32,28 @@ h2 {
 
 #root {
   min-height: 100vh;
+}
+
+::selection {
+  background: var(--color-primary);
+  color: var(--color-surface);
+}
+
+html {
+  scroll-behavior: smooth;
+}
+
+/* no motion for people who asked for none (DESIGN_SYSTEM 2.7) */
+@media (prefers-reduced-motion: reduce) {
+  html {
+    scroll-behavior: auto;
+  }
+
+  *,
+  *::before,
+  *::after {
+    animation-duration: 0.01ms !important;
+    animation-iteration-count: 1 !important;
+    transition-duration: 0.01ms !important;
+  }
 }
