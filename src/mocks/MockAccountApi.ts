@@ -11,13 +11,17 @@ import { mockSession } from './mockSession'
 import { MockResource } from './MockResource'
 
 // after a reload the fake database is empty but the fake session survives: answer with a demo user
-const DEMO_USER: User = { username: 'demo', fullName: 'Usuario de prueba' }
+const DEMO_USER: User = { username: 'demo', fullName: 'Usuario de prueba', hasPassword: true }
+
+function toProfile(user: MockUser): User {
+  return { username: user.username, fullName: user.fullName, hasPassword: user.password !== null }
+}
 
 export class MockAccountApi extends MockResource implements AccountApi {
   getProfile(): Promise<User> {
     const user = this.currentUser()
     if (user) {
-      return this.respond({ username: user.username, fullName: user.fullName })
+      return this.respond(toProfile(user))
     }
     // no cookie, no profile: the same 401 the backend gives
     return mockSession.has() ? this.respond(DEMO_USER) : this.fail(401, 'unauthorized')
@@ -31,7 +35,7 @@ export class MockAccountApi extends MockResource implements AccountApi {
     const user = this.currentUser()
     if (user) {
       user.fullName = fullName
-      return this.respond({ username: user.username, fullName })
+      return this.respond(toProfile(user))
     }
     return mockSession.has()
       ? this.respond({ ...DEMO_USER, fullName })
@@ -43,7 +47,8 @@ export class MockAccountApi extends MockResource implements AccountApi {
     if (!user && !mockSession.has()) {
       return this.fail(401, 'unauthorized')
     }
-    if (user && user.password !== body.currentPassword) {
+    // an account without password has nothing to check: its open session is the proof
+    if (user && user.password !== null && user.password !== body.currentPassword) {
       return this.fail(401, 'unauthorized')
     }
     const problems = passwordProblems(body.newPassword, {
@@ -63,7 +68,7 @@ export class MockAccountApi extends MockResource implements AccountApi {
 
   deactivate(body: DeactivateAccountRequest): Promise<void> {
     const user = this.currentUser()
-    if (user && user.password !== body.currentPassword) {
+    if (user && user.password !== null && user.password !== body.currentPassword) {
       return this.fail(401, 'unauthorized')
     }
     if (user) {

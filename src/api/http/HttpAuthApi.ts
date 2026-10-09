@@ -1,4 +1,5 @@
 import type {
+  GoogleLoginRequest,
   LoginChallenge,
   LoginRequest,
   RegisterRequest,
@@ -22,6 +23,10 @@ export class HttpAuthApi implements AuthApi {
 
   login(body: LoginRequest): Promise<LoginChallenge> {
     return this.http.post<LoginChallenge>(`${BASE}/login`, body)
+  }
+
+  googleLogin(body: GoogleLoginRequest): Promise<void> {
+    return this.http.post<void>(`${BASE}/google`, body)
   }
 
   verifyOtp(body: VerifyOtpRequest): Promise<void> {

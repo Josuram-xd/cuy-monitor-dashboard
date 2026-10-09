@@ -85,7 +85,8 @@ function ProfileCard({ fullName, username }: { fullName: string; username: strin
   )
 }
 
-function PasswordCard({ username }: { username: string }) {
+// hasPassword false = an account made with Google: it sets its first password without an old one
+function PasswordCard({ username, hasPassword }: { username: string; hasPassword: boolean }) {
   const change = useChangePasswordMutation()
   const [current, setCurrent] = useState('')
   const [next, setNext] = useState('')
@@ -97,12 +98,12 @@ function PasswordCard({ username }: { username: string }) {
   function handleSubmit(event: FormEvent) {
     event.preventDefault()
     setTouched(true)
-    if (!current || problems.length > 0) {
+    if ((hasPassword && !current) || problems.length > 0) {
       return
     }
     setDone(false)
     change.mutate(
-      { currentPassword: current, newPassword: next },
+      { currentPassword: hasPassword ? current : undefined, newPassword: next },
       {
         onSuccess: () => {
           setCurrent('')
@@ -117,19 +118,22 @@ function PasswordCard({ username }: { username: string }) {
   return (
     <section className={styles.card} aria-labelledby="password-heading">
       <h2 id="password-heading" className={styles.cardTitle}>
-        {t('account.password.title')}
+        {hasPassword ? t('account.password.title') : t('account.password.createTitle')}
       </h2>
+      {!hasPassword && <p className={styles.text}>{t('account.password.googleOnly')}</p>}
       <form className={styles.form} onSubmit={handleSubmit} noValidate>
-        <PasswordField
-          label={t('account.password.current')}
-          name="currentPassword"
-          autoComplete="current-password"
-          value={current}
-          onChange={(e) => {
-            setCurrent(e.target.value)
-            setDone(false)
-          }}
-        />
+        {hasPassword && (
+          <PasswordField
+            label={t('account.password.current')}
+            name="currentPassword"
+            autoComplete="current-password"
+            value={current}
+            onChange={(e) => {
+              setCurrent(e.target.value)
+              setDone(false)
+            }}
+          />
+        )}
         <PasswordField
           label={t('account.password.new')}
           name="newPassword"
@@ -150,14 +154,18 @@ function PasswordCard({ username }: { username: string }) {
           </p>
         )}
         <Button type="submit" variant="primary" disabled={change.isPending}>
-          {change.isPending ? t('account.password.submitting') : t('account.password.submit')}
+          {change.isPending
+            ? t('account.password.submitting')
+            : hasPassword
+              ? t('account.password.submit')
+              : t('account.password.createSubmit')}
         </Button>
       </form>
     </section>
   )
 }
 
-function DangerCard() {
+function DangerCard({ hasPassword }: { hasPassword: boolean }) {
   const { logout } = useAuth()
   const deactivate = useDeactivateAccountMutation()
   const [open, setOpen] = useState(false)
@@ -170,11 +178,11 @@ function DangerCard() {
   }
 
   function confirm() {
-    if (!password) {
+    if (hasPassword && !password) {
       return
     }
     deactivate.mutate(
-      { currentPassword: password },
+      { currentPassword: hasPassword ? password : undefined },
       // the account is off: the session is over, and /login says why
       { onSuccess: () => logout('disabled') },
     )
@@ -198,14 +206,18 @@ function DangerCard() {
           busy={deactivate.isPending}
           danger
         >
-          <p>{t('account.danger.confirmText')}</p>
-          <PasswordField
-            label={t('account.danger.password')}
-            name="deactivatePassword"
-            autoComplete="current-password"
-            value={password}
-            onChange={(e) => setPassword(e.target.value)}
-          />
+          <p>
+            {hasPassword ? t('account.danger.confirmText') : t('account.danger.confirmTextGoogle')}
+          </p>
+          {hasPassword && (
+            <PasswordField
+              label={t('account.danger.password')}
+              name="deactivatePassword"
+              autoComplete="current-password"
+              value={password}
+              onChange={(e) => setPassword(e.target.value)}
+            />
+          )}
           {deactivate.isError && (
             <FormError message={t(errorMessageKey(deactivate.error, 'account'))} />
           )}
@@ -240,8 +252,8 @@ export function Account() {
       </header>
       <div className={styles.grid}>
         <ProfileCard fullName={profile.data.fullName} username={profile.data.username} />
-        <PasswordCard username={profile.data.username} />
-        <DangerCard />
+        <PasswordCard username={profile.data.username} hasPassword={profile.data.hasPassword} />
+        <DangerCard hasPassword={profile.data.hasPassword} />
       </div>
     </div>
   )

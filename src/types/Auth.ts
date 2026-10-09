@@ -10,6 +10,11 @@ export interface LoginRequest {
   password: string
 }
 
+// the credential Google's button hands to the page: a signed ID token
+export interface GoogleLoginRequest {
+  idToken: string
+}
+
 export interface VerifyOtpRequest {
   challengeId: string
   code: string

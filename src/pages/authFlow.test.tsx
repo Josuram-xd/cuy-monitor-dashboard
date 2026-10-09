@@ -6,6 +6,7 @@ import { afterEach, beforeEach, describe, expect, it, vi } from 'vitest'
 import { getDashboardApi } from '../api/apiProvider'
 import { UnauthorizedNotifier } from '../api/UnauthorizedNotifier'
 import { AuthProvider } from '../auth/AuthProvider'
+import { config } from '../config'
 import { pendingVerification } from '../auth/pendingVerification'
 import { PublicOnlyRoute } from '../auth/PublicOnlyRoute'
 import { RequireAuth } from '../auth/RequireAuth'
@@ -120,5 +121,33 @@ describe('auth flow with the mocks', () => {
     renderApp('/verify')
 
     expect(await screen.findByRole('heading', { name: 'Iniciar sesión' })).toBeInTheDocument()
+  })
+
+  it('signs in with Google without any code', async () => {
+    const original = config.useMocks
+    config.useMocks = true
+    try {
+      renderApp('/login?next=%2Falerts')
+
+      await userEvent.click(await screen.findByRole('button', { name: /Continuar con Google/ }))
+
+      expect(await screen.findByText('private alerts')).toBeInTheDocument()
+    } finally {
+      config.useMocks = original
+    }
+  })
+
+  it('also offers Google when registering', async () => {
+    const original = config.useMocks
+    config.useMocks = true
+    try {
+      renderApp('/register')
+
+      await userEvent.click(await screen.findByRole('button', { name: /Continuar con Google/ }))
+
+      expect(await screen.findByText('private cage')).toBeInTheDocument()
+    } finally {
+      config.useMocks = original
+    }
   })
 })

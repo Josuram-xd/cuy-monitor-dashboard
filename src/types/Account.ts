@@ -3,10 +3,11 @@ export interface UpdateProfileRequest {
 }
 
 export interface ChangePasswordRequest {
-  currentPassword: string
+  // missing only for an account without password (made with Google)
+  currentPassword?: string
   newPassword: string
 }
 
 export interface DeactivateAccountRequest {
-  currentPassword: string
+  currentPassword?: string
 }
