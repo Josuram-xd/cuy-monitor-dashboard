@@ -14,8 +14,28 @@ function minutesAgo(minutes: number): string {
 export const mockCageId = 'cage-1'
 
 export const mockGuineaPigs: GuineaPig[] = [
-  { id: 1, name: 'Canela', markColor: 'RED', status: 'OBSERVED', statusSince: minutesAgo(22) },
-  { id: 2, name: 'Pelusa', markColor: 'BLUE', status: 'NORMAL', statusSince: minutesAgo(600) },
+  {
+    id: 1,
+    name: 'Canela',
+    markColor: 'RED',
+    status: 'OBSERVED',
+    statusSince: minutesAgo(22),
+    breed: 'TEDDY',
+    coatColor: 'CINNAMON',
+    initialWeightGrams: 860,
+    notes: 'La más curiosa de la jaula.',
+  },
+  {
+    id: 2,
+    name: 'Pelusa',
+    markColor: 'BLUE',
+    status: 'NORMAL',
+    statusSince: minutesAgo(600),
+    breed: 'PERUVIAN',
+    coatColor: 'CREAM',
+    initialWeightGrams: 940,
+    notes: null,
+  },
   { id: 3, name: 'Copito', markColor: 'WHITE', status: 'NORMAL', statusSince: minutesAgo(1440) },
   { id: 4, name: 'Chispa', markColor: 'ORANGE', status: 'ALERT', statusSince: minutesAgo(35) },
 ]

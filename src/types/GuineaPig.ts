@@ -1,3 +1,4 @@
+import type { Breed, CoatColor } from './GuineaPigProfile'
 import type { HealthStatus } from './HealthStatus'
 import type { MarkColor } from './MarkColor'
 
@@ -7,11 +8,20 @@ export interface GuineaPig {
   markColor: MarkColor
   status: HealthStatus
   statusSince: string
+  // null for a cuy registered without them
+  breed?: Breed | null
+  coatColor?: CoatColor | null
+  initialWeightGrams?: number | null
+  notes?: string | null
 }
 
 export interface NewGuineaPig {
   name: string
   markColor: MarkColor
+  breed?: Breed
+  coatColor?: CoatColor
+  initialWeightGrams?: number
+  notes?: string
 }
 
 export interface StatusTransition {

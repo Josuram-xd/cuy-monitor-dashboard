@@ -1,6 +1,7 @@
 import type { GuineaPigApi } from '../api/DashboardApi'
 import type { DateRange } from '../types/DateRange'
 import type { GuineaPig, GuineaPigHistory, NewGuineaPig } from '../types/GuineaPig'
+import { MAX_NOTES_LENGTH, MAX_WEIGHT_GRAMS, MIN_WEIGHT_GRAMS } from '../types/GuineaPigProfile'
 import { mockTransitions, mockWindows } from './data'
 import { MockResource } from './MockResource'
 
@@ -22,6 +23,18 @@ export class MockGuineaPigApi extends MockResource implements GuineaPigApi {
     if (name.length === 0 || name.length > MAX_NAME_LENGTH) {
       return this.fail(400, 'bad_request')
     }
+    // the same limits as the backend
+    const weight = body.initialWeightGrams
+    if (
+      weight !== undefined &&
+      (!Number.isInteger(weight) || weight < MIN_WEIGHT_GRAMS || weight > MAX_WEIGHT_GRAMS)
+    ) {
+      return this.fail(400, 'bad_request', { initialWeightGrams: 'invalid' })
+    }
+    const notes = body.notes?.trim()
+    if (notes !== undefined && notes.length > MAX_NOTES_LENGTH) {
+      return this.fail(400, 'bad_request', { notes: 'invalid' })
+    }
     if (this.db.guineaPigs.some((g) => g.markColor === body.markColor)) {
       return this.fail(409, 'conflict')
     }
@@ -31,6 +44,10 @@ export class MockGuineaPigApi extends MockResource implements GuineaPigApi {
       markColor: body.markColor,
       status: 'NORMAL',
       statusSince: new Date().toISOString(),
+      breed: body.breed ?? null,
+      coatColor: body.coatColor ?? null,
+      initialWeightGrams: weight ?? null,
+      notes: notes || null,
     }
     this.db.guineaPigs.push(created)
     return this.respond(created)

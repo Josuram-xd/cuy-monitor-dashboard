@@ -1,0 +1,67 @@
+.group {
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-2);
+}
+
+.legend {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: baseline;
+  gap: var(--space-2);
+  margin: 0;
+  font-size: var(--text-small-size);
+  line-height: var(--text-small-line);
+  font-weight: 600;
+}
+
+.hint {
+  color: var(--color-text-muted);
+  font-weight: 400;
+}
+
+.chips {
+  display: flex;
+  flex-wrap: wrap;
+  gap: var(--space-2);
+}
+
+.chip {
+  display: inline-flex;
+  align-items: center;
+  gap: var(--space-2);
+  min-height: var(--touch-target);
+  padding: 0 var(--space-4);
+  border: 1.5px solid var(--color-border);
+  border-radius: var(--radius-full);
+  background: var(--color-surface);
+  color: var(--color-text);
+  font-weight: 600;
+  cursor: pointer;
+  transition:
+    border-color var(--transition-default),
+    background-color var(--transition-default),
+    transform var(--transition-lift),
+    box-shadow var(--transition-lift);
+}
+
+.chip:hover {
+  border-color: var(--color-accent);
+  transform: translateY(-2px);
+}
+
+.chip:active {
+  transform: scale(0.96);
+}
+
+.chip:focus-visible {
+  outline: 2px solid var(--color-focus);
+  outline-offset: 2px;
+}
+
+.selected {
+  border-color: var(--color-primary);
+  background: var(--color-primary-soft);
+  color: var(--color-primary-hover);
+  box-shadow: var(--shadow-card);
+}

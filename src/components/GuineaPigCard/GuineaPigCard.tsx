@@ -23,6 +23,13 @@ export function GuineaPigCard({ guineaPig, lastWindow, now }: GuineaPigCardProps
   // not seen for a while: we can't say it's fine, so it shows as unknown
   const stale = lastSeenAt !== undefined && minutesSince(lastSeenAt, now) > STALE_AFTER_MINUTES
   const status: DisplayStatus = stale ? 'UNKNOWN' : guineaPig.status
+  const about = [
+    guineaPig.breed ? t(`guineaPig.breed.${guineaPig.breed}`) : null,
+    guineaPig.coatColor ? t(`guineaPig.coat.${guineaPig.coatColor}`) : null,
+    guineaPig.initialWeightGrams
+      ? t('guineaPig.weightGrams', { grams: guineaPig.initialWeightGrams })
+      : null,
+  ].filter(Boolean)
 
   return (
     <Link to={`/guinea-pigs/${guineaPig.id}`} className={cx(styles.card, styles[status])}>
@@ -30,6 +37,7 @@ export function GuineaPigCard({ guineaPig, lastWindow, now }: GuineaPigCardProps
         <span className={styles.name}>{guineaPig.name}</span>
         <Icon name="chevron-right" className={styles.chevron} />
       </span>
+      {about.length > 0 && <span className={styles.about}>{about.join(' · ')}</span>}
       <span className={styles.meta}>
         <StatusBadge status={status} />
         <span className={styles.mark}>

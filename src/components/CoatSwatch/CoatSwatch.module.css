@@ -1,0 +1,39 @@
+.swatch {
+  display: inline-block;
+  flex-shrink: 0;
+  border-radius: var(--radius-full);
+  box-shadow: 0 0 0 1px var(--color-border);
+}
+
+.WHITE {
+  background: #ffffff;
+}
+
+.BLACK {
+  background: #2a2623;
+}
+
+.BROWN {
+  background: #8b5a3c;
+}
+
+.CREAM {
+  background: #f3e2bd;
+}
+
+.GRAY {
+  background: #a6a6a6;
+}
+
+.CINNAMON {
+  background: #c9763d;
+}
+
+/* patches of two and three colors */
+.BICOLOR {
+  background: linear-gradient(135deg, #ffffff 50%, #8b5a3c 50%);
+}
+
+.TRICOLOR {
+  background: conic-gradient(#ffffff 0 33%, #c9763d 0 66%, #2a2623 0);
+}
