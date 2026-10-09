@@ -147,6 +147,10 @@ The app is friendly on purpose, without changing the palette. Titles and buttons
 - **GuineaPigCard** shows an avatar: the initial inside a ring of the coat color.
 - Everything that moves is switched off by `prefers-reduced-motion` (global rule in `global.css` plus each animation).
 
+### AppFooter and HowItWorks
+
+The footer closes every private page: green with the same left-to-right gradient as the header (`--header-from` / `--header-to`) and a wave on top. It has the links (**Cómo funciona**, Jaula, Alertas, Registrar, Cuenta), the name of the app with its logo and the copyright line. `HowItWorks` (`/how-it-works`) explains the app in four steps (the mark of color, the cage that watches and listens, the AI that analyses it, the panel) with the mascot; it describes the product and offers to register a cuy or see the cage.
+
 ### GuineaPigDetail (page `/guinea-pigs/:id`)
 
 What opens when the card of a cuy is clicked. It reads the list the cage page already loaded, so it needs no new endpoint: a hero with the avatar ring (coat color around the initial), the name, the status badge and since when; "Datos" with breed, coat, weight on arrival and mark (each one says "Sin dato" if it was not filled in) and the notes; the alerts of that cuy (the same `AlertList` as the cage page); and a dashed card that says the behavior and weight history is still to come. An unknown or deleted id shows an empty state with the way back. `AppLayout` renders `ScrollRestoration`, so every page opens at the top.

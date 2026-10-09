@@ -3,6 +3,35 @@
     "title": "Monitor de Salud de Cuyes",
     "shortTitle": "Monitor de Cuyes"
   },
+  "footer": {
+    "label": "Pie de página",
+    "howItWorks": "Cómo funciona",
+    "legal": "© {{year}} Monitor de Cuyes · Proyecto de Patrones de Diseño"
+  },
+  "howItWorks": {
+    "title": "Cómo funciona",
+    "intro": "Monitor de Cuyes cuida la salud de tus cuyes mientras tú no estás mirando. Así funciona, paso a paso.",
+    "register": "Registrar un cuy",
+    "seeCage": "Ver mi jaula",
+    "steps": {
+      "mark": {
+        "title": "Cada cuy lleva una marca de color",
+        "text": "Registras a cada cuy con su nombre, su raza y el color de la marca que lleva en el lomo. Ese color es lo que permite reconocerlo."
+      },
+      "watch": {
+        "title": "La jaula observa y escucha",
+        "text": "Una cámara mira a los cuyes, un micrófono escucha si hay chillidos y una báscula pesa la jaula."
+      },
+      "analyse": {
+        "title": "La inteligencia artificial lo analiza",
+        "text": "Cada minuto, un modelo de visión de Amazon Bedrock mide cuánto se mueve cada cuy y cuánto visita el comedero, y lo envía al sistema."
+      },
+      "panel": {
+        "title": "Tú lo ves en el panel",
+        "text": "Aquí ves el estado de cada cuy y las alertas. Cuando atiendas una, márcala como revisada."
+      }
+    }
+  },
   "common": {
     "loading": "Cargando…",
     "retry": "Intentar de nuevo",

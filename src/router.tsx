@@ -6,6 +6,7 @@ import { Account } from './pages/Account/Account'
 import { Alerts } from './pages/Alerts/Alerts'
 import { CageOverview } from './pages/CageOverview/CageOverview'
 import { GuineaPigDetail } from './pages/GuineaPigDetail/GuineaPigDetail'
+import { HowItWorks } from './pages/HowItWorks/HowItWorks'
 import { Login } from './pages/Login/Login'
 import { NotFound } from './pages/NotFound/NotFound'
 import { RegisterGuineaPig } from './pages/RegisterGuineaPig/RegisterGuineaPig'
@@ -33,6 +34,7 @@ export const routes: RouteObject[] = [
           { path: 'alerts', element: <Alerts /> },
           { path: 'guinea-pigs/new', element: <RegisterGuineaPig /> },
           { path: 'guinea-pigs/:id', element: <GuineaPigDetail /> },
+          { path: 'how-it-works', element: <HowItWorks /> },
           { path: 'account', element: <Account /> },
           { path: '*', element: <NotFound /> },
         ],
