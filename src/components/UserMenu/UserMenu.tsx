@@ -1,7 +1,7 @@
 import { useEffect, useId, useRef, useState } from 'react'
 import { Link } from 'react-router'
 import { useAuth } from '../../auth/useAuth'
-import { useMe } from '../../hooks/useMe'
+import { useProfile } from '../../hooks/useProfile'
 import { t } from '../../i18n'
 import { initials } from '../../utils/initials'
 import { Button } from '../Button/Button'
@@ -9,7 +9,7 @@ import styles from './UserMenu.module.css'
 
 export function UserMenu() {
   const { logout } = useAuth()
-  const me = useMe()
+  const me = useProfile()
   const [open, setOpen] = useState(false)
   const rootRef = useRef<HTMLDivElement>(null)
   const panelId = useId()
@@ -54,7 +54,7 @@ export function UserMenu() {
           {me.data && (
             <div className={styles.who}>
               <p className={styles.name}>{me.data.fullName}</p>
-              <p className={styles.email}>{me.data.email}</p>
+              <p className={styles.username}>@{me.data.username}</p>
             </div>
           )}
           <Link to="/account" className={styles.item} onClick={() => setOpen(false)}>

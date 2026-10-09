@@ -1,27 +1,27 @@
+import { QueryClient, QueryClientProvider } from '@tanstack/react-query'
 import { render, screen } from '@testing-library/react'
 import { createMemoryRouter, RouterProvider, useLocation } from 'react-router'
-import { describe, expect, it } from 'vitest'
+import { beforeEach, describe, expect, it, vi } from 'vitest'
+import { ApiError } from '../api/ApiError'
+import { getDashboardApi } from '../api/apiProvider'
+import type { DashboardApi } from '../api/DashboardApi'
 import { UnauthorizedNotifier } from '../api/UnauthorizedNotifier'
+import { createMockApi } from '../mocks/createMockApi'
+import { mockSession } from '../mocks/mockSession'
 import { AuthProvider } from './AuthProvider'
 import { loginPathFor, safeNextPath } from './nextPath'
 import { PublicOnlyRoute } from './PublicOnlyRoute'
 import { RequireAuth } from './RequireAuth'
-import { TokenStorage } from './tokenStorage'
+
+vi.mock('../api/apiProvider', () => ({ getDashboardApi: vi.fn() }))
 
 function WhereAmI() {
   const location = useLocation()
   return <p>at {location.pathname + location.search}</p>
 }
 
-function renderAt(path: string, { signedIn }: { signedIn: boolean }) {
-  const storage = new TokenStorage(null)
-  if (signedIn) {
-    storage.save({
-      accessToken: 'token',
-      tokenType: 'Bearer',
-      expiresAt: new Date(Date.now() + 60_000).toISOString(),
-    })
-  }
+function renderAt(path: string, api: DashboardApi = createMockApi(undefined, 0)) {
+  vi.mocked(getDashboardApi).mockResolvedValue(api)
   const router = createMemoryRouter(
     [
       { element: <PublicOnlyRoute />, children: [{ path: 'login', element: <WhereAmI /> }] },
@@ -36,44 +36,79 @@ function renderAt(path: string, { signedIn }: { signedIn: boolean }) {
     { initialEntries: [path] },
   )
   render(
-    <AuthProvider storage={storage} notifier={new UnauthorizedNotifier()}>
-      <RouterProvider router={router} />
-    </AuthProvider>,
+    <QueryClientProvider client={new QueryClient()}>
+      <AuthProvider notifier={new UnauthorizedNotifier()}>
+        <RouterProvider router={router} />
+      </AuthProvider>
+    </QueryClientProvider>,
   )
 }
 
 describe('RequireAuth', () => {
-  it('sends to /login and remembers where the user wanted to go', () => {
-    renderAt('/alerts?status=OPEN', { signedIn: false })
+  beforeEach(() => {
+    mockSession.end()
+  })
 
-    expect(screen.getByText('at /login?next=%2Falerts%3Fstatus%3DOPEN')).toBeInTheDocument()
+  it('waits for the server instead of flashing the login form', () => {
+    mockSession.start()
+
+    renderAt('/alerts')
+
+    expect(screen.getByRole('status')).toHaveTextContent('Cargando')
+    expect(screen.queryByText('at /login')).not.toBeInTheDocument()
     expect(screen.queryByText('alerts')).not.toBeInTheDocument()
   })
 
-  it('sends to plain /login from the home page', () => {
-    renderAt('/', { signedIn: false })
+  it('sends to /login and remembers where the user wanted to go', async () => {
+    renderAt('/alerts?status=OPEN')
 
-    expect(screen.getByText('at /login')).toBeInTheDocument()
+    expect(await screen.findByText('at /login?next=%2Falerts%3Fstatus%3DOPEN')).toBeInTheDocument()
+    expect(screen.queryByText('alerts')).not.toBeInTheDocument()
   })
 
-  it('shows the private page with a session', () => {
-    renderAt('/alerts', { signedIn: true })
+  it('sends to plain /login from the home page', async () => {
+    renderAt('/')
 
-    expect(screen.getByText('alerts')).toBeInTheDocument()
+    expect(await screen.findByText('at /login')).toBeInTheDocument()
+  })
+
+  it('shows the private page when the server recognises the session', async () => {
+    mockSession.start()
+
+    renderAt('/alerts')
+
+    expect(await screen.findByText('alerts')).toBeInTheDocument()
+  })
+
+  it('does not send to /login when the server cannot be reached', async () => {
+    const api = createMockApi(undefined, 0)
+    api.account.getProfile = () => Promise.reject(new ApiError(0, 'network_error'))
+
+    renderAt('/alerts', api)
+
+    expect(await screen.findByRole('alert')).toHaveTextContent('No hay conexión con el servidor')
+    expect(screen.getByRole('button', { name: 'Intentar de nuevo' })).toBeInTheDocument()
+    expect(screen.queryByText('at /login')).not.toBeInTheDocument()
   })
 })
 
 describe('PublicOnlyRoute', () => {
-  it('sends a signed-in user from /login to the page in ?next', () => {
-    renderAt('/login?next=%2Falerts', { signedIn: true })
-
-    expect(screen.getByText('alerts')).toBeInTheDocument()
+  beforeEach(() => {
+    mockSession.end()
   })
 
-  it('shows /login without a session', () => {
-    renderAt('/login', { signedIn: false })
+  it('sends a signed-in user from /login to the page in ?next', async () => {
+    mockSession.start()
 
-    expect(screen.getByText('at /login')).toBeInTheDocument()
+    renderAt('/login?next=%2Falerts')
+
+    expect(await screen.findByText('alerts')).toBeInTheDocument()
+  })
+
+  it('shows /login without a session', async () => {
+    renderAt('/login')
+
+    expect(await screen.findByText('at /login')).toBeInTheDocument()
   })
 })
 

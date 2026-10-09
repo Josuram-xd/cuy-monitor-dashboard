@@ -1,7 +1,6 @@
 import { Client, ReconnectionTimeMode } from '@stomp/stompjs'
 import { useEffect, useMemo, useState, type ReactNode } from 'react'
-import { tokenStorage } from '../auth/tokenStorage'
-import { useAuth } from '../auth/useAuth'
+import { getDashboardApi } from '../api/apiProvider'
 import { config } from '../config'
 import { LiveConnectionContext, type LiveStatus } from './LiveConnectionContext'
 import { wsUrl } from './wsUrl'
@@ -21,7 +20,6 @@ export function LiveConnectionProvider({
   children,
   enabled = !config.useMocks,
 }: LiveConnectionProviderProps) {
-  const { logout } = useAuth()
   const [status, setStatus] = useState<LiveStatus>('connecting')
 
   useEffect(() => {
@@ -34,21 +32,22 @@ export function LiveConnectionProvider({
       maxReconnectDelay: MAX_RETRY_MS,
       reconnectTimeMode: ReconnectionTimeMode.EXPONENTIAL,
     })
-    // read the token on every attempt, so a reconnect never sends an old one
-    client.beforeConnect = () => {
-      const session = tokenStorage.read()
-      client.connectHeaders = session ? { Authorization: `Bearer ${session.accessToken}` } : {}
-    }
+    // no headers: the browser sends the session cookie on the handshake by itself
     client.onConnect = () => setStatus('connected')
     client.onWebSocketClose = () => setStatus('reconnecting')
-    // the backend answers ERROR when the token on CONNECT is missing, invalid or expired
-    client.onStompError = () => logout('expired')
+    // The backend answers ERROR when the cookie on CONNECT is missing, invalid or expired. Any protected
+    // call renews it (or ends the session if it cannot); the client then reconnects with the new cookie.
+    client.onStompError = () => {
+      void getDashboardApi()
+        .then((api) => api.account.getProfile())
+        .catch(() => {})
+    }
 
     client.activate()
     return () => {
       void client.deactivate()
     }
-  }, [enabled, logout])
+  }, [enabled])
 
   const value = useMemo(
     () => ({ status: enabled ? status : ('disconnected' as const) }),

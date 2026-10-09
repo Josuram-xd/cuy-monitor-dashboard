@@ -54,10 +54,10 @@ export function VerifyCode() {
     verify.mutate(
       { challengeId: challenge.challengeId, code: value },
       {
-        onSuccess: (token) => {
+        onSuccess: () => {
           pendingVerification.clear()
-          // with a session, PublicOnlyRoute sends the user to ?next or "/"
-          signIn(token)
+          // the server already set the session cookies; PublicOnlyRoute then sends the user to ?next or "/"
+          signIn()
         },
         onError: (error) => {
           setCode('')

@@ -1,4 +1,3 @@
-import { tokenStorage } from '../auth/tokenStorage'
 import { config } from '../config'
 import type { DashboardApi } from './DashboardApi'
 import { HttpAccountApi } from './http/HttpAccountApi'
@@ -13,7 +12,6 @@ let api: Promise<DashboardApi> | undefined
 
 function createHttpApi(): DashboardApi {
   const http = new HttpClient(config.apiUrl, {
-    getToken: () => tokenStorage.read()?.accessToken ?? null,
     onUnauthorized: (error) => unauthorizedNotifier.notify(error),
   })
   return {

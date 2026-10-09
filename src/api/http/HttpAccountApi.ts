@@ -9,7 +9,7 @@ export class HttpAccountApi implements AccountApi {
     this.http = http
   }
 
-  getMe(signal?: AbortSignal): Promise<User> {
-    return this.http.get<User>('/api/v1/users/me', { signal })
+  getProfile(signal?: AbortSignal): Promise<User> {
+    return this.http.get<User>('/api/v1/account/profile', { signal })
   }
 }
