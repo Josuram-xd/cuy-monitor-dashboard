@@ -77,7 +77,13 @@
     "updated": "Actualizado {{time}}"
   },
   "alerts": {
+    "title": "Alertas",
+    "intro": "Cuando un cuy se comporta distinto a lo normal, aparece aquí. Márcala como revisada cuando ya lo viste.",
     "openTitle": "Alertas abiertas",
+    "reviewedTitle": "Alertas revisadas",
+    "count": "{{count}} alertas",
+    "noneReviewed": "Todavía no has revisado ninguna alerta.",
+    "markError": "No pudimos marcar la alerta como revisada. Inténtalo otra vez.",
     "seeAll": "Ver todas",
     "noneOpen": "No hay alertas abiertas.",
     "loadError": "No pudimos cargar las alertas.",

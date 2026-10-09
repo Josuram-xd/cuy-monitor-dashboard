@@ -14,8 +14,10 @@ interface AlertListProps {
   // to show the name and mark color of the guinea pig of each alert
   guineaPigs?: GuineaPig[]
   now: number
-  // without it there is no "Marcar como revisada" button (Task 8.2 wires it)
+  // without it there is no "Marcar como revisada" button
   onMarkReviewed?: (alert: Alert) => void
+  // the alert being marked right now: its button is disabled so it is not sent twice
+  busyAlertId?: number
 }
 
 function AlertSubject({ alert, guineaPig }: { alert: Alert; guineaPig?: GuineaPig }) {
@@ -38,7 +40,13 @@ function AlertSubject({ alert, guineaPig }: { alert: Alert; guineaPig?: GuineaPi
   )
 }
 
-export function AlertList({ alerts, guineaPigs = [], now, onMarkReviewed }: AlertListProps) {
+export function AlertList({
+  alerts,
+  guineaPigs = [],
+  now,
+  onMarkReviewed,
+  busyAlertId,
+}: AlertListProps) {
   return (
     <ul className={styles.list}>
       {alerts.map((alert) => (
@@ -55,7 +63,9 @@ export function AlertList({ alerts, guineaPigs = [], now, onMarkReviewed }: Aler
           />
           <p className={styles.message}>{alert.message}</p>
           {onMarkReviewed && alert.status === 'OPEN' && (
-            <Button onClick={() => onMarkReviewed(alert)}>{t('alerts.markReviewed')}</Button>
+            <Button onClick={() => onMarkReviewed(alert)} disabled={busyAlertId === alert.id}>
+              {t('alerts.markReviewed')}
+            </Button>
           )}
         </li>
       ))}
