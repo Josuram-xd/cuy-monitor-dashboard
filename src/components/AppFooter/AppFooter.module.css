@@ -1,0 +1,82 @@
+.footer {
+  position: relative;
+  margin-top: var(--space-8);
+  background: linear-gradient(90deg, var(--header-from), var(--header-to));
+  color: var(--color-surface);
+}
+
+/* a wave on top, like the one under the header */
+.wave {
+  position: absolute;
+  inset: auto 0 100%;
+  line-height: 0;
+  pointer-events: none;
+}
+
+.inner {
+  display: flex;
+  max-width: var(--content-max-width);
+  flex-direction: column;
+  align-items: center;
+  gap: var(--space-4);
+  margin: 0 auto;
+  padding: var(--space-6) var(--page-padding) var(--space-5);
+  text-align: center;
+}
+
+.links {
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: center;
+  gap: var(--space-1) var(--space-2);
+}
+
+.link {
+  padding: var(--space-2) var(--space-4);
+  border-radius: var(--radius-full);
+  color: rgb(255 255 255 / 0.88);
+  font-family: var(--font-display);
+  font-weight: 600;
+  text-decoration: none;
+  transition:
+    background-color var(--transition-default),
+    color var(--transition-default),
+    transform 280ms var(--ease-bounce);
+}
+
+.link:hover {
+  background: rgb(255 255 255 / 0.16);
+  color: #fff;
+  transform: translateY(-2px);
+}
+
+.link:focus-visible {
+  outline: 2px solid #fff;
+  outline-offset: 2px;
+}
+
+.brand {
+  display: inline-flex;
+  align-items: center;
+  gap: var(--space-2);
+}
+
+.name {
+  font-family: var(--font-display);
+  font-size: var(--text-h1-size);
+  line-height: var(--text-h1-line);
+  font-weight: 700;
+}
+
+.legal {
+  margin: 0;
+  color: rgb(255 255 255 / 0.72);
+  font-size: var(--text-small-size);
+  line-height: var(--text-small-line);
+}
+
+@media (min-width: 640px) {
+  .inner {
+    padding-bottom: var(--space-6);
+  }
+}

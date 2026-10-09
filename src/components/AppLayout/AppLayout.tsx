@@ -2,6 +2,7 @@ import { Link, Outlet, ScrollRestoration } from 'react-router'
 import { t } from '../../i18n'
 import { LiveConnectionProvider } from '../../realtime/LiveConnectionProvider'
 import { AppBackdrop } from '../AppBackdrop/AppBackdrop'
+import { AppFooter } from '../AppFooter/AppFooter'
 import { BottomNav } from '../BottomNav/BottomNav'
 import { Logo } from '../Logo/Logo'
 import { Wave } from '../Wave/Wave'
@@ -39,6 +40,7 @@ export function AppLayout() {
         <main id={MAIN_ID} className={styles.main} tabIndex={-1}>
           <Outlet />
         </main>
+        <AppFooter />
       </div>
     </LiveConnectionProvider>
   )
