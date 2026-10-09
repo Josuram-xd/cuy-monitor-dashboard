@@ -1,4 +1,4 @@
-import { Link, Outlet } from 'react-router'
+import { Link, Outlet, ScrollRestoration } from 'react-router'
 import { t } from '../../i18n'
 import { LiveConnectionProvider } from '../../realtime/LiveConnectionProvider'
 import { AppBackdrop } from '../AppBackdrop/AppBackdrop'
@@ -14,6 +14,8 @@ export function AppLayout() {
   // private pages only: the live connection exists only while there is a session
   return (
     <LiveConnectionProvider>
+      {/* every page opens at the top; Back returns to where the person was */}
+      <ScrollRestoration />
       <AppBackdrop />
       <div className={styles.layout}>
         <a href={`#${MAIN_ID}`} className={styles.skipLink}>

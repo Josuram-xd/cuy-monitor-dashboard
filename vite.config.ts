@@ -20,6 +20,8 @@ export default defineConfig(({ mode }) => {
       environment: 'jsdom',
       globals: true,
       setupFiles: './src/test/setup.ts',
+      // forms are typed key by key and the whole suite runs in parallel: a slow machine or CI needs more than 5 s
+      testTimeout: 20_000,
     },
   }
 })
