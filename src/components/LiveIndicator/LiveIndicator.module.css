@@ -1,0 +1,46 @@
+.indicator {
+  display: inline-flex;
+  align-items: center;
+  gap: var(--space-2);
+  color: var(--color-text-muted);
+  font-size: var(--text-small-size);
+  line-height: var(--text-small-line);
+  white-space: nowrap;
+}
+
+.connected {
+  color: var(--status-normal-fg);
+}
+
+.dot {
+  width: 10px;
+  height: 10px;
+  flex: 0 0 auto;
+  border-radius: var(--radius-full);
+  background: var(--status-unknown-accent);
+}
+
+.connected .dot {
+  background: var(--status-normal-accent);
+}
+
+.connecting .dot,
+.reconnecting .dot {
+  background: var(--status-observed-accent);
+}
+
+.reconnecting .dot {
+  animation: pulse 1.5s ease-in-out infinite;
+}
+
+@keyframes pulse {
+  50% {
+    opacity: 0.45;
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .reconnecting .dot {
+    animation: none;
+  }
+}
