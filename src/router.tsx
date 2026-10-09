@@ -3,6 +3,7 @@ import { PublicOnlyRoute } from './auth/PublicOnlyRoute'
 import { RequireAuth } from './auth/RequireAuth'
 import { AppLayout } from './components/AppLayout/AppLayout'
 import { Account } from './pages/Account/Account'
+import { Alerts } from './pages/Alerts/Alerts'
 import { CageOverview } from './pages/CageOverview/CageOverview'
 import { ComingSoon } from './pages/ComingSoon/ComingSoon'
 import { Login } from './pages/Login/Login'
@@ -29,7 +30,7 @@ export const routes: RouteObject[] = [
         element: <AppLayout />,
         children: [
           { index: true, element: <CageOverview /> },
-          { path: 'alerts', element: <ComingSoon /> },
+          { path: 'alerts', element: <Alerts /> },
           { path: 'guinea-pigs/new', element: <RegisterGuineaPig /> },
           { path: 'guinea-pigs/:id', element: <ComingSoon /> },
           { path: 'account', element: <Account /> },
