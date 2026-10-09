@@ -10,11 +10,11 @@ interface NavItem {
   icon: IconName
 }
 
-// "Cuenta" joins in Task 14.5
 const ITEMS: NavItem[] = [
   { to: '/', labelKey: 'nav.cage', icon: 'home' },
   { to: '/alerts', labelKey: 'nav.alerts', icon: 'bell' },
   { to: '/guinea-pigs/new', labelKey: 'nav.register', icon: 'plus-circle' },
+  { to: '/account', labelKey: 'nav.account', icon: 'user' },
 ]
 
 // Bottom bar on phones; from 640px the same <nav> sits in the top bar.

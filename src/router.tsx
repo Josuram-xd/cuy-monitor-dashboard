@@ -2,6 +2,7 @@ import { createBrowserRouter, type RouteObject } from 'react-router'
 import { PublicOnlyRoute } from './auth/PublicOnlyRoute'
 import { RequireAuth } from './auth/RequireAuth'
 import { AppLayout } from './components/AppLayout/AppLayout'
+import { Account } from './pages/Account/Account'
 import { CageOverview } from './pages/CageOverview/CageOverview'
 import { ComingSoon } from './pages/ComingSoon/ComingSoon'
 import { Login } from './pages/Login/Login'
@@ -30,8 +31,7 @@ export const routes: RouteObject[] = [
           { path: 'alerts', element: <ComingSoon /> },
           { path: 'guinea-pigs/new', element: <ComingSoon /> },
           { path: 'guinea-pigs/:id', element: <ComingSoon /> },
-          // Task 14
-          { path: 'account', element: <ComingSoon /> },
+          { path: 'account', element: <Account /> },
           { path: '*', element: <NotFound /> },
         ],
       },

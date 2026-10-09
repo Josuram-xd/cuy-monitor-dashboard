@@ -6,6 +6,7 @@
   "common": {
     "loading": "Cargando…",
     "retry": "Intentar de nuevo",
+    "cancel": "Cancelar",
     "skipToContent": "Saltar al contenido"
   },
   "errors": {
@@ -17,7 +18,8 @@
     "label": "Navegación principal",
     "cage": "Jaula",
     "alerts": "Alertas",
-    "register": "Registrar"
+    "register": "Registrar",
+    "account": "Cuenta"
   },
   "comingSoon": {
     "message": "Esta sección estará lista pronto."
@@ -157,6 +159,38 @@
   "account": {
     "menu": "Menú de la cuenta",
     "myAccount": "Mi cuenta",
-    "logout": "Cerrar sesión"
+    "logout": "Cerrar sesión",
+    "profile": {
+      "title": "Tus datos",
+      "fullName": "Nombre completo",
+      "username": "Usuario",
+      "usernameHint": "El usuario no se puede cambiar.",
+      "nameRequired": "Escribe tu nombre.",
+      "nameTooLong": "El nombre es demasiado largo.",
+      "save": "Guardar cambios",
+      "saving": "Guardando…",
+      "saved": "Listo, guardamos tu nombre."
+    },
+    "password": {
+      "title": "Cambiar contraseña",
+      "current": "Contraseña actual",
+      "new": "Contraseña nueva",
+      "hint": "Entre 8 y 72 caracteres.",
+      "submit": "Cambiar contraseña",
+      "submitting": "Cambiando…",
+      "done": "Listo, tu contraseña cambió."
+    },
+    "danger": {
+      "title": "Desactivar cuenta",
+      "text": "Si desactivas tu cuenta ya no podrás entrar. Tus datos no se muestran a nadie más.",
+      "open": "Desactivar mi cuenta",
+      "confirmTitle": "¿Desactivar tu cuenta?",
+      "confirmText": "Escribe tu contraseña para confirmar. Después saldrás de la sesión.",
+      "password": "Tu contraseña",
+      "confirm": "Sí, desactivar"
+    },
+    "error": {
+      "wrongPassword": "La contraseña actual no es correcta."
+    }
   }
 }
