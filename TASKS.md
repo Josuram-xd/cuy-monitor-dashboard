@@ -73,7 +73,7 @@
 
 🔗 **Depende de:** seguir con las Task 7.3–7.4 del repo `cuy-monitor-backend`
 
-- [ ] **Task 6.1** — `feat(realtime): add STOMP client provider with auto reconnect`
+- [x] **Task 6.1** — `feat(realtime): add STOMP client provider with auto reconnect`
 - [ ] **Task 6.2** — `feat(realtime): update cage cache from /topic/cages/{id} messages`
 - [ ] **Task 6.3** — `feat(ui): add LiveIndicator`
 - [ ] **Task 6.4** — `feat(ui): add AlertToast for ALERT and CRITICAL`
