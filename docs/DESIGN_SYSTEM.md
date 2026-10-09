@@ -147,6 +147,10 @@ The app is friendly on purpose, without changing the palette. Titles and buttons
 - **GuineaPigCard** shows an avatar: the initial inside a ring of the coat color.
 - Everything that moves is switched off by `prefers-reduced-motion` (global rule in `global.css` plus each animation).
 
+### DeleteGuineaPig
+
+A small trash button in the bottom right corner of each cuy card (outside the link that opens the cuy). It never deletes by itself: it opens a `ConfirmDialog` ("¿Eliminar a Canela?") that says the cuy leaves the cage, its mark color is free again and its history is kept. The delete is a soft delete on the server. The grid, the counter and the cage summary refresh afterwards; a 404 (already gone) is explained in the dialog.
+
 ### GoogleButton / GoogleSignIn
 
 "Continuar con Google" under the login and register forms, after an "o" divider. With `VITE_GOOGLE_CLIENT_ID` it is Google's own button (Google Identity Services draws it; the page only receives a signed ID token and never the Google password). With `VITE_USE_MOCKS=true` it is a plain demo button; with neither, nothing is drawn. `GoogleSignIn` adds the request (`POST /api/v1/auth/google`), the error message and the session start: there is no code step because Google already proved the email.

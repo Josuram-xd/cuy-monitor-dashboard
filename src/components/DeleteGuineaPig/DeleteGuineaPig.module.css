@@ -1,0 +1,35 @@
+/* sits in the bottom right corner of the card, outside the link that opens the cuy */
+.button {
+  position: absolute;
+  right: var(--space-3);
+  bottom: var(--space-3);
+  z-index: 1;
+  display: grid;
+  width: 40px;
+  height: 40px;
+  place-items: center;
+  border: 0;
+  border-radius: var(--radius-full);
+  background: transparent;
+  color: var(--color-text-muted);
+  cursor: pointer;
+  transition:
+    background-color var(--transition-default),
+    color var(--transition-default),
+    transform 280ms var(--ease-bounce);
+}
+
+.button:hover {
+  background: var(--status-critical-bg);
+  color: var(--status-critical-fg);
+  transform: scale(1.1);
+}
+
+.button:active {
+  transform: scale(0.9);
+}
+
+.button:focus-visible {
+  outline: 2px solid var(--status-critical-fg);
+  outline-offset: 2px;
+}

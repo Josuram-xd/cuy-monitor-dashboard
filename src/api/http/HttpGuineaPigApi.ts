@@ -18,6 +18,10 @@ export class HttpGuineaPigApi implements GuineaPigApi {
     return this.http.post<GuineaPig>(this.cagePath(cageId), body)
   }
 
+  remove(cageId: string, id: number): Promise<void> {
+    return this.http.delete<void>(`${this.cagePath(cageId)}/${id}`)
+  }
+
   getHistory(id: number, range: DateRange = {}, signal?: AbortSignal): Promise<GuineaPigHistory> {
     return this.http.get<GuineaPigHistory>(`/api/v1/guinea-pigs/${id}/history`, {
       query: { ...range },

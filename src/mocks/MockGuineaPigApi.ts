@@ -53,6 +53,19 @@ export class MockGuineaPigApi extends MockResource implements GuineaPigApi {
     return this.respond(created)
   }
 
+  remove(cageId: string, id: number): Promise<void> {
+    if (!this.db.hasCage(cageId)) {
+      return this.notFound()
+    }
+    const index = this.db.guineaPigs.findIndex((g) => g.id === id)
+    if (index === -1) {
+      return this.notFound()
+    }
+    // like the backend, the cuy leaves the list (and frees its color); the alerts it had stay
+    this.db.guineaPigs.splice(index, 1)
+    return this.respond(undefined)
+  }
+
   getHistory(id: number, range?: DateRange): Promise<GuineaPigHistory> {
     if (!this.db.findGuineaPig(id)) {
       return this.notFound()

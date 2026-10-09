@@ -59,4 +59,17 @@ describe('mock API', () => {
     expect(history.transitions.map((t) => t.toStatus)).toEqual(['OBSERVED', 'ALERT'])
     expect(history.windows.length).toBeGreaterThan(0)
   })
+
+  it('deletes a guinea pig: it leaves the list and frees its color; deleting it again is a 404', async () => {
+    await api.guineaPigs.remove('cage-1', 1)
+
+    const list = await api.guineaPigs.list('cage-1')
+    expect(list.some((g) => g.id === 1)).toBe(false)
+    // the color is free: a new cuy can wear it
+    await expect(
+      api.guineaPigs.register('cage-1', { name: 'Nueva', markColor: 'RED' }),
+    ).resolves.toMatchObject({ markColor: 'RED' })
+    await expect(api.guineaPigs.remove('cage-1', 999)).rejects.toMatchObject({ status: 404 })
+    await expect(api.guineaPigs.remove('nope', 2)).rejects.toMatchObject({ status: 404 })
+  })
 })
