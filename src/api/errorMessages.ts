@@ -1,7 +1,7 @@
 import { ApiError } from './ApiError'
 
 // where the error happened: the same 401 means "wrong password" on login and "wrong code" on verify
-export type ErrorContext = 'login' | 'register' | 'verify' | 'general'
+export type ErrorContext = 'login' | 'register' | 'verify' | 'account' | 'general'
 
 // Maps a failed call to an es.json key. The backend message is never shown as is.
 export function errorMessageKey(error: unknown, context: ErrorContext = 'general'): string {
@@ -16,6 +16,12 @@ export function errorMessageKey(error: unknown, context: ErrorContext = 'general
   }
   if (error.isUnauthorized && context === 'verify') {
     return 'auth.error.invalidCode'
+  }
+  if (error.isUnauthorized && context === 'account') {
+    return 'account.error.wrongPassword'
+  }
+  if (error.status === 400 && context === 'account' && 'newPassword' in error.fields) {
+    return 'auth.error.weakPassword'
   }
   if (error.status === 409 && context === 'register') {
     return 'auth.error.userExists'

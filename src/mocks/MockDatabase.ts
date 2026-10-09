@@ -11,6 +11,8 @@ export interface MockUser {
   username: string
   fullName: string
   email: string
+  // only the fake backend keeps it, to check "current password" like the real one
+  password: string
   status: MockUserStatus
 }
 

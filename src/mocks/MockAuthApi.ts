@@ -26,6 +26,7 @@ export class MockAuthApi extends MockResource implements AuthApi {
       username,
       fullName: body.fullName.trim(),
       email,
+      password: body.password,
       status: 'PENDING_VERIFICATION',
     })
     return this.respond(this.newChallenge(username))
@@ -33,7 +34,7 @@ export class MockAuthApi extends MockResource implements AuthApi {
 
   login(body: LoginRequest): Promise<LoginChallenge> {
     const username = body.username.trim().toLowerCase()
-    const user = this.db.findUser(username) ?? this.createActiveUser(username)
+    const user = this.db.findUser(username) ?? this.createActiveUser(username, body.password)
     if (user.status === 'DISABLED') {
       return this.fail(401, 'unauthorized')
     }
@@ -81,12 +82,13 @@ export class MockAuthApi extends MockResource implements AuthApi {
     return challenge
   }
 
-  private createActiveUser(username: string): MockUser {
+  private createActiveUser(username: string, password: string): MockUser {
     const user: MockUser = {
       id: crypto.randomUUID(),
       username,
       fullName: username,
       email: `${username}@example.com`,
+      password,
       status: 'ACTIVE',
     }
     this.db.users.push(user)

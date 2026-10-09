@@ -1,3 +1,8 @@
+import type {
+  ChangePasswordRequest,
+  DeactivateAccountRequest,
+  UpdateProfileRequest,
+} from '../types/Account'
 import type { Alert, AlertStatus } from '../types/Alert'
 import type { LoginChallenge, LoginRequest, RegisterRequest, VerifyOtpRequest } from '../types/Auth'
 import type { CageHealth } from '../types/CageHealth'
@@ -36,9 +41,14 @@ export interface AuthApi {
   logout(): Promise<void>
 }
 
-// the account of whoever owns the session cookie; the rest of the account CRUD comes in Task 14.1
+// the account of whoever owns the session cookie
 export interface AccountApi {
   getProfile(signal?: AbortSignal): Promise<User>
+  updateProfile(body: UpdateProfileRequest): Promise<User>
+  // 401 "invalid credentials" when the current password is wrong
+  changePassword(body: ChangePasswordRequest): Promise<void>
+  // soft delete: the account can no longer log in. Same 401 for a wrong password
+  deactivate(body: DeactivateAccountRequest): Promise<void>
 }
 
 export interface DashboardApi {

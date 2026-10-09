@@ -1,6 +1,9 @@
 import { ApiError } from './ApiError'
 
 const AUTH_PREFIX = '/api/v1/auth/'
+// A 401 with this message on a protected call means "wrong current password" (change password, deactivate),
+// not a lost session: the user must stay logged in and see the error.
+const WRONG_PASSWORD_MESSAGE = 'invalid credentials'
 
 export type QueryParams = Record<string, string | undefined>
 
@@ -83,7 +86,11 @@ export class HttpClient {
 
     if (!response.ok) {
       const error = await this.toApiError(response)
-      if (error.isUnauthorized && !path.startsWith(AUTH_PREFIX)) {
+      if (
+        error.isUnauthorized &&
+        !path.startsWith(AUTH_PREFIX) &&
+        error.message !== WRONG_PASSWORD_MESSAGE
+      ) {
         if (!retried && (await this.refreshSession(signal))) {
           return this.request<T>(method, path, options, true)
         }
