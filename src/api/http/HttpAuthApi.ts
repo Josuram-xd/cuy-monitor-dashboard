@@ -1,5 +1,4 @@
 import type {
-  AuthToken,
   LoginChallenge,
   LoginRequest,
   RegisterRequest,
@@ -25,7 +24,11 @@ export class HttpAuthApi implements AuthApi {
     return this.http.post<LoginChallenge>(`${BASE}/login`, body)
   }
 
-  verifyOtp(body: VerifyOtpRequest): Promise<AuthToken> {
-    return this.http.post<AuthToken>(`${BASE}/otp/verify`, body)
+  verifyOtp(body: VerifyOtpRequest): Promise<void> {
+    return this.http.post<void>(`${BASE}/otp/verify`, body)
+  }
+
+  logout(): Promise<void> {
+    return this.http.post<void>(`${BASE}/logout`, undefined)
   }
 }

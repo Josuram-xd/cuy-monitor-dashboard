@@ -1,19 +1,13 @@
 import type { AuthApi } from '../api/DashboardApi'
-import type {
-  AuthToken,
-  LoginChallenge,
-  LoginRequest,
-  RegisterRequest,
-  VerifyOtpRequest,
-} from '../types/Auth'
-import type { User } from '../types/User'
+import type { LoginChallenge, LoginRequest, RegisterRequest, VerifyOtpRequest } from '../types/Auth'
+import type { MockUser } from './MockDatabase'
+import { mockSession } from './mockSession'
 import { MockResource } from './MockResource'
 
 // the fake login accepts any user; the code is always this one
 export const MOCK_OTP_CODE = '123456'
 
 const CODE_TTL_MS = 5 * 60_000
-const TOKEN_TTL_MS = 30 * 60_000
 const MIN_PASSWORD_BYTES = 8
 const MAX_PASSWORD_BYTES = 72
 
@@ -27,15 +21,12 @@ export class MockAuthApi extends MockResource implements AuthApi {
     if (this.db.users.some((u) => u.username === username || u.email === email)) {
       return this.fail(409, 'conflict')
     }
-    const now = new Date().toISOString()
     this.db.users.push({
       id: crypto.randomUUID(),
       username,
       fullName: body.fullName.trim(),
       email,
       status: 'PENDING_VERIFICATION',
-      createdAt: now,
-      updatedAt: now,
     })
     return this.respond(this.newChallenge(username))
   }
@@ -49,7 +40,7 @@ export class MockAuthApi extends MockResource implements AuthApi {
     return this.respond(this.newChallenge(username))
   }
 
-  verifyOtp(body: VerifyOtpRequest): Promise<AuthToken> {
+  verifyOtp(body: VerifyOtpRequest): Promise<void> {
     const challenge = this.db.challenges.get(body.challengeId)
     const valid =
       challenge !== undefined &&
@@ -65,11 +56,14 @@ export class MockAuthApi extends MockResource implements AuthApi {
       user.status = 'ACTIVE'
       this.db.signedInUserId = user.id
     }
-    return this.respond({
-      accessToken: `mock-token-${crypto.randomUUID()}`,
-      tokenType: 'Bearer',
-      expiresAt: new Date(Date.now() + TOKEN_TTL_MS).toISOString(),
-    })
+    mockSession.start()
+    return this.respond(undefined)
+  }
+
+  logout(): Promise<void> {
+    this.db.signedInUserId = null
+    mockSession.end()
+    return this.respond(undefined)
   }
 
   private newChallenge(username: string): LoginChallenge {
@@ -87,16 +81,13 @@ export class MockAuthApi extends MockResource implements AuthApi {
     return challenge
   }
 
-  private createActiveUser(username: string): User {
-    const now = new Date().toISOString()
-    const user: User = {
+  private createActiveUser(username: string): MockUser {
+    const user: MockUser = {
       id: crypto.randomUUID(),
       username,
       fullName: username,
       email: `${username}@example.com`,
       status: 'ACTIVE',
-      createdAt: now,
-      updatedAt: now,
     }
     this.db.users.push(user)
     return user

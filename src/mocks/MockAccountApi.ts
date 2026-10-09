@@ -1,21 +1,18 @@
 import type { AccountApi } from '../api/DashboardApi'
 import type { User } from '../types/User'
+import { mockSession } from './mockSession'
 import { MockResource } from './MockResource'
 
-// after a reload the fake database is empty but the session survives: answer with a demo user
-const DEMO_USER: User = {
-  id: '00000000-0000-4000-8000-000000000000',
-  username: 'demo',
-  fullName: 'Usuario de prueba',
-  email: 'demo@example.com',
-  status: 'ACTIVE',
-  createdAt: '2026-10-01T10:00:00Z',
-  updatedAt: '2026-10-01T10:00:00Z',
-}
+// after a reload the fake database is empty but the fake session survives: answer with a demo user
+const DEMO_USER: User = { username: 'demo', fullName: 'Usuario de prueba' }
 
 export class MockAccountApi extends MockResource implements AccountApi {
-  getMe(): Promise<User> {
+  getProfile(): Promise<User> {
     const user = this.db.users.find((u) => u.id === this.db.signedInUserId)
-    return this.respond(user ?? DEMO_USER)
+    if (user) {
+      return this.respond({ username: user.username, fullName: user.fullName })
+    }
+    // no cookie, no profile: the same 401 the backend gives
+    return mockSession.has() ? this.respond(DEMO_USER) : this.fail(401, 'unauthorized')
   }
 }

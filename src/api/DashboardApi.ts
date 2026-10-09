@@ -1,11 +1,5 @@
 import type { Alert, AlertStatus } from '../types/Alert'
-import type {
-  AuthToken,
-  LoginChallenge,
-  LoginRequest,
-  RegisterRequest,
-  VerifyOtpRequest,
-} from '../types/Auth'
+import type { LoginChallenge, LoginRequest, RegisterRequest, VerifyOtpRequest } from '../types/Auth'
 import type { CageHealth } from '../types/CageHealth'
 import type { DateRange } from '../types/DateRange'
 import type { GuineaPig, GuineaPigHistory, NewGuineaPig } from '../types/GuineaPig'
@@ -31,17 +25,20 @@ export interface AlertApi {
   markReviewed(id: number): Promise<Alert>
 }
 
-// public endpoints: no token, a 401 here means wrong credentials or wrong code
+// /api/v1/auth/*: a 401 here means wrong credentials or wrong code, never a lost session
 export interface AuthApi {
   register(body: RegisterRequest): Promise<LoginChallenge>
   // also resends the code of an account that was never verified
   login(body: LoginRequest): Promise<LoginChallenge>
-  verifyOtp(body: VerifyOtpRequest): Promise<AuthToken>
+  // the answer is empty: the session arrives as HttpOnly cookies the page cannot read
+  verifyOtp(body: VerifyOtpRequest): Promise<void>
+  // ends the session on the server; it expires the cookies and revokes the tokens
+  logout(): Promise<void>
 }
 
-// the account of the token's user; the rest of the account CRUD comes in Task 14.1
+// the account of whoever owns the session cookie; the rest of the account CRUD comes in Task 14.1
 export interface AccountApi {
-  getMe(signal?: AbortSignal): Promise<User>
+  getProfile(signal?: AbortSignal): Promise<User>
 }
 
 export interface DashboardApi {

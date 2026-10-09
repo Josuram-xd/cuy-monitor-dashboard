@@ -1,5 +1,7 @@
 import { ApiError } from './ApiError'
 
+const AUTH_PREFIX = '/api/v1/auth/'
+
 export type QueryParams = Record<string, string | undefined>
 
 export type FetchFn = (input: string, init?: RequestInit) => Promise<Response>
@@ -19,22 +21,20 @@ interface ErrorBody {
 export interface HttpClientOptions {
   // injected so tests don't need to touch the global fetch
   fetchFn?: FetchFn
-  // current access token, or null without a session
-  getToken?: () => string | null
-  // a call that carried a token got 401: the session is over
+  // a protected call got 401 and the session could not be renewed: the session is over
   onUnauthorized?: (error: ApiError) => void
 }
 
 export class HttpClient {
   private readonly baseUrl: string
   private readonly fetchFn: FetchFn
-  private readonly getToken: () => string | null
   private readonly onUnauthorized: (error: ApiError) => void
+  // all the calls that fail at the same time wait for one single refresh
+  private refreshing: Promise<boolean> | null = null
 
   constructor(baseUrl: string, options: HttpClientOptions = {}) {
     this.baseUrl = baseUrl
     this.fetchFn = options.fetchFn ?? ((input, init) => fetch(input, init))
-    this.getToken = options.getToken ?? (() => null)
     this.onUnauthorized = options.onUnauthorized ?? (() => {})
   }
 
@@ -58,37 +58,35 @@ export class HttpClient {
     return this.request<T>('DELETE', path, options)
   }
 
-  protected async request<T>(method: string, path: string, options: RequestOptions): Promise<T> {
+  // The session is in HttpOnly cookies, so there is no token to attach: the browser sends them.
+  // A 401 on a protected call is first answered with one silent refresh and a retry; only if the
+  // refresh also fails the session is over. /api/v1/auth/* never refreshes: there a 401 just means
+  // wrong credentials, wrong code or no refresh cookie.
+  protected async request<T>(
+    method: string,
+    path: string,
+    options: RequestOptions,
+    retried = false,
+  ): Promise<T> {
     const { body, query, signal } = options
     const headers: Record<string, string> = { Accept: 'application/json' }
     if (body !== undefined) {
       headers['Content-Type'] = 'application/json'
     }
-    const token = this.getToken()
-    if (token) {
-      headers.Authorization = `Bearer ${token}`
-    }
 
-    let response: Response
-    try {
-      response = await this.fetchFn(this.buildUrl(path, query), {
-        method,
-        headers,
-        body: body === undefined ? undefined : JSON.stringify(body),
-        signal,
-      })
-    } catch (error) {
-      // a cancelled query is not a network failure
-      if (signal?.aborted) {
-        throw error
-      }
-      throw new ApiError(0, 'network_error')
-    }
+    const response = await this.send(this.buildUrl(path, query), {
+      method,
+      headers,
+      body: body === undefined ? undefined : JSON.stringify(body),
+      signal,
+    })
 
     if (!response.ok) {
       const error = await this.toApiError(response)
-      // without a token a 401 is just "wrong credentials" (login, verify): not a lost session
-      if (error.isUnauthorized && token) {
+      if (error.isUnauthorized && !path.startsWith(AUTH_PREFIX)) {
+        if (!retried && (await this.refreshSession(signal))) {
+          return this.request<T>(method, path, options, true)
+        }
         this.onUnauthorized(error)
       }
       throw error
@@ -97,6 +95,43 @@ export class HttpClient {
       return undefined as T
     }
     return (await response.json()) as T
+  }
+
+  private async send(url: string, init: RequestInit): Promise<Response> {
+    try {
+      // include: also works when the API is on another origin (development)
+      return await this.fetchFn(url, { ...init, credentials: 'include' })
+    } catch (error) {
+      // a cancelled query is not a network failure
+      if (init.signal?.aborted) {
+        throw error
+      }
+      throw new ApiError(0, 'network_error')
+    }
+  }
+
+  // true: new cookies are in place. false: there is no valid session to renew.
+  // A network failure or a 5xx is not "no session": it throws and the user stays logged in.
+  private refreshSession(signal?: AbortSignal): Promise<boolean> {
+    this.refreshing ??= this.callRefresh(signal).finally(() => {
+      this.refreshing = null
+    })
+    return this.refreshing
+  }
+
+  private async callRefresh(signal?: AbortSignal): Promise<boolean> {
+    const response = await this.send(this.buildUrl(`${AUTH_PREFIX}refresh`), {
+      method: 'POST',
+      headers: { Accept: 'application/json' },
+      signal,
+    })
+    if (response.ok) {
+      return true
+    }
+    if (response.status === 401) {
+      return false
+    }
+    throw await this.toApiError(response)
   }
 
   private buildUrl(path: string, query?: QueryParams): string {

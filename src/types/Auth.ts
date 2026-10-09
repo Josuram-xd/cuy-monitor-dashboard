@@ -20,9 +20,3 @@ export interface LoginChallenge {
   challengeId: string
   expiresAt: string
 }
-
-export interface AuthToken {
-  accessToken: string
-  tokenType: 'Bearer'
-  expiresAt: string
-}

@@ -9,8 +9,8 @@ import { AuthProvider } from '../auth/AuthProvider'
 import { pendingVerification } from '../auth/pendingVerification'
 import { PublicOnlyRoute } from '../auth/PublicOnlyRoute'
 import { RequireAuth } from '../auth/RequireAuth'
-import { TokenStorage } from '../auth/tokenStorage'
 import { createMockApi } from '../mocks/createMockApi'
+import { mockSession } from '../mocks/mockSession'
 import { Login } from './Login/Login'
 import { Register } from './Register/Register'
 import { VerifyCode } from './VerifyCode/VerifyCode'
@@ -41,7 +41,7 @@ function renderApp(path: string) {
   const queryClient = new QueryClient({ defaultOptions: { mutations: { retry: false } } })
   render(
     <QueryClientProvider client={queryClient}>
-      <AuthProvider storage={new TokenStorage(null)} notifier={new UnauthorizedNotifier()}>
+      <AuthProvider notifier={new UnauthorizedNotifier()}>
         <RouterProvider router={router} />
       </AuthProvider>
     </QueryClientProvider>,
@@ -54,6 +54,7 @@ function codeInput() {
 
 describe('auth flow with the mocks', () => {
   beforeEach(() => {
+    mockSession.end()
     vi.mocked(getDashboardApi).mockResolvedValue(createMockApi(undefined, 0))
   })
 
@@ -64,7 +65,7 @@ describe('auth flow with the mocks', () => {
   it('logs in with the code and lands on the page it asked for', async () => {
     renderApp('/login?next=%2Falerts')
 
-    await userEvent.type(screen.getByLabelText('Usuario'), 'juan')
+    await userEvent.type(await screen.findByLabelText('Usuario'), 'juan')
     await userEvent.type(screen.getByLabelText('Contraseña'), 'secret-pass')
     await userEvent.click(screen.getByRole('button', { name: 'Entrar' }))
 
@@ -83,7 +84,7 @@ describe('auth flow with the mocks', () => {
   it('shows the masked email after registering', async () => {
     renderApp('/register')
 
-    await userEvent.type(screen.getByLabelText('Usuario'), 'ana')
+    await userEvent.type(await screen.findByLabelText('Usuario'), 'ana')
     await userEvent.type(screen.getByLabelText('Nombre completo'), 'Ana Ruiz')
     await userEvent.type(screen.getByLabelText('Correo'), 'ana@mail.com')
     await userEvent.type(screen.getByLabelText('Contraseña'), 'secret-pass')
@@ -95,7 +96,7 @@ describe('auth flow with the mocks', () => {
   it('does not send the form with a short password', async () => {
     renderApp('/register')
 
-    await userEvent.type(screen.getByLabelText('Contraseña'), 'short')
+    await userEvent.type(await screen.findByLabelText('Contraseña'), 'short')
     await userEvent.click(screen.getByRole('button', { name: 'Crear cuenta' }))
 
     expect(screen.getByLabelText('Contraseña')).toHaveAccessibleDescription(
@@ -104,6 +105,15 @@ describe('auth flow with the mocks', () => {
     expect(
       screen.queryByRole('heading', { name: 'Código de verificación' }),
     ).not.toBeInTheDocument()
+  })
+
+  it('keeps the session across a reload: no login form for someone who already has the cookie', async () => {
+    mockSession.start()
+
+    renderApp('/login')
+
+    expect(await screen.findByText('private cage')).toBeInTheDocument()
+    expect(screen.queryByLabelText('Usuario')).not.toBeInTheDocument()
   })
 
   it('goes back to /login when /verify is opened without a code request (e.g. after a reload)', async () => {
