@@ -66,7 +66,7 @@ describe('auth flow with the mocks', () => {
     renderApp('/login?next=%2Falerts')
 
     await userEvent.type(await screen.findByLabelText('Usuario'), 'juan')
-    await userEvent.type(screen.getByLabelText('Contraseña'), 'secret-pass')
+    await userEvent.type(screen.getByLabelText('Contraseña'), 'Secret-pass-1')
     await userEvent.click(screen.getByRole('button', { name: 'Entrar' }))
 
     expect(
@@ -87,7 +87,7 @@ describe('auth flow with the mocks', () => {
     await userEvent.type(await screen.findByLabelText('Usuario'), 'ana')
     await userEvent.type(screen.getByLabelText('Nombre completo'), 'Ana Ruiz')
     await userEvent.type(screen.getByLabelText('Correo'), 'ana@mail.com')
-    await userEvent.type(screen.getByLabelText('Contraseña'), 'secret-pass')
+    await userEvent.type(screen.getByLabelText('Contraseña'), 'Secret-pass-1')
     await userEvent.click(screen.getByRole('button', { name: 'Crear cuenta' }))
 
     expect(await screen.findByText(/a•••@mail\.com/)).toBeInTheDocument()
@@ -100,7 +100,7 @@ describe('auth flow with the mocks', () => {
     await userEvent.click(screen.getByRole('button', { name: 'Crear cuenta' }))
 
     expect(screen.getByLabelText('Contraseña')).toHaveAccessibleDescription(
-      'La contraseña debe tener entre 8 y 72 caracteres.',
+      'La contraseña no cumple todos los requisitos.',
     )
     expect(
       screen.queryByRole('heading', { name: 'Código de verificación' }),

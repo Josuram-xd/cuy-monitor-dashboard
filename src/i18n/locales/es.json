@@ -97,6 +97,22 @@
     "reconnecting": "Reconectando…",
     "disconnected": "Sin conexión en vivo — los datos pueden estar desactualizados"
   },
+  "password": {
+    "title": "Tu contraseña debe tener:",
+    "progress": "{{met}} de {{total}} requisitos",
+    "met": "cumplido",
+    "notMet": "pendiente",
+    "rules": {
+      "LENGTH": "Entre 10 y 64 caracteres",
+      "LOWERCASE": "Una letra minúscula",
+      "UPPERCASE": "Una letra mayúscula",
+      "DIGIT": "Un número",
+      "SPECIAL": "Un carácter especial, como ! @ # $ % _ -",
+      "NO_SPACES": "Sin espacios",
+      "NOT_COMMON": "No puede ser una contraseña muy común",
+      "NOT_PERSONAL": "No puede incluir tu usuario ni tu correo"
+    }
+  },
   "guineaPig": {
     "still": "Quieto {{seconds}} de los últimos 60 s",
     "lastSeen": "Visto {{time}}",
@@ -143,7 +159,6 @@
       "title": "Crear cuenta",
       "submit": "Crear cuenta",
       "submitting": "Creando la cuenta…",
-      "passwordHint": "Entre 8 y 72 caracteres",
       "required": "Este dato es obligatorio.",
       "invalidEmail": "Escribe un correo válido, por ejemplo nombre@gmail.com.",
       "haveAccount": "¿Ya tienes cuenta?",
@@ -175,7 +190,7 @@
       "invalidCode": "El código no es correcto. Revisa el correo e inténtalo otra vez.",
       "expiredCode": "El código venció. Te enviamos uno nuevo.",
       "userExists": "Ese usuario o correo ya está registrado.",
-      "weakPassword": "La contraseña debe tener entre 8 y 72 caracteres."
+      "weakPassword": "La contraseña no cumple todos los requisitos."
     }
   },
   "account": {
@@ -197,7 +212,6 @@
       "title": "Cambiar contraseña",
       "current": "Contraseña actual",
       "new": "Contraseña nueva",
-      "hint": "Entre 8 y 72 caracteres.",
       "submit": "Cambiar contraseña",
       "submitting": "Cambiando…",
       "done": "Listo, tu contraseña cambió."

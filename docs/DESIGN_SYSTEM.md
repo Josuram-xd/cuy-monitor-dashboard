@@ -134,6 +134,14 @@ Supported through `prefers-color-scheme` by redefining the tokens in section 2.1
 
 All components live in `src/components/`, one folder per component with `Component.tsx` + `Component.module.css`. Props in English, visible text via `t()`.
 
+### PasswordChecklist
+
+Rules of a new password, ticked while the user types, with a bar that fills as they are met. Used under the password field of the registration form and in "Cambiar contraseña". The five main rules (10 to 64 characters, lowercase, uppercase, digit, special character) are always listed; "sin espacios", "no es una contraseña muy común" and "no incluye tu usuario ni tu correo" appear only when they are the problem. The rules live in `src/auth/passwordRules.ts` and mirror the backend's `PasswordPolicy`, which has the last word. Never says "strong": it only says which requirements are met.
+
+```tsx
+<PasswordChecklist password={form.password} username={form.username} email={form.email} />
+```
+
 ### StatusBadge
 
 Pill that shows a health status.

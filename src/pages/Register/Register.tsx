@@ -2,10 +2,12 @@ import { useState, type FormEvent } from 'react'
 import { Link, useNavigate, useSearchParams } from 'react-router'
 import { errorMessageKey } from '../../api/errorMessages'
 import { safeNextPath } from '../../auth/nextPath'
+import { passwordProblems } from '../../auth/passwordRules'
 import { pendingVerification } from '../../auth/pendingVerification'
 import { AuthLayout } from '../../components/AuthLayout/AuthLayout'
 import { Button } from '../../components/Button/Button'
 import { FormError } from '../../components/FormError/FormError'
+import { PasswordChecklist } from '../../components/PasswordChecklist/PasswordChecklist'
 import { PasswordField } from '../../components/PasswordField/PasswordField'
 import { TextField } from '../../components/TextField/TextField'
 import { useRegisterMutation } from '../../hooks/useAuthMutations'
@@ -23,9 +25,6 @@ type Field = keyof RegisterForm
 
 const EMPTY_FORM: RegisterForm = { username: '', fullName: '', email: '', password: '' }
 const EMAIL_PATTERN = /^[^\s@]+@[^\s@]+\.[^\s@]+$/
-// same rule as the backend: bytes, not characters (an emoji counts more than one)
-const MIN_PASSWORD_BYTES = 8
-const MAX_PASSWORD_BYTES = 72
 
 function validate(form: RegisterForm): Partial<Record<Field, string>> {
   const errors: Partial<Record<Field, string>> = {}
@@ -37,8 +36,8 @@ function validate(form: RegisterForm): Partial<Record<Field, string>> {
   if (!errors.email && !EMAIL_PATTERN.test(form.email.trim())) {
     errors.email = t('auth.register.invalidEmail')
   }
-  const passwordBytes = new TextEncoder().encode(form.password).length
-  if (passwordBytes < MIN_PASSWORD_BYTES || passwordBytes > MAX_PASSWORD_BYTES) {
+  // the checklist under the field says which rule is missing; this only stops the submit
+  if (passwordProblems(form.password, { username: form.username, email: form.email }).length > 0) {
     errors.password = t('auth.error.weakPassword')
   }
   return errors
@@ -132,9 +131,9 @@ export function Register() {
         <PasswordField
           label={t('auth.fields.password')}
           autoComplete="new-password"
-          hint={t('auth.register.passwordHint')}
           {...fieldProps('password')}
         />
+        <PasswordChecklist password={form.password} username={form.username} email={form.email} />
         {register.isError && <FormError message={t(errorMessageKey(register.error, 'register'))} />}
         <Button type="submit" variant="primary" fullWidth disabled={register.isPending}>
           {register.isPending ? t('auth.register.submitting') : t('auth.register.submit')}

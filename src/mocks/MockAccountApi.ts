@@ -4,6 +4,7 @@ import type {
   DeactivateAccountRequest,
   UpdateProfileRequest,
 } from '../types/Account'
+import { passwordProblems } from '../auth/passwordRules'
 import type { User } from '../types/User'
 import type { MockUser } from './MockDatabase'
 import { mockSession } from './mockSession'
@@ -11,8 +12,6 @@ import { MockResource } from './MockResource'
 
 // after a reload the fake database is empty but the fake session survives: answer with a demo user
 const DEMO_USER: User = { username: 'demo', fullName: 'Usuario de prueba' }
-const MIN_PASSWORD_BYTES = 8
-const MAX_PASSWORD_BYTES = 72
 
 export class MockAccountApi extends MockResource implements AccountApi {
   getProfile(): Promise<User> {
@@ -47,9 +46,14 @@ export class MockAccountApi extends MockResource implements AccountApi {
     if (user && user.password !== body.currentPassword) {
       return this.fail(401, 'unauthorized')
     }
-    const bytes = new TextEncoder().encode(body.newPassword).length
-    if (bytes < MIN_PASSWORD_BYTES || bytes > MAX_PASSWORD_BYTES) {
-      return this.fail(400, 'bad_request', { newPassword: 'size must be between 8 and 72' })
+    const problems = passwordProblems(body.newPassword, {
+      username: user?.username,
+      email: user?.email,
+    })
+    if (problems.length > 0) {
+      return this.fail(400, 'bad_request', {
+        password: problems.map((rule) => (rule === 'LENGTH' ? 'MIN_LENGTH' : rule)).join(','),
+      })
     }
     if (user) {
       user.password = body.newPassword
