@@ -46,39 +46,74 @@
   gap: var(--space-6);
 }
 
-.section,
-.alerts {
+/* both columns are cells of the same height: the grid decides it and the alerts panel fills it */
+.cell {
   display: flex;
+  flex-direction: column;
+  min-width: 0;
+}
+
+.section {
+  display: flex;
+  flex: 1;
   flex-direction: column;
   gap: var(--space-3);
   min-width: 0;
 }
 
-.sectionHeader {
+/* every title has the same height and a counter, so the two columns start on the same line */
+.sectionTitle {
+  min-height: 36px;
+}
+
+.count {
+  display: inline-grid;
+  min-width: 28px;
+  height: 28px;
+  place-items: center;
+  padding: 0 var(--space-2);
+  border-radius: var(--radius-full);
+  background: var(--color-primary-soft);
+  color: var(--color-primary-hover);
+  font-family: var(--font-display);
+  font-size: var(--text-small-size);
+  font-weight: 700;
+}
+
+/* the alerts live in a panel that stretches to the height of the cuyes column */
+.panel {
   display: flex;
-  align-items: center;
-  justify-content: space-between;
-  gap: var(--space-2);
+  flex: 1;
+  flex-direction: column;
+  gap: var(--space-3);
+  padding: var(--space-3);
+  border: 1px solid var(--color-border);
+  border-radius: var(--radius-lg);
+  background: color-mix(in srgb, var(--color-surface) 70%, transparent);
+  backdrop-filter: blur(6px);
+}
+
+.seeAll {
+  margin-top: auto;
 }
 
 .calm {
+  display: flex;
+  flex: 1;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  gap: var(--space-2);
   padding: var(--space-4);
-  border: 1px solid var(--color-border);
-  border-radius: var(--radius-md);
-  background: var(--color-surface);
   color: var(--color-text-muted);
+  text-align: center;
 }
 
-/* desktop: alerts panel on the right (DESIGN_SYSTEM 2.6) */
+/* desktop: alerts panel on the right (DESIGN_SYSTEM 2.6), same height as the cuyes */
 @media (min-width: 1024px) {
   .columns {
     display: grid;
-    grid-template-columns: minmax(0, 1fr) 340px;
-    align-items: start;
-  }
-
-  .alerts {
-    position: sticky;
-    top: calc(64px + var(--space-5));
+    grid-template-columns: minmax(0, 1fr) 360px;
+    align-items: stretch;
   }
 }

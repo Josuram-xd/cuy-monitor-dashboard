@@ -3,6 +3,13 @@ import { cx } from '../../utils/cx'
 
 // Feather-style outline icons, drawn inline so we don't need an icon library.
 const PATHS = {
+  scale: (
+    <>
+      <path d="M5 4h14a2 2 0 0 1 2 2v13a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V6a2 2 0 0 1 2-2z" />
+      <path d="M8 10a4 4 0 0 1 8 0" />
+      <line x1="12" y1="10" x2="14" y2="7" />
+    </>
+  ),
   plus: (
     <>
       <line x1="12" y1="5" x2="12" y2="19" />

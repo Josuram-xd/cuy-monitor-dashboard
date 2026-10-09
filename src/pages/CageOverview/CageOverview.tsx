@@ -1,6 +1,7 @@
 import { AlertList } from '../../components/AlertList/AlertList'
 import { ButtonLink } from '../../components/Button/Button'
 import { CageStatusBanner } from '../../components/CageStatusBanner/CageStatusBanner'
+import { Mascot } from '../../components/Mascot/Mascot'
 import { EmptyState } from '../../components/EmptyState/EmptyState'
 import { ErrorState } from '../../components/ErrorState/ErrorState'
 import { GuineaPigCard } from '../../components/GuineaPigCard/GuineaPigCard'
@@ -66,7 +67,12 @@ function OpenAlertsSection({ now }: { now: number }) {
     return <ErrorState message={t('alerts.loadError')} onRetry={() => void alerts.refetch()} />
   }
   if (alerts.data.length === 0) {
-    return <p className={styles.calm}>{t('alerts.noneOpen')}</p>
+    return (
+      <div className={styles.calm}>
+        <Mascot mood="happy" size={120} />
+        <p>{t('alerts.noneOpen')}</p>
+      </div>
+    )
   }
   return (
     <AlertList
@@ -79,6 +85,9 @@ function OpenAlertsSection({ now }: { now: number }) {
 
 export function CageOverview() {
   const health = useCageHealth()
+  // the same queries as the sections: only to show how many there are next to each title
+  const guineaPigCount = useGuineaPigs().data?.length
+  const openAlertCount = useAlerts('OPEN').data?.length
   const profile = useProfile()
   const now = useNow()
   const firstName = profile.data?.fullName.split(' ')[0]
@@ -99,25 +108,31 @@ export function CageOverview() {
       {/* no data or failed request: the banner shows UNKNOWN, never "Normal" */}
       <CageStatusBanner health={health.data} now={now} liveIndicator={<LiveIndicator />} />
       <div className={styles.columns}>
-        <Reveal>
+        <Reveal className={styles.cell}>
           <section className={styles.section} aria-labelledby="guinea-pigs-heading">
             <h2 id="guinea-pigs-heading" className={styles.sectionTitle}>
               {t('cage.guineaPigs')}
+              {guineaPigCount !== undefined && (
+                <span className={styles.count}>{guineaPigCount}</span>
+              )}
             </h2>
             <GuineaPigsSection now={now} />
           </section>
         </Reveal>
-        <Reveal delay={120}>
-          <section className={styles.alerts} aria-labelledby="open-alerts-heading">
-            <div className={styles.sectionHeader}>
-              <h2 id="open-alerts-heading" className={styles.sectionTitle}>
-                {t('alerts.openTitle')}
-              </h2>
-              <ButtonLink to="/alerts" variant="ghost">
+        <Reveal delay={120} className={styles.cell}>
+          <section className={styles.section} aria-labelledby="open-alerts-heading">
+            <h2 id="open-alerts-heading" className={styles.sectionTitle}>
+              {t('alerts.openTitle')}
+              {openAlertCount !== undefined && (
+                <span className={styles.count}>{openAlertCount}</span>
+              )}
+            </h2>
+            <div className={styles.panel}>
+              <OpenAlertsSection now={now} />
+              <ButtonLink to="/alerts" variant="secondary" className={styles.seeAll}>
                 {t('alerts.seeAll')}
               </ButtonLink>
             </div>
-            <OpenAlertsSection now={now} />
           </section>
         </Reveal>
       </div>
