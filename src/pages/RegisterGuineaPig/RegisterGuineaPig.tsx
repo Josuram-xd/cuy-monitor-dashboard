@@ -9,18 +9,17 @@ import { ErrorState } from '../../components/ErrorState/ErrorState'
 import { FormError } from '../../components/FormError/FormError'
 import { GuineaPigPreview } from '../../components/GuineaPigPreview/GuineaPigPreview'
 import { MarkColorPicker } from '../../components/MarkColorPicker/MarkColorPicker'
+import { PhotoField } from '../../components/PhotoField/PhotoField'
 import { Skeleton } from '../../components/Skeleton/Skeleton'
 import { TextAreaField } from '../../components/TextAreaField/TextAreaField'
-import { TextField } from '../../components/TextField/TextField'
 import { WeightField } from '../../components/WeightField/WeightField'
 import { catalogOptions } from '../../catalog/catalog'
 import { useGuineaPigs } from '../../hooks/useGuineaPigs'
 import { useRegisterGuineaPig } from '../../hooks/useRegisterGuineaPig'
 import { t } from '../../i18n'
 import { MAX_NOTES_LENGTH, MAX_WEIGHT_GRAMS, MIN_WEIGHT_GRAMS } from '../../types/GuineaPigProfile'
+import type { Photo } from '../../utils/photo'
 import styles from './RegisterGuineaPig.module.css'
-
-const MAX_NAME_LENGTH = 100
 
 // "" = left empty (it is optional); otherwise a whole number of grams inside the limits
 function weightProblem(text: string): string | undefined {
@@ -37,7 +36,7 @@ export function RegisterGuineaPig() {
   const navigate = useNavigate()
   const guineaPigs = useGuineaPigs()
   const register = useRegisterGuineaPig()
-  const [name, setName] = useState('')
+  const [photo, setPhoto] = useState<Photo | null>(null)
   const [color, setColor] = useState<string | null>(null)
   const [breed, setBreed] = useState<string | null>(null)
   const [coatColor, setCoatColor] = useState<string | null>(null)
@@ -61,13 +60,10 @@ export function RegisterGuineaPig() {
     adornment: <CoatSwatch color={code} />,
   }))
 
-  const usedBy: Record<string, string> = {}
-  for (const guineaPig of guineaPigs.data) {
-    usedBy[guineaPig.markColor] = guineaPig.name
-  }
+  const taken = guineaPigs.data.map((guineaPig) => guineaPig.markColor)
   // a color that was free when the page opened can be taken by the time it is sent
-  const selectedColor = color !== null && usedBy[color] === undefined ? color : null
-  const allTaken = catalogOptions('markColors').every(({ code }) => usedBy[code] !== undefined)
+  const selectedColor = color !== null && !taken.includes(color) ? color : null
+  const allTaken = catalogOptions('markColors').every(({ code }) => taken.includes(code))
 
   if (allTaken) {
     return (
@@ -83,12 +79,7 @@ export function RegisterGuineaPig() {
     )
   }
 
-  const trimmed = name.trim()
-  const nameError = !trimmed
-    ? t('guineaPig.register.nameRequired')
-    : trimmed.length > MAX_NAME_LENGTH
-      ? t('guineaPig.register.nameTooLong')
-      : undefined
+  const photoError = photo === null ? t('guineaPig.register.photoRequired') : undefined
   const colorError = selectedColor === null ? t('guineaPig.register.colorRequired') : undefined
   const weightError = weightProblem(weight)
   const notesError =
@@ -97,12 +88,13 @@ export function RegisterGuineaPig() {
   function handleSubmit(event: FormEvent) {
     event.preventDefault()
     setSubmitted(true)
-    if (nameError || selectedColor === null || weightError || notesError) {
+    if (photo === null || selectedColor === null || weightError || notesError) {
       return
     }
     register.mutate(
       {
-        name: trimmed,
+        photo: photo.base64,
+        photoContentType: photo.contentType,
         markColor: selectedColor,
         ...(breed && { breed }),
         ...(coatColor && { coatColor }),
@@ -125,14 +117,12 @@ export function RegisterGuineaPig() {
             <h2 id="who-heading" className={styles.sectionTitle}>
               {t('guineaPig.register.who')}
             </h2>
-            <TextField
-              label={t('guineaPig.register.name')}
-              name="name"
-              autoComplete="off"
-              maxLength={MAX_NAME_LENGTH}
-              value={name}
-              error={submitted ? nameError : undefined}
-              onChange={(e) => setName(e.target.value)}
+            <PhotoField
+              label={t('guineaPig.register.photo')}
+              hint={t('guineaPig.register.photoHint')}
+              value={photo}
+              error={submitted ? photoError : undefined}
+              onChange={setPhoto}
             />
             <ChoiceChips
               legend={t('guineaPig.register.breed')}
@@ -169,7 +159,7 @@ export function RegisterGuineaPig() {
               legend={t('guineaPig.register.color')}
               value={selectedColor}
               onChange={setColor}
-              usedBy={usedBy}
+              taken={taken}
               error={submitted ? colorError : undefined}
             />
           </section>
@@ -203,7 +193,7 @@ export function RegisterGuineaPig() {
         </form>
         <div className={styles.side}>
           <GuineaPigPreview
-            name={name}
+            photo={photo}
             breed={breed}
             coatColor={coatColor}
             markColor={selectedColor}

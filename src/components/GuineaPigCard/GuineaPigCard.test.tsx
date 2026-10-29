@@ -8,7 +8,7 @@ const NOW = Date.parse('2026-10-05T14:32:00Z')
 
 const canela: GuineaPig = {
   id: 1,
-  name: 'Canela',
+  photoUrl: '/api/v1/cages/cage-1/guinea-pigs/1/photo',
   markColor: 'RED',
   status: 'OBSERVED',
   statusSince: '2026-10-05T14:10:00Z',
@@ -42,7 +42,7 @@ describe('GuineaPigCard', () => {
   it('shows name, mark color and status', () => {
     renderCard()
 
-    expect(screen.getByText('Canela')).toBeInTheDocument()
+    expect(screen.getByText('Rojo')).toBeInTheDocument()
     expect(screen.getByText('Rojo')).toBeInTheDocument()
     expect(screen.getByText('En observación')).toBeInTheDocument()
   })

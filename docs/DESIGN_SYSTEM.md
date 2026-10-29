@@ -213,12 +213,16 @@ The main building block of the cage view.
 
 ```
 ┌▌───────────────────────────────┐   ▌ = 4 px left border in --status-*-accent
-│▌ ● Rojo   Bolita                │
-│▌ [⚠ Alerta]                     │
+│▌ (foto) Rojo                    │
+│▌ [⚠ Alerta]                  ●  │
 │▌ Quieto 48 de los últimos 60 s  │
 │▌ Visto hace 2 min            →  │
 └▌───────────────────────────────┘
 ```
+
+A cuy has **no name**: the title is the name of its mark color and the avatar is its photo
+(`GuineaPigPhoto`, round, `object-fit: cover`). The `MarkColorDot` of the meta row goes without its
+label, so the color is not written twice.
 
 - Whole card is a link to `/guinea-pigs/:id` (min height 88 px).
 - Shows at most one behavior summary line, translated to plain words.
@@ -276,6 +280,7 @@ Min height 44 px, `--radius-md`, visible focus ring.
 
 - Label always visible above the field (no placeholder-only labels).
 - Mark color picker: grid of `MarkColorDot` buttons; colors already used in the cage are disabled with the text "En uso".
+- `PhotoField`: the photo of a cuy. Square preview of 96 px, a `primary` pill that opens the camera or the gallery (`capture="environment"`) and a secondary "Quitar". The file input is only reachable through its label, which is the visible button, so it keeps the keyboard and the focus ring.
 - Errors in `--status-critical-fg` below the field, with an icon.
 
 ### AuthLayout

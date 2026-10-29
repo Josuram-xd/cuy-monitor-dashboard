@@ -4,6 +4,12 @@ import { cx } from '../../utils/cx'
 // Feather-style outline icons, drawn inline so we don't need an icon library.
 const PATHS = {
   'chevron-left': <polyline points="15 18 9 12 15 6" />,
+  camera: (
+    <>
+      <path d="M23 19a2 2 0 0 1-2 2H3a2 2 0 0 1-2-2V8a2 2 0 0 1 2-2h4l2-3h6l2 3h4a2 2 0 0 1 2 2z" />
+      <circle cx="12" cy="13" r="4" />
+    </>
+  ),
   trash: (
     <>
       <polyline points="3 6 5 6 21 6" />
