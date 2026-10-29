@@ -1,8 +1,9 @@
 import { useState, type FormEvent } from 'react'
 import { Link, useNavigate, useSearchParams } from 'react-router'
 import { errorMessageKey } from '../../api/errorMessages'
+import { EMAIL_MAX_LENGTH, FULL_NAME_MAX_LENGTH, USERNAME_MAX_LENGTH } from '../../auth/fieldLimits'
 import { safeNextPath } from '../../auth/nextPath'
-import { passwordProblems } from '../../auth/passwordRules'
+import { PASSWORD_MAX_LENGTH, passwordProblems } from '../../auth/passwordRules'
 import { pendingVerification } from '../../auth/pendingVerification'
 import { AuthLayout } from '../../components/AuthLayout/AuthLayout'
 import { Button } from '../../components/Button/Button'
@@ -26,12 +27,22 @@ type Field = keyof RegisterForm
 
 const EMPTY_FORM: RegisterForm = { username: '', fullName: '', email: '', password: '' }
 const EMAIL_PATTERN = /^[^\s@]+@[^\s@]+\.[^\s@]+$/
+const MAX_LENGTHS: Record<Field, number> = {
+  username: USERNAME_MAX_LENGTH,
+  fullName: FULL_NAME_MAX_LENGTH,
+  email: EMAIL_MAX_LENGTH,
+  password: PASSWORD_MAX_LENGTH,
+}
 
 function validate(form: RegisterForm): Partial<Record<Field, string>> {
   const errors: Partial<Record<Field, string>> = {}
   for (const field of ['username', 'fullName', 'email'] as const) {
-    if (!form[field].trim()) {
-      errors[field] = t('auth.register.required')
+    const value = form[field].trim()
+    if (!value) {
+      errors[field] = t('auth.fields.required')
+    } else if (value.length > MAX_LENGTHS[field]) {
+      // the input stops at maxLength, but a paste on an old browser can still get through
+      errors[field] = t('auth.fields.tooLong')
     }
   }
   if (!errors.email && !EMAIL_PATTERN.test(form.email.trim())) {
@@ -112,13 +123,13 @@ export function Register() {
           label={t('auth.fields.username')}
           autoComplete="username"
           autoCapitalize="none"
-          maxLength={50}
+          maxLength={USERNAME_MAX_LENGTH}
           {...fieldProps('username')}
         />
         <TextField
           label={t('auth.fields.fullName')}
           autoComplete="name"
-          maxLength={150}
+          maxLength={FULL_NAME_MAX_LENGTH}
           {...fieldProps('fullName')}
         />
         <TextField
@@ -126,12 +137,13 @@ export function Register() {
           type="email"
           autoComplete="email"
           inputMode="email"
-          maxLength={254}
+          maxLength={EMAIL_MAX_LENGTH}
           {...fieldProps('email')}
         />
         <PasswordField
           label={t('auth.fields.password')}
           autoComplete="new-password"
+          maxLength={PASSWORD_MAX_LENGTH}
           {...fieldProps('password')}
         />
         <PasswordChecklist password={form.password} username={form.username} email={form.email} />
