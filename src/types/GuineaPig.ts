@@ -2,7 +2,8 @@ import type { HealthStatus } from './HealthStatus'
 
 export interface GuineaPig {
   id: number
-  name: string
+  // where the photo is served; null for a cuy registered before the photo existed
+  photoUrl: string | null
   // codes of catalog_option, not values of an enum: the labels come from GET /api/v1/catalog
   markColor: string
   status: HealthStatus
@@ -15,7 +16,9 @@ export interface GuineaPig {
 }
 
 export interface NewGuineaPig {
-  name: string
+  // the image in base64, already shrunk by the page (see utils/photo.ts)
+  photo: string
+  photoContentType: string
   markColor: string
   breed?: string
   coatColor?: string

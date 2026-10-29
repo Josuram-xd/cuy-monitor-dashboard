@@ -9,7 +9,7 @@ const NOW = Date.parse('2026-10-05T14:32:00Z')
 function health(status: HealthStatus, pigs: HealthStatus[]): CageHealth {
   const guineaPigs: CageGuineaPigStatus[] = pigs.map((s, i) => ({
     id: i + 1,
-    name: `Cuy ${i + 1}`,
+    photoUrl: null,
     markColor: 'RED',
     status: s,
   }))

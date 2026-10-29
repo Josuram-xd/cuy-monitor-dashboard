@@ -29,9 +29,9 @@ describe('DeleteGuineaPig', () => {
     const remove = vi.spyOn(api.guineaPigs, 'remove')
     renderButton()
 
-    await userEvent.click(screen.getByRole('button', { name: 'Eliminar a Canela' }))
+    await userEvent.click(screen.getByRole('button', { name: 'Eliminar al cuy de marca Rojo' }))
 
-    const dialog = screen.getByRole('dialog', { name: '¿Eliminar a Canela?' })
+    const dialog = screen.getByRole('dialog', { name: '¿Eliminar al cuy de marca Rojo?' })
     expect(within(dialog).getByText(/Su historial se conserva/)).toBeInTheDocument()
     expect(remove).not.toHaveBeenCalled()
   })
@@ -39,32 +39,32 @@ describe('DeleteGuineaPig', () => {
   it('cancelling leaves the cuy where it is', async () => {
     renderButton()
 
-    await userEvent.click(screen.getByRole('button', { name: 'Eliminar a Canela' }))
+    await userEvent.click(screen.getByRole('button', { name: 'Eliminar al cuy de marca Rojo' }))
     await userEvent.click(
       within(screen.getByRole('dialog')).getByRole('button', { name: 'Cancelar' }),
     )
 
     expect(screen.queryByRole('dialog')).not.toBeInTheDocument()
-    expect(db.guineaPigs.some((g) => g.name === 'Canela')).toBe(true)
+    expect(db.guineaPigs.some((g) => g.markColor === 'RED')).toBe(true)
   })
 
   it('deletes it once confirmed and closes the dialog', async () => {
     renderButton()
 
-    await userEvent.click(screen.getByRole('button', { name: 'Eliminar a Canela' }))
+    await userEvent.click(screen.getByRole('button', { name: 'Eliminar al cuy de marca Rojo' }))
     await userEvent.click(
       within(screen.getByRole('dialog')).getByRole('button', { name: 'Sí, eliminar' }),
     )
 
     await waitFor(() => expect(screen.queryByRole('dialog')).not.toBeInTheDocument())
-    expect(db.guineaPigs.some((g) => g.name === 'Canela')).toBe(false)
+    expect(db.guineaPigs.some((g) => g.markColor === 'RED')).toBe(false)
   })
 
   it('says so when it is already gone', async () => {
     vi.spyOn(api.guineaPigs, 'remove').mockRejectedValue(new ApiError(404, 'not_found'))
     renderButton()
 
-    await userEvent.click(screen.getByRole('button', { name: 'Eliminar a Canela' }))
+    await userEvent.click(screen.getByRole('button', { name: 'Eliminar al cuy de marca Rojo' }))
     await userEvent.click(
       within(screen.getByRole('dialog')).getByRole('button', { name: 'Sí, eliminar' }),
     )

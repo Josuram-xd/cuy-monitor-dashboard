@@ -48,10 +48,27 @@ export const mockCatalog: Catalog = {
   ],
 }
 
+// 48 by 48 squares of the mark color: the real backend serves the bytes at
+// /api/v1/cages/{code}/guinea-pigs/{id}/photo, and the mocks have no server to serve them from
+const photos: Record<string, string> = {
+  RED:
+    'data:image/png;base64,' +
+    'iVBORw0KGgoAAAANSUhEUgAAADAAAAAwCAIAAADYYG7QAAAAOklEQVR42u3OMQ0AAAgDsMmZfzHowQXhaFIBzbSvREhISEhISEhISEhISEhISEhISEhISEhISEjoLrSFkVaXfOby8AAAAABJRU5ErkJggg==',
+  BLUE:
+    'data:image/png;base64,' +
+    'iVBORw0KGgoAAAANSUhEUgAAADAAAAAwCAIAAADYYG7QAAAAO0lEQVR42u3OQQ0AAAgEoEtiOTubxxbOBxsBSPW8EiEhISEhISEhISEhISEhISEhISEhISEhISGhu9ACJjEPtVj+xuYAAAAASUVORK5CYII=',
+  WHITE:
+    'data:image/png;base64,' +
+    'iVBORw0KGgoAAAANSUhEUgAAADAAAAAwCAIAAADYYG7QAAAAOklEQVR42u3OQQkAAAgEsOufVi6BLcTHYAGWdl6JkJCQkJCQkJCQkJCQkJCQkJCQkJCQkJCQkNBdaAFUa3V4kPSOdQAAAABJRU5ErkJggg==',
+  ORANGE:
+    'data:image/png;base64,' +
+    'iVBORw0KGgoAAAANSUhEUgAAADAAAAAwCAIAAADYYG7QAAAAOUlEQVR42u3OMQ0AAAgDsDlHNu9cEI4mFdDs5JUICQkJCQkJCQkJCQkJCQkJCQkJCQkJCQkJCd2FCtRRJsTpOCI4AAAAAElFTkSuQmCC',
+}
+
 export const mockGuineaPigs: GuineaPig[] = [
   {
     id: 1,
-    name: 'Canela',
+    photoUrl: photos.RED,
     markColor: 'RED',
     status: 'OBSERVED',
     statusSince: minutesAgo(22),
@@ -62,7 +79,7 @@ export const mockGuineaPigs: GuineaPig[] = [
   },
   {
     id: 2,
-    name: 'Pelusa',
+    photoUrl: photos.BLUE,
     markColor: 'BLUE',
     status: 'NORMAL',
     statusSince: minutesAgo(600),
@@ -71,8 +88,15 @@ export const mockGuineaPigs: GuineaPig[] = [
     initialWeightGrams: 940,
     notes: null,
   },
-  { id: 3, name: 'Copito', markColor: 'WHITE', status: 'NORMAL', statusSince: minutesAgo(1440) },
-  { id: 4, name: 'Chispa', markColor: 'ORANGE', status: 'ALERT', statusSince: minutesAgo(35) },
+  {
+    id: 3,
+    photoUrl: photos.WHITE,
+    markColor: 'WHITE',
+    status: 'NORMAL',
+    statusSince: minutesAgo(1440),
+  },
+  // registered before the photo existed: the card shows a camera instead
+  { id: 4, photoUrl: null, markColor: 'ORANGE', status: 'ALERT', statusSince: minutesAgo(35) },
 ]
 
 export const mockAudio = { status: 'NORMAL' as const, lastEventAt: minutesAgo(2) }
@@ -84,7 +108,7 @@ export const mockAlerts: Alert[] = [
     guineaPigId: 4,
     level: 'ALERT',
     type: 'BEHAVIOR',
-    message: 'Chispa lleva mucho más tiempo quieta de lo normal',
+    message: 'El cuy de marca naranja lleva mucho más tiempo quieto de lo normal',
     status: 'OPEN',
     createdAt: minutesAgo(35),
     reviewedAt: null,
@@ -106,7 +130,7 @@ export const mockAlerts: Alert[] = [
     guineaPigId: 1,
     level: 'CRITICAL',
     type: 'BEHAVIOR',
-    message: 'Canela no se acercó al comedero en varias horas',
+    message: 'El cuy de marca roja no se acercó al comedero en varias horas',
     status: 'REVIEWED',
     createdAt: minutesAgo(2900),
     reviewedAt: minutesAgo(2850),

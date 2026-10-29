@@ -24,15 +24,16 @@ describe('CageOverview', () => {
 
     expect(await screen.findByText('1 cuy en alerta')).toBeInTheDocument()
     const grid = await screen.findByRole('list', { name: 'Tus cuyes' })
-    for (const name of ['Canela', 'Pelusa', 'Copito', 'Chispa']) {
-      expect(within(grid).getByText(name)).toBeInTheDocument()
+    // a cuy has no name: the card is its photo and the color of its mark
+    for (const color of ['Rojo', 'Azul', 'Blanco', 'Naranja']) {
+      expect(within(grid).getByText(color)).toBeInTheDocument()
     }
   })
 
   it('lists the open alerts next to the cage', async () => {
     renderWithProviders(<CageOverview />)
 
-    expect(await screen.findByText(/quieta de lo normal/)).toBeInTheDocument()
+    expect(await screen.findByText(/quieto de lo normal/)).toBeInTheDocument()
     expect(screen.getByRole('link', { name: 'Ver todas' })).toHaveAttribute('href', '/alerts')
   })
 

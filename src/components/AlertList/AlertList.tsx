@@ -1,3 +1,4 @@
+import { catalogLabel } from '../../catalog/catalog'
 import { t } from '../../i18n'
 import type { Alert, EventType } from '../../types/Alert'
 import type { GuineaPig } from '../../types/GuineaPig'
@@ -11,7 +12,7 @@ import styles from './AlertList.module.css'
 
 interface AlertListProps {
   alerts: Alert[]
-  // to show the name and mark color of the guinea pig of each alert
+  // to show which guinea pig each alert is about: its mark color
   guineaPigs?: GuineaPig[]
   now: number
   // without it there is no "Marcar como revisada" button
@@ -31,7 +32,7 @@ function alertTitle(alert: Alert, guineaPig?: GuineaPig): string {
   if (alert.guineaPigId === null) {
     return t('alerts.wholeCage')
   }
-  return guineaPig ? guineaPig.name : t('alerts.unknownGuineaPig')
+  return guineaPig ? catalogLabel('markColors', guineaPig.markColor) : t('alerts.unknownGuineaPig')
 }
 
 // Same shape as a guinea pig card (ring, title, badge and mark, then the detail) so the two columns
@@ -62,7 +63,7 @@ export function AlertList({
               <StatusBadge status={alert.level} size="sm" />
               {guineaPig && (
                 <span className={styles.mark}>
-                  <MarkColorDot color={guineaPig.markColor} />
+                  <MarkColorDot color={guineaPig.markColor} showLabel={false} />
                 </span>
               )}
             </div>
