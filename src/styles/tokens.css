@@ -34,15 +34,7 @@
   --status-unknown-bg: #f2f4f6;
   --status-unknown-accent: #9aa3af;
 
-  /* 2.3 Guinea pig marks (identification only, never status) */
-  --mark-red: #d62828;
-  --mark-blue: #1e63d6;
-  --mark-green: #2e9e44;
-  --mark-yellow: #f5c518;
-  --mark-orange: #f77f00;
-  --mark-purple: #7b3fb5;
-  --mark-black: #1a1a1a;
-  --mark-white: #ffffff;
+  /* 2.3 Guinea pig marks: their hex comes from catalog_option in the database, not from a token */
 
   /* 2.4 Typography */
   /* round and chunky for titles and buttons, friendly for text; both are served by us (no external request) */

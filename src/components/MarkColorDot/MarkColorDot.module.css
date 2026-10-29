@@ -13,35 +13,3 @@
   border-radius: var(--radius-full);
   box-shadow: 0 0 0 1px var(--color-border);
 }
-
-.RED {
-  background: var(--mark-red);
-}
-
-.BLUE {
-  background: var(--mark-blue);
-}
-
-.GREEN {
-  background: var(--mark-green);
-}
-
-.YELLOW {
-  background: var(--mark-yellow);
-}
-
-.ORANGE {
-  background: var(--mark-orange);
-}
-
-.PURPLE {
-  background: var(--mark-purple);
-}
-
-.BLACK {
-  background: var(--mark-black);
-}
-
-.WHITE {
-  background: var(--mark-white);
-}

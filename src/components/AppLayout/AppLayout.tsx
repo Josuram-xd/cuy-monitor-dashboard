@@ -1,10 +1,13 @@
 import { Link, Outlet, ScrollRestoration } from 'react-router'
+import { useCatalog } from '../../hooks/useCatalog'
 import { t } from '../../i18n'
 import { LiveConnectionProvider } from '../../realtime/LiveConnectionProvider'
 import { AppBackdrop } from '../AppBackdrop/AppBackdrop'
 import { AppFooter } from '../AppFooter/AppFooter'
 import { BottomNav } from '../BottomNav/BottomNav'
+import { ErrorState } from '../ErrorState/ErrorState'
 import { Logo } from '../Logo/Logo'
+import { Skeleton } from '../Skeleton/Skeleton'
 import { Wave } from '../Wave/Wave'
 import { UserMenu } from '../UserMenu/UserMenu'
 import styles from './AppLayout.module.css'
@@ -12,6 +15,10 @@ import styles from './AppLayout.module.css'
 const MAIN_ID = 'main-content'
 
 export function AppLayout() {
+  // Colors, breeds and coat colors come from the database. Every page below paints with them, so
+  // they are loaded once here instead of in each page, and nothing renders with empty lists.
+  const catalog = useCatalog()
+
   // private pages only: the live connection exists only while there is a session
   return (
     <LiveConnectionProvider>
@@ -38,7 +45,13 @@ export function AppLayout() {
           </span>
         </header>
         <main id={MAIN_ID} className={styles.main} tabIndex={-1}>
-          <Outlet />
+          {catalog.isPending ? (
+            <Skeleton count={3} />
+          ) : catalog.isError ? (
+            <ErrorState message={t('cage.catalogError')} onRetry={() => void catalog.refetch()} />
+          ) : (
+            <Outlet />
+          )}
         </main>
         <AppFooter />
       </div>
