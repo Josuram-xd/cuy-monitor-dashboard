@@ -269,6 +269,7 @@ Min height 44 px, `--radius-md`, visible focus ring.
 - Label always visible above the field (no placeholder-only labels).
 - Mark color picker: grid of `MarkColorDot` buttons; colors already used in the cage are disabled with the text "En uso".
 - Errors in `--status-critical-fg` below the field, with an icon.
+- **Every field has an explicit limit**, never only the browser's `required`: `maxLength` on the input so nothing endless can be typed, and the same cap checked in the form before sending (a paste can get past the attribute). The caps are the ones the backend rejects with `400`, kept in `src/auth/fieldLimits.ts` (usuario 50, nombre 150, correo 254) and `src/auth/passwordRules.ts` (contraseña nueva 64). The message is `auth.fields.required` or `auth.fields.tooLong`, and it appears after leaving the field or trying to send, not while typing the first letters.
 
 ### AuthLayout
 

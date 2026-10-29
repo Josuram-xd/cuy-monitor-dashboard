@@ -1,6 +1,7 @@
 import { useState, type FormEvent } from 'react'
 import { errorMessageKey } from '../../api/errorMessages'
-import { passwordProblems } from '../../auth/passwordRules'
+import { FULL_NAME_MAX_LENGTH } from '../../auth/fieldLimits'
+import { PASSWORD_MAX_LENGTH, passwordProblems } from '../../auth/passwordRules'
 import { useAuth } from '../../auth/useAuth'
 import { Button } from '../../components/Button/Button'
 import { ConfirmDialog } from '../../components/ConfirmDialog/ConfirmDialog'
@@ -20,8 +21,6 @@ import { t } from '../../i18n'
 import { initials } from '../../utils/initials'
 import styles from './Account.module.css'
 
-const MAX_NAME_LENGTH = 150
-
 function ProfileCard({ fullName, username }: { fullName: string; username: string }) {
   const update = useUpdateProfileMutation()
   const [name, setName] = useState(fullName)
@@ -30,7 +29,7 @@ function ProfileCard({ fullName, username }: { fullName: string; username: strin
   const unchanged = trimmed === fullName
   const nameError = !trimmed
     ? t('account.profile.nameRequired')
-    : trimmed.length > MAX_NAME_LENGTH
+    : trimmed.length > FULL_NAME_MAX_LENGTH
       ? t('account.profile.nameTooLong')
       : undefined
 
@@ -53,6 +52,7 @@ function ProfileCard({ fullName, username }: { fullName: string; username: strin
           label={t('account.profile.fullName')}
           name="fullName"
           autoComplete="name"
+          maxLength={FULL_NAME_MAX_LENGTH}
           value={name}
           error={unchanged ? undefined : nameError}
           onChange={(e) => {
@@ -127,6 +127,7 @@ function PasswordCard({ username, hasPassword }: { username: string; hasPassword
             label={t('account.password.current')}
             name="currentPassword"
             autoComplete="current-password"
+            maxLength={PASSWORD_MAX_LENGTH}
             value={current}
             onChange={(e) => {
               setCurrent(e.target.value)
@@ -138,6 +139,7 @@ function PasswordCard({ username, hasPassword }: { username: string; hasPassword
           label={t('account.password.new')}
           name="newPassword"
           autoComplete="new-password"
+          maxLength={PASSWORD_MAX_LENGTH}
           error={newPasswordError}
           value={next}
           onChange={(e) => {

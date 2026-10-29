@@ -233,7 +233,9 @@
       "username": "Usuario",
       "fullName": "Nombre completo",
       "email": "Correo",
-      "password": "Contraseña"
+      "password": "Contraseña",
+      "required": "Este dato es obligatorio.",
+      "tooLong": "Este dato es demasiado largo."
     },
     "login": {
       "title": "Iniciar sesión",
@@ -246,7 +248,6 @@
       "title": "Crear cuenta",
       "submit": "Crear cuenta",
       "submitting": "Creando la cuenta…",
-      "required": "Este dato es obligatorio.",
       "invalidEmail": "Escribe un correo válido, por ejemplo nombre@gmail.com.",
       "haveAccount": "¿Ya tienes cuenta?",
       "toLogin": "Inicia sesión"
