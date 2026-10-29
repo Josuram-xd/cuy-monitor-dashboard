@@ -39,7 +39,7 @@ cuy-monitor-dashboard/
     ├── i18n/
     │   ├── index.ts        i18next, default and fallback language "es"
     │   └── locales/es.json ALL user-facing text
-    ├── types/              GuineaPig.ts, HealthStatus.ts, MarkColor.ts, Alert.ts, CageHealth.ts, WeightReading.ts,
+    ├── types/              GuineaPig.ts, HealthStatus.ts, Catalog.ts, Alert.ts, CageHealth.ts, WeightReading.ts,
     │                       User.ts (username, fullName), Auth.ts (LoginChallenge)
     ├── auth/
     │   ├── AuthProvider.tsx   session state (checking / authenticated / anonymous / unavailable), asks the server on load
@@ -141,7 +141,6 @@ Local component state only (`useState`). Session state lives in `AuthProvider` (
 
 ```ts
 export type HealthStatus = 'NORMAL' | 'OBSERVED' | 'ALERT' | 'CRITICAL';
-export type MarkColor = 'RED' | 'BLUE' | 'GREEN' | 'YELLOW' | 'ORANGE' | 'PURPLE' | 'BLACK' | 'WHITE';
 export type AlertStatus = 'OPEN' | 'REVIEWED';
 export type UserStatus = 'PENDING_VERIFICATION' | 'ACTIVE' | 'DISABLED';
 
@@ -150,6 +149,18 @@ export interface User { id: string; username: string; fullName: string; email: s
 ```
 
 - `UNKNOWN` is a UI-only status (`type DisplayStatus = HealthStatus | 'UNKNOWN'`), never sent to the backend.
+
+### Mark colors, breeds and coat colors are **not** unions
+
+They are rows of `catalog_option` in the database, served at `GET /api/v1/catalog` as
+`{ code, label, hex }`. In the types they are plain `string` (a code), and the label and the color of the dot are
+read from the catalog: adding a color or renaming a breed is an `INSERT` or an `UPDATE` in `cuy-monitor-db`, with
+no change to this repo.
+
+`src/catalog/catalog.ts` holds them in a module store with a synchronous read (`catalogOptions`, `catalogOption`,
+`catalogLabel`), the same shape as `t()` from i18n, because a dot or a chip cannot wait for a request.
+`useCatalog()` fills it and `AppLayout` holds the private pages until it is there, so nothing renders with empty
+lists; a code that is not in the catalog any more falls back to showing the code itself.
 - Timestamps arrive as ISO-8601 UTC strings and are formatted in the UI with the `es-CO` locale.
 - Backend errors arrive as `{ error, message }`; `client.ts` maps `error` codes to `es.json` keys (`auth.error.invalidCredentials`, `auth.error.invalidCode`, `auth.error.userExists`, `auth.error.weakPassword`). The raw `message` is never shown.
 

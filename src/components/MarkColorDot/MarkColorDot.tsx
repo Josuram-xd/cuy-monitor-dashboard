@@ -1,22 +1,22 @@
-import { t } from '../../i18n'
-import type { MarkColor } from '../../types/MarkColor'
+import { catalogOption } from '../../catalog/catalog'
 import styles from './MarkColorDot.module.css'
-import { cx } from '../../utils/cx'
 
 interface MarkColorDotProps {
-  color: MarkColor
+  // a MARK_COLOR code; its name and its hex come from the catalog of the database
+  color: string
   showLabel?: boolean
 }
 
 export function MarkColorDot({ color, showLabel = true }: MarkColorDotProps) {
-  const label = t(`markColor.${color}`)
+  const { label, hex } = catalogOption('markColors', color)
+  const style = { background: hex ?? 'var(--color-surface-2)' }
 
   if (!showLabel) {
-    return <span className={cx(styles.dot, styles[color])} role="img" aria-label={label} />
+    return <span className={styles.dot} style={style} role="img" aria-label={label} />
   }
   return (
     <span className={styles.wrapper}>
-      <span className={cx(styles.dot, styles[color])} aria-hidden="true" />
+      <span className={styles.dot} style={style} aria-hidden="true" />
       {label}
     </span>
   )

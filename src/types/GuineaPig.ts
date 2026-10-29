@@ -1,25 +1,24 @@
-import type { Breed, CoatColor } from './GuineaPigProfile'
 import type { HealthStatus } from './HealthStatus'
-import type { MarkColor } from './MarkColor'
 
 export interface GuineaPig {
   id: number
   name: string
-  markColor: MarkColor
+  // codes of catalog_option, not values of an enum: the labels come from GET /api/v1/catalog
+  markColor: string
   status: HealthStatus
   statusSince: string
   // null for a cuy registered without them
-  breed?: Breed | null
-  coatColor?: CoatColor | null
+  breed?: string | null
+  coatColor?: string | null
   initialWeightGrams?: number | null
   notes?: string | null
 }
 
 export interface NewGuineaPig {
   name: string
-  markColor: MarkColor
-  breed?: Breed
-  coatColor?: CoatColor
+  markColor: string
+  breed?: string
+  coatColor?: string
   initialWeightGrams?: number
   notes?: string
 }

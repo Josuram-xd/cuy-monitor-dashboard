@@ -1,4 +1,5 @@
 import type { Alert } from '../types/Alert'
+import type { Catalog } from '../types/Catalog'
 import type { GuineaPig, StatusTransition, BehaviorWindow } from '../types/GuineaPig'
 import type { WeightReading } from '../types/WeightReading'
 
@@ -12,6 +13,40 @@ function minutesAgo(minutes: number): string {
 }
 
 export const mockCageId = 'cage-1'
+
+// The same rows migration V10 of cuy-monitor-db inserts, in the same order.
+export const mockCatalog: Catalog = {
+  markColors: [
+    { code: 'RED', label: 'Rojo', hex: '#d62828' },
+    { code: 'BLUE', label: 'Azul', hex: '#1e63d6' },
+    { code: 'GREEN', label: 'Verde', hex: '#2e9e44' },
+    { code: 'YELLOW', label: 'Amarillo', hex: '#f5c518' },
+    { code: 'ORANGE', label: 'Naranja', hex: '#f77f00' },
+    { code: 'PURPLE', label: 'Morado', hex: '#7b3fb5' },
+    { code: 'BLACK', label: 'Negro', hex: '#1a1a1a' },
+    { code: 'WHITE', label: 'Blanco', hex: '#ffffff' },
+  ],
+  coatColors: [
+    { code: 'WHITE', label: 'Blanco', hex: '#ffffff' },
+    { code: 'BLACK', label: 'Negro', hex: '#2a2623' },
+    { code: 'BROWN', label: 'Café', hex: '#8b5a3c' },
+    { code: 'CREAM', label: 'Crema', hex: '#f3e2bd' },
+    { code: 'GRAY', label: 'Gris', hex: '#a6a6a6' },
+    { code: 'CINNAMON', label: 'Canela', hex: '#c9763d' },
+    { code: 'BICOLOR', label: 'Bicolor', hex: '#8b5a3c' },
+    { code: 'TRICOLOR', label: 'Tricolor', hex: '#c9763d' },
+  ],
+  breeds: [
+    { code: 'AMERICAN', label: 'Americano', hex: null },
+    { code: 'PERUVIAN', label: 'Peruano', hex: null },
+    { code: 'ABYSSINIAN', label: 'Abisinio', hex: null },
+    { code: 'TEDDY', label: 'Teddy', hex: null },
+    { code: 'SILKIE', label: 'Sedoso (Silkie)', hex: null },
+    { code: 'SKINNY', label: 'Skinny (sin pelo)', hex: null },
+    { code: 'CRESTED', label: 'Crestado', hex: null },
+    { code: 'OTHER', label: 'Otra o mestizo', hex: null },
+  ],
+}
 
 export const mockGuineaPigs: GuineaPig[] = [
   {

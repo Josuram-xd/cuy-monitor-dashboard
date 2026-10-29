@@ -1,10 +1,9 @@
 import type { HealthStatus } from './HealthStatus'
-import type { MarkColor } from './MarkColor'
 
 export interface CageGuineaPigStatus {
   id: number
   name: string
-  markColor: MarkColor
+  markColor: string
   status: HealthStatus
 }
 

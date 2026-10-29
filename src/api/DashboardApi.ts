@@ -12,6 +12,7 @@ import type {
   VerifyOtpRequest,
 } from '../types/Auth'
 import type { CageHealth } from '../types/CageHealth'
+import type { Catalog } from '../types/Catalog'
 import type { DateRange } from '../types/DateRange'
 import type { GuineaPig, GuineaPigHistory, NewGuineaPig } from '../types/GuineaPig'
 import type { User } from '../types/User'
@@ -31,6 +32,11 @@ export interface GuineaPigApi {
   getHistory(id: number, range?: DateRange, signal?: AbortSignal): Promise<GuineaPigHistory>
   // soft delete: it leaves the cage and frees its mark color, its history is kept. 404 if it is already gone
   remove(cageId: string, id: number): Promise<void>
+}
+
+// the lists of mark colors, breeds and coat colors, as the database has them
+export interface CatalogApi {
+  get(signal?: AbortSignal): Promise<Catalog>
 }
 
 export interface AlertApi {
@@ -67,4 +73,5 @@ export interface DashboardApi {
   cages: CageApi
   guineaPigs: GuineaPigApi
   alerts: AlertApi
+  catalog: CatalogApi
 }
