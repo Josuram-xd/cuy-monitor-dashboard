@@ -13,7 +13,7 @@ export function CoatSwatch({ color, size = 18 }: CoatSwatchProps) {
   return (
     <span
       className={styles.swatch}
-      style={{ width: size, height: size, background: hex ?? 'var(--color-surface-2)' }}
+      style={{ width: size, height: size, background: hex ?? 'var(--color-border)' }}
       aria-hidden="true"
     />
   )

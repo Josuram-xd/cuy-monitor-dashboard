@@ -9,7 +9,7 @@ interface MarkColorDotProps {
 
 export function MarkColorDot({ color, showLabel = true }: MarkColorDotProps) {
   const { label, hex } = catalogOption('markColors', color)
-  const style = { background: hex ?? 'var(--color-surface-2)' }
+  const style = { background: hex ?? 'var(--color-border)' }
 
   if (!showLabel) {
     return <span className={styles.dot} style={style} role="img" aria-label={label} />
