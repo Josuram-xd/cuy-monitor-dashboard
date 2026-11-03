@@ -153,47 +153,6 @@
   background: color-mix(in srgb, var(--color-surface) 80%, transparent);
 }
 
-.code {
-  display: inline-flex;
-  min-width: 0;
-  min-height: 44px;
-  align-items: center;
-  gap: var(--space-2);
-  padding: 0 var(--space-2);
-  border: 1px dashed var(--color-border);
-  border-radius: var(--radius-md);
-  background: transparent;
-  color: var(--color-text-muted);
-  font-family: var(--font-mono);
-  font-size: var(--text-small-size);
-  cursor: pointer;
-  transition:
-    border-color var(--transition-default),
-    color var(--transition-default),
-    transform 280ms var(--ease-bounce);
-}
-
-.code:hover {
-  border-color: var(--color-primary);
-  color: var(--color-primary);
-}
-
-.code:active {
-  transform: scale(0.95);
-}
-
-.copied {
-  border-style: solid;
-  border-color: var(--color-primary);
-  color: var(--color-primary);
-}
-
-.codeText {
-  overflow: hidden;
-  text-overflow: ellipsis;
-  white-space: nowrap;
-}
-
 .actions {
   display: flex;
   flex: none;
@@ -231,8 +190,7 @@
   transform: scale(0.9);
 }
 
-.action:focus-visible,
-.code:focus-visible {
+.action:focus-visible {
   outline: 2px solid var(--color-primary);
   outline-offset: 2px;
 }

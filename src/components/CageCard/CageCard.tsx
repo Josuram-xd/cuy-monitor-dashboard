@@ -1,4 +1,3 @@
-import { useState } from 'react'
 import { Link } from 'react-router'
 import { cagePath } from '../../hooks/useCageId'
 import { useCageHealth } from '../../hooks/useCageHealth'
@@ -7,11 +6,10 @@ import type { Cage } from '../../types/Cage'
 import type { DisplayStatus } from '../../types/HealthStatus'
 import { cx } from '../../utils/cx'
 import { formatRelative } from '../../utils/time'
+import { CopyCodeButton } from '../CopyCodeButton/CopyCodeButton'
 import { Icon } from '../Icon/Icon'
 import { StatusBadge } from '../StatusBadge/StatusBadge'
 import styles from './CageCard.module.css'
-
-const COPIED_FOR_MS = 2000
 
 interface CageCardProps {
   cage: Cage
@@ -21,24 +19,13 @@ interface CageCardProps {
 }
 
 // One cage in "Mis jaulas": its live status, how many cuyes it has, and the code the camera and
-// the scale need. The whole card opens the cage; edit, delete and copy sit on top of it.
+// the scale need. The whole card opens the cage; copy, edit and delete sit in its footer.
 export function CageCard({ cage, now, onEdit, onDelete }: CageCardProps) {
   const health = useCageHealth(cage.cageId)
-  const [copied, setCopied] = useState(false)
   // no answer yet or a failed one: we can't say it's fine
   const status: DisplayStatus = health.data?.status ?? 'UNKNOWN'
   const pigs = health.data?.guineaPigs
   const troubled = pigs?.filter((g) => g.status !== 'NORMAL').length ?? 0
-
-  async function copyCode() {
-    try {
-      await navigator.clipboard.writeText(cage.cageId)
-      setCopied(true)
-      setTimeout(() => setCopied(false), COPIED_FOR_MS)
-    } catch {
-      // no clipboard (old browser or no permission): the code is still on screen to copy by hand
-    }
-  }
 
   return (
     <article className={cx(styles.card, styles[status])}>
@@ -70,16 +57,7 @@ export function CageCard({ cage, now, onEdit, onDelete }: CageCardProps) {
         )}
       </Link>
       <div className={styles.footer}>
-        <button
-          type="button"
-          className={cx(styles.code, copied && styles.copied)}
-          onClick={() => void copyCode()}
-          title={t('cages.card.copyHint')}
-          aria-label={t('cages.card.copy', { code: cage.cageId })}
-        >
-          <Icon name={copied ? 'check' : 'copy'} size={16} />
-          <span className={styles.codeText}>{copied ? t('cages.card.copied') : cage.cageId}</span>
-        </button>
+        <CopyCodeButton code={cage.cageId} />
         <span className={styles.actions}>
           <button
             type="button"
