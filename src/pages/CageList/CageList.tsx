@@ -13,15 +13,24 @@ import { Skeleton } from '../../components/Skeleton/Skeleton'
 import { useCages, useCreateCage, useDeleteCage, useUpdateCage } from '../../hooks/useCages'
 import { useNow } from '../../hooks/useNow'
 import { useProfile } from '../../hooks/useProfile'
+import { useToast } from '../../components/Toast/useToast'
 import { t } from '../../i18n'
 import type { Cage } from '../../types/Cage'
 import styles from './CageList.module.css'
 
 function CreateCage({ onClose }: { onClose: () => void }) {
   const create = useCreateCage()
+  const toast = useToast()
   return (
     <CageFormDialog
-      onSubmit={(body) => create.mutate(body, { onSuccess: onClose })}
+      onSubmit={(body) =>
+        create.mutate(body, {
+          onSuccess: (cage) => {
+            toast.show({ message: t('toast.cageCreated', { name: cage.name }) })
+            onClose()
+          },
+        })
+      }
       onCancel={onClose}
       busy={create.isPending}
       error={create.error}
@@ -31,10 +40,18 @@ function CreateCage({ onClose }: { onClose: () => void }) {
 
 function EditCage({ cage, onClose }: { cage: Cage; onClose: () => void }) {
   const update = useUpdateCage(cage.cageId)
+  const toast = useToast()
   return (
     <CageFormDialog
       cage={cage}
-      onSubmit={(body) => update.mutate(body, { onSuccess: onClose })}
+      onSubmit={(body) =>
+        update.mutate(body, {
+          onSuccess: () => {
+            toast.show({ message: t('toast.cageSaved') })
+            onClose()
+          },
+        })
+      }
       onCancel={onClose}
       busy={update.isPending}
       error={update.error}
@@ -44,11 +61,19 @@ function EditCage({ cage, onClose }: { cage: Cage; onClose: () => void }) {
 
 function DeleteCage({ cage, onClose }: { cage: Cage; onClose: () => void }) {
   const remove = useDeleteCage()
+  const toast = useToast()
   return (
     <ConfirmDialog
       title={t('cages.delete.title', { name: cage.name })}
       confirmLabel={t('cages.delete.confirm')}
-      onConfirm={() => remove.mutate(cage.cageId, { onSuccess: onClose })}
+      onConfirm={() =>
+        remove.mutate(cage.cageId, {
+          onSuccess: () => {
+            toast.show({ message: t('toast.cageDeleted', { name: cage.name }), tone: 'info' })
+            onClose()
+          },
+        })
+      }
       onCancel={onClose}
       busy={remove.isPending}
       danger

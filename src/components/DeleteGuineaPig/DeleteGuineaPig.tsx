@@ -6,6 +6,7 @@ import type { GuineaPig } from '../../types/GuineaPig'
 import { ConfirmDialog } from '../ConfirmDialog/ConfirmDialog'
 import { FormError } from '../FormError/FormError'
 import { Icon } from '../Icon/Icon'
+import { useToast } from '../Toast/useToast'
 import styles from './DeleteGuineaPig.module.css'
 
 interface DeleteGuineaPigProps {
@@ -16,6 +17,7 @@ interface DeleteGuineaPigProps {
 // A small trash button for a cuy card. It never deletes by itself: it opens a confirmation first.
 export function DeleteGuineaPig({ cageId, guineaPig }: DeleteGuineaPigProps) {
   const remove = useDeleteGuineaPig(cageId)
+  const toast = useToast()
   const [open, setOpen] = useState(false)
 
   function close() {
@@ -38,7 +40,17 @@ export function DeleteGuineaPig({ cageId, guineaPig }: DeleteGuineaPigProps) {
         <ConfirmDialog
           title={t('guineaPig.delete.title', { name: guineaPig.name })}
           confirmLabel={t('guineaPig.delete.confirm')}
-          onConfirm={() => remove.mutate(guineaPig.id, { onSuccess: close })}
+          onConfirm={() =>
+            remove.mutate(guineaPig.id, {
+              onSuccess: () => {
+                toast.show({
+                  message: t('toast.guineaPigDeleted', { name: guineaPig.name }),
+                  tone: 'info',
+                })
+                close()
+              },
+            })
+          }
           onCancel={close}
           busy={remove.isPending}
           danger

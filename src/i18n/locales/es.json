@@ -37,7 +37,8 @@
     "retry": "Intentar de nuevo",
     "cancel": "Cancelar",
     "optional": "(opcional)",
-    "skipToContent": "Saltar al contenido"
+    "skipToContent": "Saltar al contenido",
+    "close": "Cerrar"
   },
   "errors": {
     "network": "No hay conexión con el servidor. Revisa tu internet e inténtalo otra vez.",
@@ -370,5 +371,16 @@
     "error": {
       "alreadyGone": "Esta jaula ya no existe. Actualiza la página."
     }
+  },
+  "toast": {
+    "cageCreated": "Jaula «{{name}}» creada",
+    "cageSaved": "Cambios guardados",
+    "cageDeleted": "Jaula «{{name}}» eliminada",
+    "guineaPigRegistered": "¡{{name}} ya está en la jaula!",
+    "guineaPigDeleted": "{{name}} salió de la jaula",
+    "alertReviewed": "Alerta marcada como revisada",
+    "allReviewed_one": "{{count}} alerta marcada como revisada",
+    "allReviewed_many": "{{count}} alertas marcadas como revisadas",
+    "allReviewed_other": "{{count}} alertas marcadas como revisadas"
   }
 }
