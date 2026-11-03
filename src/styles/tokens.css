@@ -16,6 +16,14 @@
   /* a touch darker than the playbook's #78716c so it keeps 4.5:1 on the warm background */
   --color-text-muted: #6b6560;
   --color-focus: #2d6a4f;
+  /* text and icons on the green header, footer and primary buttons: white in both themes */
+  --color-on-primary: #ffffff;
+  /* green that carries white text (header, active tab, selection): the same in both themes */
+  --color-primary-strong: #2d6a4f;
+  /* the clouds of the backdrop */
+  --color-cloud: rgb(255 255 255 / 0.85);
+  --glow-brand: rgb(45 106 79 / 0.14);
+  color-scheme: light;
 
   /* 2.2 Health status: fg/bg for text, accent for non-text marks */
   --status-normal-fg: #1f7a3d;
@@ -110,6 +118,102 @@
   --pulse-duration: 600ms;
   /* a little overshoot: things pop instead of just fading in */
   --ease-bounce: cubic-bezier(0.34, 1.56, 0.64, 1);
+}
+
+/* chosen in Ajustes > Preferencias */
+:root[data-theme='dark'] {
+  /* 2.8 Dark mode: same hues, dark warm-green surfaces; text pairs keep 4.5:1 */
+  color-scheme: dark;
+  --color-primary: #74c69d;
+  --color-primary-hover: #95d5b2;
+  --color-primary-soft: #1d3a2c;
+  --color-accent: #8fb9a8;
+  --header-from: #2d6a4f;
+  --header-to: #10261c;
+  --gradient-brand: linear-gradient(135deg, #2f6f52 0%, #245a41 45%, #10261c 100%);
+  --color-bg: #111614;
+  --color-surface: #1a211e;
+  --color-border: #34413a;
+  --color-text: #ecebe6;
+  --color-text-muted: #a9b3ad;
+  --color-focus: #74c69d;
+  --color-cloud: rgb(255 255 255 / 0.06);
+  --glow-brand: rgb(116 198 157 / 0.1);
+
+  --status-normal-fg: #7ddc97;
+  --status-normal-bg: #13301e;
+  --status-normal-accent: #34c063;
+  --status-observed-fg: #f5cf5a;
+  --status-observed-bg: #33290c;
+  --status-observed-accent: #f2b705;
+  --status-alert-fg: #ffa868;
+  --status-alert-bg: #3a2210;
+  --status-alert-accent: #f07f13;
+  --status-critical-fg: #ff8f86;
+  --status-critical-bg: #3d1816;
+  --status-critical-accent: #e5483d;
+  --status-unknown-fg: #c5ccd4;
+  --status-unknown-bg: #242a31;
+  --status-unknown-accent: #8a94a1;
+
+  --shadow-card: 0 1px 2px rgb(0 0 0 / 0.4), 0 4px 14px rgb(0 0 0 / 0.3);
+  --shadow-lift: 0 12px 30px rgb(0 0 0 / 0.5);
+  --shadow-overlay: 0 8px 24px rgb(0 0 0 / 0.55);
+  --shadow-pop: 0 14px 34px rgb(0 0 0 / 0.55), 0 2px 6px rgb(0 0 0 / 0.4);
+  --ring-focus: 0 0 0 4px rgb(116 198 157 / 0.25);
+  --pastel-mint: #1f3a2d;
+  --pastel-sun: #3a3218;
+  --pastel-peach: #3b2a22;
+  --pastel-sky: #1c3039;
+}
+
+/* "Como el dispositivo": follows the system unless light was chosen */
+@media (prefers-color-scheme: dark) {
+  :root:not([data-theme='light']) {
+    /* 2.8 Dark mode: same hues, dark warm-green surfaces; text pairs keep 4.5:1 */
+    color-scheme: dark;
+    --color-primary: #74c69d;
+    --color-primary-hover: #95d5b2;
+    --color-primary-soft: #1d3a2c;
+    --color-accent: #8fb9a8;
+    --header-from: #2d6a4f;
+    --header-to: #10261c;
+    --gradient-brand: linear-gradient(135deg, #2f6f52 0%, #245a41 45%, #10261c 100%);
+    --color-bg: #111614;
+    --color-surface: #1a211e;
+    --color-border: #34413a;
+    --color-text: #ecebe6;
+    --color-text-muted: #a9b3ad;
+    --color-focus: #74c69d;
+    --color-cloud: rgb(255 255 255 / 0.06);
+    --glow-brand: rgb(116 198 157 / 0.1);
+
+    --status-normal-fg: #7ddc97;
+    --status-normal-bg: #13301e;
+    --status-normal-accent: #34c063;
+    --status-observed-fg: #f5cf5a;
+    --status-observed-bg: #33290c;
+    --status-observed-accent: #f2b705;
+    --status-alert-fg: #ffa868;
+    --status-alert-bg: #3a2210;
+    --status-alert-accent: #f07f13;
+    --status-critical-fg: #ff8f86;
+    --status-critical-bg: #3d1816;
+    --status-critical-accent: #e5483d;
+    --status-unknown-fg: #c5ccd4;
+    --status-unknown-bg: #242a31;
+    --status-unknown-accent: #8a94a1;
+
+    --shadow-card: 0 1px 2px rgb(0 0 0 / 0.4), 0 4px 14px rgb(0 0 0 / 0.3);
+    --shadow-lift: 0 12px 30px rgb(0 0 0 / 0.5);
+    --shadow-overlay: 0 8px 24px rgb(0 0 0 / 0.55);
+    --shadow-pop: 0 14px 34px rgb(0 0 0 / 0.55), 0 2px 6px rgb(0 0 0 / 0.4);
+    --ring-focus: 0 0 0 4px rgb(116 198 157 / 0.25);
+    --pastel-mint: #1f3a2d;
+    --pastel-sun: #3a3218;
+    --pastel-peach: #3b2a22;
+    --pastel-sky: #1c3039;
+  }
 }
 
 @media (min-width: 640px) {

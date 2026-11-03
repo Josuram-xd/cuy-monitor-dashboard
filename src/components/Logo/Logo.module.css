@@ -10,7 +10,7 @@
 /* green tile, white animal */
 .brand {
   background: var(--gradient-brand);
-  color: var(--color-surface);
+  color: var(--color-on-primary);
   --detail: var(--color-primary-hover);
   --soft: rgb(255 255 255 / 0.28);
 }
