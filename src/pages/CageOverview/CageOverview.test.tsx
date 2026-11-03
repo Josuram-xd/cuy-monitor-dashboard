@@ -1,4 +1,4 @@
-import { screen, within } from '@testing-library/react'
+import { screen, waitFor, within } from '@testing-library/react'
 import userEvent from '@testing-library/user-event'
 import { beforeEach, describe, expect, it, vi } from 'vitest'
 import { ApiError } from '../../api/ApiError'
@@ -129,5 +129,19 @@ describe('CageOverview', () => {
 
     await user.click(screen.getByRole('button', { name: 'Ver todos' }))
     expect(await screen.findByRole('list', { name: 'Tus cuyes' })).toBeInTheDocument()
+  })
+
+  it('reloads the cage when "Actualizar" is pressed', async () => {
+    const user = userEvent.setup()
+    const api = createMockApi(undefined, 0)
+    setApi(api)
+    const getHealth = vi.spyOn(api.cages, 'getHealth')
+    renderInCage(<CageOverview />)
+    await screen.findByRole('list', { name: 'Tus cuyes' })
+    const before = getHealth.mock.calls.length
+
+    await user.click(screen.getByRole('button', { name: 'Actualizar' }))
+
+    await waitFor(() => expect(getHealth.mock.calls.length).toBeGreaterThan(before))
   })
 })

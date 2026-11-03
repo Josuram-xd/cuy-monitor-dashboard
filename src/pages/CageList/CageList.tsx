@@ -9,6 +9,7 @@ import { ErrorState } from '../../components/ErrorState/ErrorState'
 import { FormError } from '../../components/FormError/FormError'
 import { GuineaPigGrid, GuineaPigGridItem } from '../../components/GuineaPigGrid/GuineaPigGrid'
 import { Icon } from '../../components/Icon/Icon'
+import { RefreshButton } from '../../components/RefreshButton/RefreshButton'
 import { Skeleton } from '../../components/Skeleton/Skeleton'
 import { useCages, useCreateCage, useDeleteCage, useUpdateCage } from '../../hooks/useCages'
 import { useNow } from '../../hooks/useNow'
@@ -140,10 +141,13 @@ export function CageList() {
           <h1 className={styles.title}>{t('cages.title')}</h1>
           <p className={styles.intro}>{t('cages.intro')}</p>
         </div>
-        <Button variant="primary" onClick={() => setDialog({ kind: 'create' })}>
-          <Icon name="plus" size={18} />
-          {t('cages.new')}
-        </Button>
+        <div className={styles.headerActions}>
+          <RefreshButton queryKeys={[['cages'], ['cage']]} />
+          <Button variant="primary" onClick={() => setDialog({ kind: 'create' })}>
+            <Icon name="plus" size={18} />
+            {t('cages.new')}
+          </Button>
+        </div>
       </header>
       {content}
       {dialog?.kind === 'create' && <CreateCage onClose={close} />}

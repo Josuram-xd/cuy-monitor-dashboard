@@ -10,6 +10,7 @@ import { GuineaPigCard } from '../../components/GuineaPigCard/GuineaPigCard'
 import { GuineaPigFilter } from '../../components/GuineaPigFilter/GuineaPigFilter'
 import { applyGuineaPigFilter, NO_FILTER } from '../../components/GuineaPigFilter/guineaPigFilter'
 import { GuineaPigGrid, GuineaPigGridItem } from '../../components/GuineaPigGrid/GuineaPigGrid'
+import { RefreshButton } from '../../components/RefreshButton/RefreshButton'
 import { Reveal } from '../../components/Reveal/Reveal'
 import { LiveIndicator } from '../../components/LiveIndicator/LiveIndicator'
 import { Skeleton } from '../../components/Skeleton/Skeleton'
@@ -133,9 +134,12 @@ export function CageOverview() {
           <h1 className={styles.title}>{cage.data?.name ?? t('cage.title')}</h1>
           {cage.data?.location && <p className={styles.location}>{cage.data.location}</p>}
         </div>
-        <ButtonLink to={cagePath(cageId, '/guinea-pigs/new')} variant="primary">
-          {t('cage.newGuineaPig')}
-        </ButtonLink>
+        <div className={styles.headerActions}>
+          <RefreshButton queryKeys={[['cage', cageId], ['alerts']]} />
+          <ButtonLink to={cagePath(cageId, '/guinea-pigs/new')} variant="primary">
+            {t('cage.newGuineaPig')}
+          </ButtonLink>
+        </div>
       </header>
       {/* no data or failed request: the banner shows UNKNOWN, never "Normal" */}
       <CageStatusBanner health={health.data} now={now} liveIndicator={<LiveIndicator />} />

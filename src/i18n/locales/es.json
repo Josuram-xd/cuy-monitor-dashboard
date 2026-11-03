@@ -38,7 +38,10 @@
     "cancel": "Cancelar",
     "optional": "(opcional)",
     "skipToContent": "Saltar al contenido",
-    "close": "Cerrar"
+    "close": "Cerrar",
+    "refresh": "Actualizar",
+    "refreshing": "Actualizando…",
+    "refreshHint": "Los datos se actualizan solos cada 30 segundos; toca para hacerlo ya"
   },
   "errors": {
     "network": "No hay conexión con el servidor. Revisa tu internet e inténtalo otra vez.",

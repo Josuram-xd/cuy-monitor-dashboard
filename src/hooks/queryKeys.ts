@@ -1,5 +1,8 @@
 import type { AlertStatus } from '../types/Alert'
 
+// without the live connection, what can change on its own (states, alerts) is asked again this often
+export const LIVE_REFRESH_MS = 30_000
+
 export const queryKeys = {
   profile: ['account', 'profile'] as const,
   cages: ['cages'] as const,
