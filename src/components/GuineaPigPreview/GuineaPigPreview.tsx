@@ -1,12 +1,14 @@
 import type { ReactNode } from 'react'
 import { catalogLabel } from '../../catalog/catalog'
 import { t } from '../../i18n'
+import type { Photo } from '../../utils/photo'
 import { CoatSwatch } from '../CoatSwatch/CoatSwatch'
+import { Icon } from '../Icon/Icon'
 import { MarkColorDot } from '../MarkColorDot/MarkColorDot'
 import styles from './GuineaPigPreview.module.css'
 
 interface GuineaPigPreviewProps {
-  name: string
+  photo: Photo | null
   breed: string | null
   coatColor: string | null
   markColor: string | null
@@ -15,7 +17,7 @@ interface GuineaPigPreviewProps {
 
 // "Así se verá": the card grows while the form is filled, so the owner sees who they are adding.
 export function GuineaPigPreview({
-  name,
+  photo,
   breed,
   coatColor,
   markColor,
@@ -36,9 +38,6 @@ export function GuineaPigPreview({
       ),
     })
   }
-  if (markColor) {
-    rows.push({ key: 'mark', node: <MarkColorDot color={markColor} /> })
-  }
   if (weightGrams !== null) {
     rows.push({ key: 'weight', node: t('guineaPig.weightGrams', { grams: weightGrams }) })
   }
@@ -46,11 +45,16 @@ export function GuineaPigPreview({
   return (
     <aside className={styles.card} aria-label={t('guineaPig.register.previewTitle')}>
       <p className={styles.caption}>{t('guineaPig.register.previewTitle')}</p>
-      <span className={styles.avatar} aria-hidden="true">
-        {coatColor ? <CoatSwatch color={coatColor} size={88} /> : null}
-        <span className={styles.initial}>{name.trim().charAt(0).toUpperCase() || '?'}</span>
-      </span>
-      <p className={styles.name}>{name.trim() || t('guineaPig.register.previewName')}</p>
+      {photo ? (
+        <img className={styles.photo} src={photo.dataUrl} alt={t('guineaPig.register.photoAlt')} />
+      ) : (
+        <span className={styles.photo} aria-hidden="true">
+          <Icon name="camera" size={40} />
+        </span>
+      )}
+      <p className={styles.name}>
+        {markColor ? <MarkColorDot color={markColor} /> : t('guineaPig.register.previewNoColor')}
+      </p>
       {rows.length > 0 ? (
         <ul className={styles.rows}>
           {rows.map((row) => (

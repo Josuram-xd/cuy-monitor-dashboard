@@ -10,8 +10,8 @@ interface MarkColorPickerProps {
   legend: string
   value: string | null
   onChange: (color: string) => void
-  // colors another guinea pig already wears -> the name of that guinea pig
-  usedBy?: Record<string, string>
+  // codes another guinea pig in the cage already wears
+  taken?: string[]
   error?: string
 }
 
@@ -21,7 +21,7 @@ export function MarkColorPicker({
   legend,
   value,
   onChange,
-  usedBy = {},
+  taken = [],
   error,
 }: MarkColorPickerProps) {
   const groupName = useId()
@@ -32,26 +32,21 @@ export function MarkColorPicker({
       <legend className={styles.legend}>{legend}</legend>
       <div className={styles.grid}>
         {catalogOptions('markColors').map(({ code: color }) => {
-          const owner = usedBy[color]
-          const taken = owner !== undefined
+          const used = taken.includes(color)
           return (
-            <label key={color} className={cx(styles.option, taken && styles.taken)}>
+            <label key={color} className={cx(styles.option, used && styles.taken)}>
               <input
                 type="radio"
                 className={styles.input}
                 name={groupName}
                 value={color}
                 checked={value === color}
-                disabled={taken}
+                disabled={used}
                 onChange={() => onChange(color)}
               />
               <span className={styles.card}>
                 <MarkColorDot color={color} />
-                {taken && (
-                  <span className={styles.owner}>
-                    {t('guineaPig.register.usedBy', { name: owner })}
-                  </span>
-                )}
+                {used && <span className={styles.owner}>{t('guineaPig.register.used')}</span>}
                 <span className={styles.check} aria-hidden="true">
                   <Icon name="check-circle" size={18} />
                 </span>

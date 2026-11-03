@@ -17,9 +17,9 @@ export class MockCageApi extends MockResource implements CageApi {
       lastGrams: lastStable?.grams ?? null,
       lastMeasuredAt: lastStable?.measuredAt ?? null,
     }
-    const guineaPigs = this.db.guineaPigs.map(({ id, name, markColor, status }) => ({
+    const guineaPigs = this.db.guineaPigs.map(({ id, photoUrl, markColor, status }) => ({
       id,
-      name,
+      photoUrl,
       markColor,
       status,
     }))

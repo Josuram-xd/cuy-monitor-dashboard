@@ -27,16 +27,41 @@ describe('mock API', () => {
 
   it('rejects a mark color already used in the cage', async () => {
     await expect(
-      api.guineaPigs.register('cage-1', { name: 'Otro', markColor: 'RED' }),
+      api.guineaPigs.register('cage-1', {
+        photo: 'AAAA',
+        photoContentType: 'image/png',
+        markColor: 'RED',
+      }),
     ).rejects.toMatchObject({ status: 409, code: 'conflict' })
   })
 
   it('registers a guinea pig as NORMAL and shows it in the cage health', async () => {
-    const created = await api.guineaPigs.register('cage-1', { name: ' Nube ', markColor: 'PURPLE' })
+    const created = await api.guineaPigs.register('cage-1', {
+      photo: 'AAAA',
+      photoContentType: 'image/png',
+      markColor: 'PURPLE',
+    })
 
-    expect(created).toMatchObject({ name: 'Nube', markColor: 'PURPLE', status: 'NORMAL' })
+    expect(created).toMatchObject({
+      photoUrl: 'data:image/png;base64,AAAA',
+      markColor: 'PURPLE',
+      status: 'NORMAL',
+    })
     const health = await api.cages.getHealth('cage-1')
-    expect(health.guineaPigs.map((g) => g.name)).toContain('Nube')
+    expect(health.guineaPigs.map((g) => g.markColor)).toContain('PURPLE')
+  })
+
+  it('refuses a photo that is missing, too big or not an image', async () => {
+    for (const body of [
+      { photo: '', photoContentType: 'image/png', markColor: 'PURPLE' },
+      { photo: 'AAAA', photoContentType: 'image/svg+xml', markColor: 'PURPLE' },
+      { photo: 'A'.repeat(409_604), photoContentType: 'image/jpeg', markColor: 'PURPLE' },
+    ]) {
+      await expect(api.guineaPigs.register('cage-1', body)).rejects.toMatchObject({
+        status: 400,
+        code: 'bad_request',
+      })
+    }
   })
 
   it('filters alerts by status, newest first', async () => {
@@ -67,7 +92,11 @@ describe('mock API', () => {
     expect(list.some((g) => g.id === 1)).toBe(false)
     // the color is free: a new cuy can wear it
     await expect(
-      api.guineaPigs.register('cage-1', { name: 'Nueva', markColor: 'RED' }),
+      api.guineaPigs.register('cage-1', {
+        photo: 'AAAA',
+        photoContentType: 'image/png',
+        markColor: 'RED',
+      }),
     ).resolves.toMatchObject({ markColor: 'RED' })
     await expect(api.guineaPigs.remove('cage-1', 999)).rejects.toMatchObject({ status: 404 })
     await expect(api.guineaPigs.remove('nope', 2)).rejects.toMatchObject({ status: 404 })

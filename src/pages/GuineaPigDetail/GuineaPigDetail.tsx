@@ -7,6 +7,7 @@ import { EmptyState } from '../../components/EmptyState/EmptyState'
 import { ErrorState } from '../../components/ErrorState/ErrorState'
 import { Icon } from '../../components/Icon/Icon'
 import { Mascot } from '../../components/Mascot/Mascot'
+import { GuineaPigPhoto } from '../../components/GuineaPigPhoto/GuineaPigPhoto'
 import { MarkColorDot } from '../../components/MarkColorDot/MarkColorDot'
 import { catalogLabel } from '../../catalog/catalog'
 import { Skeleton } from '../../components/Skeleton/Skeleton'
@@ -41,7 +42,7 @@ function Alerts({ guineaPig, now }: { guineaPig: GuineaPig; now: number }) {
   }
   const mine = alerts.data.filter((alert) => alert.guineaPigId === guineaPig.id)
   if (mine.length === 0) {
-    return <p className={styles.calm}>{t('guineaPig.detail.noAlerts', { name: guineaPig.name })}</p>
+    return <p className={styles.calm}>{t('guineaPig.detail.noAlerts')}</p>
   }
   return <AlertList alerts={mine} guineaPigs={[guineaPig]} now={now} />
 }
@@ -84,12 +85,9 @@ export function GuineaPigDetail() {
       </ButtonLink>
 
       <header className={styles.hero}>
-        <span className={styles.avatar} aria-hidden="true">
-          {guineaPig.coatColor && <CoatSwatch color={guineaPig.coatColor} size={96} />}
-          <span className={styles.initial}>{guineaPig.name.charAt(0).toUpperCase()}</span>
-        </span>
+        <GuineaPigPhoto guineaPig={guineaPig} size={96} />
         <div className={styles.who}>
-          <h1 className={styles.name}>{guineaPig.name}</h1>
+          <h1 className={styles.name}>{catalogLabel('markColors', guineaPig.markColor)}</h1>
           <div className={styles.status}>
             <StatusBadge status={guineaPig.status} size="lg" />
             <span className={styles.since}>
@@ -136,7 +134,7 @@ export function GuineaPigDetail() {
 
       <section className={styles.card} aria-labelledby="alerts-heading">
         <h2 id="alerts-heading" className={styles.cardTitle}>
-          {t('guineaPig.detail.alerts', { name: guineaPig.name })}
+          {t('guineaPig.detail.alerts')}
         </h2>
         <Alerts guineaPig={guineaPig} now={now} />
       </section>

@@ -31,10 +31,10 @@ describe('GuineaPigDetail', () => {
   })
 
   it('shows who the cuy is, how it is doing and what the owner told', async () => {
-    // Canela: Teddy, cinnamon, 860 g, observed, with a note
+    // the cuy with the red mark: Teddy, cinnamon, 860 g, observed, with a note
     renderAt(api, '1')
 
-    expect(await screen.findByRole('heading', { level: 1, name: 'Canela' })).toBeInTheDocument()
+    expect(await screen.findByRole('heading', { level: 1, name: 'Rojo' })).toBeInTheDocument()
     expect(screen.getByText('En observación')).toBeInTheDocument()
     expect(screen.getByText(/^desde /)).toBeInTheDocument()
     const facts = screen.getByRole('region', { name: 'Datos' })
@@ -46,24 +46,26 @@ describe('GuineaPigDetail', () => {
   })
 
   it('says "Sin dato" for what was not filled in', async () => {
-    // Copito was registered without a profile
+    // the cuy with the white mark was registered without a profile
     renderAt(api, '3')
 
-    await screen.findByRole('heading', { level: 1, name: 'Copito' })
+    await screen.findByRole('heading', { level: 1, name: 'Blanco' })
     expect(screen.getAllByText('Sin dato')).toHaveLength(3)
   })
 
   it('lists only the alerts of that cuy', async () => {
-    // the fake cage has one open alert about Chispa (4) and none about Pelusa (2)
+    // the fake cage has one open alert about the orange cuy (4) and none about the blue one (2)
     renderAt(api, '4')
-    const alerts = await screen.findByRole('region', { name: 'Alertas de Chispa' })
-    expect(await within(alerts).findByText(/quieta de lo normal/)).toBeInTheDocument()
+    const alerts = await screen.findByRole('region', { name: 'Alertas de este cuy' })
+    expect(await within(alerts).findByText(/quieto de lo normal/)).toBeInTheDocument()
   })
 
   it('is calm when the cuy has no alerts', async () => {
     renderAt(api, '2')
 
-    expect(await screen.findByText('Pelusa no tiene alertas. ¡Todo tranquilo!')).toBeInTheDocument()
+    expect(
+      await screen.findByText('Este cuy no tiene alertas. ¡Todo tranquilo!'),
+    ).toBeInTheDocument()
   })
 
   it('says so when the cuy does not exist and offers the way back', async () => {

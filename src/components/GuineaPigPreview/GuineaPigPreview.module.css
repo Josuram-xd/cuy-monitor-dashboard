@@ -21,34 +21,16 @@
   text-transform: uppercase;
 }
 
-.avatar {
-  position: relative;
+.photo {
   display: grid;
   width: 88px;
   height: 88px;
   place-items: center;
   border-radius: var(--radius-full);
+  object-fit: cover;
   background: var(--color-primary-soft);
-  transition: background-color var(--transition-lift);
-}
-
-.avatar > span:first-child {
-  position: absolute;
-  animation: pop var(--transition-lift) both;
-}
-
-.initial {
-  position: relative;
-  display: grid;
-  width: 64px;
-  height: 64px;
-  place-items: center;
-  border-radius: var(--radius-full);
-  background: var(--color-surface);
   color: var(--color-primary-hover);
-  font-size: 32px;
-  font-weight: 800;
-  line-height: 1;
+  animation: pop var(--transition-lift) both;
 }
 
 .name {
@@ -97,7 +79,7 @@
 
 @media (prefers-reduced-motion: reduce) {
   .row,
-  .avatar > span:first-child {
+  .photo {
     animation: none;
   }
 }

@@ -31,7 +31,7 @@ describe('Alerts', () => {
     expect(
       await within(open).findAllByRole('button', { name: 'Marcar como revisada' }),
     ).toHaveLength(openAlerts.length)
-    expect(within(open).getByText('Chispa')).toBeInTheDocument()
+    expect(within(open).getByText('Naranja')).toBeInTheDocument()
   })
 
   it('moves an alert to the reviewed ones when it is marked', async () => {

@@ -18,12 +18,12 @@ describe('MarkColorPicker', () => {
         legend="Color de la marca"
         value={null}
         onChange={() => {}}
-        usedBy={{ RED: 'Canela' }}
+        taken={['RED']}
       />,
     )
 
     expect(screen.getByRole('radio', { name: /Rojo/ })).toBeDisabled()
-    expect(screen.getByText('Lo lleva Canela')).toBeInTheDocument()
+    expect(screen.getByText('En uso')).toBeInTheDocument()
     expect(screen.getByRole('radio', { name: /Azul/ })).toBeEnabled()
   })
 
@@ -44,7 +44,7 @@ describe('MarkColorPicker', () => {
         legend="Color de la marca"
         value={null}
         onChange={onChange}
-        usedBy={{ RED: 'Canela' }}
+        taken={['RED']}
       />,
     )
 

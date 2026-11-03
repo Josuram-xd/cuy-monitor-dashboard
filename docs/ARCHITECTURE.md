@@ -150,6 +150,17 @@ export interface User { id: string; username: string; fullName: string; email: s
 
 - `UNKNOWN` is a UI-only status (`type DisplayStatus = HealthStatus | 'UNKNOWN'`), never sent to the backend.
 
+### A cuy is a photo and a mark color, not a name
+
+`GuineaPig` has no `name`: it carries `photoUrl`, the path where the backend serves its photo
+(`null` for one registered before the photo existed, which shows a camera instead). Wherever a name
+used to be written — the card, the detail heading, the alerts, the delete confirmation — the label of
+its mark color is written now.
+
+Registering sends the image in base64: `utils/photo.ts` shrinks whatever was picked to 512 px on its
+longest side and under 300 KB as JPEG, which are the limits of the backend and of the `CHECK` of the
+database. The mocks have no server for the bytes, so there `photoUrl` is a `data:` url.
+
 ### Mark colors, breeds and coat colors are **not** unions
 
 They are rows of `catalog_option` in the database, served at `GET /api/v1/catalog` as

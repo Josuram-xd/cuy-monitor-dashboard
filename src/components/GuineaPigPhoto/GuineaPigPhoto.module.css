@@ -1,0 +1,12 @@
+.photo {
+  flex-shrink: 0;
+  border-radius: var(--radius-full);
+  object-fit: cover;
+  background: var(--color-primary-soft);
+}
+
+.empty {
+  display: grid;
+  place-items: center;
+  color: var(--color-primary-hover);
+}

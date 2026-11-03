@@ -145,36 +145,8 @@
   line-height: var(--text-small-line);
 }
 
-/* the fur color is a ring around the initial: the owner recognizes the cuy at a glance */
+/* the photo is how the owner recognizes the cuy at a glance */
 .avatar {
-  position: relative;
-  display: grid;
-  flex-shrink: 0;
-  width: 44px;
-  height: 44px;
-  place-items: center;
-}
-
-.avatar > span:first-child {
-  position: absolute;
-  inset: 0;
-  width: 100% !important;
-  height: 100% !important;
-}
-
-.initial {
-  position: relative;
-  display: grid;
-  width: 32px;
-  height: 32px;
-  place-items: center;
-  border-radius: var(--radius-full);
-  background: var(--color-surface);
-  color: var(--fg);
-  font-family: var(--font-display);
-  font-size: 18px;
-  font-weight: 700;
-  line-height: 1;
   box-shadow: 0 0 0 1px var(--color-border);
 }
 

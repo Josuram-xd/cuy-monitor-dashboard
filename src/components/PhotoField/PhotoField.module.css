@@ -1,0 +1,103 @@
+.field {
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-1);
+}
+
+.label {
+  font-size: var(--text-small-size);
+  line-height: var(--text-small-line);
+  font-weight: 600;
+}
+
+.box {
+  display: flex;
+  align-items: center;
+  gap: var(--space-4);
+  padding: var(--space-3);
+  border: 1px solid var(--color-border);
+  border-radius: var(--radius-md);
+  background: var(--color-surface);
+}
+
+.invalid {
+  border-color: var(--status-critical-fg);
+}
+
+/* square, so a vertical and a horizontal photo take the same room */
+.preview,
+.placeholder {
+  flex-shrink: 0;
+  width: 96px;
+  height: 96px;
+  border-radius: var(--radius-md);
+  object-fit: cover;
+}
+
+.placeholder {
+  display: grid;
+  place-items: center;
+  color: var(--color-text-muted);
+  background: var(--status-unknown-bg);
+}
+
+.actions {
+  display: flex;
+  flex-wrap: wrap;
+  gap: var(--space-2);
+}
+
+/* the input is only reachable through its label, which is the visible button */
+.input {
+  position: absolute;
+  width: 1px;
+  height: 1px;
+  overflow: hidden;
+  clip-path: inset(50%);
+}
+
+.pick,
+.remove {
+  display: inline-flex;
+  align-items: center;
+  min-height: 44px;
+  padding: 0 var(--space-4);
+  border-radius: var(--radius-full);
+  font-size: var(--text-small-size);
+  font-weight: 600;
+  cursor: pointer;
+}
+
+.pick {
+  color: var(--color-surface);
+  background: var(--color-primary);
+  border: 1px solid var(--color-primary);
+}
+
+.pick:hover {
+  background: var(--color-primary-hover);
+}
+
+.input:focus-visible + .pick {
+  outline: 2px solid var(--color-focus);
+  outline-offset: 2px;
+}
+
+.remove {
+  color: var(--color-text-muted);
+  background: none;
+  border: 1px solid var(--color-border);
+}
+
+.message {
+  display: flex;
+  align-items: center;
+  gap: var(--space-1);
+  color: var(--color-text-muted);
+  font-size: var(--text-small-size);
+  line-height: var(--text-small-line);
+}
+
+.errorMessage {
+  color: var(--status-critical-fg);
+}

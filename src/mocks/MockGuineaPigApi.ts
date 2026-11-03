@@ -2,11 +2,10 @@ import type { GuineaPigApi } from '../api/DashboardApi'
 import type { DateRange } from '../types/DateRange'
 import type { GuineaPig, GuineaPigHistory, NewGuineaPig } from '../types/GuineaPig'
 import { MAX_NOTES_LENGTH, MAX_WEIGHT_GRAMS, MIN_WEIGHT_GRAMS } from '../types/GuineaPigProfile'
+import { base64Bytes, MAX_PHOTO_BYTES, PHOTO_CONTENT_TYPES } from '../utils/photo'
 import type { CatalogKind } from '../types/Catalog'
 import { mockCatalog, mockTransitions, mockWindows } from './data'
 import { MockResource } from './MockResource'
-
-const MAX_NAME_LENGTH = 100
 
 export class MockGuineaPigApi extends MockResource implements GuineaPigApi {
   list(cageId: string): Promise<GuineaPig[]> {
@@ -20,11 +19,14 @@ export class MockGuineaPigApi extends MockResource implements GuineaPigApi {
     if (!this.db.hasCage(cageId)) {
       return this.notFound()
     }
-    const name = body.name.trim()
-    if (name.length === 0 || name.length > MAX_NAME_LENGTH) {
+    // the same limits as the backend and the CHECK of the database
+    if (
+      !body.photo ||
+      !PHOTO_CONTENT_TYPES.includes(body.photoContentType) ||
+      base64Bytes(body.photo) > MAX_PHOTO_BYTES
+    ) {
       return this.fail(400, 'bad_request')
     }
-    // the same limits as the backend
     const weight = body.initialWeightGrams
     if (
       weight !== undefined &&
@@ -48,7 +50,8 @@ export class MockGuineaPigApi extends MockResource implements GuineaPigApi {
     }
     const created: GuineaPig = {
       id: this.db.nextGuineaPigId(),
-      name,
+      // the real backend answers a path and serves the bytes; here the photo travels inline
+      photoUrl: `data:${body.photoContentType};base64,${body.photo}`,
       markColor: body.markColor,
       status: 'NORMAL',
       statusSince: new Date().toISOString(),
