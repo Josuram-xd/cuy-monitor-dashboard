@@ -1,8 +1,9 @@
+import { useState } from 'react'
 import { Link } from 'react-router'
 import { cagePath } from '../../hooks/useCageId'
 import { t } from '../../i18n'
 import type { BehaviorWindow, GuineaPig } from '../../types/GuineaPig'
-import type { DisplayStatus } from '../../types/HealthStatus'
+import { severity, type DisplayStatus, type HealthStatus } from '../../types/HealthStatus'
 import { cx } from '../../utils/cx'
 import { formatRelative, minutesSince } from '../../utils/time'
 import { CoatSwatch } from '../CoatSwatch/CoatSwatch'
@@ -23,6 +24,16 @@ interface GuineaPigCardProps {
 }
 
 export function GuineaPigCard({ cageId, guineaPig, lastWindow, now }: GuineaPigCardProps) {
+  // a status that just went up gets one highlight pulse (DESIGN_SYSTEM 2.7). The state is adjusted
+  // while rendering, so the pulse starts on the same frame the new status shows
+  const [seenStatus, setSeenStatus] = useState<HealthStatus>(guineaPig.status)
+  const [pulses, setPulses] = useState(0)
+  if (guineaPig.status !== seenStatus) {
+    if (severity(guineaPig.status) > severity(seenStatus)) {
+      setPulses((count) => count + 1)
+    }
+    setSeenStatus(guineaPig.status)
+  }
   const lastSeenAt = lastWindow?.occurredAt
   // not seen for a while: we can't say it's fine, so it shows as unknown
   const stale = lastSeenAt !== undefined && minutesSince(lastSeenAt, now) > STALE_AFTER_MINUTES
@@ -40,6 +51,8 @@ export function GuineaPigCard({ cageId, guineaPig, lastWindow, now }: GuineaPigC
       to={cagePath(cageId, `/guinea-pigs/${guineaPig.id}`)}
       className={cx(styles.card, styles[status])}
     >
+      {/* a new element per pulse, so the animation runs again each time */}
+      {pulses > 0 && <span key={pulses} className={styles.pulse} aria-hidden="true" />}
       <span className={styles.top}>
         <span className={styles.avatar} aria-hidden="true">
           {guineaPig.coatColor && <CoatSwatch color={guineaPig.coatColor} size={44} />}
