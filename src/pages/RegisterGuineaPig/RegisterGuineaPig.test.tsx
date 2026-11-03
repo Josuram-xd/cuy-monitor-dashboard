@@ -7,8 +7,8 @@ import { getDashboardApi } from '../../api/apiProvider'
 import type { DashboardApi } from '../../api/DashboardApi'
 import { createMockApi } from '../../mocks/createMockApi'
 import { MockDatabase } from '../../mocks/MockDatabase'
+import { catalogOptions } from '../../catalog/catalog'
 import { renderWithProviders } from '../../test/render'
-import { MARK_COLORS } from '../../types/MarkColor'
 import { RegisterGuineaPig } from './RegisterGuineaPig'
 
 vi.mock('../../api/apiProvider', () => ({ getDashboardApi: vi.fn() }))
@@ -83,11 +83,11 @@ describe('RegisterGuineaPig', () => {
 
   it('says there is no color left when the cage already has one of each', async () => {
     db.guineaPigs.length = 0
-    MARK_COLORS.forEach((markColor, index) =>
+    catalogOptions('markColors').forEach(({ code }, index) =>
       db.guineaPigs.push({
         id: index + 1,
         name: `Cuy ${index + 1}`,
-        markColor,
+        markColor: code,
         status: 'NORMAL',
         statusSince: new Date().toISOString(),
       }),

@@ -1,4 +1,5 @@
 import { Link } from 'react-router'
+import { catalogLabel } from '../../catalog/catalog'
 import { t } from '../../i18n'
 import type { BehaviorWindow, GuineaPig } from '../../types/GuineaPig'
 import type { DisplayStatus } from '../../types/HealthStatus'
@@ -25,8 +26,8 @@ export function GuineaPigCard({ guineaPig, lastWindow, now }: GuineaPigCardProps
   const stale = lastSeenAt !== undefined && minutesSince(lastSeenAt, now) > STALE_AFTER_MINUTES
   const status: DisplayStatus = stale ? 'UNKNOWN' : guineaPig.status
   const about = [
-    guineaPig.breed ? t(`guineaPig.breed.${guineaPig.breed}`) : null,
-    guineaPig.coatColor ? t(`guineaPig.coat.${guineaPig.coatColor}`) : null,
+    guineaPig.breed ? catalogLabel('breeds', guineaPig.breed) : null,
+    guineaPig.coatColor ? catalogLabel('coatColors', guineaPig.coatColor) : null,
     guineaPig.initialWeightGrams
       ? t('guineaPig.weightGrams', { grams: guineaPig.initialWeightGrams })
       : null,

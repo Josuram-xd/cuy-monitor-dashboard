@@ -2,7 +2,8 @@ import type { GuineaPigApi } from '../api/DashboardApi'
 import type { DateRange } from '../types/DateRange'
 import type { GuineaPig, GuineaPigHistory, NewGuineaPig } from '../types/GuineaPig'
 import { MAX_NOTES_LENGTH, MAX_WEIGHT_GRAMS, MIN_WEIGHT_GRAMS } from '../types/GuineaPigProfile'
-import { mockTransitions, mockWindows } from './data'
+import type { CatalogKind } from '../types/Catalog'
+import { mockCatalog, mockTransitions, mockWindows } from './data'
 import { MockResource } from './MockResource'
 
 const MAX_NAME_LENGTH = 100
@@ -34,6 +35,13 @@ export class MockGuineaPigApi extends MockResource implements GuineaPigApi {
     const notes = body.notes?.trim()
     if (notes !== undefined && notes.length > MAX_NOTES_LENGTH) {
       return this.fail(400, 'bad_request', { notes: 'invalid' })
+    }
+    const unknown =
+      unknownCode('markColors', body.markColor) ??
+      unknownCode('breeds', body.breed) ??
+      unknownCode('coatColors', body.coatColor)
+    if (unknown) {
+      return this.fail(400, 'bad_request')
     }
     if (this.db.guineaPigs.some((g) => g.markColor === body.markColor)) {
       return this.fail(409, 'conflict')
@@ -82,4 +90,12 @@ export class MockGuineaPigApi extends MockResource implements GuineaPigApi {
       windows: mockWindows(id).filter((w) => this.inRange(w.occurredAt, from, to)),
     })
   }
+}
+
+// a code the catalog does not have is a 400 in the backend too
+function unknownCode(kind: CatalogKind, code: string | undefined): string | undefined {
+  if (code === undefined) {
+    return undefined
+  }
+  return mockCatalog[kind].some((option) => option.code === code) ? undefined : code
 }

@@ -62,16 +62,6 @@
     "CRITICAL": "Crítico",
     "UNKNOWN": "Sin datos"
   },
-  "markColor": {
-    "RED": "Rojo",
-    "BLUE": "Azul",
-    "GREEN": "Verde",
-    "YELLOW": "Amarillo",
-    "ORANGE": "Naranja",
-    "PURPLE": "Morado",
-    "BLACK": "Negro",
-    "WHITE": "Blanco"
-  },
   "time": {
     "justNow": "hace un momento",
     "minutesAgo": "hace {{count}} min",
@@ -101,7 +91,8 @@
       "CRITICAL_other": "{{count}} cuyes en estado crítico"
     },
     "countsLabel": "Cuyes por estado",
-    "updated": "Actualizado {{time}}"
+    "updated": "Actualizado {{time}}",
+    "catalogError": "No pudimos cargar las listas de colores y razas."
   },
   "alerts": {
     "title": "Alertas",
@@ -154,26 +145,6 @@
       "notFound": "No encontramos a este cuy. Puede que ya lo hayas eliminado.",
       "historyTitle": "Historial de comportamiento y peso",
       "historySoon": "Estará disponible muy pronto."
-    },
-    "breed": {
-      "AMERICAN": "Americano",
-      "PERUVIAN": "Peruano",
-      "ABYSSINIAN": "Abisinio",
-      "TEDDY": "Teddy",
-      "SILKIE": "Sedoso (Silkie)",
-      "SKINNY": "Skinny (sin pelo)",
-      "CRESTED": "Crestado",
-      "OTHER": "Otra o mestizo"
-    },
-    "coat": {
-      "WHITE": "Blanco",
-      "BLACK": "Negro",
-      "BROWN": "Café",
-      "CREAM": "Crema",
-      "GRAY": "Gris",
-      "CINNAMON": "Canela",
-      "BICOLOR": "Bicolor",
-      "TRICOLOR": "Tricolor"
     },
     "still": "Quieto {{seconds}} de los últimos 60 s",
     "lastSeen": "Visto {{time}}",
