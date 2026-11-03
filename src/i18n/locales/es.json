@@ -103,7 +103,21 @@
       "CRITICAL_other": "{{count}} cuyes en estado crítico"
     },
     "countsLabel": "Cuyes por estado",
-    "updated": "Actualizado {{time}}"
+    "updated": "Actualizado {{time}}",
+    "filter": {
+      "searchLabel": "Buscar cuy por nombre",
+      "searchPlaceholder": "Buscar por nombre…",
+      "clearSearch": "Borrar búsqueda",
+      "statusLabel": "Mostrar",
+      "attention_one": "Necesita atención ({{count}})",
+      "attention_many": "Necesitan atención ({{count}})",
+      "attention_other": "Necesitan atención ({{count}})",
+      "normal_one": "Normal ({{count}})",
+      "normal_many": "Normales ({{count}})",
+      "normal_other": "Normales ({{count}})",
+      "noMatch": "Ningún cuy coincide con la búsqueda",
+      "reset": "Ver todos"
+    }
   },
   "alerts": {
     "title": "Alertas",

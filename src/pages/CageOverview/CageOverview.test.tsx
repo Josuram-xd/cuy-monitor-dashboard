@@ -1,4 +1,5 @@
 import { screen, within } from '@testing-library/react'
+import userEvent from '@testing-library/user-event'
 import { beforeEach, describe, expect, it, vi } from 'vitest'
 import { ApiError } from '../../api/ApiError'
 import { getDashboardApi } from '../../api/apiProvider'
@@ -93,5 +94,40 @@ describe('CageOverview', () => {
     const grid = await screen.findByRole('list', { name: 'Tus cuyes' })
     expect(within(grid).getByText('Tofu')).toBeInTheDocument()
     expect(within(grid).queryByText('Canela')).not.toBeInTheDocument()
+  })
+
+  it('finds a cuy by name, without caring about accents or capitals', async () => {
+    const user = userEvent.setup()
+    renderInCage(<CageOverview />)
+    const grid = await screen.findByRole('list', { name: 'Tus cuyes' })
+
+    await user.type(screen.getByRole('searchbox', { name: 'Buscar cuy por nombre' }), 'CHÍS')
+
+    expect(within(grid).getByText('Chispa')).toBeInTheDocument()
+    expect(within(grid).queryByText('Canela')).not.toBeInTheDocument()
+  })
+
+  it('shows only the cuyes that need attention', async () => {
+    const user = userEvent.setup()
+    renderInCage(<CageOverview />)
+    const grid = await screen.findByRole('list', { name: 'Tus cuyes' })
+
+    await user.click(screen.getByRole('button', { name: 'Necesitan atención (2)' }))
+
+    expect(within(grid).getByText('Canela')).toBeInTheDocument()
+    expect(within(grid).getByText('Chispa')).toBeInTheDocument()
+    expect(within(grid).queryByText('Pelusa')).not.toBeInTheDocument()
+  })
+
+  it('offers to see every cuy again when nothing matches', async () => {
+    const user = userEvent.setup()
+    renderInCage(<CageOverview />)
+    await screen.findByRole('list', { name: 'Tus cuyes' })
+
+    await user.type(screen.getByRole('searchbox', { name: 'Buscar cuy por nombre' }), 'zzz')
+    expect(screen.getByText('Ningún cuy coincide con la búsqueda')).toBeInTheDocument()
+
+    await user.click(screen.getByRole('button', { name: 'Ver todos' }))
+    expect(await screen.findByRole('list', { name: 'Tus cuyes' })).toBeInTheDocument()
   })
 })
