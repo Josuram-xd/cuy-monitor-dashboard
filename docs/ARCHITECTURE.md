@@ -135,6 +135,24 @@ backend AlertPublisher ─► WebSocketAlertObserver ─► STOMP /topic/cages/{
 
 Local component state only (`useState`). Session state lives in `AuthProvider` (React context). No global store: TanStack Query already holds server state.
 
+### 4.1 SOLID and GRASP
+
+| Principle | Where |
+|---|---|
+| **S** Single responsibility | Pages only compose (`CageList` picks which dialog is open; `CageDialogs` run the requests); `CageCard` shows a cage, `CopyCodeButton` copies its code, `useCopyToClipboard` talks to the clipboard; `MarkAllReviewed` and `RefreshButton` do one thing each |
+| **O** Open/closed | A new data source is a new implementation of `DashboardApi` (`HttpXxxApi` for the backend, `MockXxxApi` for the fake data); hooks and pages don't change |
+| **L** Liskov substitution | `HttpCageApi` and `MockCageApi` are interchangeable behind `CageApi`; the tests run every page against the mocks |
+| **I** Interface segregation | One small interface per resource (`CageApi`, `GuineaPigApi`, `AlertApi`, `AuthApi`, `AccountApi`); one hook per query or mutation |
+| **D** Dependency inversion | Hooks depend on `DashboardApi` (from `getDashboardApi()`), never on `fetch`; components depend on hooks, never on the API |
+
+| GRASP | Where |
+|---|---|
+| **Information Expert** | `guineaPigFilter.ts` knows how to match a cuy by name and status; `queryKeys` knows every cache key; `cagePath` builds every cage URL |
+| **Controller** | Hooks in `src/hooks/` handle each user action (create a cage, review alerts) and what to refresh after it |
+| **Pure Fabrication** | `ToastProvider`/`useToast`, `useCopyToClipboard`, `useCageId`, `renderInCage` (tests) |
+| **Indirection / Protected Variations** | `DashboardApi` stands between the hooks and the backend; `useCageId` hides where the current cage comes from (the URL) |
+| **Low coupling / High cohesion** | Each component folder holds one component and its styles; texts only in `es.json`, colors only in `tokens.css` |
+
 ## 5. Types and contracts
 
 - `src/types/` mirrors `cuy-monitor-backend/docs/contracts/`. Enums as string-literal unions:
