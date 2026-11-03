@@ -12,7 +12,7 @@ export class MockGuineaPigApi extends MockResource implements GuineaPigApi {
     if (!this.db.hasCage(cageId)) {
       return this.notFound()
     }
-    return this.respond(this.db.guineaPigs)
+    return this.respond(this.db.guineaPigsOf(cageId))
   }
 
   register(cageId: string, body: NewGuineaPig): Promise<GuineaPig> {
@@ -35,7 +35,7 @@ export class MockGuineaPigApi extends MockResource implements GuineaPigApi {
     if (notes !== undefined && notes.length > MAX_NOTES_LENGTH) {
       return this.fail(400, 'bad_request', { notes: 'invalid' })
     }
-    if (this.db.guineaPigs.some((g) => g.markColor === body.markColor)) {
+    if (this.db.guineaPigsOf(cageId).some((g) => g.markColor === body.markColor)) {
       return this.fail(409, 'conflict')
     }
     const created: GuineaPig = {
@@ -49,7 +49,7 @@ export class MockGuineaPigApi extends MockResource implements GuineaPigApi {
       initialWeightGrams: weight ?? null,
       notes: notes || null,
     }
-    this.db.guineaPigs.push(created)
+    this.db.guineaPigsOf(cageId).push(created)
     return this.respond(created)
   }
 
@@ -57,12 +57,13 @@ export class MockGuineaPigApi extends MockResource implements GuineaPigApi {
     if (!this.db.hasCage(cageId)) {
       return this.notFound()
     }
-    const index = this.db.guineaPigs.findIndex((g) => g.id === id)
+    const guineaPigs = this.db.guineaPigsOf(cageId)
+    const index = guineaPigs.findIndex((g) => g.id === id)
     if (index === -1) {
       return this.notFound()
     }
     // like the backend, the cuy leaves the list (and frees its color); the alerts it had stay
-    this.db.guineaPigs.splice(index, 1)
+    guineaPigs.splice(index, 1)
     return this.respond(undefined)
   }
 

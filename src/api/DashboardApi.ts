@@ -11,6 +11,7 @@ import type {
   RegisterRequest,
   VerifyOtpRequest,
 } from '../types/Auth'
+import type { Cage, CageInput } from '../types/Cage'
 import type { CageHealth } from '../types/CageHealth'
 import type { DateRange } from '../types/DateRange'
 import type { GuineaPig, GuineaPigHistory, NewGuineaPig } from '../types/GuineaPig'
@@ -21,6 +22,13 @@ import type { CageWeight } from '../types/WeightReading'
 // comes from the backend (HttpXxxApi) or from the fake data (MockXxxApi).
 
 export interface CageApi {
+  // the cages of the account in the session, oldest first
+  list(signal?: AbortSignal): Promise<Cage[]>
+  get(cageId: string, signal?: AbortSignal): Promise<Cage>
+  create(body: CageInput): Promise<Cage>
+  update(cageId: string, body: CageInput): Promise<Cage>
+  // soft delete: it leaves the list, its cuyes and history are kept. 403 if it is another account's
+  remove(cageId: string): Promise<void>
   getHealth(cageId: string, signal?: AbortSignal): Promise<CageHealth>
   getWeight(cageId: string, range?: DateRange, signal?: AbortSignal): Promise<CageWeight>
 }
@@ -34,7 +42,8 @@ export interface GuineaPigApi {
 }
 
 export interface AlertApi {
-  list(status?: AlertStatus, signal?: AbortSignal): Promise<Alert[]>
+  // without cageId: the alerts of every cage of the account
+  list(status?: AlertStatus, cageId?: string, signal?: AbortSignal): Promise<Alert[]>
   markReviewed(id: number): Promise<Alert>
 }
 
