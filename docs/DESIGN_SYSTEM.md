@@ -253,6 +253,26 @@ The state is announced with `aria-live="polite"`. The reconnect pulse is disable
 
 New live alert of level `ALERT` or `CRITICAL` → toast at the top (mobile) or bottom-right (desktop), stays until dismissed, with a "Ver" action. `OBSERVED` changes don't toast; they only update the card.
 
+### Toast (`ToastProvider` + `useToast`)
+
+Short confirmation after an action the person did: cage created, renamed or deleted, cuy registered or removed, alert(s) reviewed. Top of the screen on phones, bottom right from 640 px; up to 3 stacked. Leaves after 4 s (a thin brand bar empties meanwhile; hovering pauses it) or with its close button. `role="status"` + `aria-live="polite"`. Brand colors only (`success` = primary soft, `info` = neutral): health colors stay reserved. Live health alerts are the `AlertToast` above, not this.
+
+### CageCard and CageFormDialog (page `/`, "Mis jaulas")
+
+One card per cage: top border in the color of its live status (`UNKNOWN` until it answers), name, place, number of cuyes and how many need attention, "Actualizado hace X". The whole card opens the cage; the footer has the cage code as a dashed button that copies it ("¡Copiado!" for 2 s) and 44 px icon buttons to edit and delete. `CageFormDialog` (name + optional place) creates and renames; deleting uses `ConfirmDialog` with `danger`.
+
+### GuineaPigFilter
+
+Above the cuyes of a cage when there are 3 or more: a rounded search field (accents and capitals ignored, own clear button) and two `ChoiceChips` with counts, "Necesitan atención (n)" and "Normales (n)". No match → `EmptyState` with "Ver todos".
+
+### RefreshButton
+
+Pill button "Actualizar" next to the main action of a page. The arrows turn a quarter on hover and spin while anything it covers is loading, also during the automatic refresh every 30 s.
+
+### Status raise pulse
+
+`GuineaPigCard` glows once (600 ms, in the accent of the new status) when the status goes up. Going down, staying the same or `prefers-reduced-motion: reduce` show nothing.
+
 ### Buttons
 
 | Variant | Use |
