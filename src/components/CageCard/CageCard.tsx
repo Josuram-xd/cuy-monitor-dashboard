@@ -18,7 +18,7 @@ interface CageCardProps {
   onDelete: (cage: Cage) => void
 }
 
-// One cage in "Mis jaulas": its live status, how many cuyes it has, and the code the camera and
+// One cage in "Mis jaulas": its live status, how many guinea pigs it has, and the code the camera and
 // the scale need. The whole card opens the cage; copy, edit and delete sit in its footer.
 export function CageCard({ cage, now, onEdit, onDelete }: CageCardProps) {
   const health = useCageHealth(cage.cageId)

@@ -118,7 +118,7 @@ describe('RegisterGuineaPig', () => {
     })
   })
 
-  it('keeps them optional: a cuy can still be registered with only a name and a color', async () => {
+  it('keeps them optional: a guinea pig can still be registered with only a name and a color', async () => {
     renderPage(api)
 
     await userEvent.type(await screen.findByLabelText('Nombre'), 'Simple')

@@ -62,7 +62,7 @@ export class MockGuineaPigApi extends MockResource implements GuineaPigApi {
     if (index === -1) {
       return this.notFound()
     }
-    // like the backend, the cuy leaves the list (and frees its color); the alerts it had stay
+    // like the backend, the guinea pig leaves the list (and frees its color); the alerts it had stay
     guineaPigs.splice(index, 1)
     return this.respond(undefined)
   }

@@ -5,7 +5,7 @@ import { Icon } from '../Icon/Icon'
 import styles from './RefreshButton.module.css'
 
 interface RefreshButtonProps {
-  // what this button reloads (prefixes: ['cage', id] reloads the cage, its health and its cuyes)
+  // what this button reloads (prefixes: ['cage', id] reloads the cage, its health and its guinea pigs)
   queryKeys: QueryKey[]
 }
 

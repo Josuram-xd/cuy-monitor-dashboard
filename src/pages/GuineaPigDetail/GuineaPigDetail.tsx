@@ -46,7 +46,7 @@ function Alerts({ cageId, guineaPig, now }: { cageId: string; guineaPig: GuineaP
   return <AlertList alerts={mine} guineaPigs={[guineaPig]} now={now} />
 }
 
-// What we know about one cuy, from the list the cage page already loaded: who it is, how it is doing,
+// What we know about one guinea pig, from the list the cage page already loaded: who it is, how it is doing,
 // what its owner told when registering it, and its alerts. The behavior history comes later.
 export function GuineaPigDetail() {
   const { id } = useParams()

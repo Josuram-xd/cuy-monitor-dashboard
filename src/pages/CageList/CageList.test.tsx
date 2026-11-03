@@ -22,7 +22,7 @@ describe('CageList', () => {
     vi.mocked(getDashboardApi).mockReset()
   })
 
-  it('shows every cage with its status, its cuyes and a link to open it', async () => {
+  it('shows every cage with its status, its guinea pigs and a link to open it', async () => {
     setup()
 
     const list = await screen.findByRole('list', { name: 'Tus jaulas' })
