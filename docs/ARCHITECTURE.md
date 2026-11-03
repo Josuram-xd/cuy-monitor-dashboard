@@ -153,6 +153,10 @@ Local component state only (`useState`). Session state lives in `AuthProvider` (
 | **Indirection / Protected Variations** | `DashboardApi` stands between the hooks and the backend; `useCageId` hides where the current cage comes from (the URL) |
 | **Low coupling / High cohesion** | Each component folder holds one component and its styles; texts only in `es.json`, colors only in `tokens.css` |
 
+### 4.2 Preferences (language and appearance)
+
+`src/preferences/`: `storage.ts` reads and writes `{ language, theme }` in `localStorage` (`cuy-monitor.preferences`; display preferences only, never the session) and applies the theme as `data-theme` on `<html>`. `PreferencesProvider` (outside the auth and query providers, so the login pages use it too) exposes `usePreferences()`. Changing the language calls i18next and gives `RouterProvider` a new `key`, so every page draws again in the new language without leaving the current address. `main.tsx` applies the saved theme and `<html lang>` before the first render.
+
 ## 5. Types and contracts
 
 - `src/types/` mirrors `cuy-monitor-backend/docs/contracts/`. Enums as string-literal unions:
