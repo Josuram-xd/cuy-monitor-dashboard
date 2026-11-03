@@ -32,12 +32,14 @@ import styles from './RegisterGuineaPig.module.css'
 
 const MAX_NAME_LENGTH = 100
 
-const BREED_OPTIONS = BREEDS.map((value) => ({ value, label: t(`guineaPig.breed.${value}`) }))
-const COAT_OPTIONS = COAT_COLORS.map((value) => ({
-  value,
-  label: t(`guineaPig.coat.${value}`),
-  adornment: <CoatSwatch color={value} />,
-}))
+// built per render (not once at load) so they follow the chosen language
+const breedOptions = () => BREEDS.map((value) => ({ value, label: t(`guineaPig.breed.${value}`) }))
+const coatOptions = () =>
+  COAT_COLORS.map((value) => ({
+    value,
+    label: t(`guineaPig.coat.${value}`),
+    adornment: <CoatSwatch color={value} />,
+  }))
 
 // "" = left empty (it is optional); otherwise a whole number of grams inside the limits
 function weightProblem(text: string): string | undefined {
@@ -154,7 +156,7 @@ export function RegisterGuineaPig() {
             <ChoiceChips
               legend={t('guineaPig.register.breed')}
               hint={t('common.optional')}
-              options={BREED_OPTIONS}
+              options={breedOptions()}
               value={breed}
               onChange={setBreed}
             />
@@ -166,7 +168,7 @@ export function RegisterGuineaPig() {
             <ChoiceChips
               legend={t('guineaPig.register.coat')}
               hint={t('common.optional')}
-              options={COAT_OPTIONS}
+              options={coatOptions()}
               value={coatColor}
               onChange={setCoatColor}
             />
