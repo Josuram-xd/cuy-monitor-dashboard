@@ -137,7 +137,13 @@
     "unknownGuineaPig": "Cuy",
     "markReviewed": "Marcar como revisada",
     "filterByCage": "Jaula",
-    "filterByCageHint": "Toca una jaula para ver solo sus alertas"
+    "filterByCageHint": "Toca una jaula para ver solo sus alertas",
+    "markAll": "Marcar todas como revisadas",
+    "markAllTitle_one": "¿Marcar {{count}} alerta como revisada?",
+    "markAllTitle_many": "¿Marcar {{count}} alertas como revisadas?",
+    "markAllTitle_other": "¿Marcar {{count}} alertas como revisadas?",
+    "markAllText": "Hazlo solo si ya revisaste a los cuyes. Las alertas pasan a \"Revisadas\" y no se pueden volver a abrir.",
+    "markAllConfirm": "Sí, ya las revisé"
   },
   "realtime": {
     "connecting": "Conectando…",

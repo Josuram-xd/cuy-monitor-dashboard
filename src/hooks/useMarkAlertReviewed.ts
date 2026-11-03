@@ -14,3 +14,19 @@ export function useMarkAlertReviewed() {
       ]),
   })
 }
+
+// "Marcar todas como revisadas": one call per alert (the backend has no bulk endpoint)
+export function useMarkAllAlertsReviewed() {
+  const queryClient = useQueryClient()
+  return useMutation({
+    mutationFn: async (alerts: Alert[]) => {
+      const api = await getDashboardApi()
+      return Promise.all(alerts.map((alert) => api.alerts.markReviewed(alert.id)))
+    },
+    onSettled: () =>
+      Promise.all([
+        queryClient.invalidateQueries({ queryKey: ['alerts'] }),
+        queryClient.invalidateQueries({ queryKey: ['cage'] }),
+      ]),
+  })
+}
