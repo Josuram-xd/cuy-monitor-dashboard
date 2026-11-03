@@ -27,7 +27,7 @@ describe('AppFooter', () => {
     )
 
     expect(screen.getByRole('link', { name: 'Alertas' })).toHaveAttribute('href', '/alerts')
-    expect(screen.getByRole('link', { name: 'Jaula' })).toHaveAttribute('href', '/')
+    expect(screen.getByRole('link', { name: 'Jaulas' })).toHaveAttribute('href', '/')
     expect(screen.getByText(new RegExp(String(new Date().getFullYear())))).toBeInTheDocument()
   })
 })

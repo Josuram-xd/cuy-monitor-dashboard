@@ -22,7 +22,7 @@ describe('DeleteGuineaPig', () => {
   })
 
   function renderButton() {
-    renderWithProviders(<DeleteGuineaPig guineaPig={db.guineaPigs[0]} />)
+    renderWithProviders(<DeleteGuineaPig cageId="cage-1" guineaPig={db.guineaPigs[0]} />)
   }
 
   it('asks first and does not delete until it is confirmed', async () => {

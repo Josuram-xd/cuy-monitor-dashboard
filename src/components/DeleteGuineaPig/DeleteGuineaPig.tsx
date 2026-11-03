@@ -9,12 +9,13 @@ import { Icon } from '../Icon/Icon'
 import styles from './DeleteGuineaPig.module.css'
 
 interface DeleteGuineaPigProps {
+  cageId: string
   guineaPig: GuineaPig
 }
 
 // A small trash button for a cuy card. It never deletes by itself: it opens a confirmation first.
-export function DeleteGuineaPig({ guineaPig }: DeleteGuineaPigProps) {
-  const remove = useDeleteGuineaPig()
+export function DeleteGuineaPig({ cageId, guineaPig }: DeleteGuineaPigProps) {
+  const remove = useDeleteGuineaPig(cageId)
   const [open, setOpen] = useState(false)
 
   function close() {

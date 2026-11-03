@@ -4,6 +4,7 @@ import { RequireAuth } from './auth/RequireAuth'
 import { AppLayout } from './components/AppLayout/AppLayout'
 import { Account } from './pages/Account/Account'
 import { Alerts } from './pages/Alerts/Alerts'
+import { CageList } from './pages/CageList/CageList'
 import { CageOverview } from './pages/CageOverview/CageOverview'
 import { GuineaPigDetail } from './pages/GuineaPigDetail/GuineaPigDetail'
 import { HowItWorks } from './pages/HowItWorks/HowItWorks'
@@ -30,10 +31,12 @@ export const routes: RouteObject[] = [
       {
         element: <AppLayout />,
         children: [
-          { index: true, element: <CageOverview /> },
+          // "Mis jaulas"; each cage and what is inside it lives under /cages/:cageId
+          { index: true, element: <CageList /> },
+          { path: 'cages/:cageId', element: <CageOverview /> },
+          { path: 'cages/:cageId/guinea-pigs/new', element: <RegisterGuineaPig /> },
+          { path: 'cages/:cageId/guinea-pigs/:id', element: <GuineaPigDetail /> },
           { path: 'alerts', element: <Alerts /> },
-          { path: 'guinea-pigs/new', element: <RegisterGuineaPig /> },
-          { path: 'guinea-pigs/:id', element: <GuineaPigDetail /> },
           { path: 'how-it-works', element: <HowItWorks /> },
           { path: 'account', element: <Account /> },
           { path: '*', element: <NotFound /> },

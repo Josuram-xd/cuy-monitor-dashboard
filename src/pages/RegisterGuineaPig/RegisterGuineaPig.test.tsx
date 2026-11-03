@@ -17,10 +17,10 @@ function renderPage(api: DashboardApi) {
   vi.mocked(getDashboardApi).mockResolvedValue(api)
   renderWithProviders(
     <Routes>
-      <Route path="/guinea-pigs/new" element={<RegisterGuineaPig />} />
-      <Route path="/" element={<p>cage view</p>} />
+      <Route path="/cages/:cageId/guinea-pigs/new" element={<RegisterGuineaPig />} />
+      <Route path="/cages/:cageId" element={<p>cage view</p>} />
     </Routes>,
-    { route: '/guinea-pigs/new' },
+    { route: '/cages/cage-1/guinea-pigs/new' },
   )
 }
 

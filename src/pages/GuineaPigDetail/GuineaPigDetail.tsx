@@ -11,6 +11,7 @@ import { MarkColorDot } from '../../components/MarkColorDot/MarkColorDot'
 import { Skeleton } from '../../components/Skeleton/Skeleton'
 import { StatusBadge } from '../../components/StatusBadge/StatusBadge'
 import { useAlerts } from '../../hooks/useAlerts'
+import { cagePath, useCageId } from '../../hooks/useCageId'
 import { useGuineaPigs } from '../../hooks/useGuineaPigs'
 import { useNow } from '../../hooks/useNow'
 import { t } from '../../i18n'
@@ -29,8 +30,8 @@ function Fact({ label, children }: { label: string; children: ReactNode }) {
 
 const NO_DATA = <span className={styles.noData}>{t('guineaPig.detail.noData')}</span>
 
-function Alerts({ guineaPig, now }: { guineaPig: GuineaPig; now: number }) {
-  const alerts = useAlerts()
+function Alerts({ cageId, guineaPig, now }: { cageId: string; guineaPig: GuineaPig; now: number }) {
+  const alerts = useAlerts(undefined, cageId)
 
   if (alerts.isPending) {
     return <Skeleton variant="line" count={2} />
@@ -49,7 +50,8 @@ function Alerts({ guineaPig, now }: { guineaPig: GuineaPig; now: number }) {
 // what its owner told when registering it, and its alerts. The behavior history comes later.
 export function GuineaPigDetail() {
   const { id } = useParams()
-  const guineaPigs = useGuineaPigs()
+  const cageId = useCageId()
+  const guineaPigs = useGuineaPigs(cageId)
   const now = useNow()
 
   if (guineaPigs.isPending) {
@@ -67,7 +69,7 @@ export function GuineaPigDetail() {
         mascot="worried"
         message={t('guineaPig.detail.notFound')}
         action={
-          <ButtonLink to="/" variant="primary">
+          <ButtonLink to={cagePath(cageId)} variant="primary">
             {t('notFound.back')}
           </ButtonLink>
         }
@@ -77,7 +79,7 @@ export function GuineaPigDetail() {
 
   return (
     <div className={styles.page}>
-      <ButtonLink to="/" variant="ghost" className={styles.back}>
+      <ButtonLink to={cagePath(cageId)} variant="ghost" className={styles.back}>
         <Icon name="chevron-left" size={18} />
         {t('guineaPig.detail.back')}
       </ButtonLink>
@@ -137,7 +139,7 @@ export function GuineaPigDetail() {
         <h2 id="alerts-heading" className={styles.cardTitle}>
           {t('guineaPig.detail.alerts', { name: guineaPig.name })}
         </h2>
-        <Alerts guineaPig={guineaPig} now={now} />
+        <Alerts cageId={cageId} guineaPig={guineaPig} now={now} />
       </section>
 
       <section className={styles.soon} aria-labelledby="history-heading">

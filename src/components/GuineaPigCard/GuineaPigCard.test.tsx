@@ -27,7 +27,7 @@ function windowAt(minutesAgo: number): BehaviorWindow {
 function renderCard(lastWindow?: BehaviorWindow) {
   return render(
     <MemoryRouter>
-      <GuineaPigCard guineaPig={canela} lastWindow={lastWindow} now={NOW} />
+      <GuineaPigCard cageId="cage-1" guineaPig={canela} lastWindow={lastWindow} now={NOW} />
     </MemoryRouter>,
   )
 }
@@ -36,7 +36,7 @@ describe('GuineaPigCard', () => {
   it('links to the guinea pig detail', () => {
     renderCard()
 
-    expect(screen.getByRole('link')).toHaveAttribute('href', '/guinea-pigs/1')
+    expect(screen.getByRole('link')).toHaveAttribute('href', '/cages/cage-1/guinea-pigs/1')
   })
 
   it('shows name, mark color and status', () => {

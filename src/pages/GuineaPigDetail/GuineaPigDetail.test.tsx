@@ -14,10 +14,10 @@ function renderAt(api: DashboardApi, id: string) {
   vi.mocked(getDashboardApi).mockResolvedValue(api)
   renderWithProviders(
     <Routes>
-      <Route path="/guinea-pigs/:id" element={<GuineaPigDetail />} />
-      <Route path="/" element={<p>cage view</p>} />
+      <Route path="/cages/:cageId/guinea-pigs/:id" element={<GuineaPigDetail />} />
+      <Route path="/cages/:cageId" element={<p>cage view</p>} />
     </Routes>,
-    { route: `/guinea-pigs/${id}` },
+    { route: `/cages/cage-1/guinea-pigs/${id}` },
   )
 }
 
@@ -70,7 +70,10 @@ describe('GuineaPigDetail', () => {
     renderAt(api, '999')
 
     expect(await screen.findByText(/No encontramos a este cuy/)).toBeInTheDocument()
-    expect(screen.getByRole('link', { name: 'Volver a la jaula' })).toHaveAttribute('href', '/')
+    expect(screen.getByRole('link', { name: 'Volver a mis jaulas' })).toHaveAttribute(
+      'href',
+      '/cages/cage-1',
+    )
   })
 
   it('tells that the history is still to come', async () => {
