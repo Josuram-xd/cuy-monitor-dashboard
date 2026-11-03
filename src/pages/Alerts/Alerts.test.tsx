@@ -1,4 +1,4 @@
-import { screen, within } from '@testing-library/react'
+import { screen, waitFor, within } from '@testing-library/react'
 import userEvent from '@testing-library/user-event'
 import { beforeEach, describe, expect, it, vi } from 'vitest'
 import { ApiError } from '../../api/ApiError'
@@ -31,7 +31,7 @@ describe('Alerts', () => {
     expect(
       await within(open).findAllByRole('button', { name: 'Marcar como revisada' }),
     ).toHaveLength(openAlerts.length)
-    expect(within(open).getByText('Chispa')).toBeInTheDocument()
+    expect(await within(open).findByText('Chispa')).toBeInTheDocument()
   })
 
   it('moves an alert to the reviewed ones when it is marked', async () => {
@@ -96,5 +96,33 @@ describe('Alerts', () => {
     vi.spyOn(api.alerts, 'list').mockRejectedValue(new ApiError(500, 'unknown_error'))
 
     expect(await screen.findAllByRole('button', { name: 'Intentar de nuevo' })).not.toHaveLength(0)
+  })
+
+  it('filters the alerts by cage and says which cage each alert is from', async () => {
+    const user = userEvent.setup()
+    const db = new MockDatabase()
+    db.alerts.push({
+      id: 50,
+      cageId: 'cage-7f3a9c21',
+      guineaPigId: null,
+      level: 'ALERT',
+      type: 'AUDIO',
+      message: 'Chillidos en el patio',
+      status: 'OPEN',
+      createdAt: new Date().toISOString(),
+      reviewedAt: null,
+    })
+    setup(db)
+
+    const open = await screen.findByRole('region', { name: /Alertas abiertas/ })
+    expect(await within(open).findByText('Chillidos en el patio')).toBeInTheDocument()
+    expect(await within(open).findByText('Jaula del patio')).toBeInTheDocument()
+
+    await user.click(await screen.findByRole('button', { name: 'Jaula piloto' }))
+
+    await waitFor(() =>
+      expect(within(open).queryByText('Chillidos en el patio')).not.toBeInTheDocument(),
+    )
+    expect(within(open).getByText(/quieta de lo normal/)).toBeInTheDocument()
   })
 })

@@ -1,20 +1,31 @@
+import { useSearchParams } from 'react-router'
 import { AlertList } from '../../components/AlertList/AlertList'
+import { ChoiceChips } from '../../components/ChoiceChips/ChoiceChips'
 import { EmptyState } from '../../components/EmptyState/EmptyState'
 import { ErrorState } from '../../components/ErrorState/ErrorState'
 import { FormError } from '../../components/FormError/FormError'
 import { Skeleton } from '../../components/Skeleton/Skeleton'
 import { useAlerts } from '../../hooks/useAlerts'
-import { useGuineaPigs } from '../../hooks/useGuineaPigs'
+import { useCages } from '../../hooks/useCages'
+import { useGuineaPigsOfCages } from '../../hooks/useGuineaPigs'
 import { useMarkAlertReviewed } from '../../hooks/useMarkAlertReviewed'
 import { useNow } from '../../hooks/useNow'
 import { t } from '../../i18n'
 import type { AlertStatus } from '../../types/Alert'
 import styles from './Alerts.module.css'
 
-function AlertsSection({ status, now }: { status: AlertStatus; now: number }) {
-  const alerts = useAlerts(status)
-  // same query as the cage view: TanStack Query shares it
-  const guineaPigs = useGuineaPigs()
+interface AlertsSectionProps {
+  status: AlertStatus
+  // undefined = every cage of the account
+  cageId?: string
+  cageNames: Record<string, string>
+  now: number
+}
+
+function AlertsSection({ status, cageId, cageNames, now }: AlertsSectionProps) {
+  const alerts = useAlerts(status, cageId)
+  // same queries as the cage pages: TanStack Query shares them
+  const guineaPigs = useGuineaPigsOfCages(cageId ? [cageId] : Object.keys(cageNames))
   const markReviewed = useMarkAlertReviewed()
 
   if (alerts.isPending) {
@@ -36,8 +47,10 @@ function AlertsSection({ status, now }: { status: AlertStatus; now: number }) {
       {markReviewed.isError && <FormError message={t('alerts.markError')} />}
       <AlertList
         alerts={alerts.data}
-        guineaPigs={guineaPigs.data}
+        guineaPigs={guineaPigs}
         now={now}
+        // with every cage mixed, each alert says which cage it is from
+        cageNames={cageId ? undefined : cageNames}
         onMarkReviewed={status === 'OPEN' ? (alert) => markReviewed.mutate(alert.id) : undefined}
         busyAlertId={markReviewed.isPending ? markReviewed.variables : undefined}
       />
@@ -47,8 +60,18 @@ function AlertsSection({ status, now }: { status: AlertStatus; now: number }) {
 
 export function Alerts() {
   const now = useNow()
-  const open = useAlerts('OPEN')
-  const reviewed = useAlerts('REVIEWED')
+  const cages = useCages()
+  const [searchParams, setSearchParams] = useSearchParams()
+  const cageNames = Object.fromEntries((cages.data ?? []).map((c) => [c.cageId, c.name]))
+  // ?cage=<id> comes from the "Ver todas" button of a cage; an unknown one shows every cage
+  const requested = searchParams.get('cage')
+  const cageId = requested && cageNames[requested] ? requested : undefined
+  const open = useAlerts('OPEN', cageId)
+  const reviewed = useAlerts('REVIEWED', cageId)
+
+  function selectCage(next: string | null) {
+    setSearchParams(next ? { cage: next } : {}, { replace: true })
+  }
 
   return (
     <div className={styles.page}>
@@ -56,6 +79,16 @@ export function Alerts() {
         <h1 className={styles.title}>{t('alerts.title')}</h1>
         <p className={styles.intro}>{t('alerts.intro')}</p>
       </header>
+
+      {cages.data && cages.data.length > 1 && (
+        <ChoiceChips
+          legend={t('alerts.filterByCage')}
+          hint={t('alerts.filterByCageHint')}
+          options={cages.data.map((cage) => ({ value: cage.cageId, label: cage.name }))}
+          value={cageId ?? null}
+          onChange={selectCage}
+        />
+      )}
 
       <section className={styles.section} aria-labelledby="open-heading">
         <h2 id="open-heading" className={styles.sectionTitle}>
@@ -69,7 +102,7 @@ export function Alerts() {
             </span>
           )}
         </h2>
-        <AlertsSection status="OPEN" now={now} />
+        <AlertsSection status="OPEN" cageId={cageId} cageNames={cageNames} now={now} />
       </section>
 
       {/* closed by default: the open ones are what needs attention */}
@@ -86,7 +119,7 @@ export function Alerts() {
           )}
         </summary>
         <div className={styles.reviewedBody}>
-          <AlertsSection status="REVIEWED" now={now} />
+          <AlertsSection status="REVIEWED" cageId={cageId} cageNames={cageNames} now={now} />
         </div>
       </details>
     </div>
