@@ -1,16 +1,16 @@
 import { useMutation, useQueryClient } from '@tanstack/react-query'
 import { getDashboardApi } from '../api/apiProvider'
-import { config } from '../config'
+import type { Alert } from '../types/Alert'
 
-export function useMarkAlertReviewed(cageId: string = config.cageId) {
+export function useMarkAlertReviewed() {
   const queryClient = useQueryClient()
   return useMutation({
     mutationFn: async (id: number) => (await getDashboardApi()).alerts.markReviewed(id),
-    // moves the alert from "open" to "reviewed" and may change what the cage banner says
-    onSuccess: () =>
+    // moves the alert from "open" to "reviewed" and may change what the banner of its cage says
+    onSuccess: (alert: Alert) =>
       Promise.all([
         queryClient.invalidateQueries({ queryKey: ['alerts'] }),
-        queryClient.invalidateQueries({ queryKey: ['cage', cageId] }),
+        queryClient.invalidateQueries({ queryKey: ['cage', alert.cageId] }),
       ]),
   })
 }

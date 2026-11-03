@@ -1,9 +1,8 @@
 import { useMutation, useQueryClient } from '@tanstack/react-query'
 import { getDashboardApi } from '../api/apiProvider'
-import { config } from '../config'
 import type { NewGuineaPig } from '../types/GuineaPig'
 
-export function useRegisterGuineaPig(cageId: string = config.cageId) {
+export function useRegisterGuineaPig(cageId: string) {
   const queryClient = useQueryClient()
   return useMutation({
     mutationFn: async (body: NewGuineaPig) =>
