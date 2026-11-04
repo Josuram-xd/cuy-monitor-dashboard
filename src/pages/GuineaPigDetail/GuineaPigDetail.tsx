@@ -8,6 +8,7 @@ import { ErrorState } from '../../components/ErrorState/ErrorState'
 import { Icon } from '../../components/Icon/Icon'
 import { Mascot } from '../../components/Mascot/Mascot'
 import { MarkColorDot } from '../../components/MarkColorDot/MarkColorDot'
+import { catalogLabel } from '../../catalog/catalog'
 import { Skeleton } from '../../components/Skeleton/Skeleton'
 import { StatusBadge } from '../../components/StatusBadge/StatusBadge'
 import { useAlerts } from '../../hooks/useAlerts'
@@ -108,13 +109,13 @@ export function GuineaPigDetail() {
         </h2>
         <dl className={styles.facts}>
           <Fact label={t('guineaPig.register.breed')}>
-            {guineaPig.breed ? t(`guineaPig.breed.${guineaPig.breed}`) : <NoData />}
+            {guineaPig.breed ? catalogLabel('breeds', guineaPig.breed) : <NoData />}
           </Fact>
           <Fact label={t('guineaPig.register.coat')}>
             {guineaPig.coatColor ? (
               <span className={styles.inline}>
                 <CoatSwatch color={guineaPig.coatColor} />
-                {t(`guineaPig.coat.${guineaPig.coatColor}`)}
+                {catalogLabel('coatColors', guineaPig.coatColor)}
               </span>
             ) : (
               <NoData />

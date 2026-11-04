@@ -5,6 +5,7 @@ export const LIVE_REFRESH_MS = 30_000
 
 export const queryKeys = {
   profile: ['account', 'profile'] as const,
+  catalog: ['catalog'] as const,
   cages: ['cages'] as const,
   // invalidating ['cage', cageId] refreshes the cage, its health and its guinea pigs at once
   cage: (cageId: string) => ['cage', cageId, 'info'] as const,

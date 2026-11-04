@@ -67,16 +67,6 @@
     "CRITICAL": "Critical",
     "UNKNOWN": "No data"
   },
-  "markColor": {
-    "RED": "Red",
-    "BLUE": "Blue",
-    "GREEN": "Green",
-    "YELLOW": "Yellow",
-    "ORANGE": "Orange",
-    "PURPLE": "Purple",
-    "BLACK": "Black",
-    "WHITE": "White"
-  },
   "time": {
     "justNow": "just now",
     "minutesAgo": "{{count}} min ago",
@@ -115,7 +105,8 @@
       "normal_other": "Normal ({{count}})",
       "noMatch": "No guinea pig matches the search",
       "reset": "Show all"
-    }
+    },
+    "catalogError": "We couldn't load the lists of colors and breeds."
   },
   "alerts": {
     "title": "Alerts",
@@ -176,26 +167,6 @@
       "historyTitle": "Behavior and weight history",
       "historySoon": "It will be available very soon."
     },
-    "breed": {
-      "AMERICAN": "American",
-      "PERUVIAN": "Peruvian",
-      "ABYSSINIAN": "Abyssinian",
-      "TEDDY": "Teddy",
-      "SILKIE": "Silkie",
-      "SKINNY": "Skinny (hairless)",
-      "CRESTED": "Crested",
-      "OTHER": "Other or mixed"
-    },
-    "coat": {
-      "WHITE": "White",
-      "BLACK": "Black",
-      "BROWN": "Brown",
-      "CREAM": "Cream",
-      "GRAY": "Gray",
-      "CINNAMON": "Cinnamon",
-      "BICOLOR": "Two-colored",
-      "TRICOLOR": "Three-colored"
-    },
     "still": "Still {{seconds}} of the last 60 s",
     "lastSeen": "Seen {{time}}",
     "notSeen": "Not seen since {{time}}",
@@ -254,7 +225,9 @@
       "username": "Username",
       "fullName": "Full name",
       "email": "Email",
-      "password": "Password"
+      "password": "Password",
+      "required": "This field is required.",
+      "tooLong": "This field is too long."
     },
     "login": {
       "title": "Log in",
@@ -267,7 +240,6 @@
       "title": "Create account",
       "submit": "Create account",
       "submitting": "Creating the account…",
-      "required": "This field is required.",
       "invalidEmail": "Write a valid email, for example name@gmail.com.",
       "haveAccount": "Already have an account?",
       "toLogin": "Log in"
