@@ -4,6 +4,7 @@ import { HttpAccountApi } from './http/HttpAccountApi'
 import { HttpAlertApi } from './http/HttpAlertApi'
 import { HttpAuthApi } from './http/HttpAuthApi'
 import { HttpCageApi } from './http/HttpCageApi'
+import { HttpCatalogApi } from './http/HttpCatalogApi'
 import { HttpGuineaPigApi } from './http/HttpGuineaPigApi'
 import { HttpClient } from './HttpClient'
 import { unauthorizedNotifier } from './UnauthorizedNotifier'
@@ -20,6 +21,7 @@ function createHttpApi(): DashboardApi {
     cages: new HttpCageApi(http),
     guineaPigs: new HttpGuineaPigApi(http),
     alerts: new HttpAlertApi(http),
+    catalog: new HttpCatalogApi(http),
   }
 }
 

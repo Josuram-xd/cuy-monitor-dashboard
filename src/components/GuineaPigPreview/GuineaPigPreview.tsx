@@ -1,16 +1,15 @@
 import type { ReactNode } from 'react'
+import { catalogLabel } from '../../catalog/catalog'
 import { t } from '../../i18n'
-import type { Breed, CoatColor } from '../../types/GuineaPigProfile'
-import type { MarkColor } from '../../types/MarkColor'
 import { CoatSwatch } from '../CoatSwatch/CoatSwatch'
 import { MarkColorDot } from '../MarkColorDot/MarkColorDot'
 import styles from './GuineaPigPreview.module.css'
 
 interface GuineaPigPreviewProps {
   name: string
-  breed: Breed | null
-  coatColor: CoatColor | null
-  markColor: MarkColor | null
+  breed: string | null
+  coatColor: string | null
+  markColor: string | null
   weightGrams: number | null
 }
 
@@ -24,7 +23,7 @@ export function GuineaPigPreview({
 }: GuineaPigPreviewProps) {
   const rows: { key: string; node: ReactNode }[] = []
   if (breed) {
-    rows.push({ key: 'breed', node: t(`guineaPig.breed.${breed}`) })
+    rows.push({ key: 'breed', node: catalogLabel('breeds', breed) })
   }
   if (coatColor) {
     rows.push({
@@ -32,7 +31,7 @@ export function GuineaPigPreview({
       node: (
         <>
           <CoatSwatch color={coatColor} size={14} />
-          {t(`guineaPig.coat.${coatColor}`)}
+          {catalogLabel('coatColors', coatColor)}
         </>
       ),
     })
