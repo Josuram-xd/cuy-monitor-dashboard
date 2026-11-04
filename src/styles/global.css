@@ -2,8 +2,7 @@ body {
   min-height: 100vh;
   /* a soft green glow behind the header, so the page is not a flat sheet */
   background:
-    radial-gradient(900px 320px at 50% -120px, rgb(45 106 79 / 0.14), transparent 70%),
-    var(--color-bg);
+    radial-gradient(900px 320px at 50% -120px, var(--glow-brand), transparent 70%), var(--color-bg);
   background-attachment: fixed;
   color: var(--color-text);
   font-family: var(--font-sans);
@@ -42,8 +41,8 @@ h2 {
 }
 
 ::selection {
-  background: var(--color-primary);
-  color: var(--color-surface);
+  background: var(--color-primary-strong);
+  color: var(--color-on-primary);
 }
 
 html {

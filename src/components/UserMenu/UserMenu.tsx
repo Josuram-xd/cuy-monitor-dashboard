@@ -60,6 +60,9 @@ export function UserMenu() {
           <Link to="/account" className={styles.item} onClick={() => setOpen(false)}>
             {t('account.myAccount')}
           </Link>
+          <Link to="/settings" className={styles.item} onClick={() => setOpen(false)}>
+            {t('account.settings')}
+          </Link>
           {/* no confirmation: logging out is harmless and quick to undo */}
           <Button fullWidth onClick={() => logout('logout')}>
             {t('account.logout')}

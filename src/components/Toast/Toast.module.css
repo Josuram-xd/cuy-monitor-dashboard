@@ -1,0 +1,128 @@
+/* phones: top, full width; desktop: bottom right */
+.region {
+  position: fixed;
+  top: var(--space-3);
+  right: var(--space-3);
+  left: var(--space-3);
+  z-index: 60;
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-2);
+  pointer-events: none;
+}
+
+@media (min-width: 640px) {
+  .region {
+    top: auto;
+    bottom: var(--space-5);
+    left: auto;
+    width: 380px;
+  }
+}
+
+.toast {
+  position: relative;
+  display: flex;
+  align-items: center;
+  gap: var(--space-3);
+  overflow: hidden;
+  padding: var(--space-3) var(--space-3) var(--space-3) var(--space-4);
+  border: 1px solid var(--color-border);
+  border-radius: var(--radius-lg);
+  background: var(--color-surface);
+  box-shadow: var(--shadow-pop);
+  pointer-events: auto;
+  animation: enter 320ms var(--ease-bounce) both;
+}
+
+.leaving {
+  animation: leave 200ms ease-in both;
+}
+
+@keyframes enter {
+  from {
+    opacity: 0;
+    transform: translateY(12px) scale(0.96);
+  }
+}
+
+@keyframes leave {
+  to {
+    opacity: 0;
+    transform: translateX(24px);
+  }
+}
+
+.icon {
+  display: grid;
+  flex: none;
+  width: 32px;
+  height: 32px;
+  place-items: center;
+  border-radius: var(--radius-full);
+  background: var(--color-primary-soft);
+  color: var(--color-primary-hover);
+}
+
+.info .icon {
+  background: var(--color-bg);
+  color: var(--color-text-muted);
+}
+
+.message {
+  flex: 1;
+  font-weight: 600;
+}
+
+.close {
+  display: grid;
+  flex: none;
+  width: 36px;
+  height: 36px;
+  place-items: center;
+  border: 0;
+  border-radius: var(--radius-full);
+  background: transparent;
+  color: var(--color-text-muted);
+  cursor: pointer;
+  transition: background-color var(--transition-default);
+}
+
+.close:hover {
+  background: var(--color-primary-soft);
+}
+
+.close:focus-visible {
+  outline: 2px solid var(--color-primary);
+  outline-offset: 2px;
+}
+
+/* a thin bar that empties while the toast is on screen */
+.timer {
+  position: absolute;
+  bottom: 0;
+  left: 0;
+  width: 100%;
+  height: 3px;
+  background: var(--gradient-brand);
+  transform-origin: left;
+  animation: drain linear forwards;
+}
+
+.toast:hover .timer {
+  animation-play-state: paused;
+}
+
+@keyframes drain {
+  to {
+    transform: scaleX(0);
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .toast,
+  .leaving,
+  .timer {
+    animation: none;
+  }
+}

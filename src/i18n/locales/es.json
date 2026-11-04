@@ -37,7 +37,12 @@
     "retry": "Intentar de nuevo",
     "cancel": "Cancelar",
     "optional": "(opcional)",
-    "skipToContent": "Saltar al contenido"
+    "skipToContent": "Saltar al contenido",
+    "close": "Cerrar",
+    "refresh": "Actualizar",
+    "refreshing": "Actualizando…",
+    "refreshHint": "Los datos se actualizan solos cada 30 segundos; toca para hacerlo ya",
+    "maxLengthReached": "Llegaste al máximo de {{max}} caracteres"
   },
   "errors": {
     "network": "No hay conexión con el servidor. Revisa tu internet e inténtalo otra vez.",
@@ -93,6 +98,20 @@
     },
     "countsLabel": "Cuyes por estado",
     "updated": "Actualizado {{time}}",
+    "filter": {
+      "searchLabel": "Buscar cuy por nombre",
+      "searchPlaceholder": "Buscar por nombre…",
+      "clearSearch": "Borrar búsqueda",
+      "statusLabel": "Mostrar",
+      "attention_one": "Necesita atención ({{count}})",
+      "attention_many": "Necesitan atención ({{count}})",
+      "attention_other": "Necesitan atención ({{count}})",
+      "normal_one": "Normal ({{count}})",
+      "normal_many": "Normales ({{count}})",
+      "normal_other": "Normales ({{count}})",
+      "noMatch": "Ningún cuy coincide con la búsqueda",
+      "reset": "Ver todos"
+    },
     "catalogError": "No pudimos cargar las listas de colores y razas."
   },
   "alerts": {
@@ -110,7 +129,13 @@
     "unknownGuineaPig": "Cuy",
     "markReviewed": "Marcar como revisada",
     "filterByCage": "Jaula",
-    "filterByCageHint": "Toca una jaula para ver solo sus alertas"
+    "filterByCageHint": "Toca una jaula para ver solo sus alertas",
+    "markAll": "Marcar todas como revisadas",
+    "markAllTitle_one": "¿Marcar {{count}} alerta como revisada?",
+    "markAllTitle_many": "¿Marcar {{count}} alertas como revisadas?",
+    "markAllTitle_other": "¿Marcar {{count}} alertas como revisadas?",
+    "markAllText": "Hazlo solo si ya revisaste a los cuyes. Las alertas pasan a \"Revisadas\" y no se pueden volver a abrir.",
+    "markAllConfirm": "Sí, ya las revisé"
   },
   "realtime": {
     "connecting": "Conectando…",
@@ -300,7 +325,8 @@
     },
     "error": {
       "wrongPassword": "La contraseña actual no es correcta."
-    }
+    },
+    "settings": "Ajustes"
   },
   "cages": {
     "title": "Tus jaulas",
@@ -342,5 +368,34 @@
     "error": {
       "alreadyGone": "Esta jaula ya no existe. Actualiza la página."
     }
+  },
+  "toast": {
+    "cageCreated": "Jaula «{{name}}» creada",
+    "cageSaved": "Cambios guardados",
+    "cageDeleted": "Jaula «{{name}}» eliminada",
+    "guineaPigRegistered": "¡{{name}} ya está en la jaula!",
+    "guineaPigDeleted": "{{name}} salió de la jaula",
+    "alertReviewed": "Alerta marcada como revisada",
+    "allReviewed_one": "{{count}} alerta marcada como revisada",
+    "allReviewed_many": "{{count}} alertas marcadas como revisadas",
+    "allReviewed_other": "{{count}} alertas marcadas como revisadas"
+  },
+  "settings": {
+    "title": "Ajustes",
+    "preferences": "Preferencias",
+    "preferencesIntro": "Elige cómo quieres ver el monitor. Se guarda en este dispositivo.",
+    "language": "Idioma",
+    "appearance": "Apariencia",
+    "theme": {
+      "system": "Como el dispositivo",
+      "light": "Claro",
+      "dark": "Oscuro"
+    },
+    "themeHint": "\"Como el dispositivo\" cambia solo entre claro y oscuro según tu celular o computador.",
+    "saved": "Preferencias guardadas"
+  },
+  "languages": {
+    "es": "Español",
+    "en": "English"
   }
 }

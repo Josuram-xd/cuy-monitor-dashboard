@@ -16,7 +16,7 @@ describe('HowItWorks', () => {
     expect(screen.getByText('Cada cuy lleva una marca de color')).toBeInTheDocument()
   })
 
-  it('offers to register a cuy or to see the cage', () => {
+  it('offers to register a guinea pig or to see the cage', () => {
     render(
       <MemoryRouter>
         <HowItWorks />

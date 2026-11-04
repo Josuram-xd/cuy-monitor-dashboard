@@ -30,6 +30,7 @@
 }
 
 .card {
+  position: relative;
   display: flex;
   flex-direction: column;
   gap: var(--space-3);
@@ -145,7 +146,7 @@
   line-height: var(--text-small-line);
 }
 
-/* the fur color is a ring around the initial: the owner recognizes the cuy at a glance */
+/* the fur color is a ring around the initial: the owner recognizes the guinea pig at a glance */
 .avatar {
   position: relative;
   display: grid;
@@ -188,5 +189,32 @@
   }
   60% {
     transform: rotate(9deg) scale(1.08);
+  }
+}
+
+/* one 600 ms glow in the color of the new status when it goes up; never loops */
+.pulse {
+  position: absolute;
+  inset: -2px;
+  border-radius: inherit;
+  box-shadow: 0 0 0 0 var(--accent);
+  pointer-events: none;
+  animation: raised 600ms ease-out both;
+}
+
+@keyframes raised {
+  0% {
+    box-shadow: 0 0 0 0 var(--accent);
+    opacity: 0.9;
+  }
+  100% {
+    box-shadow: 0 0 0 14px var(--accent);
+    opacity: 0;
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .pulse {
+    display: none;
   }
 }

@@ -17,6 +17,7 @@ import { catalogOptions } from '../../catalog/catalog'
 import { cagePath, useCageId } from '../../hooks/useCageId'
 import { useGuineaPigs } from '../../hooks/useGuineaPigs'
 import { useRegisterGuineaPig } from '../../hooks/useRegisterGuineaPig'
+import { useToast } from '../../components/Toast/useToast'
 import { t } from '../../i18n'
 import { MAX_NOTES_LENGTH, MAX_WEIGHT_GRAMS, MIN_WEIGHT_GRAMS } from '../../types/GuineaPigProfile'
 import styles from './RegisterGuineaPig.module.css'
@@ -39,6 +40,7 @@ export function RegisterGuineaPig() {
   const cageId = useCageId()
   const guineaPigs = useGuineaPigs(cageId)
   const register = useRegisterGuineaPig(cageId)
+  const toast = useToast()
   const [name, setName] = useState('')
   const [color, setColor] = useState<string | null>(null)
   const [breed, setBreed] = useState<string | null>(null)
@@ -111,7 +113,12 @@ export function RegisterGuineaPig() {
         ...(weight !== '' && { initialWeightGrams: Number(weight) }),
         ...(notes.trim() && { notes: notes.trim() }),
       },
-      { onSuccess: () => navigate(cagePath(cageId)) },
+      {
+        onSuccess: (created) => {
+          toast.show({ message: t('toast.guineaPigRegistered', { name: created.name }) })
+          navigate(cagePath(cageId))
+        },
+      },
     )
   }
 

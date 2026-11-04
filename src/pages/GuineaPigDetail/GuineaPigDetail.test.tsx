@@ -30,7 +30,7 @@ describe('GuineaPigDetail', () => {
     api = createMockApi(db, 0)
   })
 
-  it('shows who the cuy is, how it is doing and what the owner told', async () => {
+  it('shows who the guinea pig is, how it is doing and what the owner told', async () => {
     // Canela: Teddy, cinnamon, 860 g, observed, with a note
     renderAt(api, '1')
 
@@ -53,20 +53,20 @@ describe('GuineaPigDetail', () => {
     expect(screen.getAllByText('Sin dato')).toHaveLength(3)
   })
 
-  it('lists only the alerts of that cuy', async () => {
+  it('lists only the alerts of that guinea pig', async () => {
     // the fake cage has one open alert about Chispa (4) and none about Pelusa (2)
     renderAt(api, '4')
     const alerts = await screen.findByRole('region', { name: 'Alertas de Chispa' })
     expect(await within(alerts).findByText(/quieta de lo normal/)).toBeInTheDocument()
   })
 
-  it('is calm when the cuy has no alerts', async () => {
+  it('is calm when the guinea pig has no alerts', async () => {
     renderAt(api, '2')
 
     expect(await screen.findByText('Pelusa no tiene alertas. ¡Todo tranquilo!')).toBeInTheDocument()
   })
 
-  it('says so when the cuy does not exist and offers the way back', async () => {
+  it('says so when the guinea pig does not exist and offers the way back', async () => {
     renderAt(api, '999')
 
     expect(await screen.findByText(/No encontramos a este cuy/)).toBeInTheDocument()

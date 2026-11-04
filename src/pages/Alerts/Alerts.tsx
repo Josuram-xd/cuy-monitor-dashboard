@@ -1,9 +1,11 @@
 import { useSearchParams } from 'react-router'
 import { AlertList } from '../../components/AlertList/AlertList'
 import { ChoiceChips } from '../../components/ChoiceChips/ChoiceChips'
+import { useToast } from '../../components/Toast/useToast'
 import { EmptyState } from '../../components/EmptyState/EmptyState'
 import { ErrorState } from '../../components/ErrorState/ErrorState'
 import { FormError } from '../../components/FormError/FormError'
+import { MarkAllReviewed } from '../../components/MarkAllReviewed/MarkAllReviewed'
 import { Skeleton } from '../../components/Skeleton/Skeleton'
 import { useAlerts } from '../../hooks/useAlerts'
 import { useCages } from '../../hooks/useCages'
@@ -27,6 +29,7 @@ function AlertsSection({ status, cageId, cageNames, now }: AlertsSectionProps) {
   // same queries as the cage pages: TanStack Query shares them
   const guineaPigs = useGuineaPigsOfCages(cageId ? [cageId] : Object.keys(cageNames))
   const markReviewed = useMarkAlertReviewed()
+  const toast = useToast()
 
   if (alerts.isPending) {
     return <Skeleton variant="line" count={3} />
@@ -51,7 +54,14 @@ function AlertsSection({ status, cageId, cageNames, now }: AlertsSectionProps) {
         now={now}
         // with every cage mixed, each alert says which cage it is from
         cageNames={cageId ? undefined : cageNames}
-        onMarkReviewed={status === 'OPEN' ? (alert) => markReviewed.mutate(alert.id) : undefined}
+        onMarkReviewed={
+          status === 'OPEN'
+            ? (alert) =>
+                markReviewed.mutate(alert.id, {
+                  onSuccess: () => toast.show({ message: t('toast.alertReviewed') }),
+                })
+            : undefined
+        }
         busyAlertId={markReviewed.isPending ? markReviewed.variables : undefined}
       />
     </>
@@ -91,17 +101,20 @@ export function Alerts() {
       )}
 
       <section className={styles.section} aria-labelledby="open-heading">
-        <h2 id="open-heading" className={styles.sectionTitle}>
-          {t('alerts.openTitle')}
-          {open.data && open.data.length > 0 && (
-            <span
-              className={styles.count}
-              aria-label={t('alerts.count', { count: open.data.length })}
-            >
-              {open.data.length}
-            </span>
-          )}
-        </h2>
+        <div className={styles.sectionHeader}>
+          <h2 id="open-heading" className={styles.sectionTitle}>
+            {t('alerts.openTitle')}
+            {open.data && open.data.length > 0 && (
+              <span
+                className={styles.count}
+                aria-label={t('alerts.count', { count: open.data.length })}
+              >
+                {open.data.length}
+              </span>
+            )}
+          </h2>
+          {open.data && open.data.length > 1 && <MarkAllReviewed alerts={open.data} />}
+        </div>
         <AlertsSection status="OPEN" cageId={cageId} cageNames={cageNames} now={now} />
       </section>
 
