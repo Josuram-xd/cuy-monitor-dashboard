@@ -2,6 +2,7 @@ import type { AlertStatus } from '../types/Alert'
 
 export const queryKeys = {
   profile: ['account', 'profile'] as const,
+  catalog: ['catalog'] as const,
   cages: ['cages'] as const,
   // invalidating ['cage', cageId] refreshes the cage, its health and its cuyes at once
   cage: (cageId: string) => ['cage', cageId, 'info'] as const,

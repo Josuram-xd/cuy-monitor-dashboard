@@ -82,6 +82,26 @@ describe('auth flow with the mocks', () => {
     expect(await screen.findByText('private alerts')).toBeInTheDocument()
   })
 
+  it('does not send the login without a user or with an endless one', async () => {
+    renderApp('/login')
+
+    await userEvent.click(await screen.findByRole('button', { name: 'Entrar' }))
+
+    expect(screen.getByLabelText('Usuario')).toHaveAccessibleDescription(
+      'Este dato es obligatorio.',
+    )
+    expect(screen.getByLabelText('Contraseña')).toHaveAccessibleDescription(
+      'Este dato es obligatorio.',
+    )
+    expect(
+      screen.queryByRole('heading', { name: 'Código de verificación' }),
+    ).not.toBeInTheDocument()
+
+    // the input stops at 50 characters, so 60 cannot even be typed
+    await userEvent.type(screen.getByLabelText('Usuario'), 'a'.repeat(60))
+    expect(screen.getByLabelText('Usuario')).toHaveValue('a'.repeat(50))
+  })
+
   it('shows the masked email after registering', async () => {
     renderApp('/register')
 
