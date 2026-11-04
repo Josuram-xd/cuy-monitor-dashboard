@@ -1,5 +1,6 @@
 import { useCallback, useEffect, useMemo, useState, type ReactNode } from 'react'
 import { changeLanguage } from '../i18n'
+import { changeThemeWithReveal, type Point } from '../motion/themeTransition'
 import { PreferencesContext } from './PreferencesContext'
 import {
   applyTheme,
@@ -23,7 +24,13 @@ export function PreferencesProvider({ children }: { children: ReactNode }) {
     void changeLanguage(language).then(() => setPreferences((p) => ({ ...p, language })))
   }, [])
 
-  const setTheme = useCallback((theme: Theme) => setPreferences((p) => ({ ...p, theme })), [])
+  const setTheme = useCallback((theme: Theme, origin?: Point) => {
+    // the page changes inside the transition, so the circle reveals the new colors
+    changeThemeWithReveal(() => {
+      applyTheme(theme)
+      setPreferences((p) => ({ ...p, theme }))
+    }, origin)
+  }, [])
 
   const value = useMemo(
     () => ({ ...preferences, setLanguage, setTheme }),

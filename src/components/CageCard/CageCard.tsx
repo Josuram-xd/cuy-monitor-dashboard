@@ -28,7 +28,7 @@ export function CageCard({ cage, now, onEdit, onDelete }: CageCardProps) {
   const troubled = pigs?.filter((g) => g.status !== 'NORMAL').length ?? 0
 
   return (
-    <article className={cx(styles.card, styles[status])}>
+    <article className={cx(styles.card, styles[status])} data-spotlight>
       <Link to={cagePath(cage.cageId)} className={styles.open}>
         <span className={styles.top}>
           <span className={styles.icon} aria-hidden="true">

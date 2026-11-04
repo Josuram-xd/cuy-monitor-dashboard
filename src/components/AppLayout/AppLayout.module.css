@@ -31,6 +31,24 @@
   z-index: 10;
   background: linear-gradient(90deg, var(--header-from), var(--header-to));
   color: var(--color-on-primary);
+  transition: box-shadow var(--transition-lift);
+}
+
+/* scrolled: the header lifts over the content instead of looking glued to it */
+.scrolled {
+  box-shadow: var(--shadow-lift);
+}
+
+.headerInner {
+  transition: min-height var(--transition-lift);
+}
+
+.scrolled .headerInner {
+  min-height: 48px;
+}
+
+.page {
+  animation: page-enter var(--page-enter-duration) var(--ease-out-emphasized) both;
 }
 
 /* the header ends in a soft wave instead of a straight line */

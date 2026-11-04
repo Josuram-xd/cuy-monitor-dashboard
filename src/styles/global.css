@@ -49,6 +49,59 @@ html {
   scroll-behavior: smooth;
 }
 
+/* ---- motion that answers what the person does (DESIGN_SYSTEM 2.7) ---- */
+
+/* a soft light that follows the mouse over cards and panels (src/motion/spotlight.ts moves it) */
+[data-spotlight] {
+  isolation: isolate;
+}
+
+[data-spotlight]::after {
+  content: '';
+  position: absolute;
+  inset: 0;
+  z-index: -1;
+  border-radius: inherit;
+  background: radial-gradient(
+    320px circle at var(--spot-x, 50%) var(--spot-y, 50%),
+    var(--spotlight-color),
+    transparent 70%
+  );
+  opacity: 0;
+  pointer-events: none;
+  transition: opacity 260ms ease-out;
+}
+
+[data-spotlight]:hover::after {
+  opacity: 1;
+}
+
+/* the ring that grows from the point a button was pressed (src/motion/ripple.ts) */
+[data-ripple] {
+  position: absolute;
+  border-radius: 50%;
+  background: var(--ripple-color);
+  pointer-events: none;
+  transform: scale(0);
+  opacity: 0;
+}
+
+/* each page comes in rising a little, so a change of page is felt, not just seen */
+@keyframes page-enter {
+  from {
+    opacity: 0;
+    transform: translateY(10px);
+  }
+}
+
+/* the theme change: the new look opens as a circle from the click (src/motion/themeTransition.ts),
+   so the browser's default cross-fade is turned off */
+::view-transition-old(root),
+::view-transition-new(root) {
+  animation: none;
+  mix-blend-mode: normal;
+}
+
 /* no motion for people who asked for none (DESIGN_SYSTEM 2.7) */
 @media (prefers-reduced-motion: reduce) {
   html {

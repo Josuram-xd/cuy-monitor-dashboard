@@ -1,3 +1,4 @@
+import { useRef } from 'react'
 import { Icon } from '../../components/Icon/Icon'
 import { SegmentedControl } from '../../components/SegmentedControl/SegmentedControl'
 import { useToast } from '../../components/Toast/useToast'
@@ -16,6 +17,8 @@ const THEME_ICONS = {
 export function Settings() {
   const { language, theme, setLanguage, setTheme } = usePreferences()
   const toast = useToast()
+  // the last point pressed on the appearance options: the new theme opens from there
+  const pressedAt = useRef<{ x: number; y: number } | undefined>(undefined)
 
   function chooseLanguage(next: Language) {
     if (next !== language) {
@@ -25,7 +28,7 @@ export function Settings() {
 
   function chooseTheme(next: Theme) {
     if (next !== theme) {
-      setTheme(next)
+      setTheme(next, pressedAt.current)
       toast.show({ message: t('settings.saved') })
     }
   }
@@ -35,7 +38,7 @@ export function Settings() {
       <header className={styles.header}>
         <h1 className={styles.title}>{t('settings.title')}</h1>
       </header>
-      <section className={styles.card} aria-labelledby="preferences-heading">
+      <section className={styles.card} aria-labelledby="preferences-heading" data-spotlight>
         <div className={styles.cardHeader}>
           <span className={styles.cardIcon} aria-hidden="true">
             <Icon name="settings" size={22} />
@@ -56,17 +59,23 @@ export function Settings() {
           value={language}
           onChange={chooseLanguage}
         />
-        <SegmentedControl
-          label={t('settings.appearance')}
-          hint={t('settings.themeHint')}
-          options={(['system', 'light', 'dark'] as const).map((value) => ({
-            value,
-            label: t(`settings.theme.${value}`),
-            icon: <Icon name={THEME_ICONS[value]} size={18} />,
-          }))}
-          value={theme}
-          onChange={chooseTheme}
-        />
+        <div
+          onPointerDownCapture={(event) => {
+            pressedAt.current = { x: event.clientX, y: event.clientY }
+          }}
+        >
+          <SegmentedControl
+            label={t('settings.appearance')}
+            hint={t('settings.themeHint')}
+            options={(['system', 'light', 'dark'] as const).map((value) => ({
+              value,
+              label: t(`settings.theme.${value}`),
+              icon: <Icon name={THEME_ICONS[value]} size={18} />,
+            }))}
+            value={theme}
+            onChange={chooseTheme}
+          />
+        </div>
       </section>
     </div>
   )

@@ -13,6 +13,8 @@
 }
 
 .card {
+  /* holds the pointer light (data-spotlight) */
+  position: relative;
   display: flex;
   flex-direction: column;
   gap: var(--space-5);
