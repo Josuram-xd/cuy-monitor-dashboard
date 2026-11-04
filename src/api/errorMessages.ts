@@ -2,7 +2,7 @@ import { ApiError } from './ApiError'
 
 // where the error happened: the same 401 means "wrong password" on login and "wrong code" on verify
 export type ErrorContext =
-  'login' | 'register' | 'verify' | 'account' | 'google' | 'guineaPig' | 'general'
+  'login' | 'register' | 'verify' | 'account' | 'google' | 'guineaPig' | 'cage' | 'general'
 
 // Maps a failed call to an es.json key. The backend message is never shown as is.
 export function errorMessageKey(error: unknown, context: ErrorContext = 'general'): string {
@@ -35,6 +35,13 @@ export function errorMessageKey(error: unknown, context: ErrorContext = 'general
   }
   if (error.status === 409 && context === 'guineaPig') {
     return 'guineaPig.error.colorTaken'
+  }
+  if (error.status === 404 && context === 'cage') {
+    return 'cages.error.alreadyGone'
+  }
+  // the cage access proxy of the backend refused it: it is another account's cage
+  if (error.status === 403) {
+    return 'errors.forbidden'
   }
   if (error.status === 409 && context === 'register') {
     return 'auth.error.userExists'

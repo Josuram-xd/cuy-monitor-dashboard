@@ -11,9 +11,9 @@ interface NavItem {
 }
 
 const ITEMS: NavItem[] = [
-  { to: '/', labelKey: 'nav.cage', icon: 'home' },
+  { to: '/', labelKey: 'nav.cages', icon: 'home' },
   { to: '/alerts', labelKey: 'nav.alerts', icon: 'bell' },
-  { to: '/guinea-pigs/new', labelKey: 'nav.register', icon: 'plus-circle' },
+  { to: '/how-it-works', labelKey: 'nav.help', icon: 'help-circle' },
   { to: '/account', labelKey: 'nav.account', icon: 'user' },
 ]
 
@@ -25,7 +25,8 @@ export function BottomNav() {
         <NavLink
           key={item.to}
           to={item.to}
-          end={item.to === '/'}
+          // "Mis jaulas" stays lit inside a cage too
+          end={false}
           className={({ isActive }) => cx(styles.link, isActive && styles.active)}
         >
           <Icon name={item.icon} size={22} />

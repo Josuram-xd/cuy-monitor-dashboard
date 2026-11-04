@@ -1,8 +1,7 @@
 import { useMutation, useQueryClient } from '@tanstack/react-query'
 import { getDashboardApi } from '../api/apiProvider'
-import { config } from '../config'
 
-export function useDeleteGuineaPig(cageId: string = config.cageId) {
+export function useDeleteGuineaPig(cageId: string) {
   const queryClient = useQueryClient()
   return useMutation({
     mutationFn: async (id: number) => (await getDashboardApi()).guineaPigs.remove(cageId, id),

@@ -31,10 +31,11 @@ Entrar tiene que ser simple: usuario, contraseña y un código de 6 dígitos que
 
 | Pantalla | Ruta | Qué muestra | Historias |
 |---|---|---|---|
-| Vista de jaula | `/` | Semáforo general de la jaula + una tarjeta por cuy (nombre, marca de color, estado, "visto hace X min") + últimas alertas | HU-01, HU-02, HU-07 |
-| Detalle de cuy | `/guinea-pigs/:id` | Estado actual, línea de tiempo de estados, gráficas de tiempo quieto y visitas al comedero/bebedero | HU-04 |
-| Alertas | `/alerts` | Lista de alertas abiertas y revisadas; botón para marcar como revisada | HU-05 |
-| Registrar cuy | `/guinea-pigs/new` | Formulario: nombre + color de la marca (solo colores libres en la jaula) | HU-03 |
+| Mis jaulas | `/` | Una tarjeta por jaula de la cuenta (nombre, lugar, estado en vivo, cuántos cuyes, código para la cámara y la báscula con botón de copiar); crear, renombrar y eliminar jaulas. Cada cuenta ve solo sus jaulas | — |
+| Vista de jaula | `/cages/:cageId` | Semáforo general de la jaula + una tarjeta por cuy (nombre, marca de color, estado, "visto hace X min") + últimas alertas | HU-01, HU-02, HU-07 |
+| Detalle de cuy | `/cages/:cageId/guinea-pigs/:id` | Estado actual, línea de tiempo de estados, gráficas de tiempo quieto y visitas al comedero/bebedero | HU-04 |
+| Alertas | `/alerts?cage=` | Lista de alertas abiertas y revisadas de todas las jaulas (o filtrada por una); botón para marcar como revisada | HU-05 |
+| Registrar cuy | `/cages/:cageId/guinea-pigs/new` | Formulario: nombre + color de la marca (solo colores libres en la jaula) | HU-03 |
 | Peso | `/weight` (o sección en la vista de jaula) | Gráfica del peso de la jaula en el tiempo | HU-06 |
 | Mi cuenta | `/account` | Nombre, usuario, correo; editar nombre; cambiar contraseña; desactivar cuenta; **Cerrar sesión** | HU-11, HU-12 |
 

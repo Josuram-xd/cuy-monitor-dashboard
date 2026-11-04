@@ -1,5 +1,6 @@
 import type { Alert } from '../types/Alert'
 import type { Catalog } from '../types/Catalog'
+import type { Cage } from '../types/Cage'
 import type { GuineaPig, StatusTransition, BehaviorWindow } from '../types/GuineaPig'
 import type { WeightReading } from '../types/WeightReading'
 
@@ -13,6 +14,28 @@ function minutesAgo(minutes: number): string {
 }
 
 export const mockCageId = 'cage-1'
+export const mockSecondCageId = 'cage-7f3a9c21'
+
+export const mockCages: Cage[] = [
+  {
+    cageId: mockCageId,
+    name: 'Jaula piloto',
+    location: 'Galpón',
+    createdAt: minutesAgo(60 * 24 * 30),
+  },
+  {
+    cageId: mockSecondCageId,
+    name: 'Jaula del patio',
+    location: 'Patio trasero',
+    createdAt: minutesAgo(60 * 24 * 3),
+  },
+]
+
+// the second cage: two calm cuyes, so the list of cages shows different states
+export const mockSecondCageGuineaPigs: GuineaPig[] = [
+  { id: 21, name: 'Tofu', markColor: 'WHITE', status: 'NORMAL', statusSince: minutesAgo(300) },
+  { id: 22, name: 'Mora', markColor: 'PURPLE', status: 'NORMAL', statusSince: minutesAgo(900) },
+]
 
 // The same rows migration V10 of cuy-monitor-db inserts, in the same order.
 export const mockCatalog: Catalog = {

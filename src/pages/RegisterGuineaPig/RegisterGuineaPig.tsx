@@ -14,6 +14,7 @@ import { TextAreaField } from '../../components/TextAreaField/TextAreaField'
 import { TextField } from '../../components/TextField/TextField'
 import { WeightField } from '../../components/WeightField/WeightField'
 import { catalogOptions } from '../../catalog/catalog'
+import { cagePath, useCageId } from '../../hooks/useCageId'
 import { useGuineaPigs } from '../../hooks/useGuineaPigs'
 import { useRegisterGuineaPig } from '../../hooks/useRegisterGuineaPig'
 import { t } from '../../i18n'
@@ -35,8 +36,9 @@ function weightProblem(text: string): string | undefined {
 
 export function RegisterGuineaPig() {
   const navigate = useNavigate()
-  const guineaPigs = useGuineaPigs()
-  const register = useRegisterGuineaPig()
+  const cageId = useCageId()
+  const guineaPigs = useGuineaPigs(cageId)
+  const register = useRegisterGuineaPig(cageId)
   const [name, setName] = useState('')
   const [color, setColor] = useState<string | null>(null)
   const [breed, setBreed] = useState<string | null>(null)
@@ -75,7 +77,7 @@ export function RegisterGuineaPig() {
         mascot="happy"
         message={t('guineaPig.register.allUsed')}
         action={
-          <ButtonLink to="/" variant="primary">
+          <ButtonLink to={cagePath(cageId)} variant="primary">
             {t('notFound.back')}
           </ButtonLink>
         }
@@ -109,7 +111,7 @@ export function RegisterGuineaPig() {
         ...(weight !== '' && { initialWeightGrams: Number(weight) }),
         ...(notes.trim() && { notes: notes.trim() }),
       },
-      { onSuccess: () => navigate('/') },
+      { onSuccess: () => navigate(cagePath(cageId)) },
     )
   }
 
@@ -191,7 +193,7 @@ export function RegisterGuineaPig() {
             <FormError message={t(errorMessageKey(register.error, 'guineaPig'))} />
           )}
           <div className={styles.actions}>
-            <ButtonLink to="/" variant="secondary">
+            <ButtonLink to={cagePath(cageId)} variant="secondary">
               {t('common.cancel')}
             </ButtonLink>
             <Button type="submit" variant="primary" disabled={register.isPending}>

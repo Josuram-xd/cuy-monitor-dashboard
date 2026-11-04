@@ -1,3 +1,4 @@
+import type { Cage, CageInput } from '../../types/Cage'
 import type { CageHealth } from '../../types/CageHealth'
 import type { DateRange } from '../../types/DateRange'
 import type { CageWeight } from '../../types/WeightReading'
@@ -9,6 +10,26 @@ export class HttpCageApi implements CageApi {
 
   constructor(http: HttpClient) {
     this.http = http
+  }
+
+  list(signal?: AbortSignal): Promise<Cage[]> {
+    return this.http.get<Cage[]>('/api/v1/cages', { signal })
+  }
+
+  get(cageId: string, signal?: AbortSignal): Promise<Cage> {
+    return this.http.get<Cage>(this.path(cageId), { signal })
+  }
+
+  create(body: CageInput): Promise<Cage> {
+    return this.http.post<Cage>('/api/v1/cages', body)
+  }
+
+  update(cageId: string, body: CageInput): Promise<Cage> {
+    return this.http.put<Cage>(this.path(cageId), body)
+  }
+
+  remove(cageId: string): Promise<void> {
+    return this.http.delete<void>(this.path(cageId))
   }
 
   getHealth(cageId: string, signal?: AbortSignal): Promise<CageHealth> {

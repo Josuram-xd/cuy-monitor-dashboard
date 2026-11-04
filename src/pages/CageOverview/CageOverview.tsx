@@ -10,7 +10,10 @@ import { GuineaPigGrid, GuineaPigGridItem } from '../../components/GuineaPigGrid
 import { Reveal } from '../../components/Reveal/Reveal'
 import { LiveIndicator } from '../../components/LiveIndicator/LiveIndicator'
 import { Skeleton } from '../../components/Skeleton/Skeleton'
+import { Icon } from '../../components/Icon/Icon'
 import { useAlerts } from '../../hooks/useAlerts'
+import { useCage } from '../../hooks/useCages'
+import { cagePath, useCageId } from '../../hooks/useCageId'
 import { useCageHealth } from '../../hooks/useCageHealth'
 import { useProfile } from '../../hooks/useProfile'
 import { useGuineaPigs } from '../../hooks/useGuineaPigs'
@@ -21,8 +24,8 @@ import styles from './CageOverview.module.css'
 const SKELETON_CARDS = 3
 const LATEST_ALERTS = 3
 
-function GuineaPigsSection({ now }: { now: number }) {
-  const guineaPigs = useGuineaPigs()
+function GuineaPigsSection({ cageId, now }: { cageId: string; now: number }) {
+  const guineaPigs = useGuineaPigs(cageId)
 
   if (guineaPigs.isPending) {
     return <Skeleton count={SKELETON_CARDS} />
@@ -38,7 +41,7 @@ function GuineaPigsSection({ now }: { now: number }) {
         mascot="sleepy"
         message={t('cage.empty')}
         action={
-          <ButtonLink to="/guinea-pigs/new" variant="primary">
+          <ButtonLink to={cagePath(cageId, '/guinea-pigs/new')} variant="primary">
             {t('cage.registerGuineaPig')}
           </ButtonLink>
         }
@@ -49,18 +52,18 @@ function GuineaPigsSection({ now }: { now: number }) {
     <GuineaPigGrid label={t('cage.guineaPigs')}>
       {guineaPigs.data.map((guineaPig, index) => (
         <GuineaPigGridItem key={guineaPig.id} index={index}>
-          <GuineaPigCard guineaPig={guineaPig} now={now} />
-          <DeleteGuineaPig guineaPig={guineaPig} />
+          <GuineaPigCard cageId={cageId} guineaPig={guineaPig} now={now} />
+          <DeleteGuineaPig cageId={cageId} guineaPig={guineaPig} />
         </GuineaPigGridItem>
       ))}
     </GuineaPigGrid>
   )
 }
 
-function OpenAlertsSection({ now }: { now: number }) {
-  const alerts = useAlerts('OPEN')
+function OpenAlertsSection({ cageId, now }: { cageId: string; now: number }) {
+  const alerts = useAlerts('OPEN', cageId)
   // same query as the grid, TanStack Query shares it
-  const guineaPigs = useGuineaPigs()
+  const guineaPigs = useGuineaPigs(cageId)
 
   if (alerts.isPending) {
     return <Skeleton variant="line" count={2} />
@@ -86,24 +89,31 @@ function OpenAlertsSection({ now }: { now: number }) {
 }
 
 export function CageOverview() {
-  const health = useCageHealth()
+  const cageId = useCageId()
+  const cage = useCage(cageId)
+  const health = useCageHealth(cageId)
   // the same queries as the sections: only to show how many there are next to each title
-  const guineaPigCount = useGuineaPigs().data?.length
-  const openAlertCount = useAlerts('OPEN').data?.length
+  const guineaPigCount = useGuineaPigs(cageId).data?.length
+  const openAlertCount = useAlerts('OPEN', cageId).data?.length
   const profile = useProfile()
   const now = useNow()
   const firstName = profile.data?.fullName.split(' ')[0]
 
   return (
     <div className={styles.page}>
+      <ButtonLink to="/" variant="ghost" className={styles.back}>
+        <Icon name="chevron-left" size={18} />
+        {t('cages.backToList')}
+      </ButtonLink>
       <header className={styles.heading}>
         <div>
           <p className={styles.greeting}>
             {firstName ? t('cage.greeting', { name: firstName }) : t('cage.greetingFallback')}
           </p>
-          <h1 className={styles.title}>{t('cage.title')}</h1>
+          <h1 className={styles.title}>{cage.data?.name ?? t('cage.title')}</h1>
+          {cage.data?.location && <p className={styles.location}>{cage.data.location}</p>}
         </div>
-        <ButtonLink to="/guinea-pigs/new" variant="primary">
+        <ButtonLink to={cagePath(cageId, '/guinea-pigs/new')} variant="primary">
           {t('cage.newGuineaPig')}
         </ButtonLink>
       </header>
@@ -118,7 +128,7 @@ export function CageOverview() {
                 <span className={styles.count}>{guineaPigCount}</span>
               )}
             </h2>
-            <GuineaPigsSection now={now} />
+            <GuineaPigsSection cageId={cageId} now={now} />
           </section>
         </Reveal>
         <Reveal delay={120} className={styles.cell}>
@@ -130,8 +140,12 @@ export function CageOverview() {
               )}
             </h2>
             <div className={styles.panel}>
-              <OpenAlertsSection now={now} />
-              <ButtonLink to="/alerts" variant="secondary" className={styles.seeAll}>
+              <OpenAlertsSection cageId={cageId} now={now} />
+              <ButtonLink
+                to={`/alerts?cage=${encodeURIComponent(cageId)}`}
+                variant="secondary"
+                className={styles.seeAll}
+              >
                 {t('alerts.seeAll')}
               </ButtonLink>
             </div>

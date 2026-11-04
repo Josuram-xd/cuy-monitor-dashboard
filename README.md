@@ -26,7 +26,6 @@ Todas son públicas (acaban en el bundle del navegador): nunca pongas secretos. 
 | Variable | Para qué |
 |---|---|
 | `VITE_API_URL`, `VITE_WS_URL` | Vacías = mismo origen (Caddy en producción, proxy de Vite en desarrollo) |
-| `VITE_CAGE_ID` | Código de la jaula piloto (`cage-1`) |
 | `VITE_USE_MOCKS` | `true` = datos falsos desde `src/mocks/` |
 | `VITE_GOOGLE_CLIENT_ID` | Client ID público de Google para "Continuar con Google"; vacío oculta el botón |
 

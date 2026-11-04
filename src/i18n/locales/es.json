@@ -12,7 +12,7 @@
     "title": "Cómo funciona",
     "intro": "Monitor de Cuyes cuida la salud de tus cuyes mientras tú no estás mirando. Así funciona, paso a paso.",
     "register": "Registrar un cuy",
-    "seeCage": "Ver mi jaula",
+    "seeCage": "Ver mis jaulas",
     "steps": {
       "mark": {
         "title": "Cada cuy lleva una marca de color",
@@ -42,18 +42,19 @@
   "errors": {
     "network": "No hay conexión con el servidor. Revisa tu internet e inténtalo otra vez.",
     "invalidData": "Revisa los datos e inténtalo otra vez.",
-    "generic": "Algo salió mal. Inténtalo otra vez en un momento."
+    "generic": "Algo salió mal. Inténtalo otra vez en un momento.",
+    "forbidden": "Esta jaula no es tuya."
   },
   "nav": {
     "label": "Navegación principal",
-    "cage": "Jaula",
     "alerts": "Alertas",
-    "register": "Registrar",
-    "account": "Cuenta"
+    "account": "Cuenta",
+    "cages": "Jaulas",
+    "help": "Ayuda"
   },
   "notFound": {
     "message": "No encontramos esta página.",
-    "back": "Volver a la jaula"
+    "back": "Volver a mis jaulas"
   },
   "status": {
     "NORMAL": "Normal",
@@ -107,7 +108,9 @@
     "loadError": "No pudimos cargar las alertas.",
     "wholeCage": "Toda la jaula",
     "unknownGuineaPig": "Cuy",
-    "markReviewed": "Marcar como revisada"
+    "markReviewed": "Marcar como revisada",
+    "filterByCage": "Jaula",
+    "filterByCageHint": "Toca una jaula para ver solo sus alertas"
   },
   "realtime": {
     "connecting": "Conectando…",
@@ -297,6 +300,47 @@
     },
     "error": {
       "wrongPassword": "La contraseña actual no es correcta."
+    }
+  },
+  "cages": {
+    "title": "Tus jaulas",
+    "intro": "Toca una jaula para ver sus cuyes. Cada jaula tiene un código que se escribe en la cámara y en la báscula.",
+    "new": "Nueva jaula",
+    "createFirst": "Crear mi primera jaula",
+    "empty": "Aún no tienes jaulas. Crea una para empezar a registrar tus cuyes.",
+    "loadError": "No pudimos cargar tus jaulas. Revisa la conexión e inténtalo otra vez.",
+    "backToList": "Mis jaulas",
+    "card": {
+      "guineaPigs_one": "{{count}} cuy",
+      "guineaPigs_many": "{{count}} cuyes",
+      "guineaPigs_other": "{{count}} cuyes",
+      "needAttention_one": "{{count}} necesita atención",
+      "needAttention_many": "{{count}} necesitan atención",
+      "needAttention_other": "{{count}} necesitan atención",
+      "copy": "Copiar el código {{code}}",
+      "copyHint": "Copia este código para configurar la cámara y la báscula de esta jaula",
+      "copied": "¡Copiado!",
+      "edit": "Editar {{name}}",
+      "delete": "Eliminar {{name}}"
+    },
+    "form": {
+      "createTitle": "Nueva jaula",
+      "editTitle": "Editar jaula",
+      "name": "Nombre",
+      "nameHint": "Por ejemplo: Jaula del patio",
+      "nameRequired": "Escribe un nombre para la jaula",
+      "location": "Dónde está (opcional)",
+      "locationHint": "Por ejemplo: Galpón de atrás",
+      "create": "Crear jaula",
+      "save": "Guardar cambios"
+    },
+    "delete": {
+      "title": "¿Eliminar {{name}}?",
+      "text": "La jaula dejará de aparecer y ya no recibirá datos de la cámara ni de la báscula. Sus cuyes y su historial se guardan.",
+      "confirm": "Eliminar jaula"
+    },
+    "error": {
+      "alreadyGone": "Esta jaula ya no existe. Actualiza la página."
     }
   }
 }

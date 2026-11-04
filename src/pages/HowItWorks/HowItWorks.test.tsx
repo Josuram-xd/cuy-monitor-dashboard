@@ -23,10 +23,7 @@ describe('HowItWorks', () => {
       </MemoryRouter>,
     )
 
-    expect(screen.getByRole('link', { name: 'Registrar un cuy' })).toHaveAttribute(
-      'href',
-      '/guinea-pigs/new',
-    )
-    expect(screen.getByRole('link', { name: 'Ver mi jaula' })).toHaveAttribute('href', '/')
+    expect(screen.getByRole('link', { name: 'Registrar un cuy' })).toHaveAttribute('href', '/')
+    expect(screen.getByRole('link', { name: 'Ver mis jaulas' })).toHaveAttribute('href', '/')
   })
 })

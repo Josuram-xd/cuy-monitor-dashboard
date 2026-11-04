@@ -5,7 +5,7 @@ import { getDashboardApi } from '../../api/apiProvider'
 import type { DashboardApi } from '../../api/DashboardApi'
 import { createMockApi } from '../../mocks/createMockApi'
 import { MockDatabase } from '../../mocks/MockDatabase'
-import { renderWithProviders } from '../../test/render'
+import { renderInCage } from '../../test/render'
 import { CageOverview } from './CageOverview'
 
 vi.mock('../../api/apiProvider', () => ({ getDashboardApi: vi.fn() }))
@@ -20,7 +20,7 @@ describe('CageOverview', () => {
   })
 
   it('shows the cage status and one card per guinea pig', async () => {
-    renderWithProviders(<CageOverview />)
+    renderInCage(<CageOverview />)
 
     expect(await screen.findByText('1 cuy en alerta')).toBeInTheDocument()
     const grid = await screen.findByRole('list', { name: 'Tus cuyes' })
@@ -30,10 +30,13 @@ describe('CageOverview', () => {
   })
 
   it('lists the open alerts next to the cage', async () => {
-    renderWithProviders(<CageOverview />)
+    renderInCage(<CageOverview />)
 
     expect(await screen.findByText(/quieta de lo normal/)).toBeInTheDocument()
-    expect(screen.getByRole('link', { name: 'Ver todas' })).toHaveAttribute('href', '/alerts')
+    expect(screen.getByRole('link', { name: 'Ver todas' })).toHaveAttribute(
+      'href',
+      '/alerts?cage=cage-1',
+    )
   })
 
   it('stays calm when there are no open alerts', async () => {
@@ -41,7 +44,7 @@ describe('CageOverview', () => {
     db.alerts.length = 0
     setApi(createMockApi(db, 0))
 
-    renderWithProviders(<CageOverview />)
+    renderInCage(<CageOverview />)
 
     expect(await screen.findByText('No hay alertas abiertas.')).toBeInTheDocument()
   })
@@ -51,12 +54,12 @@ describe('CageOverview', () => {
     db.guineaPigs.length = 0
     setApi(createMockApi(db, 0))
 
-    renderWithProviders(<CageOverview />)
+    renderInCage(<CageOverview />)
 
     expect(await screen.findByText('Aún no hay cuyes registrados')).toBeInTheDocument()
     expect(screen.getByRole('link', { name: 'Registrar cuy' })).toHaveAttribute(
       'href',
-      '/guinea-pigs/new',
+      '/cages/cage-1/guinea-pigs/new',
     )
   })
 
@@ -69,10 +72,26 @@ describe('CageOverview', () => {
       guineaPigs: { ...api.guineaPigs, list: failure },
     })
 
-    renderWithProviders(<CageOverview />)
+    renderInCage(<CageOverview />)
 
     expect(await screen.findByRole('alert')).toHaveTextContent('No pudimos cargar los cuyes')
     expect(screen.getByRole('button', { name: 'Intentar de nuevo' })).toBeInTheDocument()
     expect(screen.getByText('Aún no hay datos de la jaula')).toBeInTheDocument()
+  })
+
+  it('shows the name and place of the cage and a way back to every cage', async () => {
+    renderInCage(<CageOverview />)
+
+    expect(await screen.findByRole('heading', { name: 'Jaula piloto' })).toBeInTheDocument()
+    expect(screen.getByText('Galpón')).toBeInTheDocument()
+    expect(screen.getByRole('link', { name: 'Mis jaulas' })).toHaveAttribute('href', '/')
+  })
+
+  it('shows only the cuyes of the cage in the address', async () => {
+    renderInCage(<CageOverview />, { cageId: 'cage-7f3a9c21' })
+
+    const grid = await screen.findByRole('list', { name: 'Tus cuyes' })
+    expect(within(grid).getByText('Tofu')).toBeInTheDocument()
+    expect(within(grid).queryByText('Canela')).not.toBeInTheDocument()
   })
 })

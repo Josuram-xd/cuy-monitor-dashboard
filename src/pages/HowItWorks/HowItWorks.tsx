@@ -44,7 +44,7 @@ export function HowItWorks() {
       </ol>
 
       <div className={styles.actions}>
-        <ButtonLink to="/guinea-pigs/new" variant="primary">
+        <ButtonLink to="/" variant="primary">
           {t('howItWorks.register')}
         </ButtonLink>
         <ButtonLink to="/" variant="secondary">

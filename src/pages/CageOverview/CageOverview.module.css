@@ -12,6 +12,16 @@
   gap: var(--space-3);
 }
 
+.back {
+  align-self: flex-start;
+}
+
+.location {
+  color: var(--color-text-muted);
+  font-size: var(--text-small-size);
+  line-height: var(--text-small-line);
+}
+
 .greeting {
   color: var(--color-accent);
   font-size: var(--text-small-size);

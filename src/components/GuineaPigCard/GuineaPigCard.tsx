@@ -1,5 +1,6 @@
 import { Link } from 'react-router'
 import { catalogLabel } from '../../catalog/catalog'
+import { cagePath } from '../../hooks/useCageId'
 import { t } from '../../i18n'
 import type { BehaviorWindow, GuineaPig } from '../../types/GuineaPig'
 import type { DisplayStatus } from '../../types/HealthStatus'
@@ -14,13 +15,15 @@ import styles from './GuineaPigCard.module.css'
 const STALE_AFTER_MINUTES = 10
 
 interface GuineaPigCardProps {
+  // the cage it lives in, for the link to its page
+  cageId: string
   guineaPig: GuineaPig
   lastWindow?: BehaviorWindow
   // from useNow() in the page, so every card uses the same clock
   now: number
 }
 
-export function GuineaPigCard({ guineaPig, lastWindow, now }: GuineaPigCardProps) {
+export function GuineaPigCard({ cageId, guineaPig, lastWindow, now }: GuineaPigCardProps) {
   const lastSeenAt = lastWindow?.occurredAt
   // not seen for a while: we can't say it's fine, so it shows as unknown
   const stale = lastSeenAt !== undefined && minutesSince(lastSeenAt, now) > STALE_AFTER_MINUTES
@@ -34,7 +37,10 @@ export function GuineaPigCard({ guineaPig, lastWindow, now }: GuineaPigCardProps
   ].filter(Boolean)
 
   return (
-    <Link to={`/guinea-pigs/${guineaPig.id}`} className={cx(styles.card, styles[status])}>
+    <Link
+      to={cagePath(cageId, `/guinea-pigs/${guineaPig.id}`)}
+      className={cx(styles.card, styles[status])}
+    >
       <span className={styles.top}>
         <span className={styles.avatar} aria-hidden="true">
           {guineaPig.coatColor && <CoatSwatch color={guineaPig.coatColor} size={44} />}

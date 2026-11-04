@@ -9,8 +9,8 @@ export class HttpAlertApi implements AlertApi {
     this.http = http
   }
 
-  list(status?: AlertStatus, signal?: AbortSignal): Promise<Alert[]> {
-    return this.http.get<Alert[]>('/api/v1/alerts', { query: { status }, signal })
+  list(status?: AlertStatus, cageId?: string, signal?: AbortSignal): Promise<Alert[]> {
+    return this.http.get<Alert[]>('/api/v1/alerts', { query: { status, cageId }, signal })
   }
 
   markReviewed(id: number): Promise<Alert> {

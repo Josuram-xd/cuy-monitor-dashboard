@@ -6,9 +6,8 @@ import styles from './AppFooter.module.css'
 
 const LINKS = [
   { to: '/how-it-works', labelKey: 'footer.howItWorks' },
-  { to: '/', labelKey: 'nav.cage' },
+  { to: '/', labelKey: 'nav.cages' },
   { to: '/alerts', labelKey: 'nav.alerts' },
-  { to: '/guinea-pigs/new', labelKey: 'nav.register' },
   { to: '/account', labelKey: 'nav.account' },
 ]
 

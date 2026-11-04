@@ -18,6 +18,8 @@ interface AlertListProps {
   onMarkReviewed?: (alert: Alert) => void
   // the alert being marked right now: its button is disabled so it is not sent twice
   busyAlertId?: number
+  // cage id -> name; when given, each alert says which cage it is from (alerts of several cages)
+  cageNames?: Record<string, string>
 }
 
 // what the alert is about, so the ring on the left says it at a glance
@@ -42,6 +44,7 @@ export function AlertList({
   now,
   onMarkReviewed,
   busyAlertId,
+  cageNames,
 }: AlertListProps) {
   return (
     <ul className={styles.list}>
@@ -63,6 +66,12 @@ export function AlertList({
               {guineaPig && (
                 <span className={styles.mark}>
                   <MarkColorDot color={guineaPig.markColor} />
+                </span>
+              )}
+              {cageNames?.[alert.cageId] && (
+                <span className={styles.cage}>
+                  <Icon name="home" size={14} />
+                  {cageNames[alert.cageId]}
                 </span>
               )}
             </div>

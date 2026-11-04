@@ -1,7 +1,16 @@
 import type { Alert } from '../types/Alert'
+import type { Cage } from '../types/Cage'
 import type { GuineaPig } from '../types/GuineaPig'
 import type { WeightReading } from '../types/WeightReading'
-import { mockAlerts, mockCageId, mockGuineaPigs, mockWeightReadings } from './data'
+import {
+  mockAlerts,
+  mockCageId,
+  mockCages,
+  mockGuineaPigs,
+  mockSecondCageGuineaPigs,
+  mockSecondCageId,
+  mockWeightReadings,
+} from './data'
 
 export type MockUserStatus = 'PENDING_VERIFICATION' | 'ACTIVE' | 'DISABLED'
 
@@ -21,8 +30,16 @@ export interface MockUser {
 // also shows up in the cage health. Lives until the page reloads.
 export class MockDatabase {
   readonly cageId = mockCageId
+  readonly cages: Cage[] = structuredClone(mockCages)
+  // the cuyes of the first cage; kept as its own array so tests can change it directly
   readonly guineaPigs: GuineaPig[] = structuredClone(mockGuineaPigs)
+  // cage id -> its active cuyes
+  readonly guineaPigsByCage: Record<string, GuineaPig[]> = {
+    [mockCageId]: this.guineaPigs,
+    [mockSecondCageId]: structuredClone(mockSecondCageGuineaPigs),
+  }
   readonly alerts: Alert[] = structuredClone(mockAlerts)
+  // only the pilot cage has a scale
   readonly weightReadings: WeightReading[] = mockWeightReadings()
   readonly users: MockUser[] = []
   // challengeId -> username of the pending code
@@ -31,11 +48,24 @@ export class MockDatabase {
   signedInUserId: string | null = null
 
   hasCage(cageId: string): boolean {
-    return cageId === this.cageId
+    return this.cages.some((c) => c.cageId === cageId)
+  }
+
+  guineaPigsOf(cageId: string): GuineaPig[] {
+    this.guineaPigsByCage[cageId] ??= []
+    return this.guineaPigsByCage[cageId]
+  }
+
+  weightReadingsOf(cageId: string): WeightReading[] {
+    return cageId === this.cageId ? this.weightReadings : []
+  }
+
+  allGuineaPigs(): GuineaPig[] {
+    return Object.values(this.guineaPigsByCage).flat()
   }
 
   findGuineaPig(id: number): GuineaPig | undefined {
-    return this.guineaPigs.find((g) => g.id === id)
+    return this.allGuineaPigs().find((g) => g.id === id)
   }
 
   findUser(username: string): MockUser | undefined {
@@ -43,6 +73,6 @@ export class MockDatabase {
   }
 
   nextGuineaPigId(): number {
-    return Math.max(0, ...this.guineaPigs.map((g) => g.id)) + 1
+    return Math.max(0, ...this.allGuineaPigs().map((g) => g.id)) + 1
   }
 }
