@@ -68,4 +68,24 @@ describe('GuineaPigCard', () => {
 
     expect(screen.getByText('En observación')).toBeInTheDocument()
   })
+
+  it('glows once when the status goes up, never when it goes down', () => {
+    const card = (status: GuineaPig['status']) => (
+      <MemoryRouter>
+        <GuineaPigCard cageId="cage-1" guineaPig={{ ...canela, status }} now={NOW} />
+      </MemoryRouter>
+    )
+    const { container, rerender } = render(card('OBSERVED'))
+    const pulses = () => container.querySelectorAll('[class*="pulse"]').length
+    expect(pulses()).toBe(0)
+
+    rerender(card('ALERT'))
+    expect(pulses()).toBe(1)
+
+    rerender(card('NORMAL'))
+    rerender(card('NORMAL'))
+    const afterGoingDown = container.querySelector('[class*="pulse"]')
+    rerender(card('NORMAL'))
+    expect(container.querySelector('[class*="pulse"]')).toBe(afterGoingDown)
+  })
 })

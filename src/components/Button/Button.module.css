@@ -35,7 +35,7 @@
 .primary {
   background: var(--gradient-brand);
   box-shadow: var(--shadow-card);
-  color: var(--color-surface);
+  color: var(--color-on-primary);
 }
 
 .primary:hover:not(:disabled) {

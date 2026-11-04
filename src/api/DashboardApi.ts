@@ -28,7 +28,7 @@ export interface CageApi {
   get(cageId: string, signal?: AbortSignal): Promise<Cage>
   create(body: CageInput): Promise<Cage>
   update(cageId: string, body: CageInput): Promise<Cage>
-  // soft delete: it leaves the list, its cuyes and history are kept. 403 if it is another account's
+  // soft delete: it leaves the list, its guinea pigs and history are kept. 403 if it is another account's
   remove(cageId: string): Promise<void>
   getHealth(cageId: string, signal?: AbortSignal): Promise<CageHealth>
   getWeight(cageId: string, range?: DateRange, signal?: AbortSignal): Promise<CageWeight>

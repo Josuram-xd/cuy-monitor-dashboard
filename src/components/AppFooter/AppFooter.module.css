@@ -2,7 +2,7 @@
   position: relative;
   margin-top: var(--space-8);
   background: linear-gradient(90deg, var(--header-from), var(--header-to));
-  color: var(--color-surface);
+  color: var(--color-on-primary);
 }
 
 /* a wave on top, like the one under the header */

@@ -29,7 +29,9 @@ function Fact({ label, children }: { label: string; children: ReactNode }) {
   )
 }
 
-const NO_DATA = <span className={styles.noData}>{t('guineaPig.detail.noData')}</span>
+function NoData() {
+  return <span className={styles.noData}>{t('guineaPig.detail.noData')}</span>
+}
 
 function Alerts({ cageId, guineaPig, now }: { cageId: string; guineaPig: GuineaPig; now: number }) {
   const alerts = useAlerts(undefined, cageId)
@@ -47,7 +49,7 @@ function Alerts({ cageId, guineaPig, now }: { cageId: string; guineaPig: GuineaP
   return <AlertList alerts={mine} guineaPigs={[guineaPig]} now={now} />
 }
 
-// What we know about one cuy, from the list the cage page already loaded: who it is, how it is doing,
+// What we know about one guinea pig, from the list the cage page already loaded: who it is, how it is doing,
 // what its owner told when registering it, and its alerts. The behavior history comes later.
 export function GuineaPigDetail() {
   const { id } = useParams()
@@ -107,7 +109,7 @@ export function GuineaPigDetail() {
         </h2>
         <dl className={styles.facts}>
           <Fact label={t('guineaPig.register.breed')}>
-            {guineaPig.breed ? catalogLabel('breeds', guineaPig.breed) : NO_DATA}
+            {guineaPig.breed ? catalogLabel('breeds', guineaPig.breed) : <NoData />}
           </Fact>
           <Fact label={t('guineaPig.register.coat')}>
             {guineaPig.coatColor ? (
@@ -116,13 +118,15 @@ export function GuineaPigDetail() {
                 {catalogLabel('coatColors', guineaPig.coatColor)}
               </span>
             ) : (
-              NO_DATA
+              <NoData />
             )}
           </Fact>
           <Fact label={t('guineaPig.detail.initialWeight')}>
-            {guineaPig.initialWeightGrams
-              ? t('guineaPig.weightGrams', { grams: guineaPig.initialWeightGrams })
-              : NO_DATA}
+            {guineaPig.initialWeightGrams ? (
+              t('guineaPig.weightGrams', { grams: guineaPig.initialWeightGrams })
+            ) : (
+              <NoData />
+            )}
           </Fact>
           <Fact label={t('guineaPig.detail.mark')}>
             <MarkColorDot color={guineaPig.markColor} />

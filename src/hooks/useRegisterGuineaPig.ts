@@ -7,7 +7,7 @@ export function useRegisterGuineaPig(cageId: string) {
   return useMutation({
     mutationFn: async (body: NewGuineaPig) =>
       (await getDashboardApi()).guineaPigs.register(cageId, body),
-    // the new cuy shows up in the grid and in the cage summary; a 409 also needs a fresh list of colors
+    // the new guinea pig shows up in the grid and in the cage summary; a 409 also needs a fresh list of colors
     onSettled: () => queryClient.invalidateQueries({ queryKey: ['cage', cageId] }),
   })
 }

@@ -6,6 +6,7 @@ import { AppBackdrop } from '../AppBackdrop/AppBackdrop'
 import { AppFooter } from '../AppFooter/AppFooter'
 import { BottomNav } from '../BottomNav/BottomNav'
 import { ErrorState } from '../ErrorState/ErrorState'
+import { ToastProvider } from '../Toast/ToastProvider'
 import { Logo } from '../Logo/Logo'
 import { Skeleton } from '../Skeleton/Skeleton'
 import { Wave } from '../Wave/Wave'
@@ -22,39 +23,41 @@ export function AppLayout() {
   // private pages only: the live connection exists only while there is a session
   return (
     <LiveConnectionProvider>
-      {/* every page opens at the top; Back returns to where the person was */}
-      <ScrollRestoration />
-      <AppBackdrop />
-      <div className={styles.layout}>
-        <a href={`#${MAIN_ID}`} className={styles.skipLink}>
-          {t('common.skipToContent')}
-        </a>
-        <header className={styles.header}>
-          <div className={styles.headerInner}>
-            <Link to="/" className={styles.brand}>
-              <Logo size={32} tone="light" />
-              {t('app.shortTitle')}
-            </Link>
-            <div className={styles.actions}>
-              <BottomNav />
-              <UserMenu />
+      <ToastProvider>
+        {/* every page opens at the top; Back returns to where the person was */}
+        <ScrollRestoration />
+        <AppBackdrop />
+        <div className={styles.layout}>
+          <a href={`#${MAIN_ID}`} className={styles.skipLink}>
+            {t('common.skipToContent')}
+          </a>
+          <header className={styles.header}>
+            <div className={styles.headerInner}>
+              <Link to="/" className={styles.brand}>
+                <Logo size={32} tone="light" />
+                {t('app.shortTitle')}
+              </Link>
+              <div className={styles.actions}>
+                <BottomNav />
+                <UserMenu />
+              </div>
             </div>
-          </div>
-          <span className={styles.wave}>
-            <Wave gradient={{ from: 'var(--header-from)', to: 'var(--header-to)' }} />
-          </span>
-        </header>
-        <main id={MAIN_ID} className={styles.main} tabIndex={-1}>
-          {catalog.isPending ? (
-            <Skeleton count={3} />
-          ) : catalog.isError ? (
-            <ErrorState message={t('cage.catalogError')} onRetry={() => void catalog.refetch()} />
-          ) : (
-            <Outlet />
-          )}
-        </main>
-        <AppFooter />
-      </div>
+            <span className={styles.wave}>
+              <Wave gradient={{ from: 'var(--header-from)', to: 'var(--header-to)' }} />
+            </span>
+          </header>
+          <main id={MAIN_ID} className={styles.main} tabIndex={-1}>
+            {catalog.isPending ? (
+              <Skeleton count={3} />
+            ) : catalog.isError ? (
+              <ErrorState message={t('cage.catalogError')} onRetry={() => void catalog.refetch()} />
+            ) : (
+              <Outlet />
+            )}
+          </main>
+          <AppFooter />
+        </div>
+      </ToastProvider>
     </LiveConnectionProvider>
   )
 }

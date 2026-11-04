@@ -125,4 +125,19 @@ describe('Alerts', () => {
     )
     expect(within(open).getByText(/quieta de lo normal/)).toBeInTheDocument()
   })
+
+  it('marks every open alert as reviewed after confirming', async () => {
+    const user = userEvent.setup()
+    const db = new MockDatabase()
+    db.alerts.push({ ...db.alerts[0], id: 60, message: 'Otra alerta abierta' })
+    setup(db)
+    await screen.findByText('Otra alerta abierta')
+
+    await user.click(screen.getByRole('button', { name: 'Marcar todas como revisadas' }))
+    expect(screen.getByRole('dialog', { name: '¿Marcar 2 alertas como revisadas?' })).toBeVisible()
+    await user.click(screen.getByRole('button', { name: 'Sí, ya las revisé' }))
+
+    expect(await screen.findByText('No hay alertas abiertas.')).toBeInTheDocument()
+    expect(db.alerts.every((a) => a.status === 'REVIEWED')).toBe(true)
+  })
 })

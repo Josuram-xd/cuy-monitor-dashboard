@@ -1,4 +1,5 @@
 import { useId, type InputHTMLAttributes, type ReactNode } from 'react'
+import { t } from '../../i18n'
 import { cx } from '../../utils/cx'
 import { Icon } from '../Icon/Icon'
 import styles from './TextField.module.css'
@@ -25,7 +26,10 @@ export function TextField({
   const generatedId = useId()
   const inputId = id ?? generatedId
   const messageId = `${inputId}-message`
-  const message = error ?? hint
+  // the input stops typing at maxLength without a word; say it, so it doesn't look broken
+  const length = typeof rest.value === 'string' ? rest.value.length : 0
+  const atLimit = rest.maxLength !== undefined && rest.maxLength > 0 && length >= rest.maxLength
+  const message = error ?? (atLimit ? t('common.maxLengthReached', { max: rest.maxLength }) : hint)
 
   return (
     <div className={cx(styles.field, className)}>
@@ -45,10 +49,14 @@ export function TextField({
       {message && (
         <p
           id={messageId}
-          className={cx(styles.message, error && styles.errorMessage)}
-          aria-live={error ? 'polite' : undefined}
+          className={cx(
+            styles.message,
+            error && styles.errorMessage,
+            !error && atLimit && styles.limit,
+          )}
+          aria-live={error || atLimit ? 'polite' : undefined}
         >
-          {error && <Icon name="alert-circle" size={16} />}
+          {(error || atLimit) && <Icon name="alert-circle" size={16} />}
           {message}
         </p>
       )}

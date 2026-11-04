@@ -1,5 +1,6 @@
 import { describe, expect, it } from 'vitest'
-import source from './locales/es.json?raw'
+import enSource from './locales/en.json?raw'
+import esSource from './locales/es.json?raw'
 
 // JSON.parse keeps the last of two equal keys without a word, so a second "account": {...} block
 // silently deletes the first one. This reads the raw file and fails on any repeated key.
@@ -30,9 +31,10 @@ function duplicateKeys(source: string): string[] {
   return duplicates
 }
 
-describe('es.json', () => {
-  it('has no repeated keys', () => {
-    expect(duplicateKeys(source)).toEqual([])
+describe('es.json and en.json', () => {
+  it('have no repeated keys', () => {
+    expect(duplicateKeys(esSource)).toEqual([])
+    expect(duplicateKeys(enSource)).toEqual([])
   })
 
   it('the detector does find a repeated key', () => {

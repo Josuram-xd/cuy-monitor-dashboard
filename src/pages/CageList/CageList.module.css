@@ -29,3 +29,9 @@
   max-width: 60ch;
   color: var(--color-text-muted);
 }
+
+.headerActions {
+  display: flex;
+  flex-wrap: wrap;
+  gap: var(--space-2);
+}

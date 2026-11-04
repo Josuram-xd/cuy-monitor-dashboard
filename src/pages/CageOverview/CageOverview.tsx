@@ -1,12 +1,16 @@
+import { useState } from 'react'
 import { AlertList } from '../../components/AlertList/AlertList'
-import { ButtonLink } from '../../components/Button/Button'
+import { Button, ButtonLink } from '../../components/Button/Button'
 import { CageStatusBanner } from '../../components/CageStatusBanner/CageStatusBanner'
 import { Mascot } from '../../components/Mascot/Mascot'
 import { DeleteGuineaPig } from '../../components/DeleteGuineaPig/DeleteGuineaPig'
 import { EmptyState } from '../../components/EmptyState/EmptyState'
 import { ErrorState } from '../../components/ErrorState/ErrorState'
 import { GuineaPigCard } from '../../components/GuineaPigCard/GuineaPigCard'
+import { GuineaPigFilter } from '../../components/GuineaPigFilter/GuineaPigFilter'
+import { applyGuineaPigFilter, NO_FILTER } from '../../components/GuineaPigFilter/guineaPigFilter'
 import { GuineaPigGrid, GuineaPigGridItem } from '../../components/GuineaPigGrid/GuineaPigGrid'
+import { RefreshButton } from '../../components/RefreshButton/RefreshButton'
 import { Reveal } from '../../components/Reveal/Reveal'
 import { LiveIndicator } from '../../components/LiveIndicator/LiveIndicator'
 import { Skeleton } from '../../components/Skeleton/Skeleton'
@@ -23,9 +27,12 @@ import styles from './CageOverview.module.css'
 
 const SKELETON_CARDS = 3
 const LATEST_ALERTS = 3
+// with fewer guinea pigs than this, a search box is more noise than help
+const FILTER_FROM = 3
 
 function GuineaPigsSection({ cageId, now }: { cageId: string; now: number }) {
   const guineaPigs = useGuineaPigs(cageId)
+  const [filter, setFilter] = useState(NO_FILTER)
 
   if (guineaPigs.isPending) {
     return <Skeleton count={SKELETON_CARDS} />
@@ -48,15 +55,29 @@ function GuineaPigsSection({ cageId, now }: { cageId: string; now: number }) {
       />
     )
   }
+  const shown = applyGuineaPigFilter(guineaPigs.data, filter)
   return (
-    <GuineaPigGrid label={t('cage.guineaPigs')}>
-      {guineaPigs.data.map((guineaPig, index) => (
-        <GuineaPigGridItem key={guineaPig.id} index={index}>
-          <GuineaPigCard cageId={cageId} guineaPig={guineaPig} now={now} />
-          <DeleteGuineaPig cageId={cageId} guineaPig={guineaPig} />
-        </GuineaPigGridItem>
-      ))}
-    </GuineaPigGrid>
+    <>
+      {guineaPigs.data.length >= FILTER_FROM && (
+        <GuineaPigFilter guineaPigs={guineaPigs.data} value={filter} onChange={setFilter} />
+      )}
+      {shown.length === 0 ? (
+        <EmptyState
+          icon="search"
+          message={t('cage.filter.noMatch')}
+          action={<Button onClick={() => setFilter(NO_FILTER)}>{t('cage.filter.reset')}</Button>}
+        />
+      ) : (
+        <GuineaPigGrid label={t('cage.guineaPigs')}>
+          {shown.map((guineaPig, index) => (
+            <GuineaPigGridItem key={guineaPig.id} index={index}>
+              <GuineaPigCard cageId={cageId} guineaPig={guineaPig} now={now} />
+              <DeleteGuineaPig cageId={cageId} guineaPig={guineaPig} />
+            </GuineaPigGridItem>
+          ))}
+        </GuineaPigGrid>
+      )}
+    </>
   )
 }
 
@@ -113,9 +134,12 @@ export function CageOverview() {
           <h1 className={styles.title}>{cage.data?.name ?? t('cage.title')}</h1>
           {cage.data?.location && <p className={styles.location}>{cage.data.location}</p>}
         </div>
-        <ButtonLink to={cagePath(cageId, '/guinea-pigs/new')} variant="primary">
-          {t('cage.newGuineaPig')}
-        </ButtonLink>
+        <div className={styles.headerActions}>
+          <RefreshButton queryKeys={[['cage', cageId], ['alerts']]} />
+          <ButtonLink to={cagePath(cageId, '/guinea-pigs/new')} variant="primary">
+            {t('cage.newGuineaPig')}
+          </ButtonLink>
+        </div>
       </header>
       {/* no data or failed request: the banner shows UNKNOWN, never "Normal" */}
       <CageStatusBanner health={health.data} now={now} liveIndicator={<LiveIndicator />} />

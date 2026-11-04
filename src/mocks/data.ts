@@ -31,7 +31,7 @@ export const mockCages: Cage[] = [
   },
 ]
 
-// the second cage: two calm cuyes, so the list of cages shows different states
+// the second cage: two calm guinea pigs, so the list of cages shows different states
 export const mockSecondCageGuineaPigs: GuineaPig[] = [
   { id: 21, name: 'Tofu', markColor: 'WHITE', status: 'NORMAL', statusSince: minutesAgo(300) },
   { id: 22, name: 'Mora', markColor: 'PURPLE', status: 'NORMAL', statusSince: minutesAgo(900) },
@@ -180,7 +180,7 @@ export function mockWindows(guineaPigId: number): BehaviorWindow[] {
   return windows
 }
 
-// One reading every 30 minutes; every fourth one is taken while the cuyes move, so it is unstable.
+// One reading every 30 minutes; every fourth one is taken while the guinea pigs move, so it is unstable.
 export function mockWeightReadings(): WeightReading[] {
   const readings: WeightReading[] = []
   for (let minutes = 24 * 60, i = 0; minutes >= 0; minutes -= 30, i++) {

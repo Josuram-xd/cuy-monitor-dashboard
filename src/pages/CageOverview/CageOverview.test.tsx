@@ -1,4 +1,5 @@
-import { screen, within } from '@testing-library/react'
+import { screen, waitFor, within } from '@testing-library/react'
+import userEvent from '@testing-library/user-event'
 import { beforeEach, describe, expect, it, vi } from 'vitest'
 import { ApiError } from '../../api/ApiError'
 import { getDashboardApi } from '../../api/apiProvider'
@@ -87,11 +88,60 @@ describe('CageOverview', () => {
     expect(screen.getByRole('link', { name: 'Mis jaulas' })).toHaveAttribute('href', '/')
   })
 
-  it('shows only the cuyes of the cage in the address', async () => {
+  it('shows only the guinea pigs of the cage in the address', async () => {
     renderInCage(<CageOverview />, { cageId: 'cage-7f3a9c21' })
 
     const grid = await screen.findByRole('list', { name: 'Tus cuyes' })
     expect(within(grid).getByText('Tofu')).toBeInTheDocument()
     expect(within(grid).queryByText('Canela')).not.toBeInTheDocument()
+  })
+
+  it('finds a guinea pig by name, without caring about accents or capitals', async () => {
+    const user = userEvent.setup()
+    renderInCage(<CageOverview />)
+    const grid = await screen.findByRole('list', { name: 'Tus cuyes' })
+
+    await user.type(screen.getByRole('searchbox', { name: 'Buscar cuy por nombre' }), 'CHÍS')
+
+    expect(within(grid).getByText('Chispa')).toBeInTheDocument()
+    expect(within(grid).queryByText('Canela')).not.toBeInTheDocument()
+  })
+
+  it('shows only the guinea pigs that need attention', async () => {
+    const user = userEvent.setup()
+    renderInCage(<CageOverview />)
+    const grid = await screen.findByRole('list', { name: 'Tus cuyes' })
+
+    await user.click(screen.getByRole('button', { name: 'Necesitan atención (2)' }))
+
+    expect(within(grid).getByText('Canela')).toBeInTheDocument()
+    expect(within(grid).getByText('Chispa')).toBeInTheDocument()
+    expect(within(grid).queryByText('Pelusa')).not.toBeInTheDocument()
+  })
+
+  it('offers to see every guinea pig again when nothing matches', async () => {
+    const user = userEvent.setup()
+    renderInCage(<CageOverview />)
+    await screen.findByRole('list', { name: 'Tus cuyes' })
+
+    await user.type(screen.getByRole('searchbox', { name: 'Buscar cuy por nombre' }), 'zzz')
+    expect(screen.getByText('Ningún cuy coincide con la búsqueda')).toBeInTheDocument()
+
+    await user.click(screen.getByRole('button', { name: 'Ver todos' }))
+    expect(await screen.findByRole('list', { name: 'Tus cuyes' })).toBeInTheDocument()
+  })
+
+  it('reloads the cage when "Actualizar" is pressed', async () => {
+    const user = userEvent.setup()
+    const api = createMockApi(undefined, 0)
+    setApi(api)
+    const getHealth = vi.spyOn(api.cages, 'getHealth')
+    renderInCage(<CageOverview />)
+    await screen.findByRole('list', { name: 'Tus cuyes' })
+    const before = getHealth.mock.calls.length
+
+    await user.click(screen.getByRole('button', { name: 'Actualizar' }))
+
+    await waitFor(() => expect(getHealth.mock.calls.length).toBeGreaterThan(before))
   })
 })
