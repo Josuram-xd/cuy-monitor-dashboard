@@ -48,7 +48,7 @@
   align-self: stretch;
 }
 
-/* the ring takes the place of the cuy's avatar */
+/* the ring takes the place of the guinea pig's avatar */
 .ring {
   display: grid;
   flex-shrink: 0;

@@ -11,6 +11,7 @@ import { HowItWorks } from './pages/HowItWorks/HowItWorks'
 import { Login } from './pages/Login/Login'
 import { NotFound } from './pages/NotFound/NotFound'
 import { RegisterGuineaPig } from './pages/RegisterGuineaPig/RegisterGuineaPig'
+import { Settings } from './pages/Settings/Settings'
 import { Register } from './pages/Register/Register'
 import { VerifyCode } from './pages/VerifyCode/VerifyCode'
 
@@ -39,6 +40,7 @@ export const routes: RouteObject[] = [
           { path: 'alerts', element: <Alerts /> },
           { path: 'how-it-works', element: <HowItWorks /> },
           { path: 'account', element: <Account /> },
+          { path: 'settings', element: <Settings /> },
           { path: '*', element: <NotFound /> },
         ],
       },

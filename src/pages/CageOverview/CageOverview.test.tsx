@@ -88,7 +88,7 @@ describe('CageOverview', () => {
     expect(screen.getByRole('link', { name: 'Mis jaulas' })).toHaveAttribute('href', '/')
   })
 
-  it('shows only the cuyes of the cage in the address', async () => {
+  it('shows only the guinea pigs of the cage in the address', async () => {
     renderInCage(<CageOverview />, { cageId: 'cage-7f3a9c21' })
 
     const grid = await screen.findByRole('list', { name: 'Tus cuyes' })
@@ -96,7 +96,7 @@ describe('CageOverview', () => {
     expect(within(grid).queryByText('Canela')).not.toBeInTheDocument()
   })
 
-  it('finds a cuy by name, without caring about accents or capitals', async () => {
+  it('finds a guinea pig by name, without caring about accents or capitals', async () => {
     const user = userEvent.setup()
     renderInCage(<CageOverview />)
     const grid = await screen.findByRole('list', { name: 'Tus cuyes' })
@@ -107,7 +107,7 @@ describe('CageOverview', () => {
     expect(within(grid).queryByText('Canela')).not.toBeInTheDocument()
   })
 
-  it('shows only the cuyes that need attention', async () => {
+  it('shows only the guinea pigs that need attention', async () => {
     const user = userEvent.setup()
     renderInCage(<CageOverview />)
     const grid = await screen.findByRole('list', { name: 'Tus cuyes' })
@@ -119,7 +119,7 @@ describe('CageOverview', () => {
     expect(within(grid).queryByText('Pelusa')).not.toBeInTheDocument()
   })
 
-  it('offers to see every cuy again when nothing matches', async () => {
+  it('offers to see every guinea pig again when nothing matches', async () => {
     const user = userEvent.setup()
     renderInCage(<CageOverview />)
     await screen.findByRole('list', { name: 'Tus cuyes' })

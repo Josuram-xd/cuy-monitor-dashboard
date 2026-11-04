@@ -36,7 +36,7 @@ describe('DeleteGuineaPig', () => {
     expect(remove).not.toHaveBeenCalled()
   })
 
-  it('cancelling leaves the cuy where it is', async () => {
+  it('cancelling leaves the guinea pig where it is', async () => {
     renderButton()
 
     await userEvent.click(screen.getByRole('button', { name: 'Eliminar a Canela' }))

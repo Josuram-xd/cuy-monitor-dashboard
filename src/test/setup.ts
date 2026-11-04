@@ -10,3 +10,7 @@ configure({ asyncUtilTimeout: 4000 })
 // In the app AppLayout fills the catalog from GET /api/v1/catalog before any page renders. A component
 // test mounts a page on its own, so it gets the same rows the fake backend serves.
 setCatalog(mockCatalog)
+
+// The texts in the tests are the Spanish ones, the reference language. jsdom says the browser is in English,
+// so the saved preference pins Spanish before i18n reads it; a test that needs English switches on purpose.
+localStorage.setItem('cuy-monitor.preferences', JSON.stringify({ language: 'es', theme: 'system' }))

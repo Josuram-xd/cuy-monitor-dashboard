@@ -65,3 +65,9 @@
 .errorMessage {
   color: var(--status-critical-fg);
 }
+
+/* the field is full: a calm note, not an error (yellow and red are kept for health) */
+.limit {
+  color: var(--color-text);
+  font-weight: 600;
+}

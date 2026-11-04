@@ -1,15 +1,18 @@
-import { t } from '../i18n'
+import { dateLocale, t } from '../i18n'
 
 const MINUTE = 60_000
 const HOUR = 60 * MINUTE
 const DAY = 24 * HOUR
 
-const absoluteFormat = new Intl.DateTimeFormat('es-CO', {
-  day: 'numeric',
-  month: 'short',
-  hour: '2-digit',
-  minute: '2-digit',
-})
+// in the language the person chose
+function absoluteFormat(): Intl.DateTimeFormat {
+  return new Intl.DateTimeFormat(dateLocale(), {
+    day: 'numeric',
+    month: 'short',
+    hour: '2-digit',
+    minute: '2-digit',
+  })
+}
 
 export function minutesSince(iso: string, now: number = Date.now()): number {
   return Math.floor((now - Date.parse(iso)) / MINUTE)
@@ -27,5 +30,5 @@ export function formatRelative(iso: string, now: number = Date.now()): string {
   if (elapsed < DAY) {
     return t('time.hoursAgo', { count: Math.floor(elapsed / HOUR) })
   }
-  return absoluteFormat.format(new Date(iso))
+  return absoluteFormat().format(new Date(iso))
 }

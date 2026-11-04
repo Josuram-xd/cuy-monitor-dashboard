@@ -41,7 +41,8 @@
     "close": "Cerrar",
     "refresh": "Actualizar",
     "refreshing": "Actualizando…",
-    "refreshHint": "Los datos se actualizan solos cada 30 segundos; toca para hacerlo ya"
+    "refreshHint": "Los datos se actualizan solos cada 30 segundos; toca para hacerlo ya",
+    "maxLengthReached": "Llegaste al máximo de {{max}} caracteres"
   },
   "errors": {
     "network": "No hay conexión con el servidor. Revisa tu internet e inténtalo otra vez.",
@@ -324,7 +325,8 @@
     },
     "error": {
       "wrongPassword": "La contraseña actual no es correcta."
-    }
+    },
+    "settings": "Ajustes"
   },
   "cages": {
     "title": "Tus jaulas",
@@ -377,5 +379,23 @@
     "allReviewed_one": "{{count}} alerta marcada como revisada",
     "allReviewed_many": "{{count}} alertas marcadas como revisadas",
     "allReviewed_other": "{{count}} alertas marcadas como revisadas"
+  },
+  "settings": {
+    "title": "Ajustes",
+    "preferences": "Preferencias",
+    "preferencesIntro": "Elige cómo quieres ver el monitor. Se guarda en este dispositivo.",
+    "language": "Idioma",
+    "appearance": "Apariencia",
+    "theme": {
+      "system": "Como el dispositivo",
+      "light": "Claro",
+      "dark": "Oscuro"
+    },
+    "themeHint": "\"Como el dispositivo\" cambia solo entre claro y oscuro según tu celular o computador.",
+    "saved": "Preferencias guardadas"
+  },
+  "languages": {
+    "es": "Español",
+    "en": "English"
   }
 }

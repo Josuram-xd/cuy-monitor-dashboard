@@ -27,7 +27,7 @@ import styles from './CageOverview.module.css'
 
 const SKELETON_CARDS = 3
 const LATEST_ALERTS = 3
-// with fewer cuyes than this, a search box is more noise than help
+// with fewer guinea pigs than this, a search box is more noise than help
 const FILTER_FROM = 3
 
 function GuineaPigsSection({ cageId, now }: { cageId: string; now: number }) {

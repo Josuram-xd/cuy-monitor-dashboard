@@ -2,7 +2,7 @@ import { useEffect, useRef, useState } from 'react'
 import { loadGoogleIdentity } from '../../auth/googleIdentity'
 import { config } from '../../config'
 import { MOCK_GOOGLE_TOKEN } from '../../mocks/googleToken'
-import { t } from '../../i18n'
+import { currentLanguage, t } from '../../i18n'
 import { Button } from '../Button/Button'
 import styles from './GoogleButton.module.css'
 
@@ -121,7 +121,7 @@ function RealButton({ clientId, onCredential, text, disabled }: RealButtonProps)
           text,
           shape: 'rectangular',
           width: Math.min(parent.clientWidth || MAX_WIDTH, MAX_WIDTH),
-          locale: 'es',
+          locale: currentLanguage(),
         })
       })
       .catch(() => setFailed(true))

@@ -16,8 +16,8 @@
   z-index: 20;
   padding: var(--space-2) var(--space-4);
   border-radius: var(--radius-md);
-  background: var(--color-primary);
-  color: var(--color-surface);
+  background: var(--color-primary-strong);
+  color: var(--color-on-primary);
   transform: translateY(-200%);
 }
 
@@ -30,7 +30,7 @@
   top: 0;
   z-index: 10;
   background: linear-gradient(90deg, var(--header-from), var(--header-to));
-  color: var(--color-surface);
+  color: var(--color-on-primary);
 }
 
 /* the header ends in a soft wave instead of a straight line */

@@ -96,7 +96,7 @@
   font-weight: 700;
 }
 
-/* the alerts live in a panel that stretches to the height of the cuyes column */
+/* the alerts live in a panel that stretches to the height of the guinea pigs column */
 .panel {
   display: flex;
   flex: 1;
@@ -125,7 +125,7 @@
   text-align: center;
 }
 
-/* desktop: alerts panel on the right (DESIGN_SYSTEM 2.6), same height as the cuyes */
+/* desktop: alerts panel on the right (DESIGN_SYSTEM 2.6), same height as the guinea pigs */
 @media (min-width: 1024px) {
   .columns {
     display: grid;

@@ -10,7 +10,7 @@ export function useGuineaPigs(cageId: string) {
   })
 }
 
-// the cuyes of several cages at once (the alerts page, where alerts of every cage are mixed)
+// the guinea pigs of several cages at once (the alerts page, where alerts of every cage are mixed)
 export function useGuineaPigsOfCages(cageIds: string[]) {
   return useQueries({
     queries: cageIds.map((cageId) => ({

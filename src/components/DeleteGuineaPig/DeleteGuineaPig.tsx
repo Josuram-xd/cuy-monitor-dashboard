@@ -14,7 +14,7 @@ interface DeleteGuineaPigProps {
   guineaPig: GuineaPig
 }
 
-// A small trash button for a cuy card. It never deletes by itself: it opens a confirmation first.
+// A small trash button for a guinea pig card. It never deletes by itself: it opens a confirmation first.
 export function DeleteGuineaPig({ cageId, guineaPig }: DeleteGuineaPigProps) {
   const remove = useDeleteGuineaPig(cageId)
   const toast = useToast()

@@ -1,22 +1,19 @@
-import { useState } from 'react'
 import { useSearchParams } from 'react-router'
 import { AlertList } from '../../components/AlertList/AlertList'
-import { Button } from '../../components/Button/Button'
 import { ChoiceChips } from '../../components/ChoiceChips/ChoiceChips'
-import { ConfirmDialog } from '../../components/ConfirmDialog/ConfirmDialog'
-import { Icon } from '../../components/Icon/Icon'
 import { useToast } from '../../components/Toast/useToast'
 import { EmptyState } from '../../components/EmptyState/EmptyState'
 import { ErrorState } from '../../components/ErrorState/ErrorState'
 import { FormError } from '../../components/FormError/FormError'
+import { MarkAllReviewed } from '../../components/MarkAllReviewed/MarkAllReviewed'
 import { Skeleton } from '../../components/Skeleton/Skeleton'
 import { useAlerts } from '../../hooks/useAlerts'
 import { useCages } from '../../hooks/useCages'
 import { useGuineaPigsOfCages } from '../../hooks/useGuineaPigs'
-import { useMarkAlertReviewed, useMarkAllAlertsReviewed } from '../../hooks/useMarkAlertReviewed'
+import { useMarkAlertReviewed } from '../../hooks/useMarkAlertReviewed'
 import { useNow } from '../../hooks/useNow'
 import { t } from '../../i18n'
-import type { Alert, AlertStatus } from '../../types/Alert'
+import type { AlertStatus } from '../../types/Alert'
 import styles from './Alerts.module.css'
 
 interface AlertsSectionProps {
@@ -67,41 +64,6 @@ function AlertsSection({ status, cageId, cageNames, now }: AlertsSectionProps) {
         }
         busyAlertId={markReviewed.isPending ? markReviewed.variables : undefined}
       />
-    </>
-  )
-}
-
-// every open alert of what is on screen, after a confirmation
-function MarkAllReviewed({ alerts }: { alerts: Alert[] }) {
-  const markAll = useMarkAllAlertsReviewed()
-  const toast = useToast()
-  const [confirming, setConfirming] = useState(false)
-
-  return (
-    <>
-      <Button variant="ghost" onClick={() => setConfirming(true)}>
-        <Icon name="check-circle" size={18} />
-        {t('alerts.markAll')}
-      </Button>
-      {confirming && (
-        <ConfirmDialog
-          title={t('alerts.markAllTitle', { count: alerts.length })}
-          confirmLabel={t('alerts.markAllConfirm')}
-          onCancel={() => setConfirming(false)}
-          busy={markAll.isPending}
-          onConfirm={() =>
-            markAll.mutate(alerts, {
-              onSuccess: () => {
-                toast.show({ message: t('toast.allReviewed', { count: alerts.length }) })
-                setConfirming(false)
-              },
-            })
-          }
-        >
-          <p>{t('alerts.markAllText')}</p>
-          {markAll.isError && <FormError message={t('alerts.markError')} />}
-        </ConfirmDialog>
-      )}
     </>
   )
 }

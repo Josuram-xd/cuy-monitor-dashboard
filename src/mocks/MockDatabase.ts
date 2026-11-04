@@ -31,9 +31,9 @@ export interface MockUser {
 export class MockDatabase {
   readonly cageId = mockCageId
   readonly cages: Cage[] = structuredClone(mockCages)
-  // the cuyes of the first cage; kept as its own array so tests can change it directly
+  // the guinea pigs of the first cage; kept as its own array so tests can change it directly
   readonly guineaPigs: GuineaPig[] = structuredClone(mockGuineaPigs)
-  // cage id -> its active cuyes
+  // cage id -> its active guinea pigs
   readonly guineaPigsByCage: Record<string, GuineaPig[]> = {
     [mockCageId]: this.guineaPigs,
     [mockSecondCageId]: structuredClone(mockSecondCageGuineaPigs),
