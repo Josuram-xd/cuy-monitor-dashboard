@@ -6,9 +6,27 @@
   grid-auto-columns: 1fr;
   grid-auto-flow: column;
   padding-bottom: env(safe-area-inset-bottom);
-  border-top: 1px solid var(--color-border);
-  background: var(--color-surface);
+  border-top: 1px solid var(--color-border-subtle);
+  /* a fixed bar sits over the page: the highest elevation, like dialogs */
+  background: var(--color-surface-overlay);
   box-shadow: var(--shadow-overlay);
+}
+
+/* slides under the active tab (BottomNav.tsx moves it); phones: a bar on top of the tab */
+.indicator {
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: var(--indicator-width);
+  height: 3px;
+  border-radius: 0 0 var(--radius-sm) var(--radius-sm);
+  background: var(--color-primary);
+  transform: translateX(var(--indicator-x));
+  transition:
+    transform 380ms var(--ease-out-emphasized),
+    width 380ms var(--ease-out-emphasized),
+    opacity var(--transition-default);
+  pointer-events: none;
 }
 
 .link {
@@ -36,18 +54,6 @@
 .active {
   color: var(--color-primary);
   font-weight: 700;
-}
-
-/* little bar over the active tab */
-.active::before {
-  content: '';
-  position: absolute;
-  top: 0;
-  left: 30%;
-  right: 30%;
-  height: 3px;
-  border-radius: 0 0 var(--radius-sm) var(--radius-sm);
-  background: var(--color-primary-strong);
 }
 
 @media (min-width: 640px) {
@@ -84,11 +90,24 @@
   }
 
   .active {
-    background: rgb(255 255 255 / 0.22);
     color: var(--color-on-primary);
   }
 
-  .active::before {
-    display: none;
+  /* desktop: a pill behind the active tab, inside the green header */
+  .nav {
+    position: relative;
+  }
+
+  .indicator {
+    top: 0;
+    height: 100%;
+    border-radius: var(--radius-full);
+    background: rgb(255 255 255 / 0.18);
+  }
+
+  /* the labels sit above the pill */
+  .link {
+    position: relative;
+    z-index: 1;
   }
 }
