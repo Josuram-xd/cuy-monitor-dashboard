@@ -1,4 +1,6 @@
 .mascot {
+  /* a little dimmer in dark mode so the drawing doesn't glare */
+  filter: brightness(var(--image-dim));
   display: block;
   overflow: visible;
 }

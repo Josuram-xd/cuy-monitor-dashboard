@@ -17,7 +17,8 @@
   gap: var(--space-4);
   padding: var(--space-5);
   border-radius: var(--radius-lg);
-  background: var(--color-surface);
+  /* the highest level: the lightest surface in dark mode */
+  background: var(--color-surface-overlay);
   box-shadow: var(--shadow-overlay);
   animation: rise var(--rise-duration) both;
 }

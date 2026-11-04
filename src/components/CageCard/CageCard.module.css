@@ -25,6 +25,8 @@
 }
 
 .card {
+  /* holds the pointer light (data-spotlight) */
+  position: relative;
   display: flex;
   flex-direction: column;
   height: 100%;

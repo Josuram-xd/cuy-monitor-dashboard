@@ -126,15 +126,36 @@ System font stack (no web fonts to download on slow rural connections):
 
 ### 2.7 Motion
 
-- Default transition: 150 ms `ease-out` (hover, focus, badge color change). Lifts use `--transition-lift` (220 ms).
-- Entrance: cards, the cage banner and the auth card rise 14 px while fading in (`--rise-duration`, 360 ms); guinea pig cards are staggered 70 ms each.
-- The live dot pulses while the connection is up and the logo breathes on the loading screen. Everything else is still.
-- A guinea pig whose status just went up gets a single 600 ms highlight pulse on its card. No looping animations.
-- Respect `prefers-reduced-motion: reduce` (disable the pulse).
+Motion answers what the person does; it never moves on its own to draw attention. Every effect follows the same three rules: it is short (150–550 ms), it uses the "emphasized decelerate" curve (`--ease-out-emphasized`: fast start, soft landing) or the playful `--ease-bounce` for small pops, and it only animates `transform`, `opacity` and `clip-path`, so it never shifts the layout.
+
+| What the person does | What answers | Where |
+|---|---|---|
+| Moves the mouse over a card or panel | a soft light follows the pointer (`--spotlight-color`), and the card lifts a little | `data-spotlight` + `src/motion/spotlight.ts` (one listener for the page, no re-render) |
+| Presses a button | a ring grows from the exact point that was pressed | `src/motion/ripple.ts` (Web Animations API) |
+| Goes to another page | the new page rises 10 px while fading in (`--page-enter-duration`, 280 ms) | `AppLayout`, keyed by address |
+| Changes tab | the indicator slides from the old tab to the new one (pill in the header, bar on phones) | `BottomNav` |
+| Scrolls down | the header gets shorter and lifts over the content | `src/motion/useScrolled.ts` |
+| Changes the appearance | the new theme opens as a circle from the click (View Transitions API) | `src/motion/themeTransition.ts` |
+| A cuy's status goes up | a single 600 ms highlight pulse on its card | `GuineaPigCard` |
+
+Existing entrances stay: cards, the cage banner and the auth card rise 14 px while fading in (`--rise-duration`), staggered 70 ms. The live dot pulses while the connection is up. No looping animations otherwise.
+
+**Reduced motion:** with `prefers-reduced-motion: reduce`, CSS animations and transitions collapse to an instant (global.css) and the effects driven from code (pointer light, ripple, circular reveal) are not started at all (`src/motion/reducedMotion.ts`). Touch does not get the pointer light: there is no hover under a finger.
 
 ### 2.8 Dark mode
 
-Chosen in **Ajustes → Preferencias → Apariencia**: *Como el dispositivo* (default, follows `prefers-color-scheme`), *Claro* or *Oscuro*. The choice sets `data-theme` on `<html>` and `tokens.css` redefines the color tokens for `:root[data-theme='dark']` and for the system dark mode when light was not forced. Status `fg`/`bg` pairs have dark variants with the same 4.5:1 rule; the brand green gets lighter for text (`--color-primary`) while `--color-primary-strong` keeps the dark green under white text. Text on the green header, footer and primary buttons uses `--color-on-primary` (white in both themes). The theme is applied before the first paint, so a dark choice never flashes light.
+Chosen in **Ajustes → Preferencias → Apariencia**: *Como el dispositivo* (default, follows `prefers-color-scheme`), *Claro* or *Oscuro*. The choice sets `data-theme` on `<html>` and `tokens.css` redefines the color tokens for `:root[data-theme='dark']` and for the system dark mode when light was not forced (both blocks are generated from the same list). It is applied before the first paint, so a dark choice never flashes light.
+
+The dark palette follows the established rules for dark interfaces:
+
+1. **No pure black, no pure white.** The base is a dark green-gray (`#0e1311`) so the brand still belongs to it; text is an off-white (`#e6ebe8`), which glares less.
+2. **Elevation by tone, not by shadow.** Shadows barely show on dark, so every level up is a lighter surface: `--color-bg` → `--color-surface` (cards) → `--color-surface-raised` → `--color-surface-overlay` (dialogs, the account menu, toasts, the phone tab bar). A 1 px light top edge (`--elevation-edge`, inside the dark shadows) reads as "lifted".
+3. **Desaturated color.** Saturated hues vibrate on dark: the brand green and the four health statuses are lighter and softer than in light mode.
+4. **Color in small doses.** Large areas stay neutral: the header and footer are a dark neutral green, not the bright gradient of light mode; the status tint of the cage banner is weaker (`--tint-strength`, 70 %) and only in its corner. Saturated color is kept for actions and status marks.
+5. **Three text emphases.** High (`--color-text`), medium (`--color-text-muted`) and low (`--color-text-subtle`).
+6. **Hairline borders made of light** (`--color-border-subtle`), so they work on every elevation.
+7. **No color cast and no glare.** The backdrop decoration is fainter (`--backdrop-opacity`) and the pictures are a little dimmer (`--image-dim`).
+8. **Measured, not guessed.** `src/styles/tokens.contrast.test.ts` computes the WCAG contrast of every pair in both themes and fails the build if one drops: text, muted text and links ≥ 4.5:1 on every surface, each status label ≥ 4.5:1 on its tint, each status mark ≥ 3:1 on a card, white on the solid green ≥ 4.5:1, the focus ring ≥ 3:1; and it checks that each elevation level is lighter than the one below.
 
 ### 2.9 Language
 

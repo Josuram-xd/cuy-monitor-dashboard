@@ -26,7 +26,8 @@
   height: 46vmax;
   border-radius: var(--radius-full);
   filter: blur(70px);
-  opacity: 0.5;
+  /* softer in dark mode, so the decoration never tints the page */
+  opacity: var(--backdrop-opacity);
   transform: translate3d(
     calc(var(--mx, 0) * var(--depth, 0.2) * -60px),
     calc(var(--scroll, 0) * var(--depth, 0.2) * -0.3px + var(--my, 0) * var(--depth, 0.2) * -40px),

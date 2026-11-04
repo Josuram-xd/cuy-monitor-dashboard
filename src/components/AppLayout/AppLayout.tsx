@@ -1,5 +1,9 @@
-import { Link, Outlet, ScrollRestoration } from 'react-router'
+import { useEffect } from 'react'
+import { Link, Outlet, ScrollRestoration, useLocation } from 'react-router'
 import { useCatalog } from '../../hooks/useCatalog'
+import { startSpotlight } from '../../motion/spotlight'
+import { useScrolled } from '../../motion/useScrolled'
+import { cx } from '../../utils/cx'
 import { t } from '../../i18n'
 import { LiveConnectionProvider } from '../../realtime/LiveConnectionProvider'
 import { AppBackdrop } from '../AppBackdrop/AppBackdrop'
@@ -19,6 +23,11 @@ export function AppLayout() {
   // Colors, breeds and coat colors come from the database. Every page below paints with them, so
   // they are loaded once here instead of in each page, and nothing renders with empty lists.
   const catalog = useCatalog()
+  const location = useLocation()
+  const scrolled = useScrolled()
+
+  // the light that follows the mouse over cards, for every private page
+  useEffect(() => startSpotlight(), [])
 
   // private pages only: the live connection exists only while there is a session
   return (
@@ -31,7 +40,7 @@ export function AppLayout() {
           <a href={`#${MAIN_ID}`} className={styles.skipLink}>
             {t('common.skipToContent')}
           </a>
-          <header className={styles.header}>
+          <header className={cx(styles.header, scrolled && styles.scrolled)}>
             <div className={styles.headerInner}>
               <Link to="/" className={styles.brand}>
                 <Logo size={32} tone="light" />
@@ -52,7 +61,10 @@ export function AppLayout() {
             ) : catalog.isError ? (
               <ErrorState message={t('cage.catalogError')} onRetry={() => void catalog.refetch()} />
             ) : (
-              <Outlet />
+              // a new key per address: every page comes in with the same short rise
+              <div key={location.pathname} className={styles.page}>
+                <Outlet />
+              </div>
             )}
           </main>
           <AppFooter />

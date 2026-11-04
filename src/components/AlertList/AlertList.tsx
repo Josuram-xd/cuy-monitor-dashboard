@@ -51,7 +51,7 @@ export function AlertList({
       {alerts.map((alert) => {
         const guineaPig = guineaPigs.find((g) => g.id === alert.guineaPigId)
         return (
-          <li key={alert.id} className={cx(styles.item, styles[alert.level])}>
+          <li key={alert.id} className={cx(styles.item, styles[alert.level])} data-spotlight>
             <div className={styles.top}>
               <span className={styles.ring} aria-hidden="true">
                 <Icon name={TYPE_ICONS[alert.type]} size={20} />

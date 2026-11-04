@@ -21,6 +21,8 @@
 
 /* same card as GuineaPigCard: radius, status bar on the left, soft tint, lift on hover */
 .item {
+  /* holds the pointer light (data-spotlight) */
+  position: relative;
   display: flex;
   flex-direction: column;
   align-items: flex-start;
