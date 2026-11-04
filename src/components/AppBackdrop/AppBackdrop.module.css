@@ -62,7 +62,7 @@
   width: 150px;
   height: 44px;
   border-radius: var(--radius-full);
-  background: rgb(255 255 255 / 0.85);
+  background: var(--color-cloud);
   box-shadow: 0 6px 18px rgb(45 106 79 / 0.08);
   scale: var(--scale, 1);
   animation: cross 80s linear infinite;

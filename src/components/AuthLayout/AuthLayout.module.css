@@ -10,7 +10,7 @@
   overflow: hidden;
   padding: var(--space-6) var(--page-padding) var(--space-7);
   background: var(--gradient-brand);
-  color: var(--color-surface);
+  color: var(--color-on-primary);
 }
 
 .hero::before,

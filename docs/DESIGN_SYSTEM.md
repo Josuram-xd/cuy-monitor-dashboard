@@ -134,7 +134,11 @@ System font stack (no web fonts to download on slow rural connections):
 
 ### 2.8 Dark mode
 
-Supported through `prefers-color-scheme` by redefining the tokens in section 2.1. Status `fg`/`bg` pairs have dark variants defined in `tokens.css` with the same contrast rule. Light mode is the default and the one tested in daylight.
+Chosen in **Ajustes → Preferencias → Apariencia**: *Como el dispositivo* (default, follows `prefers-color-scheme`), *Claro* or *Oscuro*. The choice sets `data-theme` on `<html>` and `tokens.css` redefines the color tokens for `:root[data-theme='dark']` and for the system dark mode when light was not forced. Status `fg`/`bg` pairs have dark variants with the same 4.5:1 rule; the brand green gets lighter for text (`--color-primary`) while `--color-primary-strong` keeps the dark green under white text. Text on the green header, footer and primary buttons uses `--color-on-primary` (white in both themes). The theme is applied before the first paint, so a dark choice never flashes light.
+
+### 2.9 Language
+
+Spanish (reference) and English, chosen in **Ajustes → Preferencias → Idioma**. The first visit follows the browser (English only if it is in English). Every text lives in `src/i18n/locales/es.json` and `en.json` with the same keys and placeholders (`localeParity.test.ts` checks it); dates follow the language (`es-CO` / `en-US`). Data typed by people or sent by the backend (names, alert messages) is shown as it comes.
 
 ---
 
@@ -280,6 +284,10 @@ Pill button "Actualizar" next to the main action of a page. The arrows turn a qu
 ### Status raise pulse
 
 `GuineaPigCard` glows once (600 ms, in the accent of the new status) when the status goes up. Going down, staying the same or `prefers-reduced-motion: reduce` show nothing.
+
+### SegmentedControl
+
+One required choice among 2–3 options (language, appearance): a rounded track with a thumb that slides under the chosen option. `role="radiogroup"`, arrows move the choice like native radios, 44 px tall.
 
 ### Buttons
 

@@ -1,0 +1,392 @@
+{
+  "app": {
+    "title": "Guinea Pig Health Monitor",
+    "shortTitle": "Guinea Pig Monitor"
+  },
+  "footer": {
+    "label": "Footer",
+    "howItWorks": "How it works",
+    "legal": "© {{year}} Guinea Pig Monitor · Design Patterns Project"
+  },
+  "howItWorks": {
+    "title": "How it works",
+    "intro": "Guinea Pig Monitor looks after your guinea pigs' health while you are not watching. This is how it works, step by step.",
+    "register": "Register a guinea pig",
+    "seeCage": "See my cages",
+    "steps": {
+      "mark": {
+        "title": "Each guinea pig wears a color mark",
+        "text": "You register each guinea pig with its name, its breed and the color of the mark on its back. That color is how it is recognized."
+      },
+      "watch": {
+        "title": "The cage watches and listens",
+        "text": "A camera watches the guinea pigs, a microphone listens for squeals and a scale weighs the cage."
+      },
+      "analyse": {
+        "title": "Artificial intelligence analyses it",
+        "text": "Every minute, an Amazon Bedrock vision model measures how much each guinea pig moves and how often it visits the feeder, and sends it to the system."
+      },
+      "panel": {
+        "title": "You see it on the dashboard",
+        "text": "Here you see the status of each guinea pig and the alerts. When you take care of one, mark it as reviewed."
+      }
+    }
+  },
+  "common": {
+    "loading": "Loading…",
+    "retry": "Try again",
+    "cancel": "Cancel",
+    "optional": "(optional)",
+    "skipToContent": "Skip to content",
+    "close": "Close",
+    "refresh": "Refresh",
+    "refreshing": "Refreshing…",
+    "refreshHint": "The data refreshes by itself every 30 seconds; tap to do it now",
+    "maxLengthReached": "You've reached the maximum of {{max}} characters"
+  },
+  "errors": {
+    "network": "There is no connection to the server. Check your internet and try again.",
+    "invalidData": "Check the data and try again.",
+    "generic": "Something went wrong. Try again in a moment.",
+    "forbidden": "This cage is not yours."
+  },
+  "nav": {
+    "label": "Main navigation",
+    "alerts": "Alerts",
+    "account": "Account",
+    "cages": "Cages",
+    "help": "Help"
+  },
+  "notFound": {
+    "message": "We couldn't find this page.",
+    "back": "Back to my cages"
+  },
+  "status": {
+    "NORMAL": "Normal",
+    "OBSERVED": "Under watch",
+    "ALERT": "Alert",
+    "CRITICAL": "Critical",
+    "UNKNOWN": "No data"
+  },
+  "time": {
+    "justNow": "just now",
+    "minutesAgo": "{{count}} min ago",
+    "hoursAgo": "{{count}} h ago"
+  },
+  "cage": {
+    "title": "Your cage",
+    "greeting": "Hi, {{name}}",
+    "greetingFallback": "Hi",
+    "guineaPigs": "Your guinea pigs",
+    "guineaPigsError": "We couldn't load the guinea pigs. Check the connection and try again.",
+    "empty": "No guinea pigs registered yet",
+    "registerGuineaPig": "Register guinea pig",
+    "newGuineaPig": "New guinea pig",
+    "headline": {
+      "allGood": "All good in the cage",
+      "unknown": "No data from the cage yet",
+      "cageLevel": "Check the cage",
+      "OBSERVED_one": "{{count}} guinea pig under watch",
+      "OBSERVED_other": "{{count}} guinea pigs under watch",
+      "ALERT_one": "{{count}} guinea pig on alert",
+      "ALERT_other": "{{count}} guinea pigs on alert",
+      "CRITICAL_one": "{{count}} guinea pig in critical state",
+      "CRITICAL_other": "{{count}} guinea pigs in critical state"
+    },
+    "countsLabel": "Guinea pigs by status",
+    "updated": "Updated {{time}}",
+    "filter": {
+      "searchLabel": "Search guinea pig by name",
+      "searchPlaceholder": "Search by name…",
+      "clearSearch": "Clear search",
+      "statusLabel": "Show",
+      "attention_one": "Needs attention ({{count}})",
+      "attention_other": "Need attention ({{count}})",
+      "normal_one": "Normal ({{count}})",
+      "normal_other": "Normal ({{count}})",
+      "noMatch": "No guinea pig matches the search",
+      "reset": "Show all"
+    },
+    "catalogError": "We couldn't load the lists of colors and breeds."
+  },
+  "alerts": {
+    "title": "Alerts",
+    "intro": "When a guinea pig behaves differently from usual, it shows up here. Mark it as reviewed once you have checked it.",
+    "openTitle": "Open alerts",
+    "reviewedTitle": "Reviewed alerts",
+    "count": "{{count}} alerts",
+    "noneReviewed": "You haven't reviewed any alert yet.",
+    "markError": "We couldn't mark the alert as reviewed. Try again.",
+    "seeAll": "See all",
+    "noneOpen": "There are no open alerts.",
+    "loadError": "We couldn't load the alerts.",
+    "wholeCage": "Whole cage",
+    "unknownGuineaPig": "Guinea pig",
+    "markReviewed": "Mark as reviewed",
+    "filterByCage": "Cage",
+    "filterByCageHint": "Tap a cage to see only its alerts",
+    "markAll": "Mark all as reviewed",
+    "markAllTitle_one": "Mark {{count}} alert as reviewed?",
+    "markAllTitle_other": "Mark {{count}} alerts as reviewed?",
+    "markAllText": "Do it only if you have already checked the guinea pigs. The alerts move to \"Reviewed\" and can't be opened again.",
+    "markAllConfirm": "Yes, I checked them"
+  },
+  "realtime": {
+    "connecting": "Connecting…",
+    "connected": "Live",
+    "reconnecting": "Reconnecting…",
+    "disconnected": "No live connection — the data may be out of date"
+  },
+  "password": {
+    "title": "Your password must have:",
+    "progress": "{{met}} of {{total}} requirements",
+    "met": "done",
+    "notMet": "pending",
+    "rules": {
+      "LENGTH": "Between 10 and 64 characters",
+      "LOWERCASE": "A lowercase letter",
+      "UPPERCASE": "An uppercase letter",
+      "DIGIT": "A number",
+      "SPECIAL": "A special character, like ! @ # $ % _ -",
+      "NO_SPACES": "No spaces",
+      "NOT_COMMON": "It can't be a very common password",
+      "NOT_PERSONAL": "It can't include your username or your email"
+    }
+  },
+  "guineaPig": {
+    "weightGrams": "{{grams}} g",
+    "detail": {
+      "back": "Back to the cage",
+      "since": "since {{time}}",
+      "facts": "Details",
+      "initialWeight": "Weight on arrival",
+      "mark": "Mark for the camera",
+      "noData": "Not given",
+      "alerts": "{{name}}'s alerts",
+      "noAlerts": "{{name}} has no alerts. All calm!",
+      "notFound": "We couldn't find this guinea pig. You may have deleted it already.",
+      "historyTitle": "Behavior and weight history",
+      "historySoon": "It will be available very soon."
+    },
+    "still": "Still {{seconds}} of the last 60 s",
+    "lastSeen": "Seen {{time}}",
+    "notSeen": "Not seen since {{time}}",
+    "register": {
+      "title": "Register a guinea pig",
+      "intro": "Tell us who it is. While you fill in the form, you see on the right how its card will look.",
+      "who": "Who is it?",
+      "look": "What does it look like?",
+      "mark": "Its mark for the camera",
+      "markText": "It is the color on its back. The camera recognizes it by that color, so each guinea pig wears a different one.",
+      "moreTitle": "Anything else",
+      "breed": "Breed",
+      "coat": "Coat color",
+      "weight": "Weight on arrival",
+      "weightHint": "Between {{min}} and {{max}} g",
+      "weightLess": "Less weight",
+      "weightMore": "More weight",
+      "weightInvalid": "Write a weight between {{min}} and {{max}} g.",
+      "notes": "Notes",
+      "notesPlaceholder": "Temperament, allergies, where it comes from…",
+      "notesTooLong": "The notes are too long.",
+      "previewTitle": "This is how it will look",
+      "previewName": "Its name",
+      "previewEmpty": "Fill in the details and they show up here.",
+      "name": "Name",
+      "nameRequired": "Write the guinea pig's name.",
+      "nameTooLong": "The name is too long.",
+      "color": "Mark color",
+      "colorRequired": "Choose the mark color.",
+      "usedBy": "Worn by {{name}}",
+      "submit": "Register guinea pig",
+      "submitting": "Registering…",
+      "allUsed": "There is already a guinea pig with each mark color. No more can be registered in this cage."
+    },
+    "delete": {
+      "open": "Delete {{name}}",
+      "title": "Delete {{name}}?",
+      "text": "It will no longer show in your cage and its mark color will be free for another guinea pig. Its history is kept.",
+      "confirm": "Yes, delete"
+    },
+    "error": {
+      "colorTaken": "Another guinea pig already wears that color. Choose a free one.",
+      "alreadyGone": "This guinea pig no longer exists. Refresh the page."
+    }
+  },
+  "auth": {
+    "tagline": "Look after your guinea pigs in time",
+    "hero": {
+      "imageAlt": "Cuchi, a happy guinea pig, next to a phone showing the cage as All calm",
+      "title": "Your guinea pigs, always in sight",
+      "point1": "Know right away if a guinea pig is not well",
+      "point2": "Live alerts, without reloading the page",
+      "point3": "History and weight of your cage in one place"
+    },
+    "fields": {
+      "username": "Username",
+      "fullName": "Full name",
+      "email": "Email",
+      "password": "Password",
+      "required": "This field is required.",
+      "tooLong": "This field is too long."
+    },
+    "login": {
+      "title": "Log in",
+      "submit": "Log in",
+      "submitting": "Logging in…",
+      "noAccount": "Don't have an account?",
+      "toRegister": "Sign up"
+    },
+    "register": {
+      "title": "Create account",
+      "submit": "Create account",
+      "submitting": "Creating the account…",
+      "invalidEmail": "Write a valid email, for example name@gmail.com.",
+      "haveAccount": "Already have an account?",
+      "toLogin": "Log in"
+    },
+    "password": {
+      "show": "Show password"
+    },
+    "google": {
+      "or": "or",
+      "demo": "Continue with Google (demo)",
+      "unavailable": "We couldn't load the Google sign-in. Check your connection or use your username and password."
+    },
+    "verify": {
+      "title": "Verification code",
+      "codeLabel": "Verification code, {{length}} digits",
+      "sentTo": "We sent a code to {{email}}. It can take a minute; check your spam folder too.",
+      "sentToYourEmail": "We sent a code to your email. It can take a minute; check your spam folder too.",
+      "expiresIn": "Expires in {{time}}",
+      "resend": "Resend code",
+      "resendIn": "Resend in {{seconds}} s",
+      "resent": "We sent you a new code.",
+      "expired": "The code expired.",
+      "sendNew": "Send a new code",
+      "otherAccount": "Log in with another account"
+    },
+    "notice": {
+      "expired": "Your session ended. Log in again to keep watching your guinea pigs.",
+      "logout": "You logged out.",
+      "disabled": "Your account was deactivated."
+    },
+    "error": {
+      "invalidCredentials": "Wrong username or password.",
+      "invalidCode": "The code is not correct. Check your email and try again.",
+      "expiredCode": "The code expired. We sent you a new one.",
+      "userExists": "That username or email is already registered.",
+      "weakPassword": "The password doesn't meet every requirement.",
+      "googleFailed": "We couldn't log you in with Google. Try again.",
+      "googleOff": "Google sign-in is not available right now."
+    }
+  },
+  "account": {
+    "menu": "Account menu",
+    "myAccount": "My account",
+    "logout": "Log out",
+    "profile": {
+      "title": "Your details",
+      "fullName": "Full name",
+      "username": "Username",
+      "usernameHint": "The username can't be changed.",
+      "nameRequired": "Write your name.",
+      "nameTooLong": "The name is too long.",
+      "save": "Save changes",
+      "saving": "Saving…",
+      "saved": "Done, we saved your name."
+    },
+    "password": {
+      "title": "Change password",
+      "current": "Current password",
+      "new": "New password",
+      "submit": "Change password",
+      "submitting": "Changing…",
+      "done": "Done, your password changed.",
+      "createTitle": "Create password",
+      "googleOnly": "You log in with Google and don't have a password yet. If you want, create one to also log in with your username.",
+      "createSubmit": "Create password"
+    },
+    "danger": {
+      "title": "Deactivate account",
+      "text": "If you deactivate your account you won't be able to log in anymore. Your data is not shown to anyone else.",
+      "open": "Deactivate my account",
+      "confirmTitle": "Deactivate your account?",
+      "confirmText": "Write your password to confirm. You will be logged out afterwards.",
+      "confirmTextGoogle": "You will be logged out and won't be able to log in to this account with Google anymore.",
+      "password": "Your password",
+      "confirm": "Yes, deactivate"
+    },
+    "error": {
+      "wrongPassword": "The current password is not correct."
+    },
+    "settings": "Settings"
+  },
+  "cages": {
+    "title": "Your cages",
+    "intro": "Tap a cage to see its guinea pigs. Each cage has a code you type into the camera and the scale.",
+    "new": "New cage",
+    "createFirst": "Create my first cage",
+    "empty": "You don't have any cages yet. Create one to start registering your guinea pigs.",
+    "loadError": "We couldn't load your cages. Check the connection and try again.",
+    "backToList": "My cages",
+    "card": {
+      "guineaPigs_one": "{{count}} guinea pig",
+      "guineaPigs_other": "{{count}} guinea pigs",
+      "needAttention_one": "{{count}} needs attention",
+      "needAttention_other": "{{count}} need attention",
+      "copy": "Copy the code {{code}}",
+      "copyHint": "Copy this code to set up the camera and the scale of this cage",
+      "copied": "Copied!",
+      "edit": "Edit {{name}}",
+      "delete": "Delete {{name}}"
+    },
+    "form": {
+      "createTitle": "New cage",
+      "editTitle": "Edit cage",
+      "name": "Name",
+      "nameHint": "For example: Backyard cage",
+      "nameRequired": "Write a name for the cage",
+      "location": "Where it is (optional)",
+      "locationHint": "For example: Back shed",
+      "create": "Create cage",
+      "save": "Save changes"
+    },
+    "delete": {
+      "title": "Delete {{name}}?",
+      "text": "The cage will no longer show and won't receive data from the camera or the scale. Its guinea pigs and history are kept.",
+      "confirm": "Delete cage"
+    },
+    "error": {
+      "alreadyGone": "This cage no longer exists. Refresh the page."
+    }
+  },
+  "toast": {
+    "cageCreated": "Cage “{{name}}” created",
+    "cageSaved": "Changes saved",
+    "cageDeleted": "Cage “{{name}}” deleted",
+    "guineaPigRegistered": "{{name}} is in the cage now!",
+    "guineaPigDeleted": "{{name}} left the cage",
+    "alertReviewed": "Alert marked as reviewed",
+    "allReviewed_one": "{{count}} alert marked as reviewed",
+    "allReviewed_other": "{{count}} alerts marked as reviewed"
+  },
+  "settings": {
+    "title": "Settings",
+    "preferences": "Preferences",
+    "preferencesIntro": "Choose how you want to see the monitor. It is saved on this device.",
+    "language": "Language",
+    "appearance": "Appearance",
+    "theme": {
+      "system": "Same as the device",
+      "light": "Light",
+      "dark": "Dark"
+    },
+    "themeHint": "\"Same as the device\" switches between light and dark by itself, following your phone or computer.",
+    "saved": "Preferences saved"
+  },
+  "languages": {
+    "es": "Español",
+    "en": "English"
+  }
+}

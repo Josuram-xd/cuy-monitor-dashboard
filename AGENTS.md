@@ -40,7 +40,7 @@ Node 24 LTS. No cambies de gestor de paquetes (npm).
 ## Regla de idioma (la más importante)
 
 - **Código en inglés:** componentes, props, hooks, tipos, variables, archivos, carpetas, claves de i18n, comentarios, commits.
-- **Todo texto que ve el usuario en español**, y **solo** en `src/i18n/locales/es.json`. Se usa con `t('clave')`.
+- **Todo texto que ve el usuario** va en `src/i18n/locales/es.json` (referencia) **y** en `src/i18n/locales/en.json`, con las mismas claves (lo verifica `localeParity.test.ts`). Se usa con `t('clave')`. El idioma lo elige la persona en Ajustes → Preferencias.
 - **Prohibido** escribir texto visible directo en el JSX: ni `"Guardar"`, ni `"Normal"`, ni `aria-label="Cerrar"`. Todo por `t()`.
 - Nunca mostrar al criador palabras técnicas: "probAnomaly", "event", "API", "WebSocket", "token", "JWT", "OTP", códigos de error crudos. El OTP se llama "código de verificación".
 
