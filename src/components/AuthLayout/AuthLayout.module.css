@@ -203,6 +203,7 @@
 }
 
 .illustration {
+  filter: brightness(var(--image-dim));
   display: none;
 }
 

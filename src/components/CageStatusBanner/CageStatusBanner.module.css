@@ -37,7 +37,12 @@
   padding: var(--space-5) var(--page-padding);
   border: 1px solid var(--color-border);
   border-radius: var(--radius-lg);
-  background: linear-gradient(135deg, var(--tint) 0%, var(--tint) 40%, var(--color-surface) 100%);
+  /* the status color lives in the corner and fades into the surface: color in small doses */
+  background: linear-gradient(
+    135deg,
+    color-mix(in srgb, var(--tint) var(--tint-strength), var(--color-surface)) 0%,
+    var(--color-surface) 65%
+  );
   box-shadow: var(--shadow-card);
   transition: background-color var(--transition-default);
   animation: rise var(--rise-duration) both;
