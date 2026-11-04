@@ -11,6 +11,21 @@
   --gradient-brand: linear-gradient(135deg, #3a7d5f 0%, #2d6a4f 45%, #1b4332 100%);
   --color-bg: #f7f5f0;
   --color-surface: #ffffff;
+  /* elevation by tone (2.8): page < surface < raised (hover, panels) < overlay (dialogs, menus, toasts) */
+  --color-surface-raised: #ffffff;
+  --color-surface-overlay: #ffffff;
+  --color-border-subtle: rgb(28 25 23 / 0.08);
+  /* a light top edge that reads as "this is lifted"; only visible in dark mode */
+  --elevation-edge: 0 0 0 0 transparent;
+  --color-text-subtle: #78716c;
+  /* decoration strength of the backdrop */
+  --backdrop-opacity: 0.5;
+  --image-dim: 1;
+  /* how much of a status tint covers a large area (the cage banner) */
+  --tint-strength: 100%;
+  /* the light that follows the pointer over cards (motion, 2.7) */
+  --spotlight-color: rgb(45 106 79 / 0.08);
+  --ripple-color: currentColor;
   --color-border: #d6d3cd;
   --color-text: #1c1917;
   /* a touch darker than the playbook's #78716c so it keeps 4.5:1 on the warm background */
@@ -21,26 +36,26 @@
   /* green that carries white text (header, active tab, selection): the same in both themes */
   --color-primary-strong: #2d6a4f;
   /* the clouds of the backdrop */
-  --color-cloud: rgb(255 255 255 / 0.85);
+  --color-cloud: rgb(255 255 255 / 0.55);
   --glow-brand: rgb(45 106 79 / 0.14);
   color-scheme: light;
 
-  /* 2.2 Health status: fg/bg for text, accent for non-text marks */
+  /* 2.2 Health status: fg/bg for text (4.5:1), accent for non-text marks (3:1 on a card) */
   --status-normal-fg: #1f7a3d;
   --status-normal-bg: #e6f4ea;
   --status-normal-accent: #16a34a;
   --status-observed-fg: #8a6100;
   --status-observed-bg: #fff4cc;
-  --status-observed-accent: #f2b705;
+  --status-observed-accent: #b98c04;
   --status-alert-fg: #b24a00;
   --status-alert-bg: #ffe8d6;
-  --status-alert-accent: #f07f13;
+  --status-alert-accent: #e3760e;
   --status-critical-fg: #b3261e;
   --status-critical-bg: #fde7e7;
   --status-critical-accent: #d93025;
   --status-unknown-fg: #414851;
   --status-unknown-bg: #f2f4f6;
-  --status-unknown-accent: #9aa3af;
+  --status-unknown-accent: #8993a1;
 
   /* 2.3 Guinea pig marks: their hex comes from catalog_option in the database, not from a token */
 
@@ -108,103 +123,141 @@
   --transition-lift: 220ms cubic-bezier(0.4, 0, 0.2, 1);
   --rise-duration: 360ms;
   --pulse-duration: 600ms;
+  /* entering a page: short, so moving around never feels slow */
+  --page-enter-duration: 280ms;
+  /* the standard 'emphasized decelerate' curve: fast start, soft landing */
+  --ease-out-emphasized: cubic-bezier(0.2, 0, 0, 1);
   /* a little overshoot: things pop instead of just fading in */
   --ease-bounce: cubic-bezier(0.34, 1.56, 0.64, 1);
 }
 
 /* chosen in Ajustes > Preferencias */
 :root[data-theme='dark'] {
-  /* 2.8 Dark mode: same hues, dark warm-green surfaces; text pairs keep 4.5:1 */
+  /* 2.8 Dark mode, following the established rules for dark interfaces:
+     - no pure black: a dark green-gray base, so the green brand still belongs to it;
+     - elevation by tone, not by shadow: every level up is a lighter surface (shadows barely show on dark);
+     - desaturated colors: saturated hues vibrate on dark, so brand and statuses go lighter and softer;
+     - three text emphases (high, medium, low), all checked for WCAG AA in tokens.contrast.test.ts;
+     - color in small doses: large areas stay neutral, the green is kept for accents and actions;
+     - hairline borders made of light, so they work on every elevation;
+     - no color cast from the decoration, and pictures a little dimmer so they don't glare. */
   color-scheme: dark;
-  --color-primary: #74c69d;
-  --color-primary-hover: #95d5b2;
-  --color-primary-soft: #1d3a2c;
-  --color-accent: #8fb9a8;
-  --header-from: #2d6a4f;
-  --header-to: #10261c;
-  --gradient-brand: linear-gradient(135deg, #2f6f52 0%, #245a41 45%, #10261c 100%);
-  --color-bg: #111614;
-  --color-surface: #1a211e;
-  --color-border: #34413a;
-  --color-text: #ecebe6;
-  --color-text-muted: #a9b3ad;
-  --color-focus: #74c69d;
-  --color-cloud: rgb(255 255 255 / 0.06);
-  --glow-brand: rgb(116 198 157 / 0.1);
+  --color-primary: #7fc8a3;
+  --color-primary-hover: #9ad6b6;
+  --color-primary-soft: #1d3329;
+  --color-primary-strong: #2f6a50;
+  --color-accent: #93bdae;
+  --header-from: #18241f;
+  --header-to: #111a16;
+  --gradient-brand: linear-gradient(135deg, #357656 0%, #2b6248 50%, #20503a 100%);
+  --color-bg: #0e1311;
+  --color-surface: #151c19;
+  --color-surface-raised: #1b2420;
+  --color-surface-overlay: #222c28;
+  --color-border: #2d3a34;
+  --color-border-subtle: rgb(230 240 235 / 0.08);
+  --color-text: #e6ebe8;
+  --color-text-muted: #a3afa8;
+  --color-text-subtle: #8a968f;
+  --color-focus: #8fd3b1;
+  --color-cloud: rgb(230 240 235 / 0.025);
+  --glow-brand: rgb(127 200 163 / 0.06);
+  --elevation-edge: inset 0 1px 0 rgb(255 255 255 / 0.05);
+  --backdrop-opacity: 0.3;
+  --image-dim: 0.9;
+  --tint-strength: 70%;
+  --spotlight-color: rgb(143 211 177 / 0.07);
 
-  --status-normal-fg: #7ddc97;
-  --status-normal-bg: #13301e;
-  --status-normal-accent: #34c063;
-  --status-observed-fg: #f5cf5a;
-  --status-observed-bg: #33290c;
-  --status-observed-accent: #f2b705;
-  --status-alert-fg: #ffa868;
-  --status-alert-bg: #3a2210;
-  --status-alert-accent: #f07f13;
-  --status-critical-fg: #ff8f86;
-  --status-critical-bg: #3d1816;
-  --status-critical-accent: #e5483d;
-  --status-unknown-fg: #c5ccd4;
-  --status-unknown-bg: #242a31;
-  --status-unknown-accent: #8a94a1;
+  --status-normal-fg: #86d6a0;
+  --status-normal-bg: #14291c;
+  --status-normal-accent: #44ad6a;
+  --status-observed-fg: #e8c86a;
+  --status-observed-bg: #2b2411;
+  --status-observed-accent: #d4a62a;
+  --status-alert-fg: #f2a671;
+  --status-alert-bg: #321f12;
+  --status-alert-accent: #dc7b32;
+  --status-critical-fg: #f19c94;
+  --status-critical-bg: #351a1a;
+  --status-critical-accent: #d65a50;
+  --status-unknown-fg: #c3cad1;
+  --status-unknown-bg: #20262c;
+  --status-unknown-accent: #7d8793;
 
-  --shadow-card: 0 1px 2px rgb(0 0 0 / 0.4), 0 4px 14px rgb(0 0 0 / 0.3);
-  --shadow-lift: 0 12px 30px rgb(0 0 0 / 0.5);
-  --shadow-overlay: 0 8px 24px rgb(0 0 0 / 0.55);
-  --shadow-pop: 0 14px 34px rgb(0 0 0 / 0.55), 0 2px 6px rgb(0 0 0 / 0.4);
-  --ring-focus: 0 0 0 4px rgb(116 198 157 / 0.25);
-  --pastel-mint: #1f3a2d;
-  --pastel-sun: #3a3218;
-  --pastel-peach: #3b2a22;
-  --pastel-sky: #1c3039;
+  --shadow-card: 0 1px 2px rgb(0 0 0 / 0.45), inset 0 1px 0 rgb(255 255 255 / 0.04);
+  --shadow-lift: 0 12px 28px rgb(0 0 0 / 0.5), inset 0 1px 0 rgb(255 255 255 / 0.06);
+  --shadow-overlay: 0 16px 40px rgb(0 0 0 / 0.6), inset 0 1px 0 rgb(255 255 255 / 0.07);
+  --shadow-pop: 0 14px 34px rgb(0 0 0 / 0.55), inset 0 1px 0 rgb(255 255 255 / 0.06);
+  --ring-focus: 0 0 0 4px rgb(143 211 177 / 0.25);
+  --pastel-mint: #13221b;
+  --pastel-sun: #1a1a13;
+  --pastel-peach: #1a1615;
+  --pastel-sky: #121c20;
 }
 
 /* "Como el dispositivo": follows the system unless light was chosen */
 @media (prefers-color-scheme: dark) {
   :root:not([data-theme='light']) {
-    /* 2.8 Dark mode: same hues, dark warm-green surfaces; text pairs keep 4.5:1 */
+    /* 2.8 Dark mode, following the established rules for dark interfaces:
+       - no pure black: a dark green-gray base, so the green brand still belongs to it;
+       - elevation by tone, not by shadow: every level up is a lighter surface (shadows barely show on dark);
+       - desaturated colors: saturated hues vibrate on dark, so brand and statuses go lighter and softer;
+       - three text emphases (high, medium, low), all checked for WCAG AA in tokens.contrast.test.ts;
+       - color in small doses: large areas stay neutral, the green is kept for accents and actions;
+       - hairline borders made of light, so they work on every elevation;
+       - no color cast from the decoration, and pictures a little dimmer so they don't glare. */
     color-scheme: dark;
-    --color-primary: #74c69d;
-    --color-primary-hover: #95d5b2;
-    --color-primary-soft: #1d3a2c;
-    --color-accent: #8fb9a8;
-    --header-from: #2d6a4f;
-    --header-to: #10261c;
-    --gradient-brand: linear-gradient(135deg, #2f6f52 0%, #245a41 45%, #10261c 100%);
-    --color-bg: #111614;
-    --color-surface: #1a211e;
-    --color-border: #34413a;
-    --color-text: #ecebe6;
-    --color-text-muted: #a9b3ad;
-    --color-focus: #74c69d;
-    --color-cloud: rgb(255 255 255 / 0.06);
-    --glow-brand: rgb(116 198 157 / 0.1);
+    --color-primary: #7fc8a3;
+    --color-primary-hover: #9ad6b6;
+    --color-primary-soft: #1d3329;
+    --color-primary-strong: #2f6a50;
+    --color-accent: #93bdae;
+    --header-from: #18241f;
+    --header-to: #111a16;
+    --gradient-brand: linear-gradient(135deg, #357656 0%, #2b6248 50%, #20503a 100%);
+    --color-bg: #0e1311;
+    --color-surface: #151c19;
+    --color-surface-raised: #1b2420;
+    --color-surface-overlay: #222c28;
+    --color-border: #2d3a34;
+    --color-border-subtle: rgb(230 240 235 / 0.08);
+    --color-text: #e6ebe8;
+    --color-text-muted: #a3afa8;
+    --color-text-subtle: #8a968f;
+    --color-focus: #8fd3b1;
+    --color-cloud: rgb(230 240 235 / 0.025);
+    --glow-brand: rgb(127 200 163 / 0.06);
+    --elevation-edge: inset 0 1px 0 rgb(255 255 255 / 0.05);
+    --backdrop-opacity: 0.3;
+    --image-dim: 0.9;
+    --tint-strength: 70%;
+    --spotlight-color: rgb(143 211 177 / 0.07);
 
-    --status-normal-fg: #7ddc97;
-    --status-normal-bg: #13301e;
-    --status-normal-accent: #34c063;
-    --status-observed-fg: #f5cf5a;
-    --status-observed-bg: #33290c;
-    --status-observed-accent: #f2b705;
-    --status-alert-fg: #ffa868;
-    --status-alert-bg: #3a2210;
-    --status-alert-accent: #f07f13;
-    --status-critical-fg: #ff8f86;
-    --status-critical-bg: #3d1816;
-    --status-critical-accent: #e5483d;
-    --status-unknown-fg: #c5ccd4;
-    --status-unknown-bg: #242a31;
-    --status-unknown-accent: #8a94a1;
+    --status-normal-fg: #86d6a0;
+    --status-normal-bg: #14291c;
+    --status-normal-accent: #44ad6a;
+    --status-observed-fg: #e8c86a;
+    --status-observed-bg: #2b2411;
+    --status-observed-accent: #d4a62a;
+    --status-alert-fg: #f2a671;
+    --status-alert-bg: #321f12;
+    --status-alert-accent: #dc7b32;
+    --status-critical-fg: #f19c94;
+    --status-critical-bg: #351a1a;
+    --status-critical-accent: #d65a50;
+    --status-unknown-fg: #c3cad1;
+    --status-unknown-bg: #20262c;
+    --status-unknown-accent: #7d8793;
 
-    --shadow-card: 0 1px 2px rgb(0 0 0 / 0.4), 0 4px 14px rgb(0 0 0 / 0.3);
-    --shadow-lift: 0 12px 30px rgb(0 0 0 / 0.5);
-    --shadow-overlay: 0 8px 24px rgb(0 0 0 / 0.55);
-    --shadow-pop: 0 14px 34px rgb(0 0 0 / 0.55), 0 2px 6px rgb(0 0 0 / 0.4);
-    --ring-focus: 0 0 0 4px rgb(116 198 157 / 0.25);
-    --pastel-mint: #1f3a2d;
-    --pastel-sun: #3a3218;
-    --pastel-peach: #3b2a22;
-    --pastel-sky: #1c3039;
+    --shadow-card: 0 1px 2px rgb(0 0 0 / 0.45), inset 0 1px 0 rgb(255 255 255 / 0.04);
+    --shadow-lift: 0 12px 28px rgb(0 0 0 / 0.5), inset 0 1px 0 rgb(255 255 255 / 0.06);
+    --shadow-overlay: 0 16px 40px rgb(0 0 0 / 0.6), inset 0 1px 0 rgb(255 255 255 / 0.07);
+    --shadow-pop: 0 14px 34px rgb(0 0 0 / 0.55), inset 0 1px 0 rgb(255 255 255 / 0.06);
+    --ring-focus: 0 0 0 4px rgb(143 211 177 / 0.25);
+    --pastel-mint: #13221b;
+    --pastel-sun: #1a1a13;
+    --pastel-peach: #1a1615;
+    --pastel-sky: #121c20;
   }
 }
 

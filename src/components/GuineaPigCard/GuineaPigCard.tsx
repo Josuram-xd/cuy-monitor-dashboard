@@ -51,6 +51,7 @@ export function GuineaPigCard({ cageId, guineaPig, lastWindow, now }: GuineaPigC
     <Link
       to={cagePath(cageId, `/guinea-pigs/${guineaPig.id}`)}
       className={cx(styles.card, styles[status])}
+      data-spotlight
     >
       {/* a new element per pulse, so the animation runs again each time */}
       {pulses > 0 && <span key={pulses} className={styles.pulse} aria-hidden="true" />}

@@ -1,4 +1,8 @@
 .button {
+  /* the press ripple (src/motion/ripple.ts) is drawn inside and clipped to the pill */
+  position: relative;
+  overflow: hidden;
+  isolation: isolate;
   display: inline-flex;
   align-items: center;
   justify-content: center;

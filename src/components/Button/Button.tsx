@@ -1,5 +1,6 @@
-import type { ButtonHTMLAttributes } from 'react'
+import type { ButtonHTMLAttributes, PointerEvent } from 'react'
 import { Link, type LinkProps } from 'react-router'
+import { spawnRipple } from '../../motion/ripple'
 import { cx } from '../../utils/cx'
 import styles from './Button.module.css'
 
@@ -21,9 +22,20 @@ export function Button({
   fullWidth = false,
   type = 'button',
   className,
+  onPointerDown,
   ...rest
 }: ButtonProps) {
-  return <button type={type} className={buttonClass(variant, fullWidth, className)} {...rest} />
+  return (
+    <button
+      type={type}
+      className={buttonClass(variant, fullWidth, className)}
+      onPointerDown={(event: PointerEvent<HTMLButtonElement>) => {
+        spawnRipple(event)
+        onPointerDown?.(event)
+      }}
+      {...rest}
+    />
+  )
 }
 
 interface ButtonLinkProps extends LinkProps, ButtonStyleProps {}
@@ -33,7 +45,17 @@ export function ButtonLink({
   variant = 'secondary',
   fullWidth = false,
   className,
+  onPointerDown,
   ...rest
 }: ButtonLinkProps) {
-  return <Link className={buttonClass(variant, fullWidth, className)} {...rest} />
+  return (
+    <Link
+      className={buttonClass(variant, fullWidth, className)}
+      onPointerDown={(event: PointerEvent<HTMLAnchorElement>) => {
+        spawnRipple(event)
+        onPointerDown?.(event)
+      }}
+      {...rest}
+    />
+  )
 }

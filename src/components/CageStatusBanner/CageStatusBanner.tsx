@@ -57,7 +57,7 @@ export function CageStatusBanner({ health, liveIndicator, now }: CageStatusBanne
   const counts = health ? countByStatus(health) : []
 
   return (
-    <section className={cx(styles.banner, styles[status])}>
+    <section className={cx(styles.banner, styles[status])} data-spotlight>
       <span className={styles.mascotWrap}>
         <Mascot mood={MOODS[status]} size={150} className={styles.mascot} />
       </span>
