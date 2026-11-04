@@ -41,7 +41,8 @@
     "close": "Close",
     "refresh": "Refresh",
     "refreshing": "Refreshing…",
-    "refreshHint": "The data refreshes by itself every 30 seconds; tap to do it now"
+    "refreshHint": "The data refreshes by itself every 30 seconds; tap to do it now",
+    "maxLengthReached": "You've reached the maximum of {{max}} characters"
   },
   "errors": {
     "network": "There is no connection to the server. Check your internet and try again.",
