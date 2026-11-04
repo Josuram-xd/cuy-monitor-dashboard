@@ -13,31 +13,16 @@ import { Skeleton } from '../../components/Skeleton/Skeleton'
 import { TextAreaField } from '../../components/TextAreaField/TextAreaField'
 import { TextField } from '../../components/TextField/TextField'
 import { WeightField } from '../../components/WeightField/WeightField'
+import { catalogOptions } from '../../catalog/catalog'
 import { cagePath, useCageId } from '../../hooks/useCageId'
 import { useGuineaPigs } from '../../hooks/useGuineaPigs'
 import { useRegisterGuineaPig } from '../../hooks/useRegisterGuineaPig'
 import { useToast } from '../../components/Toast/useToast'
 import { t } from '../../i18n'
-import {
-  BREEDS,
-  COAT_COLORS,
-  MAX_NOTES_LENGTH,
-  MAX_WEIGHT_GRAMS,
-  MIN_WEIGHT_GRAMS,
-  type Breed,
-  type CoatColor,
-} from '../../types/GuineaPigProfile'
-import { MARK_COLORS, type MarkColor } from '../../types/MarkColor'
+import { MAX_NOTES_LENGTH, MAX_WEIGHT_GRAMS, MIN_WEIGHT_GRAMS } from '../../types/GuineaPigProfile'
 import styles from './RegisterGuineaPig.module.css'
 
 const MAX_NAME_LENGTH = 100
-
-const BREED_OPTIONS = BREEDS.map((value) => ({ value, label: t(`guineaPig.breed.${value}`) }))
-const COAT_OPTIONS = COAT_COLORS.map((value) => ({
-  value,
-  label: t(`guineaPig.coat.${value}`),
-  adornment: <CoatSwatch color={value} />,
-}))
 
 // "" = left empty (it is optional); otherwise a whole number of grams inside the limits
 function weightProblem(text: string): string | undefined {
@@ -57,9 +42,9 @@ export function RegisterGuineaPig() {
   const register = useRegisterGuineaPig(cageId)
   const toast = useToast()
   const [name, setName] = useState('')
-  const [color, setColor] = useState<MarkColor | null>(null)
-  const [breed, setBreed] = useState<Breed | null>(null)
-  const [coatColor, setCoatColor] = useState<CoatColor | null>(null)
+  const [color, setColor] = useState<string | null>(null)
+  const [breed, setBreed] = useState<string | null>(null)
+  const [coatColor, setCoatColor] = useState<string | null>(null)
   const [weight, setWeight] = useState('')
   const [notes, setNotes] = useState('')
   const [submitted, setSubmitted] = useState(false)
@@ -73,13 +58,20 @@ export function RegisterGuineaPig() {
     )
   }
 
-  const usedBy: Partial<Record<MarkColor, string>> = {}
+  const breedOptions = catalogOptions('breeds').map(({ code, label }) => ({ value: code, label }))
+  const coatOptions = catalogOptions('coatColors').map(({ code, label }) => ({
+    value: code,
+    label,
+    adornment: <CoatSwatch color={code} />,
+  }))
+
+  const usedBy: Record<string, string> = {}
   for (const guineaPig of guineaPigs.data) {
     usedBy[guineaPig.markColor] = guineaPig.name
   }
   // a color that was free when the page opened can be taken by the time it is sent
   const selectedColor = color !== null && usedBy[color] === undefined ? color : null
-  const allTaken = MARK_COLORS.every((c) => usedBy[c] !== undefined)
+  const allTaken = catalogOptions('markColors').every(({ code }) => usedBy[code] !== undefined)
 
   if (allTaken) {
     return (
@@ -154,7 +146,7 @@ export function RegisterGuineaPig() {
             <ChoiceChips
               legend={t('guineaPig.register.breed')}
               hint={t('common.optional')}
-              options={BREED_OPTIONS}
+              options={breedOptions}
               value={breed}
               onChange={setBreed}
             />
@@ -166,7 +158,7 @@ export function RegisterGuineaPig() {
             <ChoiceChips
               legend={t('guineaPig.register.coat')}
               hint={t('common.optional')}
-              options={COAT_OPTIONS}
+              options={coatOptions}
               value={coatColor}
               onChange={setCoatColor}
             />

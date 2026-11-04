@@ -54,11 +54,15 @@ The brand is green (PencilPlaybook palette). It shares the hue with the `NORMAL`
 - `accent` is only for non-text marks: the left border of a card, chart bands, the cage traffic light.
 - `UNKNOWN` is a UI-only state (not in the backend enum) used when a guinea pig has not been seen recently or data failed to load.
 
-### 2.3 Color — guinea pig marks (`MarkColor`)
+### 2.3 Color — guinea pig marks
 
 Mark colors identify **which** guinea pig it is. They are not status.
 
-| `MarkColor` | Label (es.json) | Swatch |
+**They are not a list written in this repo.** Each one is a row of `catalog_option` in the database, served at
+`GET /api/v1/catalog` with its `code`, its `label` in Spanish and its `hex`. The dot is painted with that `hex`
+and the name is that `label`, so adding a color is an `INSERT` and the dashboard does not change.
+
+| `code` | Label | Swatch |
 |---|---|---|
 | `RED` | Rojo | `#D62828` |
 | `BLUE` | Azul | `#1E63D6` |
@@ -68,6 +72,10 @@ Mark colors identify **which** guinea pig it is. They are not status.
 | `PURPLE` | Morado | `#7B3FB5` |
 | `BLACK` | Negro | `#1A1A1A` |
 | `WHITE` | Blanco | `#FFFFFF` |
+
+Those are the eight that migration `V10` inserts; the table above is what the database holds today, not a
+contract. A color retired there (`active = false`) stops being offered, and a guinea pig that wears it shows its
+code with a neutral dot.
 
 Rules: always render as `MarkColorDot` (a circle with a 1 px `--color-border` ring so white and black are visible on any surface) **next to the color name**. Never tint a whole card with the mark color.
 
@@ -289,6 +297,7 @@ Min height 44 px, `--radius-md`, visible focus ring.
 - Label always visible above the field (no placeholder-only labels).
 - Mark color picker: grid of `MarkColorDot` buttons; colors already used in the cage are disabled with the text "En uso".
 - Errors in `--status-critical-fg` below the field, with an icon.
+- **Every field has an explicit limit**, never only the browser's `required`: `maxLength` on the input so nothing endless can be typed, and the same cap checked in the form before sending (a paste can get past the attribute). The caps are the ones the backend rejects with `400`, kept in `src/auth/fieldLimits.ts` (usuario 50, nombre 150, correo 254) and `src/auth/passwordRules.ts` (contraseña nueva 64). The message is `auth.fields.required` or `auth.fields.tooLong`, and it appears after leaving the field or trying to send, not while typing the first letters.
 
 ### AuthLayout
 
@@ -405,7 +414,8 @@ Neutral banner (`--color-surface`, `--color-border`, info icon) on `/login`:
 | `AUDIO DISTRESS` | "Se escucharon chillidos de angustia en la jaula" |
 
 - Relative times: "hace 2 min", "hace 1 h", then absolute date after 24 h.
-- Never hardcode strings in JSX. Keys in English, grouped by screen: `cage.headline.allGood`, `guineaPig.lastSeen`, `alerts.markReviewed`, `status.OBSERVED`, `markColor.RED`, `auth.login.title`, `auth.verify.resend`, `auth.error.invalidCredentials`, `account.logout`.
+- Never hardcode strings in JSX. Keys in English, grouped by screen: `cage.headline.allGood`, `guineaPig.lastSeen`, `alerts.markReviewed`, `status.OBSERVED`, `auth.login.title`, `auth.verify.resend`, `auth.error.invalidCredentials`, `account.logout`.
+- The one exception: the names of mark colors, breeds and coat colors. They are **data**, not interface text, and come from `catalog_option` in the database already in Spanish, so they are not in `es.json` and `t()` is not used for them.
 
 ---
 

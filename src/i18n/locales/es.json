@@ -67,16 +67,6 @@
     "CRITICAL": "Crítico",
     "UNKNOWN": "Sin datos"
   },
-  "markColor": {
-    "RED": "Rojo",
-    "BLUE": "Azul",
-    "GREEN": "Verde",
-    "YELLOW": "Amarillo",
-    "ORANGE": "Naranja",
-    "PURPLE": "Morado",
-    "BLACK": "Negro",
-    "WHITE": "Blanco"
-  },
   "time": {
     "justNow": "hace un momento",
     "minutesAgo": "hace {{count}} min",
@@ -120,7 +110,8 @@
       "normal_other": "Normales ({{count}})",
       "noMatch": "Ningún cuy coincide con la búsqueda",
       "reset": "Ver todos"
-    }
+    },
+    "catalogError": "No pudimos cargar las listas de colores y razas."
   },
   "alerts": {
     "title": "Alertas",
@@ -182,26 +173,6 @@
       "historyTitle": "Historial de comportamiento y peso",
       "historySoon": "Estará disponible muy pronto."
     },
-    "breed": {
-      "AMERICAN": "Americano",
-      "PERUVIAN": "Peruano",
-      "ABYSSINIAN": "Abisinio",
-      "TEDDY": "Teddy",
-      "SILKIE": "Sedoso (Silkie)",
-      "SKINNY": "Skinny (sin pelo)",
-      "CRESTED": "Crestado",
-      "OTHER": "Otra o mestizo"
-    },
-    "coat": {
-      "WHITE": "Blanco",
-      "BLACK": "Negro",
-      "BROWN": "Café",
-      "CREAM": "Crema",
-      "GRAY": "Gris",
-      "CINNAMON": "Canela",
-      "BICOLOR": "Bicolor",
-      "TRICOLOR": "Tricolor"
-    },
     "still": "Quieto {{seconds}} de los últimos 60 s",
     "lastSeen": "Visto {{time}}",
     "notSeen": "No se ha visto {{time}}",
@@ -260,7 +231,9 @@
       "username": "Usuario",
       "fullName": "Nombre completo",
       "email": "Correo",
-      "password": "Contraseña"
+      "password": "Contraseña",
+      "required": "Este dato es obligatorio.",
+      "tooLong": "Este dato es demasiado largo."
     },
     "login": {
       "title": "Iniciar sesión",
@@ -273,7 +246,6 @@
       "title": "Crear cuenta",
       "submit": "Crear cuenta",
       "submitting": "Creando la cuenta…",
-      "required": "Este dato es obligatorio.",
       "invalidEmail": "Escribe un correo válido, por ejemplo nombre@gmail.com.",
       "haveAccount": "¿Ya tienes cuenta?",
       "toLogin": "Inicia sesión"

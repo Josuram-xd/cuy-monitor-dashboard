@@ -1,6 +1,6 @@
 import { useId } from 'react'
+import { catalogOptions } from '../../catalog/catalog'
 import { t } from '../../i18n'
-import { MARK_COLORS, type MarkColor } from '../../types/MarkColor'
 import { cx } from '../../utils/cx'
 import { Icon } from '../Icon/Icon'
 import { MarkColorDot } from '../MarkColorDot/MarkColorDot'
@@ -8,14 +8,14 @@ import styles from './MarkColorPicker.module.css'
 
 interface MarkColorPickerProps {
   legend: string
-  value: MarkColor | null
-  onChange: (color: MarkColor) => void
+  value: string | null
+  onChange: (color: string) => void
   // colors another guinea pig already wears -> the name of that guinea pig
-  usedBy?: Partial<Record<MarkColor, string>>
+  usedBy?: Record<string, string>
   error?: string
 }
 
-// Eight big options, one per mark color. A color that is already taken cannot be chosen: the
+// One big option per mark color of the catalog. A color that is already taken cannot be chosen: the
 // camera tells guinea pigs apart only by the mark, so two of the same color would be confused.
 export function MarkColorPicker({
   legend,
@@ -31,7 +31,7 @@ export function MarkColorPicker({
     <fieldset className={styles.fieldset} aria-describedby={error ? messageId : undefined}>
       <legend className={styles.legend}>{legend}</legend>
       <div className={styles.grid}>
-        {MARK_COLORS.map((color) => {
+        {catalogOptions('markColors').map(({ code: color }) => {
           const owner = usedBy[color]
           const taken = owner !== undefined
           return (

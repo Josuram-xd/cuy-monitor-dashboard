@@ -3,6 +3,7 @@ import { MockAccountApi } from './MockAccountApi'
 import { MockAlertApi } from './MockAlertApi'
 import { MockAuthApi } from './MockAuthApi'
 import { MockCageApi } from './MockCageApi'
+import { MockCatalogApi } from './MockCatalogApi'
 import { MockDatabase } from './MockDatabase'
 import { MockGuineaPigApi } from './MockGuineaPigApi'
 
@@ -13,5 +14,6 @@ export function createMockApi(db = new MockDatabase(), delayMs?: number): Dashbo
     cages: new MockCageApi(db, delayMs),
     guineaPigs: new MockGuineaPigApi(db, delayMs),
     alerts: new MockAlertApi(db, delayMs),
+    catalog: new MockCatalogApi(db, delayMs),
   }
 }
