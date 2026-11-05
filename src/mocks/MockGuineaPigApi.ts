@@ -3,7 +3,7 @@ import type { DateRange } from '../types/DateRange'
 import type { GuineaPig, GuineaPigHistory, NewGuineaPig } from '../types/GuineaPig'
 import { MAX_NOTES_LENGTH, MAX_WEIGHT_GRAMS, MIN_WEIGHT_GRAMS } from '../types/GuineaPigProfile'
 import type { CatalogKind } from '../types/Catalog'
-import { mockCatalog, mockTransitions, mockWindows } from './data'
+import { mockBaseline, mockCatalog, mockTransitions, mockWindows } from './data'
 import { MockResource } from './MockResource'
 
 const MAX_NAME_LENGTH = 100
@@ -89,6 +89,7 @@ export class MockGuineaPigApi extends MockResource implements GuineaPigApi {
       to,
       transitions: (mockTransitions[id] ?? []).filter((t) => this.inRange(t.occurredAt, from, to)),
       windows: mockWindows(id).filter((w) => this.inRange(w.occurredAt, from, to)),
+      baseline: mockBaseline(id),
     })
   }
 }
