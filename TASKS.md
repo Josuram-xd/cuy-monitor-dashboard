@@ -153,13 +153,14 @@ Rama: `feature/task-13-auth`. Se puede avanzar con mocks (cualquier usuario, có
 Rama: `feature/task-14-account`.
 🔗 **Depende de:** Task 13 · `cuy-monitor-backend` Task 19
 
-- [ ] **Task 14.1** — `feat(api): add account endpoints and useMe hook`
-- [ ] **Task 14.2** — `feat(account): add Account page with profile and logout`
-- [ ] **Task 14.3** — `feat(account): change password form`
-- [ ] **Task 14.4** — `feat(account): deactivate account with password confirmation`
+- [x] **Task 14.1** — `feat(api): add account endpoints and useMe hook`
+- [x] **Task 14.2** — `feat(account): add Account page with profile and logout`
+- [x] **Task 14.3** — `feat(account): change password form`
+- [x] **Task 14.4** — `feat(account): deactivate account with password confirmation`
   Botón `danger` + diálogo; al terminar, cierra la sesión con el aviso "Tu cuenta fue desactivada".
-- [ ] **Task 14.5** — `feat(router): add Cuenta tab to the bottom navigation`
-- [ ] **Task 14.6** — `test(account): cover profile update, password change and deactivation`
+- [x] **Task 14.5** — `feat(router): add Cuenta tab to the bottom navigation`
+- [x] **Task 14.6** — `test(account): cover profile update, password change and deactivation`
+  `Account.test.tsx`: 9 casos (perfil, contraseña, desactivación con y sin contraseña, cierre de sesión).
 
 ---
 
@@ -174,5 +175,5 @@ Rama: `feature/task-14-account`.
 
 ### Task 12 — Entrega
 
-- [ ] **Task 12.1** — `docs: update README with screenshots and setup`
+- [x] **Task 12.1** — `docs: update README with screenshots and setup`
 - [ ] **Task 12.2** — *(sin commit)* revisar todos los textos de `es.json` con alguien no técnico (la tía), incluido el registro y el login
