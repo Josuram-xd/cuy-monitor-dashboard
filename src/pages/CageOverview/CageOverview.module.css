@@ -133,3 +133,18 @@
     align-items: stretch;
   }
 }
+
+/* title on one side, the period on the other; stacked on a phone */
+.weightHead {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: flex-end;
+  justify-content: space-between;
+  gap: var(--space-3);
+}
+
+/* the previous period, while the new one arrives */
+.stale {
+  opacity: 0.55;
+  transition: opacity var(--transition-default);
+}
