@@ -405,7 +405,7 @@ Neutral banner (`--color-surface`, `--color-border`, info icon) on `/login`:
 
 | Chart | Type | Rules |
 |---|---|---|
-| `BehaviorChart` | Line (still seconds per 60 s window) + bar (feeder/waterer visits) | Main series in `--color-primary`; the guinea pig's normal range as a light band in `--color-border`; background bands with `--status-*-accent` at 12% opacity where the state was `OBSERVED`/`ALERT`/`CRITICAL` |
+| `BehaviorChart` | Line (still seconds per minute) + two small bar charts (feeder, waterer visits per hour) | Main series in `--color-primary`; the guinea pig's normal range (`baseline` of the history) as a band of `--color-primary` at 14%; background bands with `--status-*-accent` at 12% opacity where the state was `OBSERVED`/`ALERT`/`CRITICAL`. Seconds and visits never share an axis, and feeder/waterer are separate one-series charts: primary and accent are too close to tell two series apart (ΔE 7.6) |
 | `WeightChart` | Line (grams over time) | Only `stable: true` readings; y-axis starts at a sensible minimum, not at 0 |
 | State timeline | Horizontal segmented bar | One segment per state period, colored with `--status-*-accent`, labeled on hover/tap |
 
@@ -413,6 +413,9 @@ Neutral banner (`--color-surface`, `--color-border`, info icon) on `/login`:
 - Dates in Spanish (`es-CO` locale): "25 sep, 14:30".
 - Every chart has a one-line text summary above it ("Esta semana estuvo quieto más de lo normal") and an accessible description.
 - Range selector: "Hoy", "7 días", "30 días".
+- Points are grouped by hour (today), 6 hours (7 days) or day (30 days); ticks fall on round hours and grams.
+- Recharts colors come from CSS on its classes (`.recharts-line-curve`, …) with tokens, so light and dark need no JS.
+- Every chart has a crosshair tooltip and a "Ver los datos como tabla" view; the SVG itself is `aria-hidden`.
 
 ---
 
