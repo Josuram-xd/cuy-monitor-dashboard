@@ -1,5 +1,5 @@
 import type { RangePreset } from '../charts/timeRange'
-import type { AlertStatus } from '../types/Alert'
+import type { AlertHistoryFilter, AlertStatus } from '../types/Alert'
 
 // without the live connection, what can change on its own (states, alerts) is asked again this often
 export const LIVE_REFRESH_MS = 30_000
@@ -19,4 +19,6 @@ export const queryKeys = {
   // invalidating ['alerts'] refreshes every status and cage filter at once
   alerts: (status?: AlertStatus, cageId?: string) =>
     ['alerts', status ?? 'ALL', cageId ?? 'ALL'] as const,
+  // under ['alerts'] too: reviewing an alert also refreshes the history
+  alertHistory: (filter: AlertHistoryFilter) => ['alerts', 'history', filter] as const,
 }
