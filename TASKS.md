@@ -65,8 +65,8 @@
 
 🔗 **Depende de:** seguir con las Task 8.1–8.4 del repo `cuy-monitor-backend`
 
-- [ ] **Task 5.1** — `feat(api): switch cage and guinea pigs data to the real API`
-- [ ] **Task 5.2** — `feat(api): switch alerts to the real API`
+- [x] **Task 5.1** — `feat(api): switch cage and guinea pigs data to the real API`
+- [x] **Task 5.2** — `feat(api): switch alerts to the real API`
 - [ ] **Task 5.3** — *(sin commit)* construir la imagen con `VITE_USE_MOCKS=false` y verificar en el celular
 
 ### Task 6 — Actualizaciones en vivo
@@ -102,17 +102,19 @@
 
 🔗 **Depende de:** `cuy-monitor-backend` Task 13.1
 
-- [ ] **Task 9.1** — `feat(guinea-pig): add GuineaPigDetail page with current status`
-- [ ] **Task 9.2** — `feat(charts): add BehaviorChart with normal range and status bands`
-- [ ] **Task 9.3** — `feat(charts): add state timeline`
-- [ ] **Task 9.4** — `feat(charts): add date range selector (today, 7 days, 30 days)`
+- [x] **Task 9.1** — `feat(guinea-pig): add GuineaPigDetail page with current status`
+- [x] **Task 9.2** — `feat(charts): add BehaviorChart with normal range and status bands`
+  Tiempo quieto contra el perfil normal que manda el backend (`baseline`), con franjas donde no estuvo NORMAL; comedero y bebedero en gráficas aparte (un eje por gráfica). Resumen en una línea y tabla accesible.
+- [x] **Task 9.3** — `feat(charts): add state timeline`
+- [x] **Task 9.4** — `feat(charts): add date range selector (today, 7 days, 30 days)`
+  Hoy = desde la medianoche local. Puntos por hora, cada 6 h o por día según el periodo.
 
 ### Task 10 — Peso
 
 🔗 **Depende de:** `cuy-monitor-backend` Task 13.2 (y datos reales de `cuy-monitor-arduino` Task 5)
 
-- [ ] **Task 10.1** — `feat(charts): add WeightChart with stable readings only`
-- [ ] **Task 10.2** — `feat(weight): add weight section to the cage view`
+- [x] **Task 10.1** — `feat(charts): add WeightChart with stable readings only`
+- [x] **Task 10.2** — `feat(weight): add weight section to the cage view`
 
 ---
 

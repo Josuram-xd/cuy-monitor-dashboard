@@ -1,4 +1,4 @@
-import { useState } from 'react'
+import { Suspense, useState } from 'react'
 import { AlertList } from '../../components/AlertList/AlertList'
 import { Button, ButtonLink } from '../../components/Button/Button'
 import { CageStatusBanner } from '../../components/CageStatusBanner/CageStatusBanner'
@@ -13,9 +13,13 @@ import { GuineaPigGrid, GuineaPigGridItem } from '../../components/GuineaPigGrid
 import { RefreshButton } from '../../components/RefreshButton/RefreshButton'
 import { Reveal } from '../../components/Reveal/Reveal'
 import { LiveIndicator } from '../../components/LiveIndicator/LiveIndicator'
+import { RangeSelector } from '../../components/RangeSelector/RangeSelector'
 import { Skeleton } from '../../components/Skeleton/Skeleton'
 import { Icon } from '../../components/Icon/Icon'
+import { LazyWeightChart } from '../../charts/lazyCharts'
+import type { RangePreset } from '../../charts/timeRange'
 import { useAlerts } from '../../hooks/useAlerts'
+import { useCageWeight } from '../../hooks/useCageWeight'
 import { useCage } from '../../hooks/useCages'
 import { cagePath, useCageId } from '../../hooks/useCageId'
 import { useCageHealth } from '../../hooks/useCageHealth'
@@ -109,6 +113,45 @@ function OpenAlertsSection({ cageId, now }: { cageId: string; now: number }) {
   )
 }
 
+// The scale is under the whole cage: its weight belongs to the cage, not to one guinea pig
+function WeightSection({ cageId }: { cageId: string }) {
+  const [preset, setPreset] = useState<RangePreset>('today')
+  const weight = useCageWeight(cageId, preset)
+
+  return (
+    <section
+      className={styles.section}
+      aria-labelledby="weight-heading"
+      aria-busy={weight.isFetching}
+    >
+      <div className={styles.weightHead}>
+        <h2 id="weight-heading" className={styles.sectionTitle}>
+          {t('cage.weightTitle')}
+        </h2>
+        <RangeSelector value={preset} onChange={setPreset} />
+      </div>
+      <div className={styles.panel}>
+        {weight.isPending ? (
+          <Skeleton variant="line" count={3} />
+        ) : weight.isError ? (
+          <ErrorState message={t('cage.weightError')} onRetry={() => void weight.refetch()} />
+        ) : (
+          <div className={weight.isPlaceholderData ? styles.stale : undefined}>
+            <Suspense fallback={<Skeleton count={2} />}>
+              <LazyWeightChart
+                weight={weight.data.weight}
+                from={weight.data.from}
+                to={weight.data.to}
+                preset={preset}
+              />
+            </Suspense>
+          </div>
+        )}
+      </div>
+    </section>
+  )
+}
+
 export function CageOverview() {
   const cageId = useCageId()
   const cage = useCage(cageId)
@@ -176,6 +219,9 @@ export function CageOverview() {
           </section>
         </Reveal>
       </div>
+      <Reveal delay={200}>
+        <WeightSection cageId={cageId} />
+      </Reveal>
     </div>
   )
 }

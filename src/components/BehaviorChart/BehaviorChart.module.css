@@ -1,0 +1,193 @@
+.figure {
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-4);
+  margin: 0;
+}
+
+.summary {
+  margin: 0;
+  font-weight: 600;
+}
+
+.empty {
+  margin: 0;
+  color: var(--color-text-muted);
+}
+
+.chartTitle {
+  margin: 0 0 var(--space-1);
+  font-size: var(--text-small-size);
+  line-height: var(--text-small-line);
+  font-weight: 600;
+}
+
+/* the legend is text in text colors; the swatch next to it carries the identity */
+.legend {
+  display: flex;
+  flex-wrap: wrap;
+  gap: var(--space-1) var(--space-4);
+  margin: 0 0 var(--space-2);
+  padding: 0;
+  list-style: none;
+  color: var(--color-text-muted);
+  font-size: var(--text-caption-size);
+  line-height: var(--text-caption-line);
+}
+
+.legend li {
+  display: inline-flex;
+  align-items: center;
+  gap: var(--space-2);
+}
+
+.swatch {
+  display: inline-block;
+  width: 16px;
+  height: 10px;
+  border-radius: var(--radius-sm);
+}
+
+.swatchLine {
+  height: 2px;
+  background: var(--color-primary);
+}
+
+.swatchNormal {
+  background: color-mix(in srgb, var(--color-primary) 14%, transparent);
+  outline: 1px dashed color-mix(in srgb, var(--color-primary) 45%, transparent);
+}
+
+.swatchStatus {
+  background: linear-gradient(
+    90deg,
+    color-mix(in srgb, var(--status-observed-accent) 30%, transparent) 0 33%,
+    color-mix(in srgb, var(--status-alert-accent) 30%, transparent) 33% 66%,
+    color-mix(in srgb, var(--status-critical-accent) 30%, transparent) 66%
+  );
+}
+
+.plot {
+  height: 220px;
+}
+
+.plotSmall {
+  height: 140px;
+}
+
+.minis {
+  display: grid;
+  gap: var(--space-4);
+}
+
+@media (min-width: 560px) {
+  .minis {
+    grid-template-columns: 1fr 1fr;
+  }
+}
+
+.mini {
+  min-width: 0;
+}
+
+/* Recharts sets its own colors as attributes; CSS wins, so every mark wears a token */
+.plot :global(.recharts-cartesian-axis-tick-value),
+.plotSmall :global(.recharts-cartesian-axis-tick-value) {
+  fill: var(--color-text-muted);
+  font-size: var(--text-caption-size);
+}
+
+.plot :global(.recharts-cartesian-grid line),
+.plotSmall :global(.recharts-cartesian-grid line) {
+  stroke: var(--color-border-subtle);
+}
+
+.plot :global(.recharts-line-curve) {
+  stroke: var(--color-primary);
+  stroke-width: 2;
+}
+
+.plot :global(.recharts-active-dot circle) {
+  fill: var(--color-primary);
+  stroke: var(--color-surface);
+  stroke-width: 2;
+}
+
+.plotSmall :global(.recharts-bar-rectangle .recharts-rectangle) {
+  fill: var(--color-primary);
+}
+
+.plot :global(.recharts-tooltip-cursor) {
+  stroke: var(--color-text-subtle);
+}
+
+.plotSmall :global(.recharts-tooltip-cursor) {
+  fill: color-mix(in srgb, var(--color-text) 6%, transparent);
+}
+
+.plotSmall :global(.recharts-reference-line-line) {
+  stroke: var(--color-text-muted);
+  stroke-dasharray: 4 4;
+}
+
+.normalBand {
+  fill: color-mix(in srgb, var(--color-primary) 14%, transparent);
+}
+
+/* where it was not NORMAL, at 12% so the line stays on top (DESIGN_SYSTEM 4) */
+.bandOBSERVED {
+  fill: color-mix(in srgb, var(--status-observed-accent) 12%, transparent);
+}
+
+.bandALERT {
+  fill: color-mix(in srgb, var(--status-alert-accent) 12%, transparent);
+}
+
+.bandCRITICAL {
+  fill: color-mix(in srgb, var(--status-critical-accent) 12%, transparent);
+}
+
+.bandUNKNOWN {
+  fill: color-mix(in srgb, var(--status-unknown-accent) 12%, transparent);
+}
+
+.table summary {
+  min-height: var(--touch-target);
+  display: flex;
+  align-items: center;
+  color: var(--color-primary);
+  cursor: pointer;
+  font-weight: 600;
+}
+
+.table table {
+  width: 100%;
+  border-collapse: collapse;
+  font-size: var(--text-small-size);
+  font-variant-numeric: tabular-nums;
+}
+
+.table th,
+.table td {
+  padding: var(--space-1) var(--space-2);
+  border-bottom: 1px solid var(--color-border-subtle);
+  text-align: left;
+}
+
+.table thead th {
+  color: var(--color-text-muted);
+  font-weight: 600;
+}
+
+.table tbody th {
+  font-weight: 500;
+}
+
+.srOnly {
+  position: absolute;
+  width: 1px;
+  height: 1px;
+  overflow: hidden;
+  clip-path: inset(50%);
+  white-space: nowrap;
+}

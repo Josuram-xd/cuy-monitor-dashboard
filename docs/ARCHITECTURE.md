@@ -52,11 +52,14 @@ cuy-monitor-dashboard/
     │   ├── DashboardApi.ts interfaces CageApi, GuineaPigApi, AlertApi (auth/account added in Tasks 13–14)
     │   ├── http/           HttpCageApi, HttpGuineaPigApi, HttpAlertApi: call the backend through HttpClient
     │   └── apiProvider.ts  getDashboardApi(): picks HTTP or mocks once (VITE_USE_MOCKS)
-    ├── hooks/              useCageHealth, useGuineaPigs, useGuineaPigHistory, useAlerts, useProfile (TanStack Query)
+    ├── hooks/              useCageHealth, useGuineaPigs, useGuineaPigHistory, useCageWeight, useAlerts, useProfile
+    │                       (TanStack Query; history and weight are keyed by the period, not by the dates)
+    ├── charts/             pure helpers of the charts (periods, buckets, normal range, ticks) + lazyCharts:
+    │                       Recharts is only downloaded when a page with a chart opens
     ├── realtime/
     │   └── useLiveCage.ts  STOMP client (only with a session), cookie on the handshake, updates the query cache
     ├── pages/              Login, Register, VerifyCode, CageOverview, GuineaPigDetail, Alerts,
-    │                       RegisterGuineaPig, Weight, Account
+    │                       RegisterGuineaPig, Account (the weight is a section of CageOverview)
     ├── components/         see DESIGN_SYSTEM.md
     ├── mocks/              MockCageApi, MockGuineaPigApi, MockAlertApi (extend MockResource) over a shared
     │                       MockDatabase; used when VITE_USE_MOCKS=true (incl. fake auth, code 123456)

@@ -38,10 +38,18 @@ export interface BehaviorWindow {
   avgGroupDistance: number
 }
 
+// what is normal for this guinea pig, learned by the backend (its default until learned)
+export interface BaselineProfile {
+  avgStillSeconds: number
+  avgFeederVisits: number
+  avgGroupDistance: number
+}
+
 export interface GuineaPigHistory {
   guineaPigId: number
   from: string
   to: string
   transitions: StatusTransition[]
   windows: BehaviorWindow[]
+  baseline: BaselineProfile
 }

@@ -1,7 +1,12 @@
 import type { Alert } from '../types/Alert'
 import type { Catalog } from '../types/Catalog'
 import type { Cage } from '../types/Cage'
-import type { GuineaPig, StatusTransition, BehaviorWindow } from '../types/GuineaPig'
+import type {
+  BaselineProfile,
+  BehaviorWindow,
+  GuineaPig,
+  StatusTransition,
+} from '../types/GuineaPig'
 import type { WeightReading } from '../types/WeightReading'
 
 const MINUTE = 60_000
@@ -163,29 +168,56 @@ export const mockTransitions: Record<number, StatusTransition[]> = {
   ],
 }
 
-// One window every 5 minutes for the last 24 hours. Values are made up but stable between reloads.
+// the backend's default profile, a little different per guinea pig as if it had been learned
+export function mockBaseline(guineaPigId: number): BaselineProfile {
+  return {
+    avgStillSeconds: 24 + (guineaPigId % 3) * 2,
+    avgFeederVisits: 0.4,
+    avgGroupDistance: 0.55,
+  }
+}
+
+const HISTORY_DAYS = 30
+
+// minutes ago of each sample: every `recent` minutes for the last day, every `older` minutes before that,
+// so 30 days of history stay light
+function sampleTimes(recent: number, older: number): number[] {
+  const times: number[] = []
+  for (let minutes = HISTORY_DAYS * 24 * 60; minutes > 24 * 60; minutes -= older) {
+    times.push(minutes)
+  }
+  for (let minutes = 24 * 60; minutes >= 0; minutes -= recent) {
+    times.push(minutes)
+  }
+  return times
+}
+
+// 30 days of 60 s windows: one every 5 minutes for the last day, every hour before. Made up but stable.
 export function mockWindows(guineaPigId: number): BehaviorWindow[] {
   const windows: BehaviorWindow[] = []
-  for (let minutes = 24 * 60; minutes >= 0; minutes -= 5) {
+  for (const minutes of sampleTimes(5, 60)) {
     const wave = Math.sin((minutes + guineaPigId * 37) / 90)
     const alertBoost = guineaPigId === 4 && minutes <= 90 ? 20 : 0
     windows.push({
       occurredAt: minutesAgo(minutes),
       stillSeconds: Math.round(Math.min(60, 25 + wave * 15 + alertBoost)),
-      feederVisits: alertBoost ? 0 : Math.max(0, Math.round(1 + wave)),
-      watererVisits: Math.max(0, Math.round(0.5 - wave)),
+      // a visit in a 60 s window is the exception, not the rule
+      feederVisits: alertBoost || wave < 0.3 ? 0 : 1,
+      watererVisits: wave < -0.6 ? 1 : 0,
       avgGroupDistance: Number((0.5 + Math.abs(wave) * 0.3).toFixed(2)),
     })
   }
   return windows
 }
 
-// One reading every 30 minutes; every fourth one is taken while the guinea pigs move, so it is unstable.
+// 30 days of readings, every 30 minutes for the last day and every 3 hours before; every fourth one is
+// taken while the guinea pigs move, so it is unstable. The cage gains a little weight over the month.
 export function mockWeightReadings(): WeightReading[] {
   const readings: WeightReading[] = []
-  for (let minutes = 24 * 60, i = 0; minutes >= 0; minutes -= 30, i++) {
+  for (const [i, minutes] of sampleTimes(30, 180).entries()) {
     const stable = i % 4 !== 3
-    const grams = 3240 + Math.sin(minutes / 200) * 40 + (stable ? 0 : 180)
+    const growth = ((HISTORY_DAYS * 24 * 60 - minutes) / (24 * 60)) * 4
+    const grams = 3120 + growth + Math.sin(minutes / 200) * 40 + (stable ? 0 : 180)
     readings.push({ grams: Number(grams.toFixed(1)), stable, measuredAt: minutesAgo(minutes) })
   }
   return readings

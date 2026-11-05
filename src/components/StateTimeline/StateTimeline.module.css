@@ -1,0 +1,128 @@
+.timeline {
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-2);
+}
+
+/* one bar, a 2px surface gap between periods so neighbors never blur into each other */
+.bar {
+  display: flex;
+  gap: 2px;
+  height: 28px;
+  padding: 2px;
+  border-radius: var(--radius-md);
+  background: var(--color-surface);
+  box-shadow: inset 0 0 0 1px var(--color-border);
+}
+
+.segment {
+  flex: var(--share) 1 0;
+  min-width: 6px;
+  padding: 0;
+  border: none;
+  border-radius: var(--radius-sm);
+  cursor: pointer;
+  transition:
+    transform var(--transition-default),
+    filter var(--transition-default);
+}
+
+.segment:focus-visible {
+  outline: none;
+  box-shadow: var(--ring-focus);
+}
+
+.selected {
+  transform: scaleY(1.18);
+  filter: saturate(1.15);
+}
+
+.NORMAL {
+  background: var(--status-normal-accent);
+}
+
+.OBSERVED {
+  background: var(--status-observed-accent);
+}
+
+.ALERT {
+  background: var(--status-alert-accent);
+}
+
+.CRITICAL {
+  background: var(--status-critical-accent);
+}
+
+.UNKNOWN {
+  background: var(--status-unknown-accent);
+}
+
+.axis {
+  display: flex;
+  justify-content: space-between;
+  color: var(--color-text-muted);
+  font-size: var(--text-caption-size);
+  line-height: var(--text-caption-line);
+}
+
+.detail {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: var(--space-2);
+  margin: 0;
+  color: var(--color-text-muted);
+  font-size: var(--text-small-size);
+}
+
+.calm {
+  margin: 0;
+  color: var(--color-text-muted);
+}
+
+.changes {
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-2);
+  margin: var(--space-2) 0 0;
+  padding: 0;
+  list-style: none;
+}
+
+.change {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  justify-content: space-between;
+  gap: var(--space-2);
+  padding: var(--space-2) 0;
+  border-top: 1px solid var(--color-border-subtle);
+}
+
+.when {
+  color: var(--color-text-muted);
+  font-size: var(--text-small-size);
+  font-variant-numeric: tabular-nums;
+}
+
+.move {
+  display: inline-flex;
+  align-items: center;
+  gap: var(--space-2);
+  color: var(--color-text-muted);
+}
+
+.srOnly {
+  position: absolute;
+  width: 1px;
+  height: 1px;
+  overflow: hidden;
+  clip-path: inset(50%);
+  white-space: nowrap;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .segment {
+    transition: none;
+  }
+}

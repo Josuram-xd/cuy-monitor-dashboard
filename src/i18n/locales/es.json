@@ -112,7 +112,9 @@
       "noMatch": "Ningún cuy coincide con la búsqueda",
       "reset": "Ver todos"
     },
-    "catalogError": "No pudimos cargar las listas de colores y razas."
+    "catalogError": "No pudimos cargar las listas de colores y razas.",
+    "weightTitle": "Peso de la jaula",
+    "weightError": "No pudimos cargar el peso."
   },
   "alerts": {
     "title": "Alertas",
@@ -171,8 +173,10 @@
       "alerts": "Alertas de {{name}}",
       "noAlerts": "{{name}} no tiene alertas. ¡Todo tranquilo!",
       "notFound": "No encontramos a este cuy. Puede que ya lo hayas eliminado.",
-      "historyTitle": "Historial de comportamiento y peso",
-      "historySoon": "Estará disponible muy pronto."
+      "historyTitle": "Historial",
+      "behaviorTitle": "Comportamiento",
+      "timelineTitle": "Estados de salud",
+      "historyError": "No pudimos cargar el historial."
     },
     "still": "Quieto {{seconds}} de los últimos 60 s",
     "lastSeen": "Visto {{time}}",
@@ -397,5 +401,56 @@
   "languages": {
     "es": "Español",
     "en": "English"
+  },
+  "charts": {
+    "showTable": "Ver los datos como tabla",
+    "when": "Cuándo",
+    "range": {
+      "label": "Periodo",
+      "today": "Hoy",
+      "week": "7 días",
+      "month": "30 días"
+    },
+    "behavior": {
+      "summary": {
+        "noData": "Todavía no hay registros de {{name}} en este periodo.",
+        "stillMore": "En este periodo {{name}} estuvo quieto más de lo normal para él.",
+        "stillLess": "En este periodo {{name}} estuvo más activo que de costumbre.",
+        "usual": "En este periodo {{name}} se movió como siempre."
+      },
+      "noData": "Todavía no hay registros de {{name}} en este periodo.",
+      "stillTitle": "Tiempo quieto (segundos de cada minuto)",
+      "stillSeries": "{{name}}",
+      "normalRange": "Lo normal para él: de {{low}} a {{high}} s",
+      "statusBands": "Franjas de color: cuando no estuvo normal",
+      "still": "Quieto",
+      "seconds": "{{value}} s",
+      "perHour": "Visitas por hora",
+      "feederTitle": "Comedero (visitas por hora)",
+      "watererTitle": "Bebedero (visitas por hora)",
+      "tableCaption": "Comportamiento de {{name}} en el periodo"
+    },
+    "timeline": {
+      "label": "Estados en el periodo",
+      "period": "{{status}}, del {{from}} al {{to}}",
+      "between": "del {{from}} al {{to}}",
+      "changes": "Cambios de estado",
+      "to": "pasó a",
+      "noChanges": "Sin cambios de estado en este periodo: estuvo «{{status}}» todo el tiempo."
+    },
+    "weight": {
+      "title": "Peso de la jaula",
+      "cage": "Peso",
+      "grams": "{{grams}} g",
+      "latest": "Última medición: {{time}}",
+      "stableOnly": "Solo se muestran las mediciones tomadas con los cuyes quietos.",
+      "noData": "Todavía no hay mediciones de peso en este periodo.",
+      "summary": {
+        "tooFew": "Hacen falta más mediciones para ver si el peso cambia.",
+        "steady": "El peso se mantuvo estable en este periodo.",
+        "gained": "La jaula subió {{grams}} g en este periodo.",
+        "lost": "La jaula bajó {{grams}} g en este periodo. Revisa si comen bien."
+      }
+    }
   }
 }

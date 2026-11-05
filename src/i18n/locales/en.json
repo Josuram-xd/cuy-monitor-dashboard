@@ -107,7 +107,9 @@
       "noMatch": "No guinea pig matches the search",
       "reset": "Show all"
     },
-    "catalogError": "We couldn't load the lists of colors and breeds."
+    "catalogError": "We couldn't load the lists of colors and breeds.",
+    "weightTitle": "Cage weight",
+    "weightError": "We couldn't load the weight."
   },
   "alerts": {
     "title": "Alerts",
@@ -165,8 +167,10 @@
       "alerts": "{{name}}'s alerts",
       "noAlerts": "{{name}} has no alerts. All calm!",
       "notFound": "We couldn't find this guinea pig. You may have deleted it already.",
-      "historyTitle": "Behavior and weight history",
-      "historySoon": "It will be available very soon."
+      "historyTitle": "History",
+      "behaviorTitle": "Behavior",
+      "timelineTitle": "Health states",
+      "historyError": "We couldn't load the history."
     },
     "still": "Still {{seconds}} of the last 60 s",
     "lastSeen": "Seen {{time}}",
@@ -388,5 +392,56 @@
   "languages": {
     "es": "Español",
     "en": "English"
+  },
+  "charts": {
+    "showTable": "See the data as a table",
+    "when": "When",
+    "range": {
+      "label": "Period",
+      "today": "Today",
+      "week": "7 days",
+      "month": "30 days"
+    },
+    "behavior": {
+      "summary": {
+        "noData": "There are no records of {{name}} in this period yet.",
+        "stillMore": "In this period {{name}} was still for longer than usual.",
+        "stillLess": "In this period {{name}} was more active than usual.",
+        "usual": "In this period {{name}} moved as usual."
+      },
+      "noData": "There are no records of {{name}} in this period yet.",
+      "stillTitle": "Time still (seconds of each minute)",
+      "stillSeries": "{{name}}",
+      "normalRange": "Normal for it: {{low}} to {{high}} s",
+      "statusBands": "Colored bands: when it was not normal",
+      "still": "Still",
+      "seconds": "{{value}} s",
+      "perHour": "Visits per hour",
+      "feederTitle": "Feeder (visits per hour)",
+      "watererTitle": "Waterer (visits per hour)",
+      "tableCaption": "Behavior of {{name}} in the period"
+    },
+    "timeline": {
+      "label": "States in the period",
+      "period": "{{status}}, from {{from}} to {{to}}",
+      "between": "from {{from}} to {{to}}",
+      "changes": "State changes",
+      "to": "changed to",
+      "noChanges": "No state changes in this period: it was “{{status}}” the whole time."
+    },
+    "weight": {
+      "title": "Cage weight",
+      "cage": "Weight",
+      "grams": "{{grams}} g",
+      "latest": "Last reading: {{time}}",
+      "stableOnly": "Only readings taken while the guinea pigs were still are shown.",
+      "noData": "There are no weight readings in this period yet.",
+      "summary": {
+        "tooFew": "More readings are needed to see whether the weight changes.",
+        "steady": "The weight stayed steady in this period.",
+        "gained": "The cage gained {{grams}} g in this period.",
+        "lost": "The cage lost {{grams}} g in this period. Check that they are eating well."
+      }
+    }
   }
 }

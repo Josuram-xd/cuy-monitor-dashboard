@@ -69,14 +69,15 @@ describe('CageOverview', () => {
     const failure = () => Promise.reject(new ApiError(0, 'network_error'))
     setApi({
       ...api,
-      cages: { ...api.cages, getHealth: failure },
+      cages: { ...api.cages, getHealth: failure, getWeight: failure },
       guineaPigs: { ...api.guineaPigs, list: failure },
     })
 
     renderInCage(<CageOverview />)
 
-    expect(await screen.findByRole('alert')).toHaveTextContent('No pudimos cargar los cuyes')
-    expect(screen.getByRole('button', { name: 'Intentar de nuevo' })).toBeInTheDocument()
+    expect(await screen.findByText(/No pudimos cargar los cuyes/)).toBeInTheDocument()
+    expect(await screen.findByText('No pudimos cargar el peso.')).toBeInTheDocument()
+    expect(screen.getAllByRole('button', { name: 'Intentar de nuevo' })).toHaveLength(2)
     expect(screen.getByText('Aún no hay datos de la jaula')).toBeInTheDocument()
   })
 
@@ -143,5 +144,20 @@ describe('CageOverview', () => {
     await user.click(screen.getByRole('button', { name: 'Actualizar' }))
 
     await waitFor(() => expect(getHealth.mock.calls.length).toBeGreaterThan(before))
+  })
+
+  it('shows the weight of the cage with only its stable readings', async () => {
+    renderInCage(<CageOverview />)
+
+    const weight = await screen.findByRole('region', { name: 'Peso de la jaula' })
+    // the chart is loaded on demand
+    expect(
+      await within(weight).findByText(/^Última medición:/, undefined, { timeout: 5000 }),
+    ).toBeInTheDocument()
+    expect(within(weight).getByText(/cuyes quietos/)).toBeInTheDocument()
+    expect(within(weight).getByRole('radio', { name: 'Hoy' })).toHaveAttribute(
+      'aria-checked',
+      'true',
+    )
   })
 })
