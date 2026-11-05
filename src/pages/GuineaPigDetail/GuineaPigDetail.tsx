@@ -1,4 +1,4 @@
-import type { ReactNode } from 'react'
+import { Suspense, useState, type ReactNode } from 'react'
 import { useParams } from 'react-router'
 import { AlertList } from '../../components/AlertList/AlertList'
 import { ButtonLink } from '../../components/Button/Button'
@@ -6,13 +6,17 @@ import { CoatSwatch } from '../../components/CoatSwatch/CoatSwatch'
 import { EmptyState } from '../../components/EmptyState/EmptyState'
 import { ErrorState } from '../../components/ErrorState/ErrorState'
 import { Icon } from '../../components/Icon/Icon'
-import { Mascot } from '../../components/Mascot/Mascot'
 import { MarkColorDot } from '../../components/MarkColorDot/MarkColorDot'
 import { catalogLabel } from '../../catalog/catalog'
+import { RangeSelector } from '../../components/RangeSelector/RangeSelector'
 import { Skeleton } from '../../components/Skeleton/Skeleton'
+import { StateTimeline } from '../../components/StateTimeline/StateTimeline'
 import { StatusBadge } from '../../components/StatusBadge/StatusBadge'
+import { LazyBehaviorChart } from '../../charts/lazyCharts'
+import type { RangePreset } from '../../charts/timeRange'
 import { useAlerts } from '../../hooks/useAlerts'
 import { cagePath, useCageId } from '../../hooks/useCageId'
+import { useGuineaPigHistory } from '../../hooks/useGuineaPigHistory'
 import { useGuineaPigs } from '../../hooks/useGuineaPigs'
 import { useNow } from '../../hooks/useNow'
 import { t } from '../../i18n'
@@ -49,8 +53,57 @@ function Alerts({ cageId, guineaPig, now }: { cageId: string; guineaPig: GuineaP
   return <AlertList alerts={mine} guineaPigs={[guineaPig]} now={now} />
 }
 
+// Its behavior and its states over the chosen period. One range selector above both charts; while a new
+// range loads, the previous one stays on screen, dimmed, instead of a jump to a skeleton.
+function History({ guineaPig }: { guineaPig: GuineaPig }) {
+  const [preset, setPreset] = useState<RangePreset>('today')
+  const history = useGuineaPigHistory(guineaPig.id, preset)
+
+  return (
+    <section
+      className={styles.card}
+      aria-labelledby="history-heading"
+      aria-busy={history.isFetching}
+    >
+      <div className={styles.historyHead}>
+        <h2 id="history-heading" className={styles.cardTitle}>
+          {t('guineaPig.detail.historyTitle')}
+        </h2>
+        <RangeSelector value={preset} onChange={setPreset} />
+      </div>
+      {history.isPending ? (
+        <Skeleton count={2} />
+      ) : history.isError ? (
+        <ErrorState
+          message={t('guineaPig.detail.historyError')}
+          onRetry={() => void history.refetch()}
+        />
+      ) : (
+        <div className={history.isPlaceholderData ? styles.stale : styles.fresh}>
+          <h3 className={styles.subTitle}>{t('guineaPig.detail.timelineTitle')}</h3>
+          <StateTimeline
+            transitions={history.data.transitions}
+            from={history.data.from}
+            to={history.data.to}
+            currentStatus={guineaPig.status}
+          />
+          <h3 className={styles.subTitle}>{t('guineaPig.detail.behaviorTitle')}</h3>
+          <Suspense fallback={<Skeleton count={2} />}>
+            <LazyBehaviorChart
+              history={history.data}
+              name={guineaPig.name}
+              currentStatus={guineaPig.status}
+              preset={preset}
+            />
+          </Suspense>
+        </div>
+      )}
+    </section>
+  )
+}
+
 // What we know about one guinea pig, from the list the cage page already loaded: who it is, how it is doing,
-// what its owner told when registering it, and its alerts. The behavior history comes later.
+// what its owner told when registering it, its alerts, and its history.
 export function GuineaPigDetail() {
   const { id } = useParams()
   const cageId = useCageId()
@@ -147,15 +200,7 @@ export function GuineaPigDetail() {
         <Alerts cageId={cageId} guineaPig={guineaPig} now={now} />
       </section>
 
-      <section className={styles.soon} aria-labelledby="history-heading">
-        <Mascot mood="sleepy" size={96} />
-        <div>
-          <h2 id="history-heading" className={styles.cardTitle}>
-            {t('guineaPig.detail.historyTitle')}
-          </h2>
-          <p className={styles.soonText}>{t('guineaPig.detail.historySoon')}</p>
-        </div>
-      </section>
+      <History guineaPig={guineaPig} />
     </div>
   )
 }

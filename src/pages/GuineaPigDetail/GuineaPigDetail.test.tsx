@@ -1,4 +1,5 @@
 import { screen, within } from '@testing-library/react'
+import userEvent from '@testing-library/user-event'
 import { Route, Routes } from 'react-router'
 import { beforeEach, describe, expect, it, vi } from 'vitest'
 import { getDashboardApi } from '../../api/apiProvider'
@@ -76,10 +77,38 @@ describe('GuineaPigDetail', () => {
     )
   })
 
-  it('tells that the history is still to come', async () => {
-    renderAt(api, '1')
+  it('shows the states and the behavior of the guinea pig in the period', async () => {
+    // Chispa (4) went from Normal to observed and then to alert in the last two hours
+    renderAt(api, '4')
 
-    expect(await screen.findByText('Historial de comportamiento y peso')).toBeInTheDocument()
-    expect(screen.getByText('Estará disponible muy pronto.')).toBeInTheDocument()
+    const history = await screen.findByRole('region', { name: 'Historial' })
+    expect(
+      await within(history).findByRole('list', { name: 'Cambios de estado' }),
+    ).toBeInTheDocument()
+    expect(within(history).getAllByRole('listitem').length).toBeGreaterThanOrEqual(2)
+    expect(
+      await within(history).findByText(/estuvo quieto|se movió|más activo/, undefined, {
+        timeout: 5000,
+      }),
+    ).toBeInTheDocument()
+    expect(within(history).getByText(/^Lo normal para él/)).toBeInTheDocument()
+    expect(within(history).getByText('Ver los datos como tabla')).toBeInTheDocument()
+  })
+
+  it('asks the history again when another period is chosen', async () => {
+    const getHistory = vi.spyOn(api.guineaPigs, 'getHistory')
+    renderAt(api, '2')
+    const history = await screen.findByRole('region', { name: 'Historial' })
+    // the chart is loaded on demand: the first time it can take longer than findBy's default second
+    await within(history).findByText('Ver los datos como tabla', undefined, { timeout: 5000 })
+
+    await userEvent.click(within(history).getByRole('radio', { name: '7 días' }))
+
+    expect(within(history).getByRole('radio', { name: '7 días' })).toHaveAttribute(
+      'aria-checked',
+      'true',
+    )
+    const [, range] = getHistory.mock.calls.at(-1) ?? []
+    expect(Date.parse(range?.to ?? '') - Date.parse(range?.from ?? '')).toBe(7 * 86_400_000)
   })
 })

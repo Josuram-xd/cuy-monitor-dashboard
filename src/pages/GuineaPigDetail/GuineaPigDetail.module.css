@@ -172,20 +172,30 @@
   color: var(--color-text-muted);
 }
 
-/* what is still to come: said plainly, with the sleepy mascot */
-.soon {
+/* title on one side, the period on the other; stacked on a phone */
+.historyHead {
   display: flex;
-  align-items: center;
-  gap: var(--space-4);
-  padding: var(--space-4) var(--space-5);
-  border: 2px dashed var(--color-accent);
-  border-radius: var(--radius-lg);
-  background: color-mix(in srgb, var(--color-surface) 60%, transparent);
+  flex-wrap: wrap;
+  align-items: flex-end;
+  justify-content: space-between;
+  gap: var(--space-3);
 }
 
-.soonText {
-  margin: var(--space-1) 0 0;
-  color: var(--color-text-muted);
+.subTitle {
+  margin: var(--space-4) 0 var(--space-2);
+  font-size: var(--text-body-size);
+  line-height: var(--text-body-line);
+  font-weight: 600;
+}
+
+.fresh,
+.stale {
+  transition: opacity var(--transition-default);
+}
+
+/* the previous period, while the new one arrives */
+.stale {
+  opacity: 0.55;
 }
 
 @keyframes rise {
