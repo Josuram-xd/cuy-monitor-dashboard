@@ -1,0 +1,90 @@
+.history {
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-3);
+}
+
+.head {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: flex-end;
+  justify-content: space-between;
+  gap: var(--space-3);
+}
+
+.title {
+  display: flex;
+  align-items: center;
+  gap: var(--space-2);
+  font-size: var(--text-h2-size);
+  line-height: var(--text-h2-line);
+  font-weight: var(--text-h2-weight);
+}
+
+.title::before {
+  content: '';
+  width: 4px;
+  height: 20px;
+  border-radius: var(--radius-sm);
+  background: var(--gradient-brand);
+}
+
+.filters {
+  border: 1px solid var(--color-border);
+  border-radius: var(--radius-lg);
+  background: var(--color-surface);
+}
+
+.filtersSummary {
+  display: flex;
+  min-height: var(--touch-target);
+  align-items: center;
+  gap: var(--space-2);
+  padding: var(--space-2) var(--space-4);
+  cursor: pointer;
+  font-weight: 600;
+  transition: background-color var(--transition-default);
+}
+
+.filtersSummary:hover {
+  background: var(--color-primary-soft);
+}
+
+.filters[open] > .filtersSummary {
+  border-bottom: 1px solid var(--color-border);
+}
+
+.filtersBody {
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+  gap: var(--space-3);
+  padding: var(--space-4);
+}
+
+.count {
+  padding: 2px var(--space-2);
+  border-radius: var(--radius-full);
+  background: var(--color-primary-strong);
+  color: var(--color-on-primary);
+  font-size: var(--text-caption-size);
+  font-weight: 700;
+}
+
+.total {
+  margin: 0;
+  color: var(--color-text-muted);
+}
+
+.more {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: var(--space-2);
+}
+
+.shown {
+  margin: 0;
+  color: var(--color-text-muted);
+  font-size: var(--text-small-size);
+}
