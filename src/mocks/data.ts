@@ -141,6 +141,39 @@ export const mockAlerts: Alert[] = [
   },
 ]
 
+const HISTORY_MESSAGES: Record<Alert['type'], string[]> = {
+  BEHAVIOR: [
+    'Estuvo quieto mucho más tiempo de lo habitual y no fue al comedero',
+    'Se alejó del grupo durante mucho tiempo',
+    'Su comportamiento fue anómalo varios minutos seguidos',
+  ],
+  AUDIO: ['Se escucharon chillidos de angustia en la jaula'],
+  WEIGHT: ['El peso de la jaula bajó más de lo esperado'],
+}
+
+// 30 days of reviewed alerts, about one every 19 hours, so the history has pages to go through.
+// Ids from 100 on, so they never clash with the alerts above. Only Canela (1) and Chispa (4): Pelusa stays calm.
+export function mockAlertHistory(): Alert[] {
+  const history: Alert[] = []
+  for (let n = 3; n <= 37; n++) {
+    const type: Alert['type'] = n % 6 === 0 ? 'AUDIO' : n % 6 === 3 ? 'WEIGHT' : 'BEHAVIOR'
+    const messages = HISTORY_MESSAGES[type]
+    const minutes = n * 19 * 60 + (n % 7) * 13
+    history.push({
+      id: 100 + n,
+      cageId: n % 9 === 0 ? mockSecondCageId : mockCageId,
+      guineaPigId: type === 'BEHAVIOR' && n % 9 !== 0 ? (n % 2 === 0 ? 1 : 4) : null,
+      level: n % 5 === 0 ? 'CRITICAL' : 'ALERT',
+      type: n % 9 === 0 ? 'AUDIO' : type,
+      message: n % 9 === 0 ? HISTORY_MESSAGES.AUDIO[0] : messages[n % messages.length],
+      status: 'REVIEWED',
+      createdAt: minutesAgo(minutes),
+      reviewedAt: minutesAgo(minutes - 25 - (n % 4) * 20),
+    })
+  }
+  return history
+}
+
 export const mockTransitions: Record<number, StatusTransition[]> = {
   1: [
     {
