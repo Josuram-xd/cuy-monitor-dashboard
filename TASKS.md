@@ -95,8 +95,9 @@
 
 🔗 **Depende de:** `cuy-monitor-backend` Task 13.3
 
-- [ ] **Task 8.1** — `feat(alerts): add Alerts page with open and reviewed sections`
-- [ ] **Task 8.2** — `feat(alerts): mark alert as reviewed`
+- [x] **Task 8.1** — `feat(alerts): add Alerts page with open and reviewed sections`
+  Las revisadas viven ahora en el historial (`GET /api/v1/alerts/history`): periodo, filtros de estado, nivel y tipo, y páginas de 20.
+- [x] **Task 8.2** — `feat(alerts): mark alert as reviewed`
 
 ### Task 9 — Detalle de cuy
 

@@ -120,9 +120,7 @@
     "title": "Alertas",
     "intro": "Cuando un cuy se comporta distinto a lo normal, aparece aquí. Márcala como revisada cuando ya lo viste.",
     "openTitle": "Alertas abiertas",
-    "reviewedTitle": "Alertas revisadas",
     "count": "{{count}} alertas",
-    "noneReviewed": "Todavía no has revisado ninguna alerta.",
     "markError": "No pudimos marcar la alerta como revisada. Inténtalo otra vez.",
     "seeAll": "Ver todas",
     "noneOpen": "No hay alertas abiertas.",
@@ -136,8 +134,36 @@
     "markAllTitle_one": "¿Marcar {{count}} alerta como revisada?",
     "markAllTitle_many": "¿Marcar {{count}} alertas como revisadas?",
     "markAllTitle_other": "¿Marcar {{count}} alertas como revisadas?",
-    "markAllText": "Hazlo solo si ya revisaste a los cuyes. Las alertas pasan a \"Revisadas\" y no se pueden volver a abrir.",
-    "markAllConfirm": "Sí, ya las revisé"
+    "markAllText": "Hazlo solo si ya revisaste a los cuyes. Las alertas quedan como revisadas en el historial y no se pueden volver a abrir.",
+    "markAllConfirm": "Sí, ya las revisé",
+    "history": {
+      "title": "Historial de alertas",
+      "filters": "Filtros",
+      "activeFilters_one": "{{count}} activo",
+      "activeFilters_many": "{{count}} activos",
+      "activeFilters_other": "{{count}} activos",
+      "status": "Estado",
+      "level": "Nivel",
+      "type": "Qué la causó",
+      "statuses": {
+        "OPEN": "Abiertas",
+        "REVIEWED": "Revisadas"
+      },
+      "types": {
+        "BEHAVIOR": "Comportamiento",
+        "AUDIO": "Sonido",
+        "WEIGHT": "Peso"
+      },
+      "clearFilters": "Quitar filtros",
+      "empty": "No hubo alertas en este periodo.",
+      "noMatch": "Ninguna alerta coincide con estos filtros.",
+      "total_one": "{{count}} alerta en este periodo",
+      "total_many": "{{count}} alertas en este periodo",
+      "total_other": "{{count}} alertas en este periodo",
+      "shown": "Mostrando {{shown}} de {{total}}",
+      "loadMore": "Cargar más",
+      "loading": "Cargando…"
+    }
   },
   "realtime": {
     "connecting": "Conectando…",

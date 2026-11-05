@@ -42,7 +42,28 @@ describe('mock API', () => {
   it('filters alerts by status, newest first', async () => {
     const reviewed = await api.alerts.list('REVIEWED')
 
-    expect(reviewed.map((a) => a.id)).toEqual([6, 5])
+    expect(reviewed.slice(0, 2).map((a) => a.id)).toEqual([6, 5])
+    expect(reviewed.every((a) => a.status === 'REVIEWED')).toBe(true)
+    expect(reviewed.map((a) => a.createdAt)).toEqual(
+      [...reviewed.map((a) => a.createdAt)].sort().reverse(),
+    )
+  })
+
+  it('gives the alert history a page at a time, with the rules of the backend', async () => {
+    const to = new Date().toISOString()
+    const from = new Date(Date.now() - 30 * 86_400_000).toISOString()
+
+    const first = await api.alerts.history({ from, to }, 0, 10)
+    const critical = await api.alerts.history({ from, to, level: 'CRITICAL' }, 0, 100)
+
+    expect(first.items).toHaveLength(10)
+    expect(first.totalItems).toBeGreaterThan(30)
+    expect(first.hasNext).toBe(true)
+    expect(critical.items.every((a) => a.level === 'CRITICAL')).toBe(true)
+    await expect(api.alerts.history({}, 0, 500)).rejects.toMatchObject({ status: 400 })
+    await expect(
+      api.alerts.history({ from: '2026-01-01T00:00:00Z', to }, 0, 20),
+    ).rejects.toMatchObject({ status: 400 })
   })
 
   it('marks an open alert as reviewed', async () => {

@@ -3,6 +3,7 @@ import type { Cage } from '../types/Cage'
 import type { GuineaPig } from '../types/GuineaPig'
 import type { WeightReading } from '../types/WeightReading'
 import {
+  mockAlertHistory,
   mockAlerts,
   mockCageId,
   mockCages,
@@ -38,7 +39,7 @@ export class MockDatabase {
     [mockCageId]: this.guineaPigs,
     [mockSecondCageId]: structuredClone(mockSecondCageGuineaPigs),
   }
-  readonly alerts: Alert[] = structuredClone(mockAlerts)
+  readonly alerts: Alert[] = [...structuredClone(mockAlerts), ...mockAlertHistory()]
   // only the pilot cage has a scale
   readonly weightReadings: WeightReading[] = mockWeightReadings()
   readonly users: MockUser[] = []

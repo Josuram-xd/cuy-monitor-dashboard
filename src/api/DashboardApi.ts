@@ -3,7 +3,7 @@ import type {
   DeactivateAccountRequest,
   UpdateProfileRequest,
 } from '../types/Account'
-import type { Alert, AlertStatus } from '../types/Alert'
+import type { Alert, AlertHistoryFilter, AlertHistoryPage, AlertStatus } from '../types/Alert'
 import type {
   GoogleLoginRequest,
   LoginChallenge,
@@ -51,6 +51,13 @@ export interface AlertApi {
   // without cageId: the alerts of every cage of the account
   list(status?: AlertStatus, cageId?: string, signal?: AbortSignal): Promise<Alert[]>
   markReviewed(id: number): Promise<Alert>
+  // one page of the history, newest first; page counts from 0
+  history(
+    filter: AlertHistoryFilter,
+    page: number,
+    size: number,
+    signal?: AbortSignal,
+  ): Promise<AlertHistoryPage>
 }
 
 // /api/v1/auth/*: a 401 here means wrong credentials or wrong code, never a lost session
