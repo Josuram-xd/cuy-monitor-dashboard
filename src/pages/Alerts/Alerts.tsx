@@ -1,4 +1,5 @@
 import { useSearchParams } from 'react-router'
+import { AlertHistory } from '../../components/AlertHistory/AlertHistory'
 import { AlertList } from '../../components/AlertList/AlertList'
 import { ChoiceChips } from '../../components/ChoiceChips/ChoiceChips'
 import { useToast } from '../../components/Toast/useToast'
@@ -13,19 +14,17 @@ import { useGuineaPigsOfCages } from '../../hooks/useGuineaPigs'
 import { useMarkAlertReviewed } from '../../hooks/useMarkAlertReviewed'
 import { useNow } from '../../hooks/useNow'
 import { t } from '../../i18n'
-import type { AlertStatus } from '../../types/Alert'
 import styles from './Alerts.module.css'
 
-interface AlertsSectionProps {
-  status: AlertStatus
+interface OpenAlertsProps {
   // undefined = every cage of the account
   cageId?: string
   cageNames: Record<string, string>
   now: number
 }
 
-function AlertsSection({ status, cageId, cageNames, now }: AlertsSectionProps) {
-  const alerts = useAlerts(status, cageId)
+function OpenAlerts({ cageId, cageNames, now }: OpenAlertsProps) {
+  const alerts = useAlerts('OPEN', cageId)
   // same queries as the cage pages: TanStack Query shares them
   const guineaPigs = useGuineaPigsOfCages(cageId ? [cageId] : Object.keys(cageNames))
   const markReviewed = useMarkAlertReviewed()
@@ -38,12 +37,7 @@ function AlertsSection({ status, cageId, cageNames, now }: AlertsSectionProps) {
     return <ErrorState message={t('alerts.loadError')} onRetry={() => void alerts.refetch()} />
   }
   if (alerts.data.length === 0) {
-    return (
-      <EmptyState
-        icon={status === 'OPEN' ? 'check-circle' : 'inbox'}
-        message={t(status === 'OPEN' ? 'alerts.noneOpen' : 'alerts.noneReviewed')}
-      />
-    )
+    return <EmptyState icon="check-circle" message={t('alerts.noneOpen')} />
   }
   return (
     <>
@@ -54,13 +48,10 @@ function AlertsSection({ status, cageId, cageNames, now }: AlertsSectionProps) {
         now={now}
         // with every cage mixed, each alert says which cage it is from
         cageNames={cageId ? undefined : cageNames}
-        onMarkReviewed={
-          status === 'OPEN'
-            ? (alert) =>
-                markReviewed.mutate(alert.id, {
-                  onSuccess: () => toast.show({ message: t('toast.alertReviewed') }),
-                })
-            : undefined
+        onMarkReviewed={(alert) =>
+          markReviewed.mutate(alert.id, {
+            onSuccess: () => toast.show({ message: t('toast.alertReviewed') }),
+          })
         }
         busyAlertId={markReviewed.isPending ? markReviewed.variables : undefined}
       />
@@ -77,7 +68,8 @@ export function Alerts() {
   const requested = searchParams.get('cage')
   const cageId = requested && cageNames[requested] ? requested : undefined
   const open = useAlerts('OPEN', cageId)
-  const reviewed = useAlerts('REVIEWED', cageId)
+  const cageIds = cageId ? [cageId] : Object.keys(cageNames)
+  const guineaPigs = useGuineaPigsOfCages(cageIds)
 
   function selectCage(next: string | null) {
     setSearchParams(next ? { cage: next } : {}, { replace: true })
@@ -115,26 +107,10 @@ export function Alerts() {
           </h2>
           {open.data && open.data.length > 1 && <MarkAllReviewed alerts={open.data} />}
         </div>
-        <AlertsSection status="OPEN" cageId={cageId} cageNames={cageNames} now={now} />
+        <OpenAlerts cageId={cageId} cageNames={cageNames} now={now} />
       </section>
 
-      {/* closed by default: the open ones are what needs attention */}
-      <details className={styles.reviewed}>
-        <summary className={styles.summary}>
-          <span className={styles.sectionTitle}>{t('alerts.reviewedTitle')}</span>
-          {reviewed.data && reviewed.data.length > 0 && (
-            <span
-              className={styles.count}
-              aria-label={t('alerts.count', { count: reviewed.data.length })}
-            >
-              {reviewed.data.length}
-            </span>
-          )}
-        </summary>
-        <div className={styles.reviewedBody}>
-          <AlertsSection status="REVIEWED" cageId={cageId} cageNames={cageNames} now={now} />
-        </div>
-      </details>
+      <AlertHistory cageId={cageId} cageNames={cageNames} guineaPigs={guineaPigs} now={now} />
     </div>
   )
 }

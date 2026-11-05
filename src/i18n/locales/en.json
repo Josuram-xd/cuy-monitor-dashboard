@@ -115,9 +115,7 @@
     "title": "Alerts",
     "intro": "When a guinea pig behaves differently from usual, it shows up here. Mark it as reviewed once you have checked it.",
     "openTitle": "Open alerts",
-    "reviewedTitle": "Reviewed alerts",
     "count": "{{count}} alerts",
-    "noneReviewed": "You haven't reviewed any alert yet.",
     "markError": "We couldn't mark the alert as reviewed. Try again.",
     "seeAll": "See all",
     "noneOpen": "There are no open alerts.",
@@ -130,8 +128,34 @@
     "markAll": "Mark all as reviewed",
     "markAllTitle_one": "Mark {{count}} alert as reviewed?",
     "markAllTitle_other": "Mark {{count}} alerts as reviewed?",
-    "markAllText": "Do it only if you have already checked the guinea pigs. The alerts move to \"Reviewed\" and can't be opened again.",
-    "markAllConfirm": "Yes, I checked them"
+    "markAllText": "Do it only if you have already checked the guinea pigs. The alerts stay as reviewed in the history and can't be opened again.",
+    "markAllConfirm": "Yes, I checked them",
+    "history": {
+      "title": "Alert history",
+      "filters": "Filters",
+      "activeFilters_one": "{{count}} on",
+      "activeFilters_other": "{{count}} on",
+      "status": "Status",
+      "level": "Level",
+      "type": "What caused it",
+      "statuses": {
+        "OPEN": "Open",
+        "REVIEWED": "Reviewed"
+      },
+      "types": {
+        "BEHAVIOR": "Behavior",
+        "AUDIO": "Sound",
+        "WEIGHT": "Weight"
+      },
+      "clearFilters": "Clear filters",
+      "empty": "There were no alerts in this period.",
+      "noMatch": "No alert matches these filters.",
+      "total_one": "{{count}} alert in this period",
+      "total_other": "{{count}} alerts in this period",
+      "shown": "Showing {{shown}} of {{total}}",
+      "loadMore": "Load more",
+      "loading": "Loading…"
+    }
   },
   "realtime": {
     "connecting": "Connecting…",

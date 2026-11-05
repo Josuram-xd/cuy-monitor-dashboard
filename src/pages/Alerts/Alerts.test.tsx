@@ -34,7 +34,7 @@ describe('Alerts', () => {
     expect(await within(open).findByText('Chispa')).toBeInTheDocument()
   })
 
-  it('moves an alert to the reviewed ones when it is marked', async () => {
+  it('moves an alert to the reviewed ones of the history when it is marked', async () => {
     const { db } = setup()
     const open = await screen.findByRole('region', { name: /Alertas abiertas/ })
     const before = db.alerts.filter((a) => a.status === 'OPEN').length
@@ -42,14 +42,14 @@ describe('Alerts', () => {
 
     await userEvent.click(first)
 
-    await screen.findByText(/Alertas revisadas/)
     await vi.waitFor(() => {
       expect(db.alerts.filter((a) => a.status === 'OPEN')).toHaveLength(before - 1)
       expect(within(open).queryAllByRole('button', { name: 'Marcar como revisada' })).toHaveLength(
         before - 1,
       )
     })
-    expect(db.alerts.filter((a) => a.status === 'REVIEWED').length).toBeGreaterThan(0)
+    const history = screen.getByRole('region', { name: 'Historial de alertas' })
+    expect(await within(history).findByText(/Chispa lleva mucho más tiempo/)).toBeInTheDocument()
   })
 
   it('reviewed alerts have no button to mark them again', async () => {
@@ -64,15 +64,41 @@ describe('Alerts', () => {
     expect(screen.queryByRole('button', { name: 'Marcar como revisada' })).not.toBeInTheDocument()
   })
 
-  it('says so when nothing was reviewed yet', async () => {
-    const db = new MockDatabase()
-    db.alerts.forEach((a) => {
-      a.status = 'OPEN'
-      a.reviewedAt = null
-    })
-    setup(db)
+  it('shows the history of the period a page at a time', async () => {
+    setup()
+    const history = await screen.findByRole('region', { name: 'Historial de alertas' })
 
-    expect(await screen.findByText('Todavía no has revisado ninguna alerta.')).toBeInTheDocument()
+    expect(await within(history).findByText(/alertas en este periodo/)).toBeInTheDocument()
+    expect(within(history).getByRole('radio', { name: '7 días' })).toHaveAttribute(
+      'aria-checked',
+      'true',
+    )
+
+    await userEvent.click(within(history).getByRole('radio', { name: '30 días' }))
+    const more = await within(history).findByRole('button', { name: 'Cargar más' })
+    expect(within(history).getByText(/^Mostrando 20 de/)).toBeInTheDocument()
+
+    await userEvent.click(more)
+
+    expect(await within(history).findByText(/^Mostrando (3[0-9]|40) de/)).toBeInTheDocument()
+  })
+
+  it('filters the history and offers to clear the filters when nothing matches', async () => {
+    const db = new MockDatabase()
+    db.alerts.splice(0, db.alerts.length, ...db.alerts.filter((a) => a.level === 'ALERT'))
+    setup(db)
+    const history = await screen.findByRole('region', { name: 'Historial de alertas' })
+    await within(history).findByText(/alertas en este periodo/)
+
+    await userEvent.click(within(history).getByText('Filtros'))
+    await userEvent.click(within(history).getByRole('button', { name: 'Crítico' }))
+
+    expect(
+      await within(history).findByText('Ninguna alerta coincide con estos filtros.'),
+    ).toBeInTheDocument()
+    expect(within(history).getByText('1 activo')).toBeInTheDocument()
+    await userEvent.click(within(history).getAllByRole('button', { name: 'Quitar filtros' })[0])
+    expect(await within(history).findByText(/alertas en este periodo/)).toBeInTheDocument()
   })
 
   it('explains the failure and keeps the alert open when marking fails', async () => {
@@ -131,7 +157,8 @@ describe('Alerts', () => {
     const db = new MockDatabase()
     db.alerts.push({ ...db.alerts[0], id: 60, message: 'Otra alerta abierta' })
     setup(db)
-    await screen.findByText('Otra alerta abierta')
+    const open = await screen.findByRole('region', { name: /Alertas abiertas/ })
+    await within(open).findByText('Otra alerta abierta')
 
     await user.click(screen.getByRole('button', { name: 'Marcar todas como revisadas' }))
     expect(screen.getByRole('dialog', { name: '¿Marcar 2 alertas como revisadas?' })).toBeVisible()
