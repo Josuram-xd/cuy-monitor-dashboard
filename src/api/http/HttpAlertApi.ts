@@ -1,4 +1,4 @@
-import type { Alert, AlertStatus } from '../../types/Alert'
+import type { Alert, AlertHistoryFilter, AlertHistoryPage, AlertStatus } from '../../types/Alert'
 import type { AlertApi } from '../DashboardApi'
 import type { HttpClient } from '../HttpClient'
 
@@ -15,5 +15,22 @@ export class HttpAlertApi implements AlertApi {
 
   markReviewed(id: number): Promise<Alert> {
     return this.http.patch<Alert>(`/api/v1/alerts/${id}`, { status: 'REVIEWED' })
+  }
+
+  history(
+    filter: AlertHistoryFilter,
+    page: number,
+    size: number,
+    signal?: AbortSignal,
+  ): Promise<AlertHistoryPage> {
+    return this.http.get<AlertHistoryPage>('/api/v1/alerts/history', {
+      query: {
+        ...filter,
+        guineaPigId: filter.guineaPigId === undefined ? undefined : String(filter.guineaPigId),
+        page: String(page),
+        size: String(size),
+      },
+      signal,
+    })
   }
 }
