@@ -2,6 +2,7 @@ import { config } from '../config'
 import type { DashboardApi } from './DashboardApi'
 import { HttpAccountApi } from './http/HttpAccountApi'
 import { HttpAlertApi } from './http/HttpAlertApi'
+import { HttpAssistantApi } from './http/HttpAssistantApi'
 import { HttpAuthApi } from './http/HttpAuthApi'
 import { HttpCageApi } from './http/HttpCageApi'
 import { HttpCatalogApi } from './http/HttpCatalogApi'
@@ -22,6 +23,7 @@ function createHttpApi(): DashboardApi {
     guineaPigs: new HttpGuineaPigApi(http),
     alerts: new HttpAlertApi(http),
     catalog: new HttpCatalogApi(http),
+    assistant: new HttpAssistantApi(http),
   }
 }
 

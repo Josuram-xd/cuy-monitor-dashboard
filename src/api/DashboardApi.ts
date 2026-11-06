@@ -4,6 +4,7 @@ import type {
   UpdateProfileRequest,
 } from '../types/Account'
 import type { Alert, AlertHistoryFilter, AlertHistoryPage, AlertStatus } from '../types/Alert'
+import type { AssistantReply, AssistantRequest } from '../types/Assistant'
 import type {
   GoogleLoginRequest,
   LoginChallenge,
@@ -83,6 +84,12 @@ export interface AccountApi {
   deactivate(body: DeactivateAccountRequest): Promise<void>
 }
 
+// "Cuchi", the help assistant: the backend keeps no history, the conversation travels whole
+export interface AssistantApi {
+  // 429 too many questions, 503 the assistant can't answer now
+  ask(body: AssistantRequest): Promise<AssistantReply>
+}
+
 export interface DashboardApi {
   auth: AuthApi
   account: AccountApi
@@ -90,4 +97,5 @@ export interface DashboardApi {
   guineaPigs: GuineaPigApi
   alerts: AlertApi
   catalog: CatalogApi
+  assistant: AssistantApi
 }
