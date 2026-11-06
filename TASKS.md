@@ -87,9 +87,9 @@
 
 🔗 **Depende de:** `cuy-monitor-backend` Task 8.3
 
-- [ ] **Task 7.1** — `feat(form): add mark color picker with used colors disabled`
-- [ ] **Task 7.2** — `feat(guinea-pig): add RegisterGuineaPig page`
-- [ ] **Task 7.3** — `feat(guinea-pig): add form validation and error messages`
+- [x] **Task 7.1** — `feat(form): add mark color picker with used colors disabled`
+- [x] **Task 7.2** — `feat(guinea-pig): add RegisterGuineaPig page`
+- [x] **Task 7.3** — `feat(guinea-pig): add form validation and error messages`
 
 ### Task 8 — Página de alertas
 
@@ -168,7 +168,7 @@ Rama: `feature/task-14-account`.
 
 ### Task 11 — Calidad
 
-- [ ] **Task 11.1** — `feat(styles): add dark mode tokens`
+- [x] **Task 11.1** — `feat(styles): add dark mode tokens`
 - [ ] **Task 11.2** — `fix(a11y): apply accessibility checklist from the design system`
 - [ ] **Task 11.3** — `test: cover hooks and pages with mocked API`
 - [ ] **Task 11.4** — `perf: lazy load detail and chart pages`
