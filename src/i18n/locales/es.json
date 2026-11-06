@@ -478,5 +478,28 @@
         "lost": "La jaula bajó {{grams}} g en este periodo. Revisa si comen bien."
       }
     }
+  },
+  "assistant": {
+    "name": "Cuchi",
+    "title": "Cuchi, tu ayudante",
+    "subtitle": "Te explico la app y el estado de tus cuyes",
+    "open": "Abrir la ayuda de Cuchi",
+    "close": "Cerrar la ayuda",
+    "greeting": "¡Hola! Soy Cuchi. Pregúntame qué significa un estado, qué hacer con una alerta o cómo usar la app.",
+    "you": "Tú",
+    "typing": "Cuchi está escribiendo…",
+    "inputLabel": "Escribe tu pregunta",
+    "placeholder": "Escribe tu pregunta…",
+    "send": "Enviar",
+    "disclaimer": "Cuchi no es veterinario. Si un cuy está en alerta o crítico, revísalo y consulta a un veterinario.",
+    "suggestion": {
+      "observed": "¿Qué significa «En observación»?",
+      "alert": "¿Qué hago si hay una alerta?",
+      "register": "¿Cómo registro un cuy?"
+    },
+    "error": {
+      "unavailable": "Cuchi no puede responder ahora. Inténtalo en unos minutos.",
+      "tooMany": "Hiciste muchas preguntas seguidas. Espera unos minutos y vuelve a intentarlo."
+    }
   }
 }
