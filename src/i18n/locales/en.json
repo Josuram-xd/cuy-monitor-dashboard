@@ -467,5 +467,28 @@
         "lost": "The cage lost {{grams}} g in this period. Check that they are eating well."
       }
     }
+  },
+  "assistant": {
+    "name": "Cuchi",
+    "title": "Cuchi, your helper",
+    "subtitle": "I explain the app and how your guinea pigs are",
+    "open": "Open Cuchi's help",
+    "close": "Close the help",
+    "greeting": "Hi! I'm Cuchi. Ask me what a state means, what to do about an alert or how to use the app.",
+    "you": "You",
+    "typing": "Cuchi is typing…",
+    "inputLabel": "Write your question",
+    "placeholder": "Write your question…",
+    "send": "Send",
+    "disclaimer": "Cuchi is not a vet. If a guinea pig is on alert or critical, check it and see a vet.",
+    "suggestion": {
+      "observed": "What does “Under watch” mean?",
+      "alert": "What do I do about an alert?",
+      "register": "How do I register a guinea pig?"
+    },
+    "error": {
+      "unavailable": "Cuchi can't answer right now. Try again in a few minutes.",
+      "tooMany": "You asked many questions in a row. Wait a few minutes and try again."
+    }
   }
 }

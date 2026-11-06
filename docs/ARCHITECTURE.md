@@ -203,6 +203,7 @@ lists; a code that is not in the catalog any more falls back to showing the code
 | RegisterGuineaPig | `POST /api/v1/cages/{id}/guinea-pigs` | JWT |
 | Weight | `GET /api/v1/cages/{id}/weight?from=&to=` | JWT |
 | All private pages | `WS /ws` → `/topic/cages/{id}` | JWT on `CONNECT` |
+| All private pages (`AssistantChat`, "Cuchi") | `POST /api/v1/assistant/messages` (the whole conversation, the backend keeps none) | cookie |
 
 As of 2026-10-03 the backend has `/actuator/health`, `/api/v1/system/*` and the ingestion endpoint; auth (Task 18–20) and the dashboard API are in progress. Use `VITE_USE_MOCKS=true` until they are ready.
 

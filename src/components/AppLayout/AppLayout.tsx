@@ -8,6 +8,7 @@ import { t } from '../../i18n'
 import { LiveConnectionProvider } from '../../realtime/LiveConnectionProvider'
 import { AppBackdrop } from '../AppBackdrop/AppBackdrop'
 import { AppFooter } from '../AppFooter/AppFooter'
+import { AssistantChat } from '../AssistantChat/AssistantChat'
 import { BottomNav } from '../BottomNav/BottomNav'
 import { ErrorState } from '../ErrorState/ErrorState'
 import { ToastProvider } from '../Toast/ToastProvider'
@@ -69,6 +70,8 @@ export function AppLayout() {
           </main>
           <AppFooter />
         </div>
+        {/* Cuchi, the help assistant, over every private page */}
+        <AssistantChat />
       </ToastProvider>
     </LiveConnectionProvider>
   )

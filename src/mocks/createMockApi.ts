@@ -1,6 +1,7 @@
 import type { DashboardApi } from '../api/DashboardApi'
 import { MockAccountApi } from './MockAccountApi'
 import { MockAlertApi } from './MockAlertApi'
+import { MockAssistantApi } from './MockAssistantApi'
 import { MockAuthApi } from './MockAuthApi'
 import { MockCageApi } from './MockCageApi'
 import { MockCatalogApi } from './MockCatalogApi'
@@ -15,5 +16,6 @@ export function createMockApi(db = new MockDatabase(), delayMs?: number): Dashbo
     guineaPigs: new MockGuineaPigApi(db, delayMs),
     alerts: new MockAlertApi(db, delayMs),
     catalog: new MockCatalogApi(db, delayMs),
+    assistant: new MockAssistantApi(db, delayMs),
   }
 }
