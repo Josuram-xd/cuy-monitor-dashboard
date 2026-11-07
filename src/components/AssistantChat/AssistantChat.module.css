@@ -1,5 +1,8 @@
 /* phones: above the bottom navigation; desktop: bottom right corner */
 .root {
+  transition:
+    transform var(--transition-lift),
+    opacity var(--transition-lift);
   position: fixed;
   right: var(--space-4);
   bottom: calc(60px + env(safe-area-inset-bottom) + var(--space-4));
@@ -231,4 +234,11 @@
   .toggle:hover {
     transform: none;
   }
+}
+
+/* scrolling down: out of the way */
+.tucked {
+  transform: translateY(calc(100% + var(--space-6)));
+  opacity: 0;
+  pointer-events: none;
 }

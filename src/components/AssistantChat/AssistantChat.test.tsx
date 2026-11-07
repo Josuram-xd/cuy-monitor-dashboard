@@ -1,4 +1,4 @@
-import { screen, waitFor } from '@testing-library/react'
+import { act, screen, waitFor } from '@testing-library/react'
 import userEvent from '@testing-library/user-event'
 import { beforeEach, describe, expect, it, vi } from 'vitest'
 import { ApiError } from '../../api/ApiError'
@@ -87,5 +87,25 @@ describe('AssistantChat', () => {
       expect(screen.getByRole('alert')).toHaveTextContent('Hiciste muchas preguntas seguidas'),
     )
     expect(ask).toHaveBeenCalledTimes(2)
+  })
+
+  it('steps aside while the page scrolls down and comes back when it scrolls up', async () => {
+    renderWithProviders(<AssistantChat />)
+    const toggle = screen.getByRole('button', { name: 'Abrir la ayuda de Cuchi' })
+    const root = toggle.parentElement!
+    const scrollTo = (y: number) => {
+      Object.defineProperty(window, 'scrollY', { value: y, configurable: true })
+      window.dispatchEvent(new Event('scroll'))
+    }
+
+    act(() => scrollTo(400))
+    expect(root.className).toMatch(/tucked/)
+
+    // a small nudge up made by the layout itself does not bring it back
+    act(() => scrollTo(392))
+    expect(root.className).toMatch(/tucked/)
+
+    act(() => scrollTo(200))
+    expect(root.className).not.toMatch(/tucked/)
   })
 })
