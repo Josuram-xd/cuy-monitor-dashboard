@@ -3,6 +3,7 @@ import { useParams } from 'react-router'
 import { AlertList } from '../../components/AlertList/AlertList'
 import { ButtonLink } from '../../components/Button/Button'
 import { CoatSwatch } from '../../components/CoatSwatch/CoatSwatch'
+import { GuineaPigPhoto } from '../../components/GuineaPigPhoto/GuineaPigPhoto'
 import { EmptyState } from '../../components/EmptyState/EmptyState'
 import { ErrorState } from '../../components/ErrorState/ErrorState'
 import { Icon } from '../../components/Icon/Icon'
@@ -23,6 +24,7 @@ import { t } from '../../i18n'
 import type { GuineaPig } from '../../types/GuineaPig'
 import { formatRelative } from '../../utils/time'
 import styles from './GuineaPigDetail.module.css'
+import { guineaPigLabel } from '../../utils/guineaPig'
 
 function Fact({ label, children }: { label: string; children: ReactNode }) {
   return (
@@ -48,7 +50,11 @@ function Alerts({ cageId, guineaPig, now }: { cageId: string; guineaPig: GuineaP
   }
   const mine = alerts.data.filter((alert) => alert.guineaPigId === guineaPig.id)
   if (mine.length === 0) {
-    return <p className={styles.calm}>{t('guineaPig.detail.noAlerts', { name: guineaPig.name })}</p>
+    return (
+      <p className={styles.calm}>
+        {t('guineaPig.detail.noAlerts', { name: guineaPigLabel(guineaPig) })}
+      </p>
+    )
   }
   return <AlertList alerts={mine} guineaPigs={[guineaPig]} now={now} />
 }
@@ -91,7 +97,7 @@ function History({ guineaPig }: { guineaPig: GuineaPig }) {
           <Suspense fallback={<Skeleton count={2} />}>
             <LazyBehaviorChart
               history={history.data}
-              name={guineaPig.name}
+              name={guineaPigLabel(guineaPig)}
               currentStatus={guineaPig.status}
               preset={preset}
             />
@@ -141,12 +147,14 @@ export function GuineaPigDetail() {
       </ButtonLink>
 
       <header className={styles.hero}>
-        <span className={styles.avatar} aria-hidden="true">
-          {guineaPig.coatColor && <CoatSwatch color={guineaPig.coatColor} size={96} />}
-          <span className={styles.initial}>{guineaPig.name.charAt(0).toUpperCase()}</span>
-        </span>
+        <GuineaPigPhoto
+          photoUrl={guineaPig.photoUrl}
+          alt={t('guineaPig.detail.photoAlt', { name: guineaPigLabel(guineaPig) })}
+          size={120}
+          coatColor={guineaPig.coatColor}
+        />
         <div className={styles.who}>
-          <h1 className={styles.name}>{guineaPig.name}</h1>
+          <h1 className={styles.name}>{guineaPigLabel(guineaPig)}</h1>
           <div className={styles.status}>
             <StatusBadge status={guineaPig.status} size="lg" />
             <span className={styles.since}>
@@ -195,7 +203,7 @@ export function GuineaPigDetail() {
 
       <section className={styles.card} aria-labelledby="alerts-heading">
         <h2 id="alerts-heading" className={styles.cardTitle}>
-          {t('guineaPig.detail.alerts', { name: guineaPig.name })}
+          {t('guineaPig.detail.alerts', { name: guineaPigLabel(guineaPig) })}
         </h2>
         <Alerts cageId={cageId} guineaPig={guineaPig} now={now} />
       </section>

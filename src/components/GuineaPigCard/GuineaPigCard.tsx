@@ -7,11 +7,12 @@ import type { BehaviorWindow, GuineaPig } from '../../types/GuineaPig'
 import { severity, type DisplayStatus, type HealthStatus } from '../../types/HealthStatus'
 import { cx } from '../../utils/cx'
 import { formatRelative, minutesSince } from '../../utils/time'
-import { CoatSwatch } from '../CoatSwatch/CoatSwatch'
+import { GuineaPigPhoto } from '../GuineaPigPhoto/GuineaPigPhoto'
 import { Icon } from '../Icon/Icon'
 import { MarkColorDot } from '../MarkColorDot/MarkColorDot'
 import { StatusBadge } from '../StatusBadge/StatusBadge'
 import styles from './GuineaPigCard.module.css'
+import { guineaPigLabel } from '../../utils/guineaPig'
 
 const STALE_AFTER_MINUTES = 10
 
@@ -56,11 +57,14 @@ export function GuineaPigCard({ cageId, guineaPig, lastWindow, now }: GuineaPigC
       {/* a new element per pulse, so the animation runs again each time */}
       {pulses > 0 && <span key={pulses} className={styles.pulse} aria-hidden="true" />}
       <span className={styles.top}>
-        <span className={styles.avatar} aria-hidden="true">
-          {guineaPig.coatColor && <CoatSwatch color={guineaPig.coatColor} size={44} />}
-          <span className={styles.initial}>{guineaPig.name.charAt(0).toUpperCase()}</span>
-        </span>
-        <span className={styles.name}>{guineaPig.name}</span>
+        {/* the photo is how the breeder recognizes it; the text next to it already names it */}
+        <GuineaPigPhoto
+          photoUrl={guineaPig.photoUrl}
+          alt=""
+          size={52}
+          coatColor={guineaPig.coatColor}
+        />
+        <span className={styles.name}>{guineaPigLabel(guineaPig)}</span>
         <Icon name="chevron-right" className={styles.chevron} />
       </span>
       {about.length > 0 && <span className={styles.about}>{about.join(' · ')}</span>}

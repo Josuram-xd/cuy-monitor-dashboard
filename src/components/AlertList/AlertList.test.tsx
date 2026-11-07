@@ -9,7 +9,7 @@ const NOW = Date.parse('2026-10-05T14:32:00Z')
 
 const chispa: GuineaPig = {
   id: 4,
-  name: 'Chispa',
+  photoUrl: null,
   markColor: 'ORANGE',
   status: 'ALERT',
   statusSince: '2026-10-05T14:00:00Z',
@@ -22,7 +22,7 @@ function alert(overrides: Partial<Alert>): Alert {
     guineaPigId: 4,
     level: 'ALERT',
     type: 'BEHAVIOR',
-    message: 'Chispa lleva mucho más tiempo quieta de lo normal',
+    message: 'Lleva mucho más tiempo quieta de lo normal',
     status: 'OPEN',
     createdAt: new Date(NOW - 5 * 60_000).toISOString(),
     reviewedAt: null,
@@ -35,7 +35,7 @@ describe('AlertList', () => {
     render(<AlertList alerts={[alert({})]} guineaPigs={[chispa]} now={NOW} />)
 
     expect(screen.getByText('Alerta')).toBeInTheDocument()
-    expect(screen.getByText('Chispa')).toBeInTheDocument()
+    expect(screen.getByText('Cuy Naranja')).toBeInTheDocument()
     expect(screen.getByText('Naranja')).toBeInTheDocument()
     expect(screen.getByText(/quieta de lo normal/)).toBeInTheDocument()
     expect(screen.getByText('hace 5 min')).toBeInTheDocument()

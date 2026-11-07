@@ -2,6 +2,8 @@ import { beforeEach, describe, expect, it } from 'vitest'
 import type { DashboardApi } from '../api/DashboardApi'
 import { createMockApi } from './createMockApi'
 
+const PHOTO = { photo: '/9j/4AAQ', photoContentType: 'image/jpeg' as const }
+
 describe('mock API', () => {
   let api: DashboardApi
 
@@ -27,16 +29,32 @@ describe('mock API', () => {
 
   it('rejects a mark color already used in the cage', async () => {
     await expect(
-      api.guineaPigs.register('cage-1', { name: 'Otro', markColor: 'RED' }),
+      api.guineaPigs.register('cage-1', { ...PHOTO, markColor: 'RED' }),
     ).rejects.toMatchObject({ status: 409, code: 'conflict' })
   })
 
-  it('registers a guinea pig as NORMAL and shows it in the cage health', async () => {
-    const created = await api.guineaPigs.register('cage-1', { name: ' Nube ', markColor: 'PURPLE' })
+  it('registers a guinea pig as NORMAL with its photo and shows it in the cage health', async () => {
+    const created = await api.guineaPigs.register('cage-1', { ...PHOTO, markColor: 'PURPLE' })
 
-    expect(created).toMatchObject({ name: 'Nube', markColor: 'PURPLE', status: 'NORMAL' })
+    expect(created).toMatchObject({
+      markColor: 'PURPLE',
+      status: 'NORMAL',
+      photoUrl: 'data:image/jpeg;base64,/9j/4AAQ',
+    })
     const health = await api.cages.getHealth('cage-1')
-    expect(health.guineaPigs.map((g) => g.name)).toContain('Nube')
+    expect(health.guineaPigs.map((g) => g.id)).toContain(created.id)
+  })
+
+  it('like the backend, asks for a photo of an accepted type and at most 300 KB', async () => {
+    for (const photo of [
+      { photo: '', photoContentType: 'image/jpeg' as const },
+      { photo: '/9j/4AAQ', photoContentType: 'image/svg+xml' as never },
+      { photo: 'A'.repeat(420_000), photoContentType: 'image/png' as const },
+    ]) {
+      await expect(
+        api.guineaPigs.register('cage-1', { ...photo, markColor: 'GREEN' }),
+      ).rejects.toMatchObject({ status: 400 })
+    }
   })
 
   it('filters alerts by status, newest first', async () => {
@@ -88,7 +106,7 @@ describe('mock API', () => {
     expect(list.some((g) => g.id === 1)).toBe(false)
     // the color is free: a new cuy can wear it
     await expect(
-      api.guineaPigs.register('cage-1', { name: 'Nueva', markColor: 'RED' }),
+      api.guineaPigs.register('cage-1', { ...PHOTO, markColor: 'RED' }),
     ).resolves.toMatchObject({ markColor: 'RED' })
     await expect(api.guineaPigs.remove('cage-1', 999)).rejects.toMatchObject({ status: 404 })
     await expect(api.guineaPigs.remove('nope', 2)).rejects.toMatchObject({ status: 404 })

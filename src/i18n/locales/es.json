@@ -99,8 +99,8 @@
     "countsLabel": "Cuyes por estado",
     "updated": "Actualizado {{time}}",
     "filter": {
-      "searchLabel": "Buscar cuy por nombre",
-      "searchPlaceholder": "Buscar por nombre…",
+      "searchLabel": "Buscar cuy por color o raza",
+      "searchPlaceholder": "Buscar por color o raza…",
       "clearSearch": "Borrar búsqueda",
       "statusLabel": "Mostrar",
       "attention_one": "Necesita atención ({{count}})",
@@ -207,14 +207,15 @@
       "historyTitle": "Historial",
       "behaviorTitle": "Comportamiento",
       "timelineTitle": "Estados de salud",
-      "historyError": "No pudimos cargar el historial."
+      "historyError": "No pudimos cargar el historial.",
+      "photoAlt": "Foto de {{name}}"
     },
     "still": "Quieto {{seconds}} de los últimos 60 s",
     "lastSeen": "Visto {{time}}",
     "notSeen": "No se ha visto {{time}}",
     "register": {
       "title": "Registrar un cuy",
-      "intro": "Cuéntanos quién es. Mientras llenas el formulario, a la derecha ves cómo se verá su tarjeta.",
+      "intro": "Sube su foto y elige su marca. Mientras llenas el formulario, a la derecha ves cómo se verá su tarjeta.",
       "who": "¿Quién es?",
       "look": "¿Cómo es?",
       "mark": "Su marca para la cámara",
@@ -231,28 +232,38 @@
       "notesPlaceholder": "Carácter, alergias, de dónde viene…",
       "notesTooLong": "Las notas son demasiado largas.",
       "previewTitle": "Así se verá",
-      "previewName": "Su nombre",
+      "previewName": "Elige su marca",
       "previewEmpty": "Completa los datos y aparecen aquí.",
-      "name": "Nombre",
-      "nameRequired": "Escribe el nombre del cuy.",
-      "nameTooLong": "El nombre es demasiado largo.",
       "color": "Color de la marca",
       "colorRequired": "Elige el color de la marca.",
-      "usedBy": "Lo lleva {{name}}",
+      "usedBy": "En uso",
       "submit": "Registrar cuy",
       "submitting": "Registrando…",
-      "allUsed": "Ya hay un cuy con cada color de marca. No se pueden registrar más en esta jaula."
+      "allUsed": "Ya hay un cuy con cada color de marca. No se pueden registrar más en esta jaula.",
+      "photo": "Foto del cuy",
+      "photoHint": "Una foto de cerca, con buena luz: así lo reconoces en el panel.",
+      "photoPick": "Tomar o elegir foto",
+      "photoChange": "Cambiar foto",
+      "photoBusy": "Preparando la foto…",
+      "photoPreview": "Foto elegida",
+      "photoRequired": "Agrega una foto del cuy.",
+      "photoProblem": {
+        "type": "Esa imagen no sirve: usa una foto JPG, PNG o WebP.",
+        "unreadable": "No pudimos abrir esa foto. Prueba con otra.",
+        "tooBig": "La foto es demasiado grande incluso reducida. Prueba con otra."
+      }
     },
     "delete": {
-      "open": "Eliminar a {{name}}",
-      "title": "¿Eliminar a {{name}}?",
+      "open": "Eliminar {{name}}",
+      "title": "¿Eliminar {{name}}?",
       "text": "Dejará de aparecer en tu jaula y su color de marca quedará libre para otro cuy. Su historial se conserva.",
       "confirm": "Sí, eliminar"
     },
     "error": {
       "colorTaken": "Otro cuy ya lleva ese color. Elige uno libre.",
       "alreadyGone": "Este cuy ya no existe. Actualiza la página."
-    }
+    },
+    "byMark": "Cuy {{color}}"
   },
   "auth": {
     "tagline": "Cuida a tus cuyes a tiempo",

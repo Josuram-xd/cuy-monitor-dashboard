@@ -36,10 +36,43 @@ export const mockCages: Cage[] = [
   },
 ]
 
+// The mocks carry no pictures of animals: each cuy gets a drawing in the color of its mark, as a data:
+// URL, which the dashboard shows like a real photoUrl
+const MARK_HEX: Record<string, string> = {
+  RED: '#d62828',
+  BLUE: '#1e63d6',
+  GREEN: '#2e9e44',
+  YELLOW: '#f5c518',
+  ORANGE: '#f77f00',
+  PURPLE: '#7b3fb5',
+  BLACK: '#1a1a1a',
+  WHITE: '#f2efe9',
+}
+
+export function mockPhoto(markColor: string): string {
+  const svg =
+    `<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 64 64'><rect width='64' height='64' fill='#e9dcc8'/>` +
+    `<ellipse cx='32' cy='38' rx='22' ry='16' fill='#b07a4f'/><circle cx='22' cy='30' r='3' fill='#222'/>` +
+    `<ellipse cx='38' cy='26' rx='9' ry='6' fill='${MARK_HEX[markColor] ?? '#999'}'/></svg>`
+  return `data:image/svg+xml;utf8,${encodeURIComponent(svg)}`
+}
+
 // the second cage: two calm guinea pigs, so the list of cages shows different states
 export const mockSecondCageGuineaPigs: GuineaPig[] = [
-  { id: 21, name: 'Tofu', markColor: 'WHITE', status: 'NORMAL', statusSince: minutesAgo(300) },
-  { id: 22, name: 'Mora', markColor: 'PURPLE', status: 'NORMAL', statusSince: minutesAgo(900) },
+  {
+    id: 21,
+    photoUrl: mockPhoto('WHITE'),
+    markColor: 'WHITE',
+    status: 'NORMAL',
+    statusSince: minutesAgo(300),
+  },
+  {
+    id: 22,
+    photoUrl: mockPhoto('PURPLE'),
+    markColor: 'PURPLE',
+    status: 'NORMAL',
+    statusSince: minutesAgo(900),
+  },
 ]
 
 // The same rows migration V10 of cuy-monitor-db inserts, in the same order.
@@ -79,7 +112,7 @@ export const mockCatalog: Catalog = {
 export const mockGuineaPigs: GuineaPig[] = [
   {
     id: 1,
-    name: 'Canela',
+    photoUrl: mockPhoto('RED'),
     markColor: 'RED',
     status: 'OBSERVED',
     statusSince: minutesAgo(22),
@@ -90,7 +123,7 @@ export const mockGuineaPigs: GuineaPig[] = [
   },
   {
     id: 2,
-    name: 'Pelusa',
+    photoUrl: mockPhoto('BLUE'),
     markColor: 'BLUE',
     status: 'NORMAL',
     statusSince: minutesAgo(600),
@@ -99,8 +132,20 @@ export const mockGuineaPigs: GuineaPig[] = [
     initialWeightGrams: 940,
     notes: null,
   },
-  { id: 3, name: 'Copito', markColor: 'WHITE', status: 'NORMAL', statusSince: minutesAgo(1440) },
-  { id: 4, name: 'Chispa', markColor: 'ORANGE', status: 'ALERT', statusSince: minutesAgo(35) },
+  {
+    id: 3,
+    photoUrl: mockPhoto('WHITE'),
+    markColor: 'WHITE',
+    status: 'NORMAL',
+    statusSince: minutesAgo(1440),
+  },
+  {
+    id: 4,
+    photoUrl: mockPhoto('ORANGE'),
+    markColor: 'ORANGE',
+    status: 'ALERT',
+    statusSince: minutesAgo(35),
+  },
 ]
 
 export const mockAudio = { status: 'NORMAL' as const, lastEventAt: minutesAgo(2) }
@@ -112,7 +157,7 @@ export const mockAlerts: Alert[] = [
     guineaPigId: 4,
     level: 'ALERT',
     type: 'BEHAVIOR',
-    message: 'Chispa lleva mucho más tiempo quieta de lo normal',
+    message: 'Lleva mucho más tiempo quieta de lo normal',
     status: 'OPEN',
     createdAt: minutesAgo(35),
     reviewedAt: null,
@@ -134,7 +179,7 @@ export const mockAlerts: Alert[] = [
     guineaPigId: 1,
     level: 'CRITICAL',
     type: 'BEHAVIOR',
-    message: 'Canela no se acercó al comedero en varias horas',
+    message: 'No se acercó al comedero en varias horas',
     status: 'REVIEWED',
     createdAt: minutesAgo(2900),
     reviewedAt: minutesAgo(2850),
@@ -152,7 +197,7 @@ const HISTORY_MESSAGES: Record<Alert['type'], string[]> = {
 }
 
 // 30 days of reviewed alerts, about one every 19 hours, so the history has pages to go through.
-// Ids from 100 on, so they never clash with the alerts above. Only Canela (1) and Chispa (4): Pelusa stays calm.
+// Ids from 100 on, so they never clash with the alerts above. Only RED (1) and ORANGE (4): BLUE stays calm.
 export function mockAlertHistory(): Alert[] {
   const history: Alert[] = []
   for (let n = 3; n <= 37; n++) {
