@@ -103,10 +103,12 @@ describe('GuineaPigDetail', () => {
   })
 
   it('shows the states and the behavior of the guinea pig in the period', async () => {
-    // ORANGE (4) went from Normal to observed and then to alert in the last two hours
+    // ORANGE (4) went from Normal to observed and then to alert in the last two hours. "Hoy" starts at
+    // midnight, so right after midnight those changes are yesterday: 7 days holds them at any hour
     renderAt(api, '4')
 
     const history = await screen.findByRole('region', { name: 'Historial' })
+    await userEvent.click(within(history).getByRole('radio', { name: '7 días' }))
     expect(
       await within(history).findByRole('list', { name: 'Cambios de estado' }),
     ).toBeInTheDocument()
