@@ -77,8 +77,8 @@
 .close {
   display: grid;
   flex: none;
-  width: 36px;
-  height: 36px;
+  width: var(--touch-target);
+  height: var(--touch-target);
   place-items: center;
   border: 0;
   border-radius: var(--radius-full);

@@ -453,18 +453,18 @@ Neutral banner (`--color-surface`, `--color-border`, info icon) on `/login`:
 
 ## 6. Accessibility checklist
 
-- [ ] Text contrast ≥ 4.5:1; UI marks ≥ 3:1.
-- [ ] Status and mark color never conveyed by color alone.
-- [ ] Tap targets ≥ 44 × 44 px.
-- [ ] Visible focus ring on every interactive element; logical tab order.
-- [ ] Live updates announced with `aria-live="polite"` (`assertive` only for `CRITICAL`).
-- [ ] Charts have a text alternative.
+- [x] Text contrast ≥ 4.5:1; UI marks ≥ 3:1. (`tokens.contrast.test.ts`, light and dark)
+- [x] Status and mark color never conveyed by color alone. (`StatusBadge`, `MarkColorDot` + name)
+- [x] Tap targets ≥ 44 × 44 px. (toast close, delete cuy and clear filter raised to `--touch-target`)
+- [x] Visible focus ring on every interactive element; logical tab order. (`:focus-visible` in `global.css`)
+- [x] Live updates announced with `aria-live="polite"` (`assertive` only for `CRITICAL`). (`AlertToast` has one region of each)
+- [x] Charts have a text alternative. (summary line + "Ver los datos como tabla")
 - [ ] Works at 200% zoom and 360 px width without horizontal scroll.
-- [ ] `lang="es"` on `<html>`.
-- [ ] Every form field has a visible `<label>`; errors linked with `aria-describedby` and announced (`aria-live="polite"`).
-- [ ] `OtpInput` is one input for screen readers ("Código de verificación, 6 dígitos"), not six unlabeled boxes.
-- [ ] Password managers and phone code autofill work (`autocomplete` attributes).
-- [ ] After login, focus goes to the page title; after logout, to the `SessionNotice`.
+- [x] `lang="es"` on `<html>`. (and `changeLanguage` keeps it in step)
+- [x] Every form field has a visible `<label>`; errors linked with `aria-describedby` and announced (`aria-live="polite"`).
+- [x] `OtpInput` is one input for screen readers ("Código de verificación, 6 dígitos"), not six unlabeled boxes.
+- [x] Password managers and phone code autofill work (`autocomplete` attributes).
+- [x] After login, focus goes to the page title; after logout, to the `SessionNotice`. (`AppLayout` focuses the `<h1>` of every page)
 
 ---
 

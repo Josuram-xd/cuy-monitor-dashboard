@@ -63,7 +63,8 @@ describe('AlertToast', () => {
 
     arrive({ cageId: cages[0].cageId })
 
-    const toast = screen.getByRole('alert')
+    // an ALERT is announced politely; only a CRITICAL one interrupts
+    const toast = screen.getByRole('status')
     expect(within(toast).getByText('Alerta')).toBeInTheDocument()
     expect(
       within(toast).getByText('Se escucharon chillidos de angustia en la jaula'),
@@ -101,5 +102,15 @@ describe('AlertToast', () => {
 
     expect(screen.queryByText('alerta 1')).not.toBeInTheDocument()
     expect(screen.getAllByText(/^alerta \d$/)).toHaveLength(3)
+  })
+
+  it('only a CRITICAL alert goes in the assertive region', () => {
+    renderToast()
+
+    arrive({ id: 1, level: 'ALERT', message: 'leve' })
+    arrive({ id: 2, level: 'CRITICAL', message: 'grave' })
+
+    expect(within(screen.getByRole('status')).getByText('leve')).toBeInTheDocument()
+    expect(within(screen.getByRole('alert')).getByText('grave')).toBeInTheDocument()
   })
 })
