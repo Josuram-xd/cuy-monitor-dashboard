@@ -155,6 +155,11 @@
       "shown": "Showing {{shown}} of {{total}}",
       "loadMore": "Load more",
       "loading": "Loading…"
+    },
+    "live": {
+      "inCage": "in {{cage}}",
+      "open": "See the alerts of this cage",
+      "dismiss": "Close the notice"
     }
   },
   "realtime": {

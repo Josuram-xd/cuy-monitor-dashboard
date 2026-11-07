@@ -7,6 +7,7 @@ import { cx } from '../../utils/cx'
 import { t } from '../../i18n'
 import { LiveConnectionProvider } from '../../realtime/LiveConnectionProvider'
 import { AppBackdrop } from '../AppBackdrop/AppBackdrop'
+import { AlertToast } from '../AlertToast/AlertToast'
 import { AppFooter } from '../AppFooter/AppFooter'
 import { AssistantChat } from '../AssistantChat/AssistantChat'
 import { BottomNav } from '../BottomNav/BottomNav'
@@ -70,6 +71,8 @@ export function AppLayout() {
           </main>
           <AppFooter />
         </div>
+        {/* alerts that arrive live, on any private page (Task 6.4) */}
+        <AlertToast />
         {/* Cuchi, the help assistant, over every private page */}
         <AssistantChat />
       </ToastProvider>
