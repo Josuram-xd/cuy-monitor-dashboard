@@ -62,6 +62,9 @@ export function AlertList({
                 <Icon name={TYPE_ICONS[alert.type]} size={20} />
               </span>
               <span className={styles.title}>
+                {guineaPig && !ofOneGuineaPig && (
+                  <MarkColorDot color={guineaPig.markColor} showLabel={false} />
+                )}
                 {ofOneGuineaPig ? t(`alerts.type.${alert.type}`) : alertTitle(alert, guineaPig)}
               </span>
               <time className={styles.time} dateTime={alert.createdAt}>
@@ -70,11 +73,6 @@ export function AlertList({
             </div>
             <div className={styles.meta}>
               <StatusBadge status={alert.level} size="sm" />
-              {guineaPig && !ofOneGuineaPig && (
-                <span className={styles.mark}>
-                  <MarkColorDot color={guineaPig.markColor} />
-                </span>
-              )}
               {cageNames?.[alert.cageId] && (
                 <span className={styles.cage}>
                   <Icon name="home" size={14} />

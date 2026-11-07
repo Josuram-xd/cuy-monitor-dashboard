@@ -66,6 +66,9 @@
 }
 
 .title {
+  display: inline-flex;
+  align-items: center;
+  gap: var(--space-2);
   flex: 1 1 9em;
   min-width: 0;
   overflow: hidden;
@@ -90,12 +93,6 @@
   flex-wrap: wrap;
   align-items: center;
   gap: var(--space-2) var(--space-3);
-}
-
-.mark {
-  color: var(--color-text-muted);
-  font-size: var(--text-small-size);
-  line-height: var(--text-small-line);
 }
 
 .cage {
