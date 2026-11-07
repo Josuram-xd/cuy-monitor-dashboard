@@ -27,13 +27,17 @@ interface Criteria {
   type: EventType | null
 }
 
-const NO_CRITERIA: Criteria = { status: null, level: null, type: null }
+// the open alerts are listed right above the history: by default it shows the ones already reviewed,
+// and that default is not counted as a filter the breeder turned on
+const DEFAULT_CRITERIA: Criteria = { status: 'REVIEWED', level: null, type: null }
 const STATUSES: readonly AlertStatus[] = ['OPEN', 'REVIEWED']
 const LEVELS: readonly AlertLevel[] = ['ALERT', 'CRITICAL']
 const TYPES: readonly EventType[] = ['BEHAVIOR', 'AUDIO', 'WEIGHT']
 
 function activeCount(criteria: Criteria): number {
-  return Object.values(criteria).filter((value) => value !== null).length
+  return (Object.keys(criteria) as (keyof Criteria)[]).filter(
+    (key) => criteria[key] !== DEFAULT_CRITERIA[key],
+  ).length
 }
 
 // Every alert of the period, open or reviewed, newest first and a page at a time. The period fixes its dates
@@ -41,7 +45,7 @@ function activeCount(criteria: Criteria): number {
 export function AlertHistory({ cageId, cageNames, guineaPigs, now }: AlertHistoryProps) {
   const headingId = useId()
   const [preset, setPreset] = useState<RangePreset>('week')
-  const [criteria, setCriteria] = useState<Criteria>(NO_CRITERIA)
+  const [criteria, setCriteria] = useState<Criteria>(DEFAULT_CRITERIA)
   const range = useMemo(() => rangeFor(preset), [preset])
   const filter: AlertHistoryFilter = {
     ...range,
@@ -101,7 +105,7 @@ export function AlertHistory({ cageId, cageNames, guineaPigs, now }: AlertHistor
             onChange={pick('type')}
           />
           {filtersOn > 0 && (
-            <Button variant="ghost" onClick={() => setCriteria(NO_CRITERIA)}>
+            <Button variant="ghost" onClick={() => setCriteria(DEFAULT_CRITERIA)}>
               {t('alerts.history.clearFilters')}
             </Button>
           )}
@@ -118,7 +122,7 @@ export function AlertHistory({ cageId, cageNames, guineaPigs, now }: AlertHistor
           message={t(filtersOn > 0 ? 'alerts.history.noMatch' : 'alerts.history.empty')}
           action={
             filtersOn > 0 ? (
-              <Button onClick={() => setCriteria(NO_CRITERIA)}>
+              <Button onClick={() => setCriteria(DEFAULT_CRITERIA)}>
                 {t('alerts.history.clearFilters')}
               </Button>
             ) : undefined

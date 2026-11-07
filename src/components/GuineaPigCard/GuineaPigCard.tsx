@@ -65,15 +65,16 @@ export function GuineaPigCard({ cageId, guineaPig, lastWindow, now }: GuineaPigC
           coatColor={guineaPig.coatColor}
           className={styles.photo}
         />
-        <span className={styles.name}>{guineaPigLabel(guineaPig)}</span>
+        {/* the dot shows the color of the mark; the name already says it, so it is not repeated */}
+        <span className={styles.name}>
+          <MarkColorDot color={guineaPig.markColor} showLabel={false} />
+          {guineaPigLabel(guineaPig)}
+        </span>
         <Icon name="chevron-right" className={styles.chevron} />
       </span>
       {about.length > 0 && <span className={styles.about}>{about.join(' · ')}</span>}
       <span className={styles.meta}>
         <StatusBadge status={status} />
-        <span className={styles.mark}>
-          <MarkColorDot color={guineaPig.markColor} />
-        </span>
       </span>
       {lastSeenAt && (
         <span className={styles.details}>

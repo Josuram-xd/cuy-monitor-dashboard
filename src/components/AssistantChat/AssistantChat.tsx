@@ -25,11 +25,36 @@ export function AssistantChat() {
   const [messages, setMessages] = useState<AssistantMessage[]>([])
   const [draft, setDraft] = useState('')
   const [errorKey, setErrorKey] = useState<string | null>(null)
+  // while the page goes down the button steps aside, so it never sits on what is being read;
+  // scrolling back up (or reaching the top) brings it back. Never hidden with the chat open.
+  const [tucked, setTucked] = useState(false)
   const ask = useAskAssistant()
   const titleId = useId()
   const inputRef = useRef<HTMLTextAreaElement>(null)
   const listRef = useRef<HTMLOListElement>(null)
   const toggleRef = useRef<HTMLButtonElement>(null)
+
+  useEffect(() => {
+    let last = window.scrollY
+    // a clear move down tucks it, a clear move up (or the top of the page) brings it back; the small
+    // nudges a layout makes on its own (a few px up after a jump) change nothing
+    function onScroll() {
+      const now = window.scrollY
+      const moved = now - last
+      if (now <= 80) {
+        setTucked(false)
+        last = now
+      } else if (moved > 24) {
+        setTucked(true)
+        last = now
+      } else if (moved < -48) {
+        setTucked(false)
+        last = now
+      }
+    }
+    window.addEventListener('scroll', onScroll, { passive: true })
+    return () => window.removeEventListener('scroll', onScroll)
+  }, [])
 
   useEffect(() => {
     if (open) {
@@ -86,7 +111,7 @@ export function AssistantChat() {
   }
 
   return (
-    <div className={styles.root}>
+    <div className={cx(styles.root, tucked && !open && styles.tucked)}>
       {open && (
         <section
           className={styles.panel}

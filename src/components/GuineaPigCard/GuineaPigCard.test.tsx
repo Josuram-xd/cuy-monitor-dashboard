@@ -48,7 +48,9 @@ describe('GuineaPigCard', () => {
       'src',
       '/api/v1/cages/cage-1/guinea-pigs/1/photo',
     )
-    expect(screen.getByText('Rojo')).toBeInTheDocument()
+    // the mark is a dot next to the name, not the word repeated
+    expect(screen.getByRole('img', { name: 'Rojo' })).toBeInTheDocument()
+    expect(screen.queryByText('Rojo')).not.toBeInTheDocument()
     expect(screen.getByText('En observación')).toBeInTheDocument()
   })
 

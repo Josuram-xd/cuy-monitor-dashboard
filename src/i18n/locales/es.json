@@ -310,7 +310,7 @@
     },
     "google": {
       "or": "o",
-      "demo": "Continuar con Google (demo)",
+      "demo": "Continuar con Google",
       "unavailable": "No pudimos cargar el acceso con Google. Revisa tu conexión o usa tu usuario y contraseña."
     },
     "verify": {

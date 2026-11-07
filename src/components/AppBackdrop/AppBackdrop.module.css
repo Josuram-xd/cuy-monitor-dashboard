@@ -144,3 +144,15 @@
     transition: none;
   }
 }
+
+/* phones: the data is the point; the decoration stays still and the small sprites go away */
+@media (max-width: 639px) {
+  .cloud,
+  .blob {
+    animation: none;
+  }
+
+  .sprite {
+    display: none;
+  }
+}

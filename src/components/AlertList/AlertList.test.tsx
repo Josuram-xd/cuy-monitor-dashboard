@@ -36,7 +36,8 @@ describe('AlertList', () => {
 
     expect(screen.getByText('Alerta')).toBeInTheDocument()
     expect(screen.getByText('Cuy Naranja')).toBeInTheDocument()
-    expect(screen.getByText('Naranja')).toBeInTheDocument()
+    // the mark is a dot next to the name, named for screen readers
+    expect(screen.getByRole('img', { name: 'Naranja' })).toBeInTheDocument()
     expect(screen.getByText(/quieta de lo normal/)).toBeInTheDocument()
     expect(screen.getByText('hace 5 min')).toBeInTheDocument()
   })
