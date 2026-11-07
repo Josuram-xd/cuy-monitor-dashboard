@@ -25,7 +25,7 @@ describe('CageOverview', () => {
 
     expect(await screen.findByText('1 cuy en alerta')).toBeInTheDocument()
     const grid = await screen.findByRole('list', { name: 'Tus cuyes' })
-    for (const name of ['Canela', 'Pelusa', 'Copito', 'Chispa']) {
+    for (const name of ['Cuy Rojo', 'Cuy Azul', 'Cuy Blanco', 'Cuy Naranja']) {
       expect(within(grid).getByText(name)).toBeInTheDocument()
     }
   })
@@ -93,19 +93,20 @@ describe('CageOverview', () => {
     renderInCage(<CageOverview />, { cageId: 'cage-7f3a9c21' })
 
     const grid = await screen.findByRole('list', { name: 'Tus cuyes' })
-    expect(within(grid).getByText('Tofu')).toBeInTheDocument()
-    expect(within(grid).queryByText('Canela')).not.toBeInTheDocument()
+    // the second cage has WHITE and PURPLE; RED lives in the pilot cage
+    expect(within(grid).getByText('Cuy Morado')).toBeInTheDocument()
+    expect(within(grid).queryByText('Cuy Rojo')).not.toBeInTheDocument()
   })
 
-  it('finds a guinea pig by name, without caring about accents or capitals', async () => {
+  it('finds a guinea pig by the color of its mark, without caring about accents or capitals', async () => {
     const user = userEvent.setup()
     renderInCage(<CageOverview />)
     const grid = await screen.findByRole('list', { name: 'Tus cuyes' })
 
-    await user.type(screen.getByRole('searchbox', { name: 'Buscar cuy por nombre' }), 'CHÍS')
+    await user.type(screen.getByRole('searchbox', { name: 'Buscar cuy por color o raza' }), 'NARÁN')
 
-    expect(within(grid).getByText('Chispa')).toBeInTheDocument()
-    expect(within(grid).queryByText('Canela')).not.toBeInTheDocument()
+    expect(within(grid).getByText('Cuy Naranja')).toBeInTheDocument()
+    expect(within(grid).queryByText('Cuy Rojo')).not.toBeInTheDocument()
   })
 
   it('shows only the guinea pigs that need attention', async () => {
@@ -115,9 +116,9 @@ describe('CageOverview', () => {
 
     await user.click(screen.getByRole('button', { name: 'Necesitan atención (2)' }))
 
-    expect(within(grid).getByText('Canela')).toBeInTheDocument()
-    expect(within(grid).getByText('Chispa')).toBeInTheDocument()
-    expect(within(grid).queryByText('Pelusa')).not.toBeInTheDocument()
+    expect(within(grid).getByText('Cuy Rojo')).toBeInTheDocument()
+    expect(within(grid).getByText('Cuy Naranja')).toBeInTheDocument()
+    expect(within(grid).queryByText('Cuy Azul')).not.toBeInTheDocument()
   })
 
   it('offers to see every guinea pig again when nothing matches', async () => {
@@ -125,7 +126,7 @@ describe('CageOverview', () => {
     renderInCage(<CageOverview />)
     await screen.findByRole('list', { name: 'Tus cuyes' })
 
-    await user.type(screen.getByRole('searchbox', { name: 'Buscar cuy por nombre' }), 'zzz')
+    await user.type(screen.getByRole('searchbox', { name: 'Buscar cuy por color o raza' }), 'zzz')
     expect(screen.getByText('Ningún cuy coincide con la búsqueda')).toBeInTheDocument()
 
     await user.click(screen.getByRole('button', { name: 'Ver todos' }))

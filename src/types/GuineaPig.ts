@@ -2,7 +2,9 @@ import type { HealthStatus } from './HealthStatus'
 
 export interface GuineaPig {
   id: number
-  name: string
+  // the path of its photo (contract 3.3c); null for a cuy registered before photos existed.
+  // There is no name: the breeder tells them apart by the photo and the mark
+  photoUrl: string | null
   // codes of catalog_option, not values of an enum: the labels come from GET /api/v1/catalog
   markColor: string
   status: HealthStatus
@@ -14,8 +16,12 @@ export interface GuineaPig {
   notes?: string | null
 }
 
+export type PhotoContentType = 'image/jpeg' | 'image/png' | 'image/webp'
+
 export interface NewGuineaPig {
-  name: string
+  // the image in base64, without the "data:" prefix, at most 300 KB once decoded
+  photo: string
+  photoContentType: PhotoContentType
   markColor: string
   breed?: string
   coatColor?: string

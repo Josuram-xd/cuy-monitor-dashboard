@@ -32,10 +32,10 @@ describe('GuineaPigDetail', () => {
   })
 
   it('shows who the guinea pig is, how it is doing and what the owner told', async () => {
-    // Canela: Teddy, cinnamon, 860 g, observed, with a note
+    // RED (1): Teddy, cinnamon coat, 860 g, observed, with a note
     renderAt(api, '1')
 
-    expect(await screen.findByRole('heading', { level: 1, name: 'Canela' })).toBeInTheDocument()
+    expect(await screen.findByRole('heading', { level: 1, name: 'Cuy Rojo' })).toBeInTheDocument()
     expect(screen.getByText('En observación')).toBeInTheDocument()
     expect(screen.getByText(/^desde /)).toBeInTheDocument()
     const facts = screen.getByRole('region', { name: 'Datos' })
@@ -47,24 +47,26 @@ describe('GuineaPigDetail', () => {
   })
 
   it('says "Sin dato" for what was not filled in', async () => {
-    // Copito was registered without a profile
+    // WHITE (3) was registered without a profile
     renderAt(api, '3')
 
-    await screen.findByRole('heading', { level: 1, name: 'Copito' })
+    await screen.findByRole('heading', { level: 1, name: 'Cuy Blanco' })
     expect(screen.getAllByText('Sin dato')).toHaveLength(3)
   })
 
   it('lists only the alerts of that guinea pig', async () => {
-    // the fake cage has one open alert about Chispa (4) and none about Pelusa (2)
+    // the fake cage has one open alert about ORANGE (4) and none about BLUE (2)
     renderAt(api, '4')
-    const alerts = await screen.findByRole('region', { name: 'Alertas de Chispa' })
+    const alerts = await screen.findByRole('region', { name: 'Alertas de Cuy Naranja' })
     expect(await within(alerts).findByText(/quieta de lo normal/)).toBeInTheDocument()
   })
 
   it('is calm when the guinea pig has no alerts', async () => {
     renderAt(api, '2')
 
-    expect(await screen.findByText('Pelusa no tiene alertas. ¡Todo tranquilo!')).toBeInTheDocument()
+    expect(
+      await screen.findByText('Cuy Azul no tiene alertas. ¡Todo tranquilo!'),
+    ).toBeInTheDocument()
   })
 
   it('says so when the guinea pig does not exist and offers the way back', async () => {
@@ -78,7 +80,7 @@ describe('GuineaPigDetail', () => {
   })
 
   it('shows the states and the behavior of the guinea pig in the period', async () => {
-    // Chispa (4) went from Normal to observed and then to alert in the last two hours
+    // ORANGE (4) went from Normal to observed and then to alert in the last two hours
     renderAt(api, '4')
 
     const history = await screen.findByRole('region', { name: 'Historial' })

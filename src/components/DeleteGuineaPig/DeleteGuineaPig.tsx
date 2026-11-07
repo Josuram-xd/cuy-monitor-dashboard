@@ -8,6 +8,7 @@ import { FormError } from '../FormError/FormError'
 import { Icon } from '../Icon/Icon'
 import { useToast } from '../Toast/useToast'
 import styles from './DeleteGuineaPig.module.css'
+import { guineaPigLabel } from '../../utils/guineaPig'
 
 interface DeleteGuineaPigProps {
   cageId: string
@@ -30,21 +31,21 @@ export function DeleteGuineaPig({ cageId, guineaPig }: DeleteGuineaPigProps) {
       <button
         type="button"
         className={styles.button}
-        aria-label={t('guineaPig.delete.open', { name: guineaPig.name })}
-        title={t('guineaPig.delete.open', { name: guineaPig.name })}
+        aria-label={t('guineaPig.delete.open', { name: guineaPigLabel(guineaPig) })}
+        title={t('guineaPig.delete.open', { name: guineaPigLabel(guineaPig) })}
         onClick={() => setOpen(true)}
       >
         <Icon name="trash" size={18} />
       </button>
       {open && (
         <ConfirmDialog
-          title={t('guineaPig.delete.title', { name: guineaPig.name })}
+          title={t('guineaPig.delete.title', { name: guineaPigLabel(guineaPig) })}
           confirmLabel={t('guineaPig.delete.confirm')}
           onConfirm={() =>
             remove.mutate(guineaPig.id, {
               onSuccess: () => {
                 toast.show({
-                  message: t('toast.guineaPigDeleted', { name: guineaPig.name }),
+                  message: t('toast.guineaPigDeleted', { name: guineaPigLabel(guineaPig) }),
                   tone: 'info',
                 })
                 close()

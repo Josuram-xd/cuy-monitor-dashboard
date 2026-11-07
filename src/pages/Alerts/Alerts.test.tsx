@@ -31,7 +31,7 @@ describe('Alerts', () => {
     expect(
       await within(open).findAllByRole('button', { name: 'Marcar como revisada' }),
     ).toHaveLength(openAlerts.length)
-    expect(await within(open).findByText('Chispa')).toBeInTheDocument()
+    expect(await within(open).findByText('Cuy Naranja')).toBeInTheDocument()
   })
 
   it('moves an alert to the reviewed ones of the history when it is marked', async () => {
@@ -49,7 +49,7 @@ describe('Alerts', () => {
       )
     })
     const history = screen.getByRole('region', { name: 'Historial de alertas' })
-    expect(await within(history).findByText(/Chispa lleva mucho más tiempo/)).toBeInTheDocument()
+    expect(await within(history).findByText(/Lleva mucho más tiempo/)).toBeInTheDocument()
   })
 
   it('reviewed alerts have no button to mark them again', async () => {

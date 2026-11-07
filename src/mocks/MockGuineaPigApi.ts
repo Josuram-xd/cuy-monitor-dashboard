@@ -6,7 +6,9 @@ import type { CatalogKind } from '../types/Catalog'
 import { mockBaseline, mockCatalog, mockTransitions, mockWindows } from './data'
 import { MockResource } from './MockResource'
 
-const MAX_NAME_LENGTH = 100
+// the same rules as the backend (contract 3.3)
+const MAX_PHOTO_BYTES = 300 * 1024
+const PHOTO_TYPES = ['image/jpeg', 'image/png', 'image/webp']
 
 export class MockGuineaPigApi extends MockResource implements GuineaPigApi {
   list(cageId: string): Promise<GuineaPig[]> {
@@ -20,9 +22,12 @@ export class MockGuineaPigApi extends MockResource implements GuineaPigApi {
     if (!this.db.hasCage(cageId)) {
       return this.notFound()
     }
-    const name = body.name.trim()
-    if (name.length === 0 || name.length > MAX_NAME_LENGTH) {
-      return this.fail(400, 'bad_request')
+    if (
+      !body.photo ||
+      !PHOTO_TYPES.includes(body.photoContentType) ||
+      Math.floor((body.photo.length * 3) / 4) > MAX_PHOTO_BYTES
+    ) {
+      return this.fail(400, 'bad_request', { photo: 'invalid' })
     }
     // the same limits as the backend
     const weight = body.initialWeightGrams
@@ -48,7 +53,7 @@ export class MockGuineaPigApi extends MockResource implements GuineaPigApi {
     }
     const created: GuineaPig = {
       id: this.db.nextGuineaPigId(),
-      name,
+      photoUrl: `data:${body.photoContentType};base64,${body.photo}`,
       markColor: body.markColor,
       status: 'NORMAL',
       statusSince: new Date().toISOString(),

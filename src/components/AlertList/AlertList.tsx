@@ -8,6 +8,7 @@ import { Icon, type IconName } from '../Icon/Icon'
 import { MarkColorDot } from '../MarkColorDot/MarkColorDot'
 import { StatusBadge } from '../StatusBadge/StatusBadge'
 import styles from './AlertList.module.css'
+import { guineaPigLabel } from '../../utils/guineaPig'
 
 interface AlertListProps {
   alerts: Alert[]
@@ -33,7 +34,7 @@ function alertTitle(alert: Alert, guineaPig?: GuineaPig): string {
   if (alert.guineaPigId === null) {
     return t('alerts.wholeCage')
   }
-  return guineaPig ? guineaPig.name : t('alerts.unknownGuineaPig')
+  return guineaPig ? guineaPigLabel(guineaPig) : t('alerts.unknownGuineaPig')
 }
 
 // Same shape as a guinea pig card (ring, title, badge and mark, then the detail) so the two columns

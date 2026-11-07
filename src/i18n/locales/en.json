@@ -96,8 +96,8 @@
     "countsLabel": "Guinea pigs by status",
     "updated": "Updated {{time}}",
     "filter": {
-      "searchLabel": "Search guinea pig by name",
-      "searchPlaceholder": "Search by name…",
+      "searchLabel": "Search guinea pigs by color or breed",
+      "searchPlaceholder": "Search by color or breed…",
       "clearSearch": "Clear search",
       "statusLabel": "Show",
       "attention_one": "Needs attention ({{count}})",
@@ -199,14 +199,15 @@
       "historyTitle": "History",
       "behaviorTitle": "Behavior",
       "timelineTitle": "Health states",
-      "historyError": "We couldn't load the history."
+      "historyError": "We couldn't load the history.",
+      "photoAlt": "Photo of {{name}}"
     },
     "still": "Still {{seconds}} of the last 60 s",
     "lastSeen": "Seen {{time}}",
     "notSeen": "Not seen since {{time}}",
     "register": {
       "title": "Register a guinea pig",
-      "intro": "Tell us who it is. While you fill in the form, you see on the right how its card will look.",
+      "intro": "Add its photo and choose its mark. While you fill in the form, its card appears on the right.",
       "who": "Who is it?",
       "look": "What does it look like?",
       "mark": "Its mark for the camera",
@@ -223,28 +224,38 @@
       "notesPlaceholder": "Temperament, allergies, where it comes from…",
       "notesTooLong": "The notes are too long.",
       "previewTitle": "This is how it will look",
-      "previewName": "Its name",
+      "previewName": "Choose its mark",
       "previewEmpty": "Fill in the details and they show up here.",
-      "name": "Name",
-      "nameRequired": "Write the guinea pig's name.",
-      "nameTooLong": "The name is too long.",
       "color": "Mark color",
       "colorRequired": "Choose the mark color.",
-      "usedBy": "Worn by {{name}}",
+      "usedBy": "In use",
       "submit": "Register guinea pig",
       "submitting": "Registering…",
-      "allUsed": "There is already a guinea pig with each mark color. No more can be registered in this cage."
+      "allUsed": "There is already a guinea pig with each mark color. No more can be registered in this cage.",
+      "photo": "Photo of the guinea pig",
+      "photoHint": "A close photo with good light: that is how you recognize it on the panel.",
+      "photoPick": "Take or choose a photo",
+      "photoChange": "Change photo",
+      "photoBusy": "Preparing the photo…",
+      "photoPreview": "Chosen photo",
+      "photoRequired": "Add a photo of the guinea pig.",
+      "photoProblem": {
+        "type": "That image won't work: use a JPG, PNG or WebP photo.",
+        "unreadable": "We couldn't open that photo. Try another one.",
+        "tooBig": "The photo is too big even when reduced. Try another one."
+      }
     },
     "delete": {
-      "open": "Delete {{name}}",
-      "title": "Delete {{name}}?",
+      "open": "Remove {{name}}",
+      "title": "Remove {{name}}?",
       "text": "It will no longer show in your cage and its mark color will be free for another guinea pig. Its history is kept.",
       "confirm": "Yes, delete"
     },
     "error": {
       "colorTaken": "Another guinea pig already wears that color. Choose a free one.",
       "alreadyGone": "This guinea pig no longer exists. Refresh the page."
-    }
+    },
+    "byMark": "Guinea pig {{color}}"
   },
   "auth": {
     "tagline": "Look after your guinea pigs in time",

@@ -1,12 +1,15 @@
 import type { ReactNode } from 'react'
 import { catalogLabel } from '../../catalog/catalog'
 import { t } from '../../i18n'
+import { guineaPigLabel } from '../../utils/guineaPig'
 import { CoatSwatch } from '../CoatSwatch/CoatSwatch'
+import { GuineaPigPhoto } from '../GuineaPigPhoto/GuineaPigPhoto'
 import { MarkColorDot } from '../MarkColorDot/MarkColorDot'
 import styles from './GuineaPigPreview.module.css'
 
 interface GuineaPigPreviewProps {
-  name: string
+  // the chosen photo, as a data: URL
+  photo: string | null
   breed: string | null
   coatColor: string | null
   markColor: string | null
@@ -15,7 +18,7 @@ interface GuineaPigPreviewProps {
 
 // "Así se verá": the card grows while the form is filled, so the owner sees who they are adding.
 export function GuineaPigPreview({
-  name,
+  photo,
   breed,
   coatColor,
   markColor,
@@ -46,11 +49,10 @@ export function GuineaPigPreview({
   return (
     <aside className={styles.card} aria-label={t('guineaPig.register.previewTitle')}>
       <p className={styles.caption}>{t('guineaPig.register.previewTitle')}</p>
-      <span className={styles.avatar} aria-hidden="true">
-        {coatColor ? <CoatSwatch color={coatColor} size={88} /> : null}
-        <span className={styles.initial}>{name.trim().charAt(0).toUpperCase() || '?'}</span>
-      </span>
-      <p className={styles.name}>{name.trim() || t('guineaPig.register.previewName')}</p>
+      <GuineaPigPhoto photoUrl={photo} alt="" size={88} coatColor={coatColor} />
+      <p className={styles.name}>
+        {markColor ? guineaPigLabel({ markColor }) : t('guineaPig.register.previewName')}
+      </p>
       {rows.length > 0 ? (
         <ul className={styles.rows}>
           {rows.map((row) => (

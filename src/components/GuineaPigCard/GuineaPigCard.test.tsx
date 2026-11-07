@@ -6,9 +6,9 @@ import { GuineaPigCard } from './GuineaPigCard'
 
 const NOW = Date.parse('2026-10-05T14:32:00Z')
 
-const canela: GuineaPig = {
+const red: GuineaPig = {
   id: 1,
-  name: 'Canela',
+  photoUrl: '/api/v1/cages/cage-1/guinea-pigs/1/photo',
   markColor: 'RED',
   status: 'OBSERVED',
   statusSince: '2026-10-05T14:10:00Z',
@@ -27,7 +27,7 @@ function windowAt(minutesAgo: number): BehaviorWindow {
 function renderCard(lastWindow?: BehaviorWindow) {
   return render(
     <MemoryRouter>
-      <GuineaPigCard cageId="cage-1" guineaPig={canela} lastWindow={lastWindow} now={NOW} />
+      <GuineaPigCard cageId="cage-1" guineaPig={red} lastWindow={lastWindow} now={NOW} />
     </MemoryRouter>,
   )
 }
@@ -39,10 +39,15 @@ describe('GuineaPigCard', () => {
     expect(screen.getByRole('link')).toHaveAttribute('href', '/cages/cage-1/guinea-pigs/1')
   })
 
-  it('shows name, mark color and status', () => {
+  it('shows its photo, its mark color and status', () => {
     renderCard()
 
-    expect(screen.getByText('Canela')).toBeInTheDocument()
+    // no name: the photo and the mark say who it is
+    expect(screen.getByText('Cuy Rojo')).toBeInTheDocument()
+    expect(document.querySelector('img')).toHaveAttribute(
+      'src',
+      '/api/v1/cages/cage-1/guinea-pigs/1/photo',
+    )
     expect(screen.getByText('Rojo')).toBeInTheDocument()
     expect(screen.getByText('En observación')).toBeInTheDocument()
   })
@@ -72,7 +77,7 @@ describe('GuineaPigCard', () => {
   it('glows once when the status goes up, never when it goes down', () => {
     const card = (status: GuineaPig['status']) => (
       <MemoryRouter>
-        <GuineaPigCard cageId="cage-1" guineaPig={{ ...canela, status }} now={NOW} />
+        <GuineaPigCard cageId="cage-1" guineaPig={{ ...red, status }} now={NOW} />
       </MemoryRouter>
     )
     const { container, rerender } = render(card('OBSERVED'))

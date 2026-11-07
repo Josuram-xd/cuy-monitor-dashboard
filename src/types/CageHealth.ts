@@ -2,7 +2,7 @@ import type { HealthStatus } from './HealthStatus'
 
 export interface CageGuineaPigStatus {
   id: number
-  name: string
+  photoUrl: string | null
   markColor: string
   status: HealthStatus
 }
