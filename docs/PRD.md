@@ -32,10 +32,10 @@ Entrar tiene que ser simple: usuario, contraseña y un código de 6 dígitos que
 | Pantalla | Ruta | Qué muestra | Historias |
 |---|---|---|---|
 | Mis jaulas | `/` | Una tarjeta por jaula de la cuenta (nombre, lugar, estado en vivo, cuántos cuyes, código para la cámara y la báscula con botón de copiar); crear, renombrar y eliminar jaulas. Cada cuenta ve solo sus jaulas | — |
-| Vista de jaula | `/cages/:cageId` | Semáforo general de la jaula + una tarjeta por cuy (nombre, marca de color, estado, "visto hace X min") + últimas alertas | HU-01, HU-02, HU-07 |
+| Vista de jaula | `/cages/:cageId` | Semáforo general de la jaula + una tarjeta por cuy (foto, marca de color, estado, "visto hace X min") + últimas alertas | HU-01, HU-02, HU-07 |
 | Detalle de cuy | `/cages/:cageId/guinea-pigs/:id` | Estado actual, línea de tiempo de estados, gráficas de tiempo quieto y visitas al comedero/bebedero | HU-04 |
 | Alertas | `/alerts?cage=` | Lista de alertas abiertas y revisadas de todas las jaulas (o filtrada por una); botón para marcar como revisada | HU-05 |
-| Registrar cuy | `/cages/:cageId/guinea-pigs/new` | Formulario: nombre + color de la marca (solo colores libres en la jaula) | HU-03 |
+| Registrar cuy | `/cages/:cageId/guinea-pigs/new` | Formulario: foto (cámara o galería, reducida a menos de 300 KB) + color de la marca (solo colores libres en la jaula); raza, pelaje, peso y notas opcionales | HU-03 |
 | Peso | `/weight` (o sección en la vista de jaula) | Gráfica del peso de la jaula en el tiempo | HU-06 |
 | Mi cuenta | `/account` | Nombre, usuario, correo; editar nombre; cambiar contraseña; desactivar cuenta; **Cerrar sesión** | HU-11, HU-12 |
 
@@ -49,7 +49,7 @@ Si alguien entra a una ruta privada sin sesión, va a `/login` y, después de en
 | D-02 | Semáforo de la jaula con el estado del `CageHealth` | Avance |
 | D-03 | Recibir cambios de estado y alertas en vivo por WebSocket, sin recargar la página | Avance (con eventos falsos) |
 | D-04 | Indicar si la conexión en vivo está activa o caída | Avance |
-| D-05 | Registrar un cuy con nombre y marca de color | Final |
+| D-05 | Registrar un cuy con foto y marca de color | Final |
 | D-06 | Historial de un cuy con gráficas por rango de fechas | Final |
 | D-07 | Listar alertas y marcarlas como revisadas | Final |
 | D-08 | Gráfica de peso de la jaula | Final |
