@@ -58,7 +58,7 @@
 - [x] **Task 4.3** — `feat(alerts): add AlertList with latest open alerts on CageOverview`
 - [x] **Task 4.4** — `build: add Dockerfile and Caddyfile serving the SPA`
   Multi-stage `node:24-alpine` → `caddy:2.11-alpine`, `try_files {path} /index.html`, puerto 80, `.dockerignore`. Variables `VITE_*` como build args.
-- [ ] **Task 4.5** — *(sin commit)* clonar el repo al lado del backend en la EC2 y levantarlo con Compose
+- [x] **Task 4.5** — *(sin commit)* clonar el repo al lado del backend en la EC2 y levantarlo con Compose
   🔗 Depende de: `cuy-monitor-backend` Task 23 (servicio `dashboard` y ruta `/` en Caddy)
 
 ### Task 5 — Conectar al backend real
@@ -67,7 +67,7 @@
 
 - [x] **Task 5.1** — `feat(api): switch cage and guinea pigs data to the real API`
 - [x] **Task 5.2** — `feat(api): switch alerts to the real API`
-- [ ] **Task 5.3** — *(sin commit)* construir la imagen con `VITE_USE_MOCKS=false` y verificar en el celular
+- [x] **Task 5.3** — *(sin commit)* construir la imagen con `VITE_USE_MOCKS=false` y verificar en el celular
 
 ### Task 6 — Actualizaciones en vivo
 
@@ -169,9 +169,10 @@ Rama: `feature/task-14-account`.
 ### Task 11 — Calidad
 
 - [x] **Task 11.1** — `feat(styles): add dark mode tokens`
-- [ ] **Task 11.2** — `fix(a11y): apply accessibility checklist from the design system`
-- [ ] **Task 11.3** — `test: cover hooks and pages with mocked API`
-- [ ] **Task 11.4** — `perf: lazy load detail and chart pages`
+- [x] **Task 11.2** — `fix(a11y): apply accessibility checklist from the design system`
+  Checklist de `DESIGN_SYSTEM.md` revisada en el código; falta mirar a mano 200 % de zoom y 360 px.
+- [x] **Task 11.3** — `test: cover hooks and pages with mocked API`
+- [x] **Task 11.4** — `perf: lazy load detail and chart pages`
 
 ### Task 12 — Entrega
 
