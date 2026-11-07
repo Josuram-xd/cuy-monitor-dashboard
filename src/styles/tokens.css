@@ -19,7 +19,7 @@
   --elevation-edge: 0 0 0 0 transparent;
   --color-text-subtle: #78716c;
   /* decoration strength of the backdrop */
-  --backdrop-opacity: 0.5;
+  --backdrop-opacity: 0.3;
   --image-dim: 1;
   /* how much of a status tint covers a large area (the cage banner) */
   --tint-strength: 100%;
