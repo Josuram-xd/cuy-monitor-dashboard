@@ -168,6 +168,11 @@
       "inCage": "en {{cage}}",
       "open": "Ver las alertas de esta jaula",
       "dismiss": "Cerrar el aviso"
+    },
+    "type": {
+      "BEHAVIOR": "Comportamiento",
+      "AUDIO": "Sonido",
+      "WEIGHT": "Peso"
     }
   },
   "realtime": {
@@ -208,14 +213,17 @@
       "behaviorTitle": "Comportamiento",
       "timelineTitle": "Estados de salud",
       "historyError": "No pudimos cargar el historial.",
-      "photoAlt": "Foto de {{name}}"
+      "photoAlt": "Foto de {{name}}",
+      "allAlerts_one": "Ver su alerta en Alertas",
+      "allAlerts_many": "Ver sus {{count}} alertas",
+      "allAlerts_other": "Ver sus {{count}} alertas"
     },
     "still": "Quieto {{seconds}} de los últimos 60 s",
     "lastSeen": "Visto {{time}}",
     "notSeen": "No se ha visto {{time}}",
     "register": {
       "title": "Registrar un cuy",
-      "intro": "Sube su foto y elige su marca. Mientras llenas el formulario, a la derecha ves cómo se verá su tarjeta.",
+      "intro": "Sube su foto y elige su marca. Mientras llenas el formulario ves cómo se verá su tarjeta.",
       "who": "¿Quién es?",
       "look": "¿Cómo es?",
       "mark": "Su marca para la cámara",

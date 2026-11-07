@@ -1,4 +1,4 @@
-import { screen, within } from '@testing-library/react'
+import { screen, waitFor, within } from '@testing-library/react'
 import userEvent from '@testing-library/user-event'
 import { Route, Routes } from 'react-router'
 import { beforeEach, describe, expect, it, vi } from 'vitest'
@@ -59,6 +59,29 @@ describe('GuineaPigDetail', () => {
     renderAt(api, '4')
     const alerts = await screen.findByRole('region', { name: 'Alertas de Cuy Naranja' })
     expect(await within(alerts).findByText(/quieta de lo normal/)).toBeInTheDocument()
+  })
+
+  it('shows only its latest three alerts, titled by what they are about, and links to the rest', async () => {
+    // RED (1) has a long list of alerts in the fake history
+    renderAt(api, '1')
+    const alerts = await screen.findByRole('region', { name: 'Alertas de Cuy Rojo' })
+
+    await waitFor(() => expect(within(alerts).getAllByRole('listitem')).toHaveLength(3))
+    // inside its own page the name is not repeated in every alert
+    expect(within(alerts).queryByText('Cuy Rojo')).not.toBeInTheDocument()
+    expect(within(alerts).getAllByText(/Comportamiento|Sonido|Peso/).length).toBeGreaterThan(0)
+    expect(within(alerts).getByRole('link', { name: /Ver sus \d+ alertas/ })).toHaveAttribute(
+      'href',
+      '/alerts?cage=cage-1',
+    )
+  })
+
+  it('shows how it has been doing before its alerts', async () => {
+    renderAt(api, '1')
+    const history = await screen.findByRole('region', { name: 'Historial' })
+    const alerts = screen.getByRole('region', { name: 'Alertas de Cuy Rojo' })
+
+    expect(history.compareDocumentPosition(alerts) & Node.DOCUMENT_POSITION_FOLLOWING).toBeTruthy()
   })
 
   it('is calm when the guinea pig has no alerts', async () => {

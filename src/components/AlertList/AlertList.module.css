@@ -43,8 +43,10 @@
   box-shadow: var(--shadow-pop);
 }
 
+/* on a narrow phone the date goes to its own line before the title gets cut */
 .top {
   display: flex;
+  flex-wrap: wrap;
   align-items: center;
   gap: var(--space-3);
   align-self: stretch;
@@ -64,7 +66,7 @@
 }
 
 .title {
-  flex: 1;
+  flex: 1 1 9em;
   min-width: 0;
   overflow: hidden;
   font-family: var(--font-display);
@@ -77,6 +79,7 @@
 
 .time {
   flex-shrink: 0;
+  margin-left: auto;
   color: var(--color-text-muted);
   font-size: var(--text-small-size);
   line-height: var(--text-small-line);

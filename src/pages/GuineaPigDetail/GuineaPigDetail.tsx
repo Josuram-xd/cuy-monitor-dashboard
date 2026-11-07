@@ -39,6 +39,9 @@ function NoData() {
   return <span className={styles.noData}>{t('guineaPig.detail.noData')}</span>
 }
 
+// the latest ones; the whole list lives in "Alertas"
+const LATEST_ALERTS = 3
+
 function Alerts({ cageId, guineaPig, now }: { cageId: string; guineaPig: GuineaPig; now: number }) {
   const alerts = useAlerts(undefined, cageId)
 
@@ -56,7 +59,21 @@ function Alerts({ cageId, guineaPig, now }: { cageId: string; guineaPig: GuineaP
       </p>
     )
   }
-  return <AlertList alerts={mine} guineaPigs={[guineaPig]} now={now} />
+  return (
+    <>
+      <AlertList
+        alerts={mine.slice(0, LATEST_ALERTS)}
+        guineaPigs={[guineaPig]}
+        now={now}
+        ofOneGuineaPig
+      />
+      {mine.length > LATEST_ALERTS && (
+        <ButtonLink to={`/alerts?cage=${encodeURIComponent(cageId)}`} variant="secondary" fullWidth>
+          {t('guineaPig.detail.allAlerts', { count: mine.length })}
+        </ButtonLink>
+      )}
+    </>
+  )
 }
 
 // Its behavior and its states over the chosen period. One range selector above both charts; while a new
@@ -201,14 +218,15 @@ export function GuineaPigDetail() {
         )}
       </section>
 
+      {/* how it has been doing first, then its latest alerts */}
+      <History guineaPig={guineaPig} />
+
       <section className={styles.card} aria-labelledby="alerts-heading">
         <h2 id="alerts-heading" className={styles.cardTitle}>
           {t('guineaPig.detail.alerts', { name: guineaPigLabel(guineaPig) })}
         </h2>
         <Alerts cageId={cageId} guineaPig={guineaPig} now={now} />
       </section>
-
-      <History guineaPig={guineaPig} />
     </div>
   )
 }
