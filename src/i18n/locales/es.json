@@ -163,6 +163,11 @@
       "shown": "Mostrando {{shown}} de {{total}}",
       "loadMore": "Cargar más",
       "loading": "Cargando…"
+    },
+    "live": {
+      "inCage": "en {{cage}}",
+      "open": "Ver las alertas de esta jaula",
+      "dismiss": "Cerrar el aviso"
     }
   },
   "realtime": {

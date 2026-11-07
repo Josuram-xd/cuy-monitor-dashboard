@@ -15,7 +15,7 @@ describe('LiveIndicator', () => {
     'announces the %s state with a text label',
     (status, label) => {
       render(
-        <LiveConnectionContext.Provider value={{ status }}>
+        <LiveConnectionContext.Provider value={{ status, onAlert: () => () => {} }}>
           <LiveIndicator />
         </LiveConnectionContext.Provider>,
       )

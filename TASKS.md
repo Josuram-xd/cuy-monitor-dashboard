@@ -74,9 +74,9 @@
 🔗 **Depende de:** seguir con las Task 7.3–7.4 del repo `cuy-monitor-backend`
 
 - [x] **Task 6.1** — `feat(realtime): add STOMP client provider with auto reconnect`
-- [ ] **Task 6.2** — `feat(realtime): update cage cache from /topic/cages/{id} messages`
+- [x] **Task 6.2** — `feat(realtime): update cage cache from /topic/cages/{id} messages`
 - [x] **Task 6.3** — `feat(ui): add LiveIndicator`
-- [ ] **Task 6.4** — `feat(ui): add AlertToast for ALERT and CRITICAL`
+- [x] **Task 6.4** — `feat(ui): add AlertToast for ALERT and CRITICAL`
 - [ ] **Task 6.5** — *(sin commit)* probar con el fake producer (`cuy-monitor-backend` Task 9) que una alerta aparece sin recargar
 
 ---
