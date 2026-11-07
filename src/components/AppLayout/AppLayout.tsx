@@ -1,4 +1,4 @@
-import { useEffect } from 'react'
+import { useEffect, useRef } from 'react'
 import { Link, Outlet, ScrollRestoration, useLocation } from 'react-router'
 import { useCatalog } from '../../hooks/useCatalog'
 import { startSpotlight } from '../../motion/spotlight'
@@ -31,6 +31,20 @@ export function AppLayout() {
   // the light that follows the mouse over cards, for every private page
   useEffect(() => startSpotlight(), [])
 
+  // Accessibility checklist: after login (this layout appears) and on every new page, focus goes
+  // to the page title, so a screen reader says where the person is
+  const mainRef = useRef<HTMLElement>(null)
+  useEffect(() => {
+    if (catalog.isPending) {
+      return
+    }
+    const title = mainRef.current?.querySelector<HTMLElement>('h1')
+    if (title) {
+      title.tabIndex = -1
+      title.focus({ preventScroll: true })
+    }
+  }, [location.pathname, catalog.isPending])
+
   // private pages only: the live connection exists only while there is a session
   return (
     <LiveConnectionProvider>
@@ -57,7 +71,7 @@ export function AppLayout() {
               <Wave gradient={{ from: 'var(--header-from)', to: 'var(--header-to)' }} />
             </span>
           </header>
-          <main id={MAIN_ID} className={styles.main} tabIndex={-1}>
+          <main ref={mainRef} id={MAIN_ID} className={styles.main} tabIndex={-1}>
             {catalog.isPending ? (
               <Skeleton count={3} />
             ) : catalog.isError ? (

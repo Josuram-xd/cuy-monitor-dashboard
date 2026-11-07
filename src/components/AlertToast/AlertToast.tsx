@@ -47,34 +47,42 @@ export function AlertToast() {
   const cageName = (cageId: string) =>
     cages.data?.find((cage) => cage.cageId === cageId)?.name ?? cageId
 
+  const renderToast = (alert: Alert) => (
+    <div key={alert.id} className={styles.toast} data-level={alert.level}>
+      <div className={styles.header}>
+        <StatusBadge status={alert.level} size="sm" />
+        <span className={styles.cage}>
+          {t('alerts.live.inCage', { cage: cageName(alert.cageId) })}
+        </span>
+        <button
+          type="button"
+          className={styles.close}
+          onClick={() => dismiss(alert.id)}
+          aria-label={t('alerts.live.dismiss')}
+        >
+          <Icon name="x" size={16} />
+        </button>
+      </div>
+      <p className={styles.message}>{alert.message}</p>
+      <Link
+        to={`/alerts?cage=${encodeURIComponent(alert.cageId)}`}
+        className={styles.link}
+        onClick={() => dismiss(alert.id)}
+      >
+        {t('alerts.live.open')}
+      </Link>
+    </div>
+  )
+
+  // design system checklist: live updates are polite, only CRITICAL interrupts the screen reader
   return (
-    <div className={styles.region} role="alert" aria-live="assertive">
-      {alerts.map((alert) => (
-        <div key={alert.id} className={styles.toast} data-level={alert.level}>
-          <div className={styles.header}>
-            <StatusBadge status={alert.level} size="sm" />
-            <span className={styles.cage}>
-              {t('alerts.live.inCage', { cage: cageName(alert.cageId) })}
-            </span>
-            <button
-              type="button"
-              className={styles.close}
-              onClick={() => dismiss(alert.id)}
-              aria-label={t('alerts.live.dismiss')}
-            >
-              <Icon name="x" size={16} />
-            </button>
-          </div>
-          <p className={styles.message}>{alert.message}</p>
-          <Link
-            to={`/alerts?cage=${encodeURIComponent(alert.cageId)}`}
-            className={styles.link}
-            onClick={() => dismiss(alert.id)}
-          >
-            {t('alerts.live.open')}
-          </Link>
-        </div>
-      ))}
+    <div className={styles.region}>
+      <div className={styles.stack} role="alert" aria-live="assertive">
+        {alerts.filter((alert) => alert.level === 'CRITICAL').map(renderToast)}
+      </div>
+      <div className={styles.stack} role="status" aria-live="polite">
+        {alerts.filter((alert) => alert.level !== 'CRITICAL').map(renderToast)}
+      </div>
     </div>
   )
 }
