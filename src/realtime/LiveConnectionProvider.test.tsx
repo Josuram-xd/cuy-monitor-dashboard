@@ -1,9 +1,12 @@
 import { Client, ReconnectionTimeMode } from '@stomp/stompjs'
-import { act, cleanup, render, screen } from '@testing-library/react'
+import { QueryClient, QueryClientProvider } from '@tanstack/react-query'
+import { act, cleanup, render, screen, waitFor } from '@testing-library/react'
+import { useEffect } from 'react'
 import { afterEach, beforeEach, describe, expect, it, vi } from 'vitest'
 import { getDashboardApi } from '../api/apiProvider'
 import { createMockApi } from '../mocks/createMockApi'
 import { LiveConnectionProvider } from './LiveConnectionProvider'
+import type { Alert } from '../types/Alert'
 import { useLiveConnection } from './useLiveConnection'
 
 vi.mock('../api/apiProvider', () => ({ getDashboardApi: vi.fn() }))
@@ -13,12 +16,21 @@ function StatusProbe() {
   return <span>{status}</span>
 }
 
-function renderProvider(enabled: boolean) {
+function renderProvider(enabled: boolean, child = <StatusProbe />) {
+  const queryClient = new QueryClient({ defaultOptions: { queries: { retry: false } } })
   return render(
-    <LiveConnectionProvider enabled={enabled}>
-      <StatusProbe />
-    </LiveConnectionProvider>,
+    <QueryClientProvider client={queryClient}>
+      <LiveConnectionProvider enabled={enabled}>{child}</LiveConnectionProvider>
+    </QueryClientProvider>,
   )
+}
+
+function activatedClient(activate: { mock: { contexts: unknown[] } }): Client {
+  const context = activate.mock.contexts[0]
+  if (!(context instanceof Client)) {
+    throw new Error('The STOMP client did not activate')
+  }
+  return context
 }
 
 describe('LiveConnectionProvider', () => {
@@ -79,5 +91,49 @@ describe('LiveConnectionProvider', () => {
 
     expect(screen.getByText('disconnected')).toBeInTheDocument()
     expect(activate).not.toHaveBeenCalled()
+  })
+
+  it('follows the topic of every cage of the account and hands its alerts to the listeners', async () => {
+    const activate = vi.spyOn(Client.prototype, 'activate').mockImplementation(() => {})
+    vi.spyOn(Client.prototype, 'deactivate').mockResolvedValue(undefined)
+    vi.spyOn(Client.prototype, 'connected', 'get').mockReturnValue(true)
+    const handlers = new Map<string, (frame: { body: string }) => void>()
+    const unsubscribe = vi.fn()
+    vi.spyOn(Client.prototype, 'subscribe').mockImplementation((topic, callback) => {
+      handlers.set(topic, callback as never)
+      return { id: topic, unsubscribe }
+    })
+    const heard: Alert[] = []
+    function Listener() {
+      const { onAlert } = useLiveConnection()
+      useEffect(() => onAlert((alert) => heard.push(alert)), [onAlert])
+      return null
+    }
+
+    const view = renderProvider(true, <Listener />)
+    const client = activatedClient(activate)
+    await act(async () => {
+      client.onConnect({ headers: {}, body: '' } as never)
+    })
+
+    const cages = await (await getDashboardApi()).cages.list()
+    await waitFor(() => expect(handlers.size).toBe(cages.length))
+    expect([...handlers.keys()]).toEqual(cages.map((cage) => `/topic/cages/${cage.cageId}`))
+
+    const alert = { id: 99, cageId: cages[0].cageId, level: 'CRITICAL', message: 'x' } as Alert
+    act(() => {
+      handlers.get(`/topic/cages/${cages[0].cageId}`)!({
+        body: JSON.stringify({
+          type: 'ALERT',
+          cageId: cages[0].cageId,
+          occurredAt: 'now',
+          data: alert,
+        }),
+      })
+    })
+    expect(heard).toEqual([alert])
+
+    view.unmount()
+    expect(unsubscribe).toHaveBeenCalledTimes(cages.length)
   })
 })
