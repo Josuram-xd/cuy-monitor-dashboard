@@ -6,15 +6,32 @@
   border-radius: var(--radius-full);
 }
 
-/* the coat swatch is the ring; the photo sits inside it */
+/* the ring: the coat color when it is known, a soft green otherwise */
+.ring {
+  position: absolute;
+  inset: 0;
+  border-radius: var(--radius-full);
+}
+
+.ring > span {
+  width: 100% !important;
+  height: 100% !important;
+}
+
+.plainRing {
+  background: var(--color-primary-soft);
+}
+
+/* the photo sits inside the ring, with a thin border so it stands out from it */
 .image,
 .placeholder {
   position: relative;
-  width: calc(100% - 6px);
-  height: calc(100% - 6px);
+  width: calc(100% - 8px);
+  height: calc(100% - 8px);
   border-radius: var(--radius-full);
   object-fit: cover;
   background: var(--color-surface);
+  box-shadow: 0 0 0 2px var(--color-surface);
 }
 
 .placeholder {

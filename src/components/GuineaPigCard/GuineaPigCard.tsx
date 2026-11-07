@@ -63,6 +63,7 @@ export function GuineaPigCard({ cageId, guineaPig, lastWindow, now }: GuineaPigC
           alt=""
           size={52}
           coatColor={guineaPig.coatColor}
+          className={styles.photo}
         />
         <span className={styles.name}>{guineaPigLabel(guineaPig)}</span>
         <Icon name="chevron-right" className={styles.chevron} />
