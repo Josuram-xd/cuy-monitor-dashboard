@@ -301,7 +301,7 @@
     },
     "google": {
       "or": "or",
-      "demo": "Continue with Google (demo)",
+      "demo": "Continue with Google",
       "unavailable": "We couldn't load the Google sign-in. Check your connection or use your username and password."
     },
     "verify": {
