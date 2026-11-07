@@ -36,6 +36,13 @@ h2 {
   outline-offset: 2px;
 }
 
+/* the page title takes the focus on every new page so a screen reader announces it (AppLayout); it is
+   not something to click, so it gets no ring: a box around the title looked like a layout bug */
+h1[tabindex='-1']:focus,
+main[tabindex='-1']:focus {
+  outline: none;
+}
+
 #root {
   min-height: 100vh;
 }

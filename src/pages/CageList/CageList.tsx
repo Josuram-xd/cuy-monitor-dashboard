@@ -50,7 +50,7 @@ export function CageList() {
     )
   } else {
     content = (
-      <GuineaPigGrid label={t('cages.title')}>
+      <GuineaPigGrid label={t('cages.title')} wide>
         {cages.data.map((cage, index) => (
           <GuineaPigGridItem key={cage.cageId} index={index}>
             <CageCard

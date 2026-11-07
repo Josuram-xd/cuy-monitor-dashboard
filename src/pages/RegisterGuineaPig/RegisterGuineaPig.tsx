@@ -144,31 +144,6 @@ export function RegisterGuineaPig({ preparePhoto }: RegisterGuineaPigProps = {})
               error={submitted ? photoError : undefined}
               prepare={preparePhoto}
             />
-            <ChoiceChips
-              legend={t('guineaPig.register.breed')}
-              hint={t('common.optional')}
-              options={breedOptions}
-              value={breed}
-              onChange={setBreed}
-            />
-          </section>
-          <section className={styles.section} aria-labelledby="look-heading">
-            <h2 id="look-heading" className={styles.sectionTitle}>
-              {t('guineaPig.register.look')}
-            </h2>
-            <ChoiceChips
-              legend={t('guineaPig.register.coat')}
-              hint={t('common.optional')}
-              options={coatOptions}
-              value={coatColor}
-              onChange={setCoatColor}
-            />
-            <WeightField
-              label={t('guineaPig.register.weight')}
-              value={weight}
-              onChange={setWeight}
-              error={weightError}
-            />
           </section>
           <section className={styles.section} aria-labelledby="mark-heading">
             <h2 id="mark-heading" className={styles.sectionTitle}>
@@ -181,6 +156,31 @@ export function RegisterGuineaPig({ preparePhoto }: RegisterGuineaPigProps = {})
               onChange={setColor}
               usedBy={usedBy}
               error={submitted ? colorError : undefined}
+            />
+          </section>
+          <section className={styles.section} aria-labelledby="look-heading">
+            <h2 id="look-heading" className={styles.sectionTitle}>
+              {t('guineaPig.register.look')}
+            </h2>
+            <ChoiceChips
+              legend={t('guineaPig.register.breed')}
+              hint={t('common.optional')}
+              options={breedOptions}
+              value={breed}
+              onChange={setBreed}
+            />
+            <ChoiceChips
+              legend={t('guineaPig.register.coat')}
+              hint={t('common.optional')}
+              options={coatOptions}
+              value={coatColor}
+              onChange={setCoatColor}
+            />
+            <WeightField
+              label={t('guineaPig.register.weight')}
+              value={weight}
+              onChange={setWeight}
+              error={weightError}
             />
           </section>
           <section className={styles.section} aria-labelledby="notes-heading">

@@ -160,6 +160,11 @@
       "inCage": "in {{cage}}",
       "open": "See the alerts of this cage",
       "dismiss": "Close the notice"
+    },
+    "type": {
+      "BEHAVIOR": "Behavior",
+      "AUDIO": "Sound",
+      "WEIGHT": "Weight"
     }
   },
   "realtime": {
@@ -200,14 +205,16 @@
       "behaviorTitle": "Behavior",
       "timelineTitle": "Health states",
       "historyError": "We couldn't load the history.",
-      "photoAlt": "Photo of {{name}}"
+      "photoAlt": "Photo of {{name}}",
+      "allAlerts_one": "See its alert in Alerts",
+      "allAlerts_other": "See its {{count}} alerts"
     },
     "still": "Still {{seconds}} of the last 60 s",
     "lastSeen": "Seen {{time}}",
     "notSeen": "Not seen since {{time}}",
     "register": {
       "title": "Register a guinea pig",
-      "intro": "Add its photo and choose its mark. While you fill in the form, its card appears on the right.",
+      "intro": "Add its photo and choose its mark. While you fill in the form you see how its card will look.",
       "who": "Who is it?",
       "look": "What does it look like?",
       "mark": "Its mark for the camera",

@@ -21,6 +21,9 @@ interface AlertListProps {
   busyAlertId?: number
   // cage id -> name; when given, each alert says which cage it is from (alerts of several cages)
   cageNames?: Record<string, string>
+  // the list sits in the page of that one guinea pig: repeating its name in every item adds nothing,
+  // so the title says what the alert is about (behavior, sound, weight) and the mark is left out
+  ofOneGuineaPig?: boolean
 }
 
 // what the alert is about, so the ring on the left says it at a glance
@@ -46,6 +49,7 @@ export function AlertList({
   onMarkReviewed,
   busyAlertId,
   cageNames,
+  ofOneGuineaPig = false,
 }: AlertListProps) {
   return (
     <ul className={styles.list}>
@@ -57,14 +61,16 @@ export function AlertList({
               <span className={styles.ring} aria-hidden="true">
                 <Icon name={TYPE_ICONS[alert.type]} size={20} />
               </span>
-              <span className={styles.title}>{alertTitle(alert, guineaPig)}</span>
+              <span className={styles.title}>
+                {ofOneGuineaPig ? t(`alerts.type.${alert.type}`) : alertTitle(alert, guineaPig)}
+              </span>
               <time className={styles.time} dateTime={alert.createdAt}>
                 {formatRelative(alert.createdAt, now)}
               </time>
             </div>
             <div className={styles.meta}>
               <StatusBadge status={alert.level} size="sm" />
-              {guineaPig && (
+              {guineaPig && !ofOneGuineaPig && (
                 <span className={styles.mark}>
                   <MarkColorDot color={guineaPig.markColor} />
                 </span>

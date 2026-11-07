@@ -30,6 +30,17 @@ describe('CageOverview', () => {
     }
   })
 
+  it('puts the guinea pigs that need attention first', async () => {
+    renderInCage(<CageOverview />)
+    const grid = await screen.findByRole('list', { name: 'Tus cuyes' })
+
+    const names = within(grid)
+      .getAllByText(/^Cuy /)
+      .map((element) => element.textContent)
+    // ORANGE is in ALERT, RED in OBSERVED, then the calm ones
+    expect(names).toEqual(['Cuy Naranja', 'Cuy Rojo', 'Cuy Azul', 'Cuy Blanco'])
+  })
+
   it('lists the open alerts next to the cage', async () => {
     renderInCage(<CageOverview />)
 

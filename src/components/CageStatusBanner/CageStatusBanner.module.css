@@ -31,10 +31,11 @@
 .banner {
   position: relative;
   display: flex;
-  align-items: center;
+  align-items: flex-start;
   gap: var(--space-3);
   overflow: hidden;
-  padding: var(--space-5) var(--page-padding);
+  /* phones: compact, so the guinea pigs that need attention are on the first screen */
+  padding: var(--space-4) var(--page-padding);
   border: 1px solid var(--color-border);
   border-radius: var(--radius-lg);
   /* the status color lives in the corner and fades into the surface: color in small doses */
@@ -133,15 +134,15 @@
   display: grid;
   flex-shrink: 0;
   place-items: center;
-  width: 96px;
-  height: 96px;
+  width: 56px;
+  height: 56px;
   border-radius: var(--radius-full);
   background: color-mix(in srgb, var(--accent) 18%, var(--color-surface));
   box-shadow: 0 0 0 6px color-mix(in srgb, var(--accent) 16%, transparent);
 }
 
 .mascot {
-  width: 86px;
+  width: 50px;
   height: auto;
 }
 

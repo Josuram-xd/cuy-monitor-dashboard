@@ -24,7 +24,10 @@ export function GuineaPigPhoto({ photoUrl, alt, size, coatColor, className }: Gu
   const failed = src !== null && failedSrc === src
   return (
     <span className={cx(styles.photo, className)} style={{ width: size, height: size }}>
-      {coatColor && <CoatSwatch color={coatColor} size={size} />}
+      {/* the coat color is a ring behind the photo, never a block of its own */}
+      <span className={cx(styles.ring, !coatColor && styles.plainRing)} aria-hidden="true">
+        {coatColor && <CoatSwatch color={coatColor} size={size} />}
+      </span>
       {src && !failed ? (
         <img
           className={styles.image}

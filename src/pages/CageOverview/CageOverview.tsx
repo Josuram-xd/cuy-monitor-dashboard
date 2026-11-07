@@ -28,6 +28,7 @@ import { useGuineaPigs } from '../../hooks/useGuineaPigs'
 import { useNow } from '../../hooks/useNow'
 import { t } from '../../i18n'
 import styles from './CageOverview.module.css'
+import { severity } from '../../types/HealthStatus'
 
 const SKELETON_CARDS = 3
 const LATEST_ALERTS = 3
@@ -59,7 +60,10 @@ function GuineaPigsSection({ cageId, now }: { cageId: string; now: number }) {
       />
     )
   }
-  const shown = applyGuineaPigFilter(guineaPigs.data, filter)
+  // the ones that need attention first: on a phone they are what the breeder sees without scrolling
+  const shown = applyGuineaPigFilter(guineaPigs.data, filter).toSorted(
+    (a, b) => severity(b.status) - severity(a.status) || a.id - b.id,
+  )
   return (
     <>
       {guineaPigs.data.length >= FILTER_FROM && (
