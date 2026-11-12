@@ -1,7 +1,7 @@
 import { useId } from 'react'
 import { t } from '../../i18n'
 import type { GuineaPig } from '../../types/GuineaPig'
-import type { GuineaPigFilterValue } from './guineaPigFilter'
+import type { GuineaPigFilterValue } from './filter'
 import { ChoiceChips } from '../ChoiceChips/ChoiceChips'
 import { Icon } from '../Icon/Icon'
 import styles from './GuineaPigFilter.module.css'
