@@ -38,6 +38,37 @@ Capturas tomadas con `VITE_USE_MOCKS=true`, a 390 px (celular) y 1280 px (escrit
 | Cuenta | `/account` | Perfil, cambiar contraseña, desactivar la cuenta y cerrar sesión |
 | Ajustes | `/settings` | Idioma (español/inglés) y apariencia (claro, oscuro o el del sistema) |
 
+## Patrones de diseño
+
+Todos escritos a mano en TypeScript: no hay librería que los aporte.
+
+| Patrón | Dónde | Cómo se aplica |
+|---|---|---|
+| **Abstract Factory** | `src/api/apiProvider.ts` | `createHttpApi()` fabrica la familia completa de siete clientes (`auth`, `account`, `cages`, `guineaPigs`, `alerts`, `catalog`, `assistant`) que encajan entre sí |
+| **Strategy** | `src/api/http/` vs `src/mocks/` | Cada API tiene dos implementaciones de la misma interfaz: `HttpCatalogApi` habla con el backend, `MockCatalogApi` devuelve datos falsos. Quien las usa no nota la diferencia |
+| **Singleton** (perezoso) | `apiProvider.ts` | `api ??= ...` crea la implementación una sola vez, al primer uso, y la reutiliza |
+| **Facade** | `src/api/DashboardApi.ts` | Una interfaz agrupa las siete sub-APIs, así que las pantallas piden `api.alerts` sin saber cuántos clientes hay detrás |
+| **Adapter** | `src/api/HttpClient.ts` | Envuelve `fetch` y traduce lo que devuelve: cabeceras, cookies de sesión y errores HTTP convertidos en `ApiError` |
+
+### Por qué importa
+
+La elección se hace en **un solo punto**:
+
+```ts
+api ??= config.useMocks
+  ? import('../mocks/createMockApi').then(({ createMockApi }) => createMockApi())
+  : Promise.resolve(createHttpApi())
+```
+
+Dos consecuencias prácticas:
+
+- Las pantallas y los tests nunca saben si hablan con el backend real o con los mocks
+- Los mocks entran por `import()` **dinámico**, así que no se compilan en la build de producción: el bundle no contiene ni un dato falso
+
+### Lo que no se reclama
+
+Los colores, razas y colores de pelaje **no** son un patrón del frontend: se piden a `GET /api/v1/catalog` y salen de la tabla `catalog_option` de la base. `MarkColorDot` lee de ahí la etiqueta y el hex. Cambiar un color es un `UPDATE`, no un despliegue.
+
 ## Comandos
 
 ```bash
