@@ -22,6 +22,7 @@
     "@stomp/stompjs": "^7.3.0",
     "@tanstack/react-query": "^5.104.1",
     "i18next": "^26.4.2",
+    "motion": "^14.13.0",
     "react": "^19.2.8",
     "react-dom": "^19.2.8",
     "react-router": "^8.4.0",

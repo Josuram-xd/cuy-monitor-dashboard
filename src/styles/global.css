@@ -93,14 +93,6 @@ html {
   opacity: 0;
 }
 
-/* each page comes in rising a little, so a change of page is felt, not just seen */
-@keyframes page-enter {
-  from {
-    opacity: 0;
-    transform: translateY(10px);
-  }
-}
-
 /* the theme change: the new look opens as a circle from the click (src/motion/themeTransition.ts),
    so the browser's default cross-fade is turned off */
 ::view-transition-old(root),

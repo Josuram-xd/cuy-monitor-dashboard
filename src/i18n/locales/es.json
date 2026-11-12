@@ -173,7 +173,9 @@
       "BEHAVIOR": "Comportamiento",
       "AUDIO": "Sonido",
       "WEIGHT": "Peso"
-    }
+    },
+    "aiNote": "Qué dice Cuchi",
+    "aiNoteWriting": "Cuchi está leyendo esta alerta…"
   },
   "realtime": {
     "connecting": "Conectando…",

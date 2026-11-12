@@ -124,7 +124,6 @@
   --rise-duration: 360ms;
   --pulse-duration: 600ms;
   /* entering a page: short, so moving around never feels slow */
-  --page-enter-duration: 280ms;
   /* the standard 'emphasized decelerate' curve: fast start, soft landing */
   --ease-out-emphasized: cubic-bezier(0.2, 0, 0, 1);
   /* a little overshoot: things pop instead of just fading in */

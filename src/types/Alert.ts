@@ -17,6 +17,11 @@ export interface Alert {
   status: AlertStatus
   createdAt: string
   reviewedAt: string | null
+  // what the assistant wrote about this alert on its own, with no question from the breeder.
+  // null for a few seconds after the alert arrives, while it is being written, and null for good
+  // if the model was unavailable: the alert is shown either way.
+  aiNote: string | null
+  aiNoteAt: string | null
 }
 
 // what the history is asked for; every field is optional, like in the backend (contract 3.9)

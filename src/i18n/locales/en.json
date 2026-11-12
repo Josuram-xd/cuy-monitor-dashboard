@@ -165,7 +165,9 @@
       "BEHAVIOR": "Behavior",
       "AUDIO": "Sound",
       "WEIGHT": "Weight"
-    }
+    },
+    "aiNote": "What Cuchi says",
+    "aiNoteWriting": "Cuchi is reading this alert…"
   },
   "realtime": {
     "connecting": "Connecting…",

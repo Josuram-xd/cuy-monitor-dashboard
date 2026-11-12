@@ -161,6 +161,11 @@ export const mockAlerts: Alert[] = [
     status: 'OPEN',
     createdAt: minutesAgo(35),
     reviewedAt: null,
+    aiNote:
+      'Canela se movió mucho menos de lo normal en la última media hora y no fue al comedero. ' +
+      'Revisa si está comiendo y bebiendo, cómo respira y si se esconde o se aparta del grupo. ' +
+      'Si mañana sigue igual, llama al veterinario.',
+    aiNoteAt: minutesAgo(34),
   },
   {
     id: 6,
@@ -172,6 +177,9 @@ export const mockAlerts: Alert[] = [
     status: 'REVIEWED',
     createdAt: minutesAgo(1300),
     reviewedAt: minutesAgo(1250),
+    // the model was unavailable when this one came in: the alert is shown without a note
+    aiNote: null,
+    aiNoteAt: null,
   },
   {
     id: 5,
@@ -183,6 +191,11 @@ export const mockAlerts: Alert[] = [
     status: 'REVIEWED',
     createdAt: minutesAgo(2900),
     reviewedAt: minutesAgo(2850),
+    aiNote:
+      'Nube no se acercó al comedero en varias horas y se quedó apartada del grupo. ' +
+      'Mírale la boca y los dientes, si hay diarrea y si bebe agua. ' +
+      'Esto ya es para ver a un veterinario hoy.',
+    aiNoteAt: minutesAgo(2899),
   },
 ]
 
@@ -195,6 +208,13 @@ const HISTORY_MESSAGES: Record<Alert['type'], string[]> = {
   AUDIO: ['Se escucharon chillidos de angustia en la jaula'],
   WEIGHT: ['El peso de la jaula bajó más de lo esperado'],
 }
+
+// what the assistant wrote about the behavior alerts of the history
+const HISTORY_NOTES = [
+  'Se movió mucho menos de lo normal y no fue al comedero. Revisa si come, si bebe y cómo respira.',
+  'Estuvo apartado del grupo un buen rato. Mira si se esconde, si hay diarrea y si tiene heridas.',
+  'Su manera de moverse cambió durante varios minutos. Revisa las patas, la postura y si come normal.',
+]
 
 // 30 days of reviewed alerts, about one every 19 hours, so the history has pages to go through.
 // Ids from 100 on, so they never clash with the alerts above. Only RED (1) and ORANGE (4): BLUE stays calm.
@@ -213,6 +233,8 @@ export function mockAlertHistory(): Alert[] {
       message: n % 9 === 0 ? HISTORY_MESSAGES.AUDIO[0] : messages[n % messages.length],
       status: 'REVIEWED',
       createdAt: minutesAgo(minutes),
+      aiNote: type === 'BEHAVIOR' ? HISTORY_NOTES[n % HISTORY_NOTES.length] : null,
+      aiNoteAt: type === 'BEHAVIOR' ? minutesAgo(minutes - 1) : null,
       reviewedAt: minutesAgo(minutes - 25 - (n % 4) * 20),
     })
   }

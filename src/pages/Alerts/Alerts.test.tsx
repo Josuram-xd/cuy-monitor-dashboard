@@ -137,6 +137,8 @@ describe('Alerts', () => {
       status: 'OPEN',
       createdAt: new Date().toISOString(),
       reviewedAt: null,
+      aiNote: null,
+      aiNoteAt: null,
     })
     setup(db)
 
