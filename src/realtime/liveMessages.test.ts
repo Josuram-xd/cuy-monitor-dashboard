@@ -20,6 +20,8 @@ const ALERT: Alert = {
   status: 'OPEN',
   createdAt: '2026-11-06T10:00:00Z',
   reviewedAt: null,
+  aiNote: null,
+  aiNoteAt: null,
 }
 
 function envelope(type: string, data: unknown) {

@@ -41,6 +41,8 @@ function arrive(alert: Partial<Alert>) {
         status: 'OPEN',
         createdAt: '2026-11-06T10:00:00Z',
         reviewedAt: null,
+        aiNote: null,
+        aiNoteAt: null,
         ...alert,
       }),
     ),

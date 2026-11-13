@@ -1,6 +1,10 @@
 import { useEffect, useRef } from 'react'
+import { AnimatePresence, LazyMotion, useReducedMotion } from 'motion/react'
+import * as m from 'motion/react-m'
 import { Link, Outlet, ScrollRestoration, useLocation } from 'react-router'
 import { useCatalog } from '../../hooks/useCatalog'
+import { loadMotionFeatures } from '../../motion/features'
+import { pageVariants } from '../../motion/presets'
 import { startSpotlight } from '../../motion/spotlight'
 import { useScrolled } from '../../motion/useScrolled'
 import { cx } from '../../utils/cx'
@@ -26,6 +30,8 @@ export function AppLayout() {
   // they are loaded once here instead of in each page, and nothing renders with empty lists.
   const catalog = useCatalog()
   const location = useLocation()
+  // the system was asked for less motion: the pages still swap, without the movement
+  const still = useReducedMotion()
   const scrolled = useScrolled()
 
   // the light that follows the mouse over cards, for every private page
@@ -77,10 +83,22 @@ export function AppLayout() {
             ) : catalog.isError ? (
               <ErrorState message={t('cage.catalogError')} onRetry={() => void catalog.refetch()} />
             ) : (
-              // a new key per address: every page comes in with the same short rise
-              <div key={location.pathname} className={styles.page}>
-                <Outlet />
-              </div>
+              // a new key per address: the page that leaves fades out before the next one rises.
+              // mode="wait" keeps only one page on screen, so the footer never jumps.
+              <LazyMotion features={loadMotionFeatures} strict>
+                <AnimatePresence mode="wait" initial={false}>
+                  <m.div
+                    key={location.pathname}
+                    className={styles.page}
+                    variants={still ? undefined : pageVariants}
+                    initial="hidden"
+                    animate="shown"
+                    exit="gone"
+                  >
+                    <Outlet />
+                  </m.div>
+                </AnimatePresence>
+              </LazyMotion>
             )}
           </main>
           <AppFooter />

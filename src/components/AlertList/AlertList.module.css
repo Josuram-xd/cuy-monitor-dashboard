@@ -108,3 +108,33 @@
   margin: 0;
   font-size: var(--text-body-size);
 }
+
+/* What the assistant wrote about this alert on its own. Set apart from the alert's own message —
+   that one is the system talking, this one is Cuchi — but with the card's accent, so it reads as
+   part of the same card and not as a second alert. */
+.aiNote {
+  /* AnimatePresence animates the height: nothing may leak out while it is collapsed */
+  overflow: hidden;
+  width: 100%;
+}
+
+.aiNoteLabel {
+  display: inline-flex;
+  gap: var(--space-1);
+  align-items: center;
+  margin-bottom: var(--space-1);
+  color: var(--accent);
+  font-size: var(--text-caption-size);
+  font-weight: 600;
+  letter-spacing: 0.02em;
+  text-transform: uppercase;
+}
+
+.aiNoteText {
+  margin: 0;
+  padding-left: var(--space-3);
+  border-left: 2px solid var(--color-border-subtle);
+  color: var(--color-text-muted);
+  font-size: var(--text-body-size);
+  line-height: 1.55;
+}

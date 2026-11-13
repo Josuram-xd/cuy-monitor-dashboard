@@ -47,8 +47,10 @@
   min-height: 48px;
 }
 
+/* the rise is driven from code now (motion/presets.ts, pageVariants), so the page can also leave.
+   Keeping the CSS animation here as well would play it twice. */
 .page {
-  animation: page-enter var(--page-enter-duration) var(--ease-out-emphasized) both;
+  min-width: 0;
 }
 
 /* the header ends in a soft wave instead of a straight line */
