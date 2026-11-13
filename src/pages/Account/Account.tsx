@@ -8,38 +8,101 @@ import { ConfirmDialog } from '../../components/ConfirmDialog/ConfirmDialog'
 import { ErrorState } from '../../components/ErrorState/ErrorState'
 import { FormError } from '../../components/FormError/FormError'
 import { PasswordChecklist } from '../../components/PasswordChecklist/PasswordChecklist'
+import { PhotoField } from '../../components/PhotoField/PhotoField'
+import { ProfilePhoto } from '../../components/ProfilePhoto/ProfilePhoto'
 import { PasswordField } from '../../components/PasswordField/PasswordField'
 import { Skeleton } from '../../components/Skeleton/Skeleton'
 import { TextField } from '../../components/TextField/TextField'
 import {
   useChangePasswordMutation,
   useDeactivateAccountMutation,
+  useProfilePhotoMutation,
   useUpdateProfileMutation,
 } from '../../hooks/useAccountMutations'
 import { useProfile } from '../../hooks/useProfile'
 import { t } from '../../i18n'
-import { initials } from '../../utils/initials'
+import { NICKNAME_MAX_LENGTH } from '../../types/Account'
+import type { User } from '../../types/User'
+import type { PreparedPhoto } from '../../utils/photo'
 import styles from './Account.module.css'
 
-function ProfileCard({ fullName, username }: { fullName: string; username: string }) {
+// The photo has its own endpoint, so it saves the moment it is picked instead of waiting for the
+// form: that also means a failed upload cannot take the name change down with it.
+function PhotoCard({ user }: { user: User }) {
+  const photo = useProfilePhotoMutation()
+  const [picked, setPicked] = useState<PreparedPhoto | null>(null)
+  const [done, setDone] = useState<'saved' | 'removed' | null>(null)
+
+  function handleChange(next: PreparedPhoto | null) {
+    setPicked(next)
+    setDone(null)
+    if (next) {
+      photo.mutate(
+        { photo: next.base64, photoContentType: next.contentType },
+        { onSuccess: () => setDone('saved') },
+      )
+    }
+  }
+
+  function handleRemove() {
+    setPicked(null)
+    setDone(null)
+    photo.mutate(null, { onSuccess: () => setDone('removed') })
+  }
+
+  return (
+    <section className={styles.card} aria-labelledby="photo-heading">
+      <h2 id="photo-heading" className={styles.cardTitle}>
+        {t('account.profile.photo')}
+      </h2>
+      <PhotoField
+        label={t('account.profile.photoField')}
+        hint={t('account.profile.photoHint')}
+        value={picked}
+        existingUrl={user.photoUrl}
+        onChange={handleChange}
+        onRemove={handleRemove}
+        busy={photo.isPending}
+      />
+      {photo.isError && <FormError message={t('account.profile.photoFailed')} />}
+      {done && (
+        <p className={styles.success} role="status">
+          {t(done === 'saved' ? 'account.profile.photoSaved' : 'account.profile.photoRemoved')}
+        </p>
+      )}
+    </section>
+  )
+}
+
+function ProfileCard({ user }: { user: User }) {
   const update = useUpdateProfileMutation()
-  const [name, setName] = useState(fullName)
+  const [name, setName] = useState(user.fullName)
+  const [nickname, setNickname] = useState(user.nickname ?? '')
   const [saved, setSaved] = useState(false)
   const trimmed = name.trim()
-  const unchanged = trimmed === fullName
+  const trimmedNickname = nickname.trim()
+  const unchanged = trimmed === user.fullName && trimmedNickname === (user.nickname ?? '')
   const nameError = !trimmed
     ? t('account.profile.nameRequired')
     : trimmed.length > FULL_NAME_MAX_LENGTH
       ? t('account.profile.nameTooLong')
       : undefined
+  const nicknameError =
+    trimmedNickname.length > NICKNAME_MAX_LENGTH
+      ? t('account.profile.nicknameTooLong')
+      : undefined
 
   function handleSubmit(event: FormEvent) {
     event.preventDefault()
-    if (nameError || unchanged) {
+    if (nameError || nicknameError || unchanged) {
       return
     }
     setSaved(false)
-    update.mutate({ fullName: trimmed }, { onSuccess: () => setSaved(true) })
+    // empty clears it: the screens then fall back to the full name
+    update.mutate(
+      { fullName: trimmed, nickname: trimmedNickname || null },
+      { onSuccess: () => setSaved(true) },
+    )
   }
 
   return (
@@ -61,9 +124,22 @@ function ProfileCard({ fullName, username }: { fullName: string; username: strin
           }}
         />
         <TextField
+          label={t('account.profile.nickname')}
+          name="nickname"
+          autoComplete="nickname"
+          maxLength={NICKNAME_MAX_LENGTH}
+          value={nickname}
+          error={nicknameError}
+          hint={t('account.profile.nicknameHint')}
+          onChange={(e) => {
+            setNickname(e.target.value)
+            setSaved(false)
+          }}
+        />
+        <TextField
           label={t('account.profile.username')}
           name="username"
-          value={username}
+          value={user.username}
           readOnly
           hint={t('account.profile.usernameHint')}
         />
@@ -76,7 +152,9 @@ function ProfileCard({ fullName, username }: { fullName: string; username: strin
         <Button
           type="submit"
           variant="primary"
-          disabled={update.isPending || unchanged || nameError !== undefined}
+          disabled={
+            update.isPending || unchanged || nameError !== undefined || nicknameError !== undefined
+          }
         >
           {update.isPending ? t('account.profile.saving') : t('account.profile.save')}
         </Button>
@@ -243,17 +321,18 @@ export function Account() {
   return (
     <div className={styles.page}>
       <header className={styles.hero}>
-        <span className={styles.avatar} aria-hidden="true">
-          {initials(profile.data.fullName)}
+        <span className={styles.avatar}>
+          <ProfilePhoto user={profile.data} className={styles.avatarPhoto} />
         </span>
         <div className={styles.who}>
-          <h1 className={styles.name}>{profile.data.fullName}</h1>
+          <h1 className={styles.name}>{profile.data.displayName}</h1>
           <p className={styles.username}>@{profile.data.username}</p>
         </div>
         <Button onClick={() => logout('logout')}>{t('account.logout')}</Button>
       </header>
       <div className={styles.grid}>
-        <ProfileCard fullName={profile.data.fullName} username={profile.data.username} />
+        <ProfileCard user={profile.data} />
+        <PhotoCard user={profile.data} />
         <PasswordCard username={profile.data.username} hasPassword={profile.data.hasPassword} />
         <DangerCard hasPassword={profile.data.hasPassword} />
       </div>

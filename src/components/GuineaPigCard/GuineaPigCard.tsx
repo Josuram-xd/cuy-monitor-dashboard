@@ -5,6 +5,7 @@ import { cagePath } from '../../hooks/useCageId'
 import { t } from '../../i18n'
 import type { BehaviorWindow, GuineaPig } from '../../types/GuineaPig'
 import { severity, type DisplayStatus, type HealthStatus } from '../../types/HealthStatus'
+import { useTilt } from '../../motion/useTilt'
 import { cx } from '../../utils/cx'
 import { formatRelative, minutesSince } from '../../utils/time'
 import { GuineaPigPhoto } from '../GuineaPigPhoto/GuineaPigPhoto'
@@ -47,12 +48,14 @@ export function GuineaPigCard({ cageId, guineaPig, lastWindow, now }: GuineaPigC
       ? t('guineaPig.weightGrams', { grams: guineaPig.initialWeightGrams })
       : null,
   ].filter(Boolean)
+  const tilt = useTilt()
 
   return (
     <Link
       to={cagePath(cageId, `/guinea-pigs/${guineaPig.id}`)}
       className={cx(styles.card, styles[status])}
       data-spotlight
+      {...tilt}
     >
       {/* a new element per pulse, so the animation runs again each time */}
       {pulses > 0 && <span key={pulses} className={styles.pulse} aria-hidden="true" />}

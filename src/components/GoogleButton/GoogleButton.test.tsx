@@ -1,10 +1,17 @@
 import { render, screen, waitFor } from '@testing-library/react'
 import userEvent from '@testing-library/user-event'
+import type { ReactElement } from 'react'
 import { afterEach, describe, expect, it, vi } from 'vitest'
 import { loadGoogleIdentity, type GoogleAccountsId } from '../../auth/googleIdentity'
 import { config } from '../../config'
 import { MOCK_GOOGLE_TOKEN } from '../../mocks/googleToken'
+import { PreferencesProvider } from '../../preferences/PreferencesProvider'
 import { GoogleButton } from './GoogleButton'
+
+// the real button asks the app which theme is on, to ask Google for the matching variant
+function renderWithTheme(ui: ReactElement) {
+  return render(<PreferencesProvider>{ui}</PreferencesProvider>)
+}
 
 vi.mock('../../auth/googleIdentity', () => ({ loadGoogleIdentity: vi.fn() }))
 
@@ -47,13 +54,18 @@ describe('GoogleButton', () => {
     } as unknown as GoogleAccountsId)
     const onCredential = vi.fn()
 
-    render(<GoogleButton onCredential={onCredential} text="signup_with" />)
+    renderWithTheme(<GoogleButton onCredential={onCredential} text="signup_with" />)
 
     await waitFor(() => expect(renderButton).toHaveBeenCalled())
     expect(initialize).toHaveBeenCalledWith(
       expect.objectContaining({ client_id: 'abc.apps.googleusercontent.com' }),
     )
-    expect(renderButton.mock.calls[0][1]).toMatchObject({ text: 'signup_with', locale: 'es' })
+    // the house buttons are pills: a rectangular Google button was the odd one out
+    expect(renderButton.mock.calls[0][1]).toMatchObject({
+      text: 'signup_with',
+      locale: 'es',
+      shape: 'pill',
+    })
 
     const { callback } = initialize.mock.calls[0][0] as {
       callback: (response: { credential?: string }) => void
@@ -69,7 +81,7 @@ describe('GoogleButton', () => {
     config.googleClientId = 'abc.apps.googleusercontent.com'
     vi.mocked(loadGoogleIdentity).mockRejectedValue(new Error('blocked'))
 
-    render(<GoogleButton onCredential={() => {}} />)
+    renderWithTheme(<GoogleButton onCredential={() => {}} />)
 
     expect(await screen.findByText(/No pudimos cargar el acceso con Google/)).toBeInTheDocument()
   })

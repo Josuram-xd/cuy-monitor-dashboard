@@ -252,7 +252,8 @@
         "type": "That image won't work: use a JPG, PNG or WebP photo.",
         "unreadable": "We couldn't open that photo. Try another one.",
         "tooBig": "The photo is too big even when reduced. Try another one."
-      }
+      },
+      "photoRemove": "Remove photo"
     },
     "delete": {
       "open": "Remove {{name}}",
@@ -347,7 +348,16 @@
       "nameTooLong": "The name is too long.",
       "save": "Save changes",
       "saving": "Saving…",
-      "saved": "Done, we saved your name."
+      "saved": "Done, we saved your details.",
+      "nickname": "What should we call you",
+      "nicknameHint": "Optional. This is the name you will see in the app; leave it empty to use your full name.",
+      "nicknameTooLong": "That nickname is too long.",
+      "photo": "Your profile photo",
+      "photoHint": "Optional. Without one we show your initials.",
+      "photoSaved": "Done, we changed your photo.",
+      "photoRemoved": "We removed your photo.",
+      "photoFailed": "We could not save the photo. Try again.",
+      "photoField": "Choose your photo"
     },
     "password": {
       "title": "Change password",

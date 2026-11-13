@@ -43,8 +43,11 @@
   animation-delay: calc(var(--i, 0) * 70ms);
 }
 
+/* The lean follows the pointer (useTilt writes --tilt-x/--tilt-y). perspective is what makes it
+   read as depth instead of a skew, and the transition above brings it back to flat on the way out. */
 .card:hover {
-  transform: translateY(-6px);
+  transform: perspective(900px) translateY(-6px) rotateX(var(--tilt-x, 0deg))
+    rotateY(var(--tilt-y, 0deg));
   box-shadow: var(--shadow-pop);
 }
 

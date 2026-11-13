@@ -3,6 +3,14 @@
 export interface User {
   username: string
   fullName: string
+  // the short name the breeder picked, null until they pick one
+  nickname: string | null
+  // the nickname, or the full name when there is none. The backend works it out so no screen has to
+  displayName: string
   // false for an account made with Google that never set one: there is no password to ask for
   hasPassword: boolean
+  // Where to point an <img>, or null for an account without a picture. The backend only answers
+  // whether there is one (the bytes never travel inside the profile): the API adapter turns that
+  // into an address, which is why this field is not in the contract.
+  photoUrl: string | null
 }

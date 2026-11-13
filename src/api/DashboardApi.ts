@@ -1,5 +1,6 @@
 import type {
   ChangePasswordRequest,
+  ProfilePhotoRequest,
   DeactivateAccountRequest,
   UpdateProfileRequest,
 } from '../types/Account'
@@ -78,6 +79,8 @@ export interface AuthApi {
 export interface AccountApi {
   getProfile(signal?: AbortSignal): Promise<User>
   updateProfile(body: UpdateProfileRequest): Promise<User>
+  setPhoto(body: ProfilePhotoRequest): Promise<void>
+  removePhoto(): Promise<void>
   // 401 "invalid credentials" when the current password is wrong
   changePassword(body: ChangePasswordRequest): Promise<void>
   // soft delete: the account can no longer log in. Same 401 for a wrong password

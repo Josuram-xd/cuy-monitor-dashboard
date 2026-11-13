@@ -4,6 +4,7 @@ import { useCageHealth } from '../../hooks/useCageHealth'
 import { t } from '../../i18n'
 import type { Cage } from '../../types/Cage'
 import type { DisplayStatus } from '../../types/HealthStatus'
+import { useTilt } from '../../motion/useTilt'
 import { cx } from '../../utils/cx'
 import { formatRelative } from '../../utils/time'
 import { CopyCodeButton } from '../CopyCodeButton/CopyCodeButton'
@@ -26,9 +27,11 @@ export function CageCard({ cage, now, onEdit, onDelete }: CageCardProps) {
   const status: DisplayStatus = health.data?.status ?? 'UNKNOWN'
   const pigs = health.data?.guineaPigs
   const troubled = pigs?.filter((g) => g.status !== 'NORMAL').length ?? 0
+  // the card leans towards the pointer: depth the flat shadow alone could not give it
+  const tilt = useTilt()
 
   return (
-    <article className={cx(styles.card, styles[status])} data-spotlight>
+    <article className={cx(styles.card, styles[status])} data-spotlight {...tilt}>
       <Link to={cagePath(cage.cageId)} className={styles.open}>
         <span className={styles.top}>
           <span className={styles.icon} aria-hidden="true">
