@@ -16,6 +16,9 @@ export const queryKeys = {
   cageWeight: (cageId: string, preset: RangePreset) => ['cage', cageId, 'weight', preset] as const,
   guineaPigHistory: (id: number, preset: RangePreset) =>
     ['guinea-pig', id, 'history', preset] as const,
+  // the admin panel. Saving an option also invalidates ['catalog'], which the pickers read
+  adminCatalog: ['admin', 'catalog'] as const,
+  adminUsers: ['admin', 'users'] as const,
   // invalidating ['alerts'] refreshes every status and cage filter at once
   alerts: (status?: AlertStatus, cageId?: string) =>
     ['alerts', status ?? 'ALL', cageId ?? 'ALL'] as const,

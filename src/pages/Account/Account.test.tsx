@@ -73,6 +73,7 @@ describe('Account', () => {
       username: 'ana',
       fullName: 'Ana Ruiz',
       hasPassword: true,
+      role: 'ADMIN',
     })
   })
 

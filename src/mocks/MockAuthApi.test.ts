@@ -31,6 +31,8 @@ describe('mock auth', () => {
       displayName: 'juan',
       hasPassword: true,
       photoUrl: null,
+      // in mock mode every account is an admin, so the panel can be shown without a backend
+      role: 'ADMIN',
     })
   })
 
@@ -50,6 +52,7 @@ describe('mock auth', () => {
       'hasPassword',
       'nickname',
       'photoUrl',
+      'role',
       'username',
     ])
   })

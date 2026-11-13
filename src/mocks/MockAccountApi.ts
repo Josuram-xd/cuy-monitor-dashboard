@@ -23,6 +23,8 @@ function toProfile(user: MockUser): User {
     displayName: nickname ?? user.fullName,
     hasPassword: user.password !== null,
     photoUrl: user.photoUrl ?? null,
+    // in mock mode every account is an admin, so the admin panel can be shown without a backend
+    role: 'ADMIN',
   }
 }
 

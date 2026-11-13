@@ -1,3 +1,5 @@
+import type { UserRole } from './Admin'
+
 // GET /api/v1/account/profile. On purpose it carries only what the screens show:
 // no id, email, status, timestamps or password hash.
 export interface User {
@@ -13,4 +15,7 @@ export interface User {
   // whether there is one (the bytes never travel inside the profile): the API adapter turns that
   // into an address, which is why this field is not in the contract.
   photoUrl: string | null
+  // the session cookie is HttpOnly, so the page cannot read its token's claim: this is how it learns the role.
+  // It decides what is drawn, never what is allowed
+  role: UserRole
 }
