@@ -1,6 +1,7 @@
 import { config } from '../config'
 import type { DashboardApi } from './DashboardApi'
 import { HttpAccountApi } from './http/HttpAccountApi'
+import { HttpAdminApi } from './http/HttpAdminApi'
 import { HttpAlertApi } from './http/HttpAlertApi'
 import { HttpAssistantApi } from './http/HttpAssistantApi'
 import { HttpAuthApi } from './http/HttpAuthApi'
@@ -24,6 +25,7 @@ function createHttpApi(): DashboardApi {
     alerts: new HttpAlertApi(http),
     catalog: new HttpCatalogApi(http),
     assistant: new HttpAssistantApi(http),
+    admin: new HttpAdminApi(http),
   }
 }
 

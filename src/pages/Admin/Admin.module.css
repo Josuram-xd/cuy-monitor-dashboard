@@ -1,0 +1,231 @@
+.page {
+  display: flex;
+  max-width: 760px;
+  flex-direction: column;
+  gap: var(--space-5);
+  margin: 0 auto;
+}
+
+.title {
+  font-size: var(--text-display-size);
+  line-height: var(--text-display-line);
+  font-weight: var(--text-display-weight);
+}
+
+.subtitle {
+  margin-top: var(--space-2);
+  color: var(--color-text-muted);
+}
+
+.card {
+  /* holds the pointer light (data-spotlight) */
+  position: relative;
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-5);
+  padding: var(--space-5);
+  border: 1px solid var(--color-border);
+  border-radius: var(--radius-lg);
+  background: var(--color-surface);
+  box-shadow: var(--shadow-card);
+  animation: rise var(--rise-duration) both;
+}
+
+@keyframes rise {
+  from {
+    opacity: 0;
+    transform: translateY(14px);
+  }
+}
+
+.cardHeader {
+  display: flex;
+  align-items: flex-start;
+  gap: var(--space-3);
+}
+
+.cardIcon {
+  display: grid;
+  flex: none;
+  width: 44px;
+  height: 44px;
+  place-items: center;
+  border-radius: var(--radius-full);
+  background: var(--color-primary-soft);
+  color: var(--color-primary);
+}
+
+.intro {
+  margin-top: var(--space-1);
+  color: var(--color-text-muted);
+  font-size: var(--text-small-size);
+}
+
+/* --- the catalog --- */
+
+.options,
+.users {
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-2);
+  list-style: none;
+}
+
+.option {
+  display: flex;
+  align-items: center;
+  gap: var(--space-3);
+  padding: var(--space-3);
+  border: 1px solid var(--color-border-subtle);
+  border-radius: var(--radius-md);
+  background: var(--color-surface-raised);
+}
+
+/* switched off: still readable, clearly not in the pickers */
+.option[data-off],
+.user [data-off] {
+  opacity: 0.6;
+}
+
+.option[data-off] .optionLabel {
+  text-decoration: line-through;
+}
+
+.dot {
+  flex: none;
+  width: 18px;
+  height: 18px;
+  border: 1px solid var(--color-border);
+  border-radius: var(--radius-full);
+}
+
+.optionLabel {
+  flex: 1;
+  min-width: 0;
+  font-weight: 500;
+}
+
+.code {
+  padding: 2px var(--space-2);
+  border-radius: var(--radius-sm);
+  background: var(--color-surface-overlay);
+  color: var(--color-text-muted);
+  font-family: var(--font-mono);
+  font-size: var(--text-caption-size);
+}
+
+.optionAction {
+  flex: none;
+}
+
+.addForm {
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-3);
+  padding-top: var(--space-4);
+  border-top: 1px solid var(--color-border-subtle);
+}
+
+.addTitle {
+  font-size: var(--text-h2-size);
+  font-weight: 600;
+}
+
+.colorRow {
+  display: flex;
+  align-items: center;
+  gap: var(--space-3);
+}
+
+.colorInput {
+  width: 48px;
+  height: 32px;
+  padding: 0;
+  border: 1px solid var(--color-border);
+  border-radius: var(--radius-sm);
+  background: none;
+  cursor: pointer;
+}
+
+.error {
+  color: var(--status-critical-fg);
+  font-size: var(--text-small-size);
+}
+
+/* --- the accounts --- */
+
+.user {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: var(--space-3);
+  padding: var(--space-3);
+  border: 1px solid var(--color-border-subtle);
+  border-radius: var(--radius-md);
+  background: var(--color-surface-raised);
+}
+
+.userWho {
+  flex: 1;
+  min-width: 12rem;
+}
+
+.userName {
+  display: flex;
+  align-items: center;
+  gap: var(--space-2);
+  font-weight: 500;
+}
+
+.youTag {
+  padding: 1px var(--space-2);
+  border-radius: var(--radius-full);
+  background: var(--color-primary-soft);
+  color: var(--color-primary);
+  font-size: var(--text-caption-size);
+  font-weight: 600;
+}
+
+.userMeta {
+  margin-top: 2px;
+  color: var(--color-text-muted);
+  font-size: var(--text-small-size);
+  overflow-wrap: anywhere;
+}
+
+.userTags {
+  display: flex;
+  flex: none;
+  gap: var(--space-2);
+}
+
+.roleTag,
+.statusTag {
+  padding: 2px var(--space-2);
+  border: 1px solid var(--color-border);
+  border-radius: var(--radius-full);
+  font-size: var(--text-caption-size);
+}
+
+.roleTag[data-admin] {
+  border-color: transparent;
+  background: var(--color-primary-soft);
+  color: var(--color-primary);
+  font-weight: 600;
+}
+
+.userActions {
+  display: flex;
+  flex: none;
+  gap: var(--space-2);
+}
+
+@media (max-width: 36rem) {
+  .userActions {
+    flex: 1;
+  }
+
+  .userActions > * {
+    flex: 1;
+  }
+}

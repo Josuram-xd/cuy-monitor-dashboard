@@ -11,10 +11,21 @@ import { mockSession } from './mockSession'
 import { MockResource } from './MockResource'
 
 // after a reload the fake database is empty but the fake session survives: answer with a demo user
-const DEMO_USER: User = { username: 'demo', fullName: 'Usuario de prueba', hasPassword: true }
+// an admin on purpose: the admin panel can be shown without a backend
+const DEMO_USER: User = {
+  username: 'demo',
+  fullName: 'Usuario de prueba',
+  hasPassword: true,
+  role: 'ADMIN',
+}
 
 function toProfile(user: MockUser): User {
-  return { username: user.username, fullName: user.fullName, hasPassword: user.password !== null }
+  return {
+    username: user.username,
+    fullName: user.fullName,
+    hasPassword: user.password !== null,
+    role: 'ADMIN',
+  }
 }
 
 export class MockAccountApi extends MockResource implements AccountApi {
