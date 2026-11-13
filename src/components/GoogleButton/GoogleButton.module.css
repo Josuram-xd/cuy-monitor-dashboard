@@ -28,10 +28,30 @@
   min-height: 44px;
 }
 
+/* The iframe cannot be styled from here, so the app's own look goes around it: the same pill, the
+   same card shadow, and the same lift on hover as a house button. */
 .button {
   width: 100%;
   display: flex;
   justify-content: center;
+  border-radius: var(--radius-full);
+  box-shadow: var(--shadow-card);
+  transition:
+    box-shadow var(--transition-lift),
+    transform var(--transition-lift);
+}
+
+.button:hover {
+  box-shadow: var(--shadow-lift);
+  transform: translateY(-1px);
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .button,
+  .button:hover {
+    transform: none;
+    transition: none;
+  }
 }
 
 .mask {
