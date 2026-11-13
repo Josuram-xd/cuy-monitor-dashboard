@@ -56,7 +56,7 @@ function PhotoCard({ user }: { user: User }) {
         {t('account.profile.photo')}
       </h2>
       <PhotoField
-        label={t('account.profile.photo')}
+        label={t('account.profile.photoField')}
         hint={t('account.profile.photoHint')}
         value={picked}
         existingUrl={user.photoUrl}

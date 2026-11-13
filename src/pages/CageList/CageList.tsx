@@ -28,7 +28,8 @@ export function CageList() {
   const profile = useProfile()
   const now = useNow()
   const [dialog, setDialog] = useState<Dialog | null>(null)
-  const firstName = profile.data?.fullName.split(' ')[0]
+  // the name they picked, if they picked one: the greeting is exactly where it belongs
+  const firstName = profile.data?.displayName.split(' ')[0]
   const close = () => setDialog(null)
 
   let content

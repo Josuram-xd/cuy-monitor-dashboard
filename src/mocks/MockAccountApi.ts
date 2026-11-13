@@ -14,16 +14,6 @@ import { MockResource } from './MockResource'
 
 const ACCEPTED_PHOTO_TYPES = ['image/jpeg', 'image/png', 'image/webp']
 
-// after a reload the fake database is empty but the fake session survives: answer with a demo user
-const DEMO_USER: User = {
-  username: 'demo',
-  fullName: 'Usuario de prueba',
-  nickname: null,
-  displayName: 'Usuario de prueba',
-  hasPassword: true,
-  photoUrl: null,
-}
-
 function toProfile(user: MockUser): User {
   const nickname = user.nickname ?? null
   return {
@@ -39,11 +29,8 @@ function toProfile(user: MockUser): User {
 export class MockAccountApi extends MockResource implements AccountApi {
   getProfile(): Promise<User> {
     const user = this.currentUser()
-    if (user) {
-      return this.respond(toProfile(user))
-    }
     // no cookie, no profile: the same 401 the backend gives
-    return mockSession.has() ? this.respond(DEMO_USER) : this.fail(401, 'unauthorized')
+    return user ? this.respond(toProfile(user)) : this.fail(401, 'unauthorized')
   }
 
   updateProfile(body: UpdateProfileRequest): Promise<User> {
@@ -56,44 +43,38 @@ export class MockAccountApi extends MockResource implements AccountApi {
       return this.fail(400, 'bad_request', { nickname: 'invalid' })
     }
     const user = this.currentUser()
-    if (user) {
-      user.fullName = fullName
-      user.nickname = nickname
-      return this.respond(toProfile(user))
+    if (!user) {
+      return this.fail(401, 'unauthorized')
     }
-    return mockSession.has()
-      ? this.respond({ ...DEMO_USER, fullName, nickname, displayName: nickname ?? fullName })
-      : this.fail(401, 'unauthorized')
+    user.fullName = fullName
+    user.nickname = nickname
+    return this.respond(toProfile(user))
   }
 
   setPhoto(body: ProfilePhotoRequest): Promise<void> {
     const user = this.currentUser()
-    if (!user && !mockSession.has()) {
+    if (!user) {
       return this.fail(401, 'unauthorized')
     }
     if (!ACCEPTED_PHOTO_TYPES.includes(body.photoContentType)) {
       return this.fail(400, 'bad_request', { photo: 'invalid' })
     }
-    if (user) {
-      user.photoUrl = `data:${body.photoContentType};base64,${body.photo}`
-    }
+    user.photoUrl = `data:${body.photoContentType};base64,${body.photo}`
     return this.respond(undefined)
   }
 
   removePhoto(): Promise<void> {
     const user = this.currentUser()
-    if (!user && !mockSession.has()) {
+    if (!user) {
       return this.fail(401, 'unauthorized')
     }
-    if (user) {
-      user.photoUrl = null
-    }
+    user.photoUrl = null
     return this.respond(undefined)
   }
 
   changePassword(body: ChangePasswordRequest): Promise<void> {
     const user = this.currentUser()
-    if (!user && !mockSession.has()) {
+    if (!user) {
       return this.fail(401, 'unauthorized')
     }
     // an account without password has nothing to check: its open session is the proof
@@ -129,6 +110,8 @@ export class MockAccountApi extends MockResource implements AccountApi {
   }
 
   private currentUser(): MockUser | undefined {
-    return this.db.users.find((u) => u.id === this.db.signedInUserId)
+    const signedIn = this.db.users.find((u) => u.id === this.db.signedInUserId)
+    // the demo row stands in when the fake database lost the account but the session survived
+    return signedIn ?? (mockSession.has() ? this.db.demoUser : undefined)
   }
 }

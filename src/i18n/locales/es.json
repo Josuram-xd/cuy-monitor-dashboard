@@ -365,7 +365,8 @@
       "photoHint": "Opcional. Si no pones una, mostramos tus iniciales.",
       "photoSaved": "Listo, cambiamos tu foto.",
       "photoRemoved": "Quitamos tu foto.",
-      "photoFailed": "No pudimos guardar la foto. Intenta de nuevo."
+      "photoFailed": "No pudimos guardar la foto. Intenta de nuevo.",
+      "photoField": "Elige tu foto"
     },
     "password": {
       "title": "Cambiar contraseña",

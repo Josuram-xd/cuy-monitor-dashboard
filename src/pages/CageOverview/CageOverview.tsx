@@ -165,7 +165,8 @@ export function CageOverview() {
   const openAlertCount = useAlerts('OPEN', cageId).data?.length
   const profile = useProfile()
   const now = useNow()
-  const firstName = profile.data?.fullName.split(' ')[0]
+  // the name they picked, if they picked one: the greeting is exactly where it belongs
+  const firstName = profile.data?.displayName.split(' ')[0]
 
   return (
     <div className={styles.page}>
