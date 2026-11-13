@@ -80,4 +80,20 @@ describe('dark theme elevation', () => {
     expect(dark['color-bg'].toLowerCase()).not.toBe('#000000')
     expect(dark['color-text'].toLowerCase()).not.toBe('#ffffff')
   })
+
+  // Being lighter is not enough: a step nobody can see is the same as no step. Contrast ratio is
+  // the wrong measure down here (its +0.05 flattens everything near black), so this compares
+  // luminance directly. The ramp once shipped at 1.77x, which read as one flat black page.
+  it('a card is clearly lighter than the page behind it', () => {
+    expect(luminance(dark['color-surface']) / luminance(dark['color-bg'])).toBeGreaterThanOrEqual(3)
+  })
+
+  it('borders are visible on the surface they sit on', () => {
+    expect(contrast(dark['color-border'], dark['color-surface'])).toBeGreaterThanOrEqual(1.9)
+  })
+
+  // Near-white text on near-black glares and tires the eyes on a long look
+  it('body text does not glare', () => {
+    expect(contrast(dark['color-text'], dark['color-bg'])).toBeLessThanOrEqual(14)
+  })
 })
