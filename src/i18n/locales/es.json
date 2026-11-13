@@ -380,7 +380,8 @@
     "error": {
       "wrongPassword": "La contraseña actual no es correcta."
     },
-    "settings": "Ajustes"
+    "settings": "Ajustes",
+    "admin": "Administración"
   },
   "cages": {
     "title": "Tus jaulas",
@@ -524,6 +525,78 @@
     "error": {
       "unavailable": "Cuchi no puede responder ahora. Inténtalo en unos minutos.",
       "tooMany": "Hiciste muchas preguntas seguidas. Espera unos minutos y vuelve a intentarlo."
+    }
+  },
+  "admin": {
+    "title": "Panel de administración",
+    "subtitle": "Lo que los criadores eligen en la aplicación sale de aquí, no del código.",
+    "loadFailed": "No pudimos cargar esta información.",
+    "notAllowed": "Esta sección es solo para administradores.",
+    "backHome": "Volver a mis jaulas",
+    "catalog": {
+      "title": "Catálogo",
+      "intro": "Las razas y los colores que aparecen al registrar un cuy. Puedes añadir los que falten sin esperar una nueva versión de la aplicación.",
+      "kind": "Qué lista quieres editar",
+      "kinds": {
+        "BREED": "Razas",
+        "COAT_COLOR": "Colores de pelaje",
+        "MARK_COLOR": "Colores de marca"
+      },
+      "addTitle": "Añadir a esta lista",
+      "label": "Nombre",
+      "labelHint": "Como lo verá el criador, por ejemplo «Cuy colombiano».",
+      "labelRequired": "Escribe el nombre.",
+      "code": "Código",
+      "codeHint": "Se arma solo con el nombre. Es lo que se guarda en cada cuy, así que no cambia después.",
+      "codeInvalid": "El código solo puede llevar letras, números y _, y máximo 20 caracteres.",
+      "codeTaken": "Ya existe una opción con ese código en esta lista.",
+      "color": "Color",
+      "hexInvalid": "Elige un color válido.",
+      "add": "Añadir",
+      "adding": "Añadiendo…",
+      "added": "Listo, «{{label}}» ya aparece en la lista.",
+      "saveFailed": "No pudimos guardarlo. Vuelve a intentarlo.",
+      "turnOff": "Ocultar",
+      "turnOn": "Volver a mostrar",
+      "turnOffOne": "Ocultar «{{label}}»",
+      "turnOnOne": "Volver a mostrar «{{label}}»",
+      "turnOffTitle": "¿Ocultar «{{label}}»?",
+      "turnOffExplain": "Dejará de aparecer al registrar un cuy. Los cuyes que ya la tienen la conservan, y puedes volver a mostrarla cuando quieras.",
+      "turnedOff": "«{{label}}» ya no aparece en la lista.",
+      "turnedOn": "«{{label}}» vuelve a aparecer en la lista.",
+      "turnOffFailed": "No pudimos ocultarla. Vuelve a intentarlo."
+    },
+    "users": {
+      "title": "Cuentas",
+      "intro": "Quién entra a la aplicación y quién puede editar el catálogo.",
+      "you": "Tú",
+      "roles": {
+        "BREEDER": "Criador",
+        "ADMIN": "Administrador"
+      },
+      "statuses": {
+        "PENDING_VERIFICATION": "Sin verificar",
+        "ACTIVE": "Activa",
+        "DISABLED": "Deshabilitada"
+      },
+      "promote": "Hacer administrador",
+      "demote": "Quitar administrador",
+      "enable": "Habilitar",
+      "disable": "Deshabilitar",
+      "lastAdmin": "Es el único administrador: nombra a otro antes de cambiarlo.",
+      "promoteTitle": "¿Hacer administrador a {{name}}?",
+      "promoteExplain": "Podrá editar el catálogo y las cuentas, igual que tú.",
+      "demoteTitle": "¿Quitarle el administrador a {{name}}?",
+      "demoteExplain": "Seguirá usando sus jaulas con normalidad, pero ya no podrá editar el catálogo.",
+      "enableTitle": "¿Habilitar la cuenta de {{name}}?",
+      "enableExplain": "Volverá a poder iniciar sesión.",
+      "disableTitle": "¿Deshabilitar la cuenta de {{name}}?",
+      "disableExplain": "No podrá iniciar sesión. Sus jaulas y sus cuyes no se borran, y puedes habilitarla otra vez.",
+      "promoted": "{{name}} ya es administrador.",
+      "demoted": "{{name}} ya no es administrador.",
+      "enabled": "La cuenta de {{name}} está habilitada.",
+      "disabled": "La cuenta de {{name}} está deshabilitada.",
+      "failed": "No pudimos aplicar el cambio. Vuelve a intentarlo."
     }
   }
 }
