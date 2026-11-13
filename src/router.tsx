@@ -31,6 +31,8 @@ const RegisterGuineaPig = page(
 const Alerts = page(() => import('./pages/Alerts/Alerts'), 'Alerts')
 const HowItWorks = page(() => import('./pages/HowItWorks/HowItWorks'), 'HowItWorks')
 const Account = page(() => import('./pages/Account/Account'), 'Account')
+// only an admin ever opens it, so it stays out of everybody's bundle
+const Admin = page(() => import('./pages/Admin/Admin'), 'Admin')
 const Settings = page(() => import('./pages/Settings/Settings'), 'Settings')
 
 function lazyPage(Page: LazyExoticComponent<ComponentType>) {
@@ -67,6 +69,8 @@ export const routes: RouteObject[] = [
           { path: 'how-it-works', element: lazyPage(HowItWorks) },
           { path: 'account', element: lazyPage(Account) },
           { path: 'settings', element: lazyPage(Settings) },
+          // the page checks the role itself; the backend checks it again on every call
+          { path: 'admin', element: lazyPage(Admin) },
           { path: '*', element: <NotFound /> },
         ],
       },

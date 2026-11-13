@@ -63,6 +63,12 @@ export function UserMenu() {
           <Link to="/settings" className={styles.item} onClick={() => setOpen(false)}>
             {t('account.settings')}
           </Link>
+          {/* only shown to an admin; the backend checks the role again on every call behind it */}
+          {me.data?.role === 'ADMIN' && (
+            <Link to="/admin" className={styles.item} onClick={() => setOpen(false)}>
+              {t('account.admin')}
+            </Link>
+          )}
           {/* no confirmation: logging out is harmless and quick to undo */}
           <Button fullWidth onClick={() => logout('logout')}>
             {t('account.logout')}
