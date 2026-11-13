@@ -51,8 +51,10 @@
   animation-delay: calc(var(--i, 0) * 70ms);
 }
 
+/* the lean follows the pointer, on top of the lift this card already had (see CageCard) */
 .card:hover {
-  transform: translateY(-6px) rotate(-0.8deg);
+  transform: perspective(900px) translateY(-6px) rotate(-0.8deg) rotateX(var(--tilt-x, 0deg))
+    rotateY(var(--tilt-y, 0deg));
   box-shadow: var(--shadow-pop);
 }
 
