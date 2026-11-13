@@ -82,6 +82,8 @@
     "empty": "Aún no hay cuyes registrados",
     "registerGuineaPig": "Registrar cuy",
     "newGuineaPig": "Nuevo cuy",
+    "simulate": "Simulación",
+    "simulateHint": "Prueba la IA con una jaula dibujada donde uno de tus cuyes se ve enfermo",
     "headline": {
       "allGood": "Todo bien en la jaula",
       "unknown": "Aún no hay datos de la jaula",
@@ -440,6 +442,9 @@
     "cageCreated": "Jaula «{{name}}» creada",
     "cageSaved": "Cambios guardados",
     "cageDeleted": "Jaula «{{name}}» eliminada",
+    "simulationStarted": "Simulación en marcha: ya llegó una alerta de sonido y la IA está mirando la jaula. Un cuy pasará a observación en unos minutos y a alerta en unos 30.",
+    "simulationNoGuineaPigs": "Registra al menos un cuy para usar la simulación",
+    "simulationFailed": "La simulación no pudo empezar. Inténtalo otra vez en un momento.",
     "guineaPigRegistered": "¡{{name}} ya está en la jaula!",
     "guineaPigDeleted": "{{name}} salió de la jaula",
     "alertReviewed": "Alerta marcada como revisada",

@@ -98,10 +98,9 @@ export class HttpClient {
       }
       throw error
     }
-    if (response.status === 204) {
-      return undefined as T
-    }
-    return (await response.json()) as T
+    // 204, or a 202 that only says "started": no body to parse
+    const text = await response.text()
+    return (text ? JSON.parse(text) : undefined) as T
   }
 
   private async send(url: string, init: RequestInit): Promise<Response> {

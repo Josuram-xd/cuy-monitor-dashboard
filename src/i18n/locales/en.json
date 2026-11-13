@@ -82,6 +82,8 @@
     "empty": "No guinea pigs registered yet",
     "registerGuineaPig": "Register guinea pig",
     "newGuineaPig": "New guinea pig",
+    "simulate": "Simulation",
+    "simulateHint": "Try the AI on a drawn cage where one of your guinea pigs looks sick",
     "headline": {
       "allGood": "All good in the cage",
       "unknown": "No data from the cage yet",
@@ -429,6 +431,9 @@
     "cageCreated": "Cage “{{name}}” created",
     "cageSaved": "Changes saved",
     "cageDeleted": "Cage “{{name}}” deleted",
+    "simulationStarted": "Simulation running: a sound alert just arrived and the AI is watching the cage. One guinea pig will be observed in a few minutes and alerted in about 30.",
+    "simulationNoGuineaPigs": "Register at least one guinea pig to use the simulation",
+    "simulationFailed": "The simulation could not start. Try again in a moment.",
     "guineaPigRegistered": "{{name}} is in the cage now!",
     "guineaPigDeleted": "{{name}} left the cage",
     "alertReviewed": "Alert marked as reviewed",
