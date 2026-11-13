@@ -3,7 +3,7 @@ import { Link } from 'react-router'
 import { useAuth } from '../../auth/useAuth'
 import { useProfile } from '../../hooks/useProfile'
 import { t } from '../../i18n'
-import { initials } from '../../utils/initials'
+import { ProfilePhoto } from '../ProfilePhoto/ProfilePhoto'
 import { Button } from '../Button/Button'
 import styles from './UserMenu.module.css'
 
@@ -47,13 +47,13 @@ export function UserMenu() {
         aria-controls={panelId}
         onClick={() => setOpen((v) => !v)}
       >
-        <span aria-hidden="true">{initials(me.data?.fullName)}</span>
+        <ProfilePhoto user={me.data} className={styles.photo} />
       </button>
       {open && (
         <div id={panelId} className={styles.panel}>
           {me.data && (
             <div className={styles.who}>
-              <p className={styles.name}>{me.data.fullName}</p>
+              <p className={styles.name}>{me.data.displayName}</p>
               <p className={styles.username}>@{me.data.username}</p>
             </div>
           )}

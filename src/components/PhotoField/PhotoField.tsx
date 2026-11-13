@@ -10,6 +10,11 @@ interface PhotoFieldProps {
   hint?: string
   value: PreparedPhoto | null
   onChange: (photo: PreparedPhoto | null) => void
+  // a picture already saved, shown until a new one is picked (the account's own photo)
+  existingUrl?: string | null
+  // shown only when there is something to remove; without it the field has no remove button
+  onRemove?: () => void
+  busy?: boolean
   // the form's own error ("Agrega una foto")
   error?: string
   // injectable for the tests (jsdom has no canvas)
@@ -22,13 +27,18 @@ export function PhotoField({
   hint,
   value,
   onChange,
+  existingUrl,
+  onRemove,
+  busy: busyOutside,
   error,
   prepare = preparePhoto,
 }: PhotoFieldProps) {
   const id = useId()
   const input = useRef<HTMLInputElement>(null)
   const [problem, setProblem] = useState<string | null>(null)
-  const [busy, setBusy] = useState(false)
+  const [working, setWorking] = useState(false)
+  const busy = working || Boolean(busyOutside)
+  const preview = value?.dataUrl ?? existingUrl ?? null
   const message = problem ?? error
   const messageId = `${id}-message`
 
@@ -38,7 +48,7 @@ export function PhotoField({
     if (!file) {
       return
     }
-    setBusy(true)
+    setWorking(true)
     setProblem(null)
     try {
       onChange(await prepare(file))
@@ -46,7 +56,7 @@ export function PhotoField({
       const reason = failure instanceof PhotoProblem ? failure.reason : 'unreadable'
       setProblem(t(`guineaPig.register.photoProblem.${reason}`))
     } finally {
-      setBusy(false)
+      setWorking(false)
     }
   }
 
@@ -57,10 +67,10 @@ export function PhotoField({
       </label>
       {hint && !message && <p className={styles.hint}>{hint}</p>}
       <div className={cx(styles.drop, message && styles.invalid)}>
-        {value ? (
+        {preview ? (
           <img
             className={styles.preview}
-            src={value.dataUrl}
+            src={preview}
             alt={t('guineaPig.register.photoPreview')}
           />
         ) : (
@@ -88,11 +98,16 @@ export function PhotoField({
         >
           {busy
             ? t('guineaPig.register.photoBusy')
-            : value
+            : preview
               ? t('guineaPig.register.photoChange')
               : t('guineaPig.register.photoPick')}
         </button>
       </div>
+      {onRemove && preview && (
+        <button type="button" className={styles.remove} onClick={onRemove} disabled={busy}>
+          {t('guineaPig.register.photoRemove')}
+        </button>
+      )}
       {message && (
         <p id={messageId} className={styles.error} aria-live="polite">
           {message}

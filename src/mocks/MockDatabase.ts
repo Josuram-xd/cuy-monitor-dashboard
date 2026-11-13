@@ -25,6 +25,9 @@ export interface MockUser {
   // null for an account made with Google that never set one
   password: string | null
   status: MockUserStatus
+  nickname?: string | null
+  // the real backend keeps bytes and serves them at an address; the mock keeps the data: URL
+  photoUrl?: string | null
 }
 
 // In-memory state shared by the mock APIs, so a guinea pig registered here
