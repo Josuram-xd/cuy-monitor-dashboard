@@ -158,6 +158,22 @@ describe('CageOverview', () => {
     await waitFor(() => expect(getHealth.mock.calls.length).toBeGreaterThan(before))
   })
 
+  it('starts the simulation of this cage and reloads its alerts', async () => {
+    const user = userEvent.setup()
+    const api = createMockApi(undefined, 0)
+    setApi(api)
+    const start = vi.spyOn(api.cages, 'startSimulation')
+    const listAlerts = vi.spyOn(api.alerts, 'list')
+    renderInCage(<CageOverview />)
+    await screen.findByRole('list', { name: 'Tus cuyes' })
+    const before = listAlerts.mock.calls.length
+
+    await user.click(screen.getByRole('button', { name: 'Simulación' }))
+
+    expect(start).toHaveBeenCalledWith('cage-1')
+    await waitFor(() => expect(listAlerts.mock.calls.length).toBeGreaterThan(before))
+  })
+
   it('shows the weight of the cage with only its stable readings', async () => {
     renderInCage(<CageOverview />)
 

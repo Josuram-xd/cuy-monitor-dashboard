@@ -87,6 +87,11 @@ export class MockCageApi extends MockResource implements CageApi {
     })
   }
 
+  // no AI service in mock mode: accepted, and the fake data already has alerts to look at
+  startSimulation(cageId: string): Promise<void> {
+    return this.db.hasCage(cageId) ? this.respond(undefined) : this.notFound()
+  }
+
   getWeight(cageId: string, range?: DateRange): Promise<CageWeight> {
     if (!this.db.hasCage(cageId)) {
       return this.notFound()

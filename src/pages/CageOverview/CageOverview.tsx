@@ -24,6 +24,9 @@ import { useCage } from '../../hooks/useCages'
 import { cagePath, useCageId } from '../../hooks/useCageId'
 import { useCageHealth } from '../../hooks/useCageHealth'
 import { useProfile } from '../../hooks/useProfile'
+import { useStartSimulation } from '../../hooks/useStartSimulation'
+import { useToast } from '../../components/Toast/useToast'
+import { ApiError } from '../../api/ApiError'
 import { useGuineaPigs } from '../../hooks/useGuineaPigs'
 import { useNow } from '../../hooks/useNow'
 import { t } from '../../i18n'
@@ -165,6 +168,23 @@ export function CageOverview() {
   const openAlertCount = useAlerts('OPEN', cageId).data?.length
   const profile = useProfile()
   const now = useNow()
+  const simulation = useStartSimulation(cageId)
+  const toast = useToast()
+
+  function startSimulation() {
+    simulation.mutate(undefined, {
+      onSuccess: () => toast.show({ message: t('toast.simulationStarted') }),
+      onError: (error) =>
+        toast.show({
+          message: t(
+            error instanceof ApiError && error.status === 400
+              ? 'toast.simulationNoGuineaPigs'
+              : 'toast.simulationFailed',
+          ),
+          tone: 'info',
+        }),
+    })
+  }
   // the name they picked, if they picked one: the greeting is exactly where it belongs
   const firstName = profile.data?.displayName.split(' ')[0]
 
@@ -184,6 +204,14 @@ export function CageOverview() {
         </div>
         <div className={styles.headerActions}>
           <RefreshButton queryKeys={[['cage', cageId], ['alerts']]} />
+          {/* for practice: the AI analyses a drawn cage, see POST /cages/{id}/simulation */}
+          <Button
+            onClick={startSimulation}
+            disabled={simulation.isPending || guineaPigCount === 0}
+            title={t('cage.simulateHint')}
+          >
+            {t('cage.simulate')}
+          </Button>
           <ButtonLink to={cagePath(cageId, '/guinea-pigs/new')} variant="primary">
             {t('cage.newGuineaPig')}
           </ButtonLink>

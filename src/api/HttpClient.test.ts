@@ -61,6 +61,12 @@ describe('HttpClient', () => {
     await expect(client.delete('/api/v1/account')).resolves.toBeUndefined()
   })
 
+  it('returns undefined for a 202 without a body', async () => {
+    const { client } = clientAnswering(new Response(null, { status: 202 }))
+
+    await expect(client.delete('/api/v1/account')).resolves.toBeUndefined()
+  })
+
   it('turns the backend error body into an ApiError', async () => {
     const { client } = clientAnswering(
       jsonResponse(409, { error: 'conflict', message: 'color already used' }),

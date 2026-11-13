@@ -40,6 +40,10 @@ export class HttpCageApi implements CageApi {
     return this.http.get<CageWeight>(`${this.path(cageId)}/weight`, { query: { ...range }, signal })
   }
 
+  startSimulation(cageId: string): Promise<void> {
+    return this.http.post<void>(`${this.path(cageId)}/simulation`, undefined)
+  }
+
   private path(cageId: string): string {
     return `/api/v1/cages/${encodeURIComponent(cageId)}`
   }
