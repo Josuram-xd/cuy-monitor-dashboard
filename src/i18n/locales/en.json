@@ -252,7 +252,8 @@
         "type": "That image won't work: use a JPG, PNG or WebP photo.",
         "unreadable": "We couldn't open that photo. Try another one.",
         "tooBig": "The photo is too big even when reduced. Try another one."
-      }
+      },
+      "photoRemove": "Remove photo"
     },
     "delete": {
       "open": "Remove {{name}}",
@@ -347,7 +348,16 @@
       "nameTooLong": "The name is too long.",
       "save": "Save changes",
       "saving": "Saving…",
-      "saved": "Done, we saved your name."
+      "saved": "Done, we saved your details.",
+      "nickname": "What should we call you",
+      "nicknameHint": "Optional. This is the name you will see in the app; leave it empty to use your full name.",
+      "nicknameTooLong": "That nickname is too long.",
+      "photo": "Your profile photo",
+      "photoHint": "Optional. Without one we show your initials.",
+      "photoSaved": "Done, we changed your photo.",
+      "photoRemoved": "We removed your photo.",
+      "photoFailed": "We could not save the photo. Try again.",
+      "photoField": "Choose your photo"
     },
     "password": {
       "title": "Change password",
@@ -373,7 +383,8 @@
     "error": {
       "wrongPassword": "The current password is not correct."
     },
-    "settings": "Settings"
+    "settings": "Settings",
+    "admin": "Admin"
   },
   "cages": {
     "title": "Your cages",
@@ -514,6 +525,77 @@
     "error": {
       "unavailable": "Cuchi can't answer right now. Try again in a few minutes.",
       "tooMany": "You asked many questions in a row. Wait a few minutes and try again."
+    }
+  },
+  "admin": {
+    "title": "Admin panel",
+    "subtitle": "What breeders pick from in the app comes from here, not from the code.",
+    "loadFailed": "We could not load this.",
+    "notAllowed": "This section is for admins only.",
+    "backHome": "Back to my cages",
+    "catalog": {
+      "title": "Catalog",
+      "intro": "The breeds and colors offered when a guinea pig is registered. You can add the missing ones without waiting for a new version of the app.",
+      "kind": "Which list to edit",
+      "kinds": {
+        "BREED": "Breeds",
+        "COAT_COLOR": "Coat colors",
+        "MARK_COLOR": "Mark colors"
+      },
+      "addTitle": "Add to this list",
+      "label": "Name",
+      "labelHint": "What the breeder will read, for example “Colombian guinea pig”.",
+      "labelRequired": "Write the name.",
+      "code": "Code",
+      "codeHint": "Built from the name. It is what gets stored on every guinea pig, so it does not change later.",
+      "codeInvalid": "A code can only hold letters, numbers and _, up to 20 characters.",
+      "codeTaken": "An option with that code is already in this list.",
+      "color": "Color",
+      "hexInvalid": "Pick a valid color.",
+      "add": "Add",
+      "adding": "Adding…",
+      "added": "Done, “{{label}}” is in the list now.",
+      "saveFailed": "We could not save it. Please try again.",
+      "turnOff": "Hide",
+      "turnOn": "Show again",
+      "turnOffOne": "Hide “{{label}}”",
+      "turnOnOne": "Show “{{label}}” again",
+      "turnOffTitle": "Hide “{{label}}”?",
+      "turnOffExplain": "It will stop being offered when a guinea pig is registered. The guinea pigs that already have it keep it, and you can show it again whenever you want.",
+      "turnedOff": "“{{label}}” is no longer in the list.",
+      "turnedOn": "“{{label}}” is back in the list.",
+      "turnOffFailed": "We could not hide it. Please try again."
+    },
+    "users": {
+      "title": "Accounts",
+      "intro": "Who gets into the app, and who can edit the catalog.",
+      "you": "You",
+      "roles": {
+        "BREEDER": "Breeder",
+        "ADMIN": "Admin"
+      },
+      "statuses": {
+        "PENDING_VERIFICATION": "Not verified",
+        "ACTIVE": "Active",
+        "DISABLED": "Disabled"
+      },
+      "promote": "Make admin",
+      "demote": "Remove admin",
+      "enable": "Enable",
+      "disable": "Disable",
+      "promoteTitle": "Make {{name}} an admin?",
+      "promoteExplain": "They will be able to edit the catalog and the accounts, just like you.",
+      "demoteTitle": "Remove {{name}}'s admin?",
+      "demoteExplain": "They keep using their cages as usual, but can no longer edit the catalog.",
+      "enableTitle": "Enable {{name}}'s account?",
+      "enableExplain": "They will be able to sign in again.",
+      "disableTitle": "Disable {{name}}'s account?",
+      "disableExplain": "They will not be able to sign in. Their cages and guinea pigs are not deleted, and you can enable the account again.",
+      "promoted": "{{name}} is an admin now.",
+      "demoted": "{{name}} is no longer an admin.",
+      "enabled": "{{name}}'s account is enabled.",
+      "disabled": "{{name}}'s account is disabled.",
+      "failed": "We could not apply the change. Please try again."
     }
   }
 }

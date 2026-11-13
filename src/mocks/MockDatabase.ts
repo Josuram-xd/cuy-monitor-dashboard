@@ -25,6 +25,9 @@ export interface MockUser {
   // null for an account made with Google that never set one
   password: string | null
   status: MockUserStatus
+  nickname?: string | null
+  // the real backend keeps bytes and serves them at an address; the mock keeps the data: URL
+  photoUrl?: string | null
 }
 
 // In-memory state shared by the mock APIs, so a guinea pig registered here
@@ -43,6 +46,17 @@ export class MockDatabase {
   // only the pilot cage has a scale
   readonly weightReadings: WeightReading[] = mockWeightReadings()
   readonly users: MockUser[] = []
+  // After a reload the fake database is empty but the fake session survives. This row stands in for
+  // whoever is signed in, and being a row like any other, a nickname or a photo set on it sticks
+  // for the rest of the session instead of being thrown away.
+  readonly demoUser: MockUser = {
+    id: 'demo',
+    username: 'demo',
+    fullName: 'Usuario de prueba',
+    email: 'demo@cuymonitor.local',
+    password: 'dev-password',
+    status: 'ACTIVE',
+  }
   // challengeId -> username of the pending code
   readonly challenges = new Map<string, { username: string; expiresAt: string }>()
   // last user that entered the code, answers "who am I" in the mocks

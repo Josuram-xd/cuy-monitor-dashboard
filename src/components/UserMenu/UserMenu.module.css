@@ -2,6 +2,14 @@
   position: relative;
 }
 
+/* the picture fills the circle the initials used to sit in */
+.photo {
+  width: 100%;
+  height: 100%;
+  border-radius: var(--radius-full);
+  object-fit: cover;
+}
+
 /* a white badge on the green header */
 .avatar {
   display: grid;

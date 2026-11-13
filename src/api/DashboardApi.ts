@@ -1,8 +1,16 @@
 import type {
   ChangePasswordRequest,
+  ProfilePhotoRequest,
   DeactivateAccountRequest,
   UpdateProfileRequest,
 } from '../types/Account'
+import type {
+  AdminCatalogKind,
+  AdminCatalogOption,
+  AdminCatalogOptionInput,
+  AdminUser,
+  UserRole,
+} from '../types/Admin'
 import type { Alert, AlertHistoryFilter, AlertHistoryPage, AlertStatus } from '../types/Alert'
 import type { AssistantReply, AssistantRequest } from '../types/Assistant'
 import type {
@@ -78,6 +86,8 @@ export interface AuthApi {
 export interface AccountApi {
   getProfile(signal?: AbortSignal): Promise<User>
   updateProfile(body: UpdateProfileRequest): Promise<User>
+  setPhoto(body: ProfilePhotoRequest): Promise<void>
+  removePhoto(): Promise<void>
   // 401 "invalid credentials" when the current password is wrong
   changePassword(body: ChangePasswordRequest): Promise<void>
   // soft delete: the account can no longer log in. Same 401 for a wrong password
@@ -90,6 +100,21 @@ export interface AssistantApi {
   ask(body: AssistantRequest): Promise<AssistantReply>
 }
 
+// /api/v1/admin/*: only an account with role ADMIN gets past the backend's proxy, which checks the role
+// against the database on each call. A breeder who reaches these anyway gets 403
+export interface AdminApi {
+  // every option, including the ones switched off
+  listCatalog(signal?: AbortSignal): Promise<AdminCatalogOption[]>
+  // creates it, or overwrites the one with the same kind and code
+  saveCatalogOption(body: AdminCatalogOptionInput): Promise<AdminCatalogOption>
+  // hides it from the pickers; the guinea pigs already using it keep it
+  deactivateCatalogOption(kind: AdminCatalogKind, code: string): Promise<AdminCatalogOption>
+  listUsers(signal?: AbortSignal): Promise<AdminUser[]>
+  // 400 when it would be your own account or the last admin
+  changeUserRole(id: string, role: UserRole): Promise<AdminUser>
+  setUserEnabled(id: string, enabled: boolean): Promise<AdminUser>
+}
+
 export interface DashboardApi {
   auth: AuthApi
   account: AccountApi
@@ -98,4 +123,5 @@ export interface DashboardApi {
   alerts: AlertApi
   catalog: CatalogApi
   assistant: AssistantApi
+  admin: AdminApi
 }

@@ -26,7 +26,13 @@ describe('mock auth', () => {
     await expect(api.account.getProfile()).resolves.toEqual({
       username: 'juan',
       fullName: 'juan',
+      nickname: null,
+      // without a nickname the screens show the full name
+      displayName: 'juan',
       hasPassword: true,
+      photoUrl: null,
+      // in mock mode every account is an admin, so the panel can be shown without a backend
+      role: 'ADMIN',
     })
   })
 
@@ -40,7 +46,15 @@ describe('mock auth', () => {
 
     const profile = await api.account.getProfile()
 
-    expect(Object.keys(profile).sort()).toEqual(['fullName', 'hasPassword', 'username'])
+    expect(Object.keys(profile).sort()).toEqual([
+      'displayName',
+      'fullName',
+      'hasPassword',
+      'nickname',
+      'photoUrl',
+      'role',
+      'username',
+    ])
   })
 
   it('ends the session on logout', async () => {

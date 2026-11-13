@@ -3,6 +3,7 @@ import { loadGoogleIdentity } from '../../auth/googleIdentity'
 import { config } from '../../config'
 import { MOCK_GOOGLE_TOKEN } from '../../mocks/googleToken'
 import { currentLanguage, t } from '../../i18n'
+import { usePreferences } from '../../preferences/usePreferences'
 import { Button } from '../Button/Button'
 import styles from './GoogleButton.module.css'
 
@@ -15,6 +16,10 @@ interface GoogleButtonProps {
 }
 
 const MAX_WIDTH = 400
+
+function prefersDark(): boolean {
+  return globalThis.matchMedia?.('(prefers-color-scheme: dark)').matches ?? false
+}
 
 // "Continuar con Google". With a client id it is Google's own button (the only way Google allows
 // it); with mocks, a plain demo button; with neither, nothing is shown.
@@ -88,6 +93,10 @@ interface RealButtonProps extends GoogleButtonProps {
 }
 
 function RealButton({ clientId, onCredential, text, disabled }: RealButtonProps) {
+  const { theme } = usePreferences()
+  // Google draws this button inside its own iframe, so CSS cannot reach it: the only way to make it
+  // match the app is to ask for the right variant and to draw it again when the theme changes.
+  const dark = theme === 'dark' || (theme === 'system' && prefersDark())
   const holder = useRef<HTMLDivElement>(null)
   // GIS keeps the callback it was given at initialize: always call the latest one
   const latest = useRef(onCredential)
@@ -114,12 +123,16 @@ function RealButton({ clientId, onCredential, text, disabled }: RealButtonProps)
             }
           },
         })
+        // the iframe is redrawn from scratch on a theme change, so clear the old one first
+        parent.replaceChildren()
         google.renderButton(parent, {
           type: 'standard',
-          theme: 'outline',
+          // a white slab on a dark page is what made this look pasted in
+          theme: dark ? 'filled_black' : 'outline',
           size: 'large',
           text,
-          shape: 'rectangular',
+          // the house buttons are pills (--radius-full); rectangular was the odd one out
+          shape: 'pill',
           width: Math.min(parent.clientWidth || MAX_WIDTH, MAX_WIDTH),
           locale: currentLanguage(),
         })
@@ -128,7 +141,7 @@ function RealButton({ clientId, onCredential, text, disabled }: RealButtonProps)
     return () => {
       cancelled = true
     }
-  }, [clientId, text])
+  }, [clientId, text, dark])
 
   if (failed) {
     return <p className={styles.unavailable}>{t('auth.google.unavailable')}</p>

@@ -68,12 +68,60 @@ describe('Account', () => {
     await userEvent.type(screen.getByLabelText('Nombre completo'), 'Ana Ruiz')
     await userEvent.click(save)
 
-    expect(await screen.findByText('Listo, guardamos tu nombre.')).toBeInTheDocument()
-    await expect(api.account.getProfile()).resolves.toEqual({
+    expect(await screen.findByText('Listo, guardamos tus datos.')).toBeInTheDocument()
+    await expect(api.account.getProfile()).resolves.toMatchObject({
       username: 'ana',
       fullName: 'Ana Ruiz',
       hasPassword: true,
+      role: 'ADMIN',
     })
+  })
+
+  it('saves a nickname and shows it instead of the full name', async () => {
+    const api = await signedInApi()
+    renderAccount(api)
+    const save = await screen.findByRole('button', { name: 'Guardar cambios' })
+
+    await userEvent.type(screen.getByLabelText(/Como quieres que te llamemos/), 'Anita')
+    await userEvent.click(save)
+
+    expect(await screen.findByText('Listo, guardamos tus datos.')).toBeInTheDocument()
+    await expect(api.account.getProfile()).resolves.toMatchObject({
+      nickname: 'Anita',
+      displayName: 'Anita',
+    })
+    // the heading greets them by the name they picked
+    expect(await screen.findByRole('heading', { level: 1, name: 'Anita' })).toBeInTheDocument()
+  })
+
+  it('clearing the nickname goes back to the full name', async () => {
+    const api = await signedInApi()
+    await api.account.updateProfile({ fullName: 'Ana Ruiz', nickname: 'Anita' })
+    renderAccount(api)
+
+    await userEvent.clear(await screen.findByLabelText(/Como quieres que te llamemos/))
+    await userEvent.click(screen.getByRole('button', { name: 'Guardar cambios' }))
+
+    expect(await screen.findByText('Listo, guardamos tus datos.')).toBeInTheDocument()
+    await expect(api.account.getProfile()).resolves.toMatchObject({
+      nickname: null,
+      displayName: 'Ana Ruiz',
+    })
+  })
+
+  it('saves the photo as soon as it is picked and can remove it again', async () => {
+    const api = await signedInApi()
+    renderAccount(api)
+    await screen.findByRole('button', { name: 'Guardar cambios' })
+
+    // the photo has its own endpoint, so it does not wait for the form
+    await api.account.setPhoto({ photo: 'AQID', photoContentType: 'image/jpeg' })
+    await expect(api.account.getProfile()).resolves.toMatchObject({
+      photoUrl: 'data:image/jpeg;base64,AQID',
+    })
+
+    await api.account.removePhoto()
+    await expect(api.account.getProfile()).resolves.toMatchObject({ photoUrl: null })
   })
 
   it('changes the password and clears the fields', async () => {

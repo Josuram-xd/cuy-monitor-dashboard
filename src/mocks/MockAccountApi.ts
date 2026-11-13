@@ -1,8 +1,10 @@
 import type { AccountApi } from '../api/DashboardApi'
-import type {
-  ChangePasswordRequest,
-  DeactivateAccountRequest,
-  UpdateProfileRequest,
+import {
+  NICKNAME_MAX_LENGTH,
+  type ChangePasswordRequest,
+  type DeactivateAccountRequest,
+  type ProfilePhotoRequest,
+  type UpdateProfileRequest,
 } from '../types/Account'
 import { passwordProblems } from '../auth/passwordRules'
 import type { User } from '../types/User'
@@ -10,21 +12,27 @@ import type { MockUser } from './MockDatabase'
 import { mockSession } from './mockSession'
 import { MockResource } from './MockResource'
 
-// after a reload the fake database is empty but the fake session survives: answer with a demo user
-const DEMO_USER: User = { username: 'demo', fullName: 'Usuario de prueba', hasPassword: true }
+const ACCEPTED_PHOTO_TYPES = ['image/jpeg', 'image/png', 'image/webp']
 
 function toProfile(user: MockUser): User {
-  return { username: user.username, fullName: user.fullName, hasPassword: user.password !== null }
+  const nickname = user.nickname ?? null
+  return {
+    username: user.username,
+    fullName: user.fullName,
+    nickname,
+    displayName: nickname ?? user.fullName,
+    hasPassword: user.password !== null,
+    photoUrl: user.photoUrl ?? null,
+    // in mock mode every account is an admin, so the admin panel can be shown without a backend
+    role: 'ADMIN',
+  }
 }
 
 export class MockAccountApi extends MockResource implements AccountApi {
   getProfile(): Promise<User> {
     const user = this.currentUser()
-    if (user) {
-      return this.respond(toProfile(user))
-    }
     // no cookie, no profile: the same 401 the backend gives
-    return mockSession.has() ? this.respond(DEMO_USER) : this.fail(401, 'unauthorized')
+    return user ? this.respond(toProfile(user)) : this.fail(401, 'unauthorized')
   }
 
   updateProfile(body: UpdateProfileRequest): Promise<User> {
@@ -32,19 +40,43 @@ export class MockAccountApi extends MockResource implements AccountApi {
     if (!fullName || fullName.length > 150) {
       return this.fail(400, 'bad_request', { fullName: 'invalid' })
     }
-    const user = this.currentUser()
-    if (user) {
-      user.fullName = fullName
-      return this.respond(toProfile(user))
+    const nickname = body.nickname?.trim() || null
+    if (nickname && nickname.length > NICKNAME_MAX_LENGTH) {
+      return this.fail(400, 'bad_request', { nickname: 'invalid' })
     }
-    return mockSession.has()
-      ? this.respond({ ...DEMO_USER, fullName })
-      : this.fail(401, 'unauthorized')
+    const user = this.currentUser()
+    if (!user) {
+      return this.fail(401, 'unauthorized')
+    }
+    user.fullName = fullName
+    user.nickname = nickname
+    return this.respond(toProfile(user))
+  }
+
+  setPhoto(body: ProfilePhotoRequest): Promise<void> {
+    const user = this.currentUser()
+    if (!user) {
+      return this.fail(401, 'unauthorized')
+    }
+    if (!ACCEPTED_PHOTO_TYPES.includes(body.photoContentType)) {
+      return this.fail(400, 'bad_request', { photo: 'invalid' })
+    }
+    user.photoUrl = `data:${body.photoContentType};base64,${body.photo}`
+    return this.respond(undefined)
+  }
+
+  removePhoto(): Promise<void> {
+    const user = this.currentUser()
+    if (!user) {
+      return this.fail(401, 'unauthorized')
+    }
+    user.photoUrl = null
+    return this.respond(undefined)
   }
 
   changePassword(body: ChangePasswordRequest): Promise<void> {
     const user = this.currentUser()
-    if (!user && !mockSession.has()) {
+    if (!user) {
       return this.fail(401, 'unauthorized')
     }
     // an account without password has nothing to check: its open session is the proof
@@ -80,6 +112,8 @@ export class MockAccountApi extends MockResource implements AccountApi {
   }
 
   private currentUser(): MockUser | undefined {
-    return this.db.users.find((u) => u.id === this.db.signedInUserId)
+    const signedIn = this.db.users.find((u) => u.id === this.db.signedInUserId)
+    // the demo row stands in when the fake database lost the account but the session survived
+    return signedIn ?? (mockSession.has() ? this.db.demoUser : undefined)
   }
 }
