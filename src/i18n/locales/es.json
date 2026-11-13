@@ -583,7 +583,6 @@
       "demote": "Quitar administrador",
       "enable": "Habilitar",
       "disable": "Deshabilitar",
-      "lastAdmin": "Es el único administrador: nombra a otro antes de cambiarlo.",
       "promoteTitle": "¿Hacer administrador a {{name}}?",
       "promoteExplain": "Podrá editar el catálogo y las cuentas, igual que tú.",
       "demoteTitle": "¿Quitarle el administrador a {{name}}?",

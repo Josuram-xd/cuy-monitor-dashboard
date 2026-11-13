@@ -571,7 +571,6 @@
       "demote": "Remove admin",
       "enable": "Enable",
       "disable": "Disable",
-      "lastAdmin": "This is the only admin: name another one before changing it.",
       "promoteTitle": "Make {{name}} an admin?",
       "promoteExplain": "They will be able to edit the catalog and the accounts, just like you.",
       "demoteTitle": "Remove {{name}}'s admin?",

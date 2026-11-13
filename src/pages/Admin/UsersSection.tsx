@@ -27,7 +27,6 @@ export function UsersSection({ myUsername }: { myUsername?: string }) {
   const [pending, setPending] = useState<Pending | null>(null)
 
   const busy = changeRole.isPending || setEnabled.isPending
-  const admins = (users.data ?? []).filter((user) => user.role === 'ADMIN').length
 
   function confirm() {
     if (!pending) return
@@ -117,9 +116,9 @@ export function UsersSection({ myUsername }: { myUsername?: string }) {
 
       <ul className={styles.users}>
         {(users.data ?? []).map((user) => {
+          // your own row has no buttons: the backend refuses changing your own role or switching
+          // yourself off, and between those two the last admin can never be lost
           const isMe = user.username === myUsername
-          // demoting or disabling the only admin left would make the catalog uneditable
-          const lastAdmin = user.role === 'ADMIN' && admins <= 1
           const disabled = user.status === 'DISABLED'
           return (
             <li key={user.id} className={styles.user}>
@@ -146,15 +145,13 @@ export function UsersSection({ myUsername }: { myUsername?: string }) {
                     onClick={() =>
                       setPending({ kind: 'role', user, makeAdmin: user.role !== 'ADMIN' })
                     }
-                    disabled={busy || lastAdmin}
-                    title={lastAdmin ? t('admin.users.lastAdmin') : undefined}
+                    disabled={busy}
                   >
                     {user.role === 'ADMIN' ? t('admin.users.demote') : t('admin.users.promote')}
                   </Button>
                   <Button
                     onClick={() => setPending({ kind: 'enabled', user, enable: disabled })}
-                    disabled={busy || (lastAdmin && !disabled)}
-                    title={lastAdmin && !disabled ? t('admin.users.lastAdmin') : undefined}
+                    disabled={busy}
                   >
                     {disabled ? t('admin.users.enable') : t('admin.users.disable')}
                   </Button>

@@ -142,12 +142,13 @@ describe('Admin', () => {
     })
   })
 
-  it('does not offer to demote the only admin', async () => {
+  it('leaves no way to demote the only admin', async () => {
     setup()
 
     const section = await accounts()
-    // the demo account is the only admin, and it is also ours, so there is no such button at all
     await within(section).findByText('Ana Quispe')
+    // the only admin is your own account, and your own row has no buttons, so losing the last admin
+    // is not something the screen can even offer
     expect(screen.queryByRole('button', { name: 'Quitar administrador' })).toBeNull()
   })
 
