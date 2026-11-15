@@ -46,6 +46,7 @@
   },
   "errors": {
     "network": "There is no connection to the server. Check your internet and try again.",
+    "tooManyRequests": "Too many attempts. Wait a moment and try again.",
     "invalidData": "Check the data and try again.",
     "generic": "Something went wrong. Try again in a moment.",
     "forbidden": "This cage is not yours."

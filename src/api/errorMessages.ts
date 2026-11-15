@@ -63,6 +63,9 @@ export function errorMessageKey(error: unknown, context: ErrorContext = 'general
   if (error.status === 400 && context === 'register' && 'password' in error.fields) {
     return 'auth.error.weakPassword'
   }
+  if (error.status === 429) {
+    return 'errors.tooManyRequests'
+  }
   if (error.status === 400) {
     return 'errors.invalidData'
   }
