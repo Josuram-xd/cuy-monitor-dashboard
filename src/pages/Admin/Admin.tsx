@@ -1,5 +1,7 @@
 import { Link } from 'react-router'
 import { EmptyState } from '../../components/EmptyState/EmptyState'
+import { ErrorState } from '../../components/ErrorState/ErrorState'
+import { Skeleton } from '../../components/Skeleton/Skeleton'
 import { useProfile } from '../../hooks/useProfile'
 import { t } from '../../i18n'
 import { CatalogSection } from './CatalogSection'
@@ -14,7 +16,14 @@ import styles from './Admin.module.css'
 export function Admin() {
   const me = useProfile()
 
-  if (me.data && me.data.role !== 'ADMIN') {
+  // the role is known before any admin call goes out: otherwise a breeder's page fires them and gets 403s
+  if (me.isPending) {
+    return <Skeleton count={2} />
+  }
+  if (me.isError) {
+    return <ErrorState message={t('admin.loadFailed')} onRetry={() => void me.refetch()} />
+  }
+  if (me.data.role !== 'ADMIN') {
     return (
       <div className={styles.page}>
         <EmptyState
@@ -32,7 +41,7 @@ export function Admin() {
         <p className={styles.subtitle}>{t('admin.subtitle')}</p>
       </header>
       <CatalogSection />
-      <UsersSection myUsername={me.data?.username} />
+      <UsersSection myUsername={me.data.username} />
     </div>
   )
 }
