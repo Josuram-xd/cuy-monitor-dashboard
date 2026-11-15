@@ -1,4 +1,4 @@
-import { useState } from 'react'
+import { useRef, useState } from 'react'
 import { Link, Navigate, useSearchParams } from 'react-router'
 import { errorMessageKey } from '../../api/errorMessages'
 import { pendingVerification } from '../../auth/pendingVerification'
@@ -34,6 +34,7 @@ export function VerifyCode() {
   const [infoKey, setInfoKey] = useState<string | null>(null)
   const [resendAt, setResendAt] = useState(() => Date.now() + RESEND_AFTER_MS)
   const now = useNow(SECOND)
+  const inputRef = useRef<HTMLInputElement>(null)
   const verify = useVerifyOtpMutation()
   const resend = useLoginMutation()
 
@@ -62,6 +63,7 @@ export function VerifyCode() {
         onError: (error) => {
           setCode('')
           setErrorKey(errorMessageKey(error, 'verify'))
+          inputRef.current?.focus()
         },
       },
     )
@@ -108,7 +110,10 @@ export function VerifyCode() {
           }}
           onComplete={handleComplete}
           error={errorKey ? t(errorKey) : undefined}
-          disabled={verify.isPending || expired}
+          readOnly={verify.isPending}
+          busy={verify.isPending}
+          disabled={expired}
+          inputRef={inputRef}
           autoFocus
         />
         {infoKey && (
