@@ -24,7 +24,12 @@ import type { Cage, CageInput } from '../types/Cage'
 import type { CageHealth } from '../types/CageHealth'
 import type { Catalog } from '../types/Catalog'
 import type { DateRange } from '../types/DateRange'
-import type { GuineaPig, GuineaPigHistory, NewGuineaPig } from '../types/GuineaPig'
+import type {
+  GuineaPig,
+  GuineaPigHistory,
+  GuineaPigPhotoRequest,
+  NewGuineaPig,
+} from '../types/GuineaPig'
 import type { User } from '../types/User'
 import type { CageWeight } from '../types/WeightReading'
 
@@ -51,6 +56,10 @@ export interface GuineaPigApi {
   getHistory(id: number, range?: DateRange, signal?: AbortSignal): Promise<GuineaPigHistory>
   // soft delete: it leaves the cage and frees its mark color, its history is kept. 404 if it is already gone
   remove(cageId: string, id: number): Promise<void>
+  // replaces the photo of a guinea pig of the cage (204). 400 if the image is invalid, 404 if it is gone
+  setPhoto(cageId: string, id: number, body: GuineaPigPhotoRequest): Promise<void>
+  // leaves it without photo, so the placeholder shows (204)
+  removePhoto(cageId: string, id: number): Promise<void>
 }
 
 // the lists of mark colors, breeds and coat colors, as the database has them
