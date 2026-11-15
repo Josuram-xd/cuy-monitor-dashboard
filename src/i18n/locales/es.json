@@ -219,6 +219,11 @@
       "timelineTitle": "Estados de salud",
       "historyError": "No pudimos cargar el historial.",
       "photoAlt": "Foto de {{name}}",
+      "photoTitle": "Foto",
+      "photoField": "Elige la foto de este cuy",
+      "photoSaved": "Listo, cambiamos la foto.",
+      "photoRemoved": "Quitamos la foto.",
+      "photoFailed": "No pudimos guardar la foto. Intenta de nuevo.",
       "allAlerts_one": "Ver su alerta en Alertas",
       "allAlerts_many": "Ver sus {{count}} alertas",
       "allAlerts_other": "Ver sus {{count}} alertas"

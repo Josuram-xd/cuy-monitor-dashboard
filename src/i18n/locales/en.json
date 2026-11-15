@@ -211,6 +211,11 @@
       "timelineTitle": "Health states",
       "historyError": "We couldn't load the history.",
       "photoAlt": "Photo of {{name}}",
+      "photoTitle": "Photo",
+      "photoField": "Choose a photo of this guinea pig",
+      "photoSaved": "Done, we changed the photo.",
+      "photoRemoved": "We removed the photo.",
+      "photoFailed": "We couldn't save the photo. Try again.",
       "allAlerts_one": "See its alert in Alerts",
       "allAlerts_other": "See its {{count}} alerts"
     },
