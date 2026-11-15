@@ -7,6 +7,8 @@ const WRONG_PASSWORD_MESSAGE = 'invalid credentials'
 
 export type QueryParams = Record<string, string | undefined>
 
+const REQUEST_TIMEOUT_MS = 15_000
+
 export type FetchFn = (input: string, init?: RequestInit) => Promise<Response>
 
 interface RequestOptions {
@@ -73,14 +75,16 @@ export class HttpClient {
   ): Promise<T> {
     const { body, query, signal } = options
     const headers: Record<string, string> = { Accept: 'application/json' }
-    if (body !== undefined) {
+    // FormData/Blob go raw: the browser sets the multipart boundary / type itself
+    const raw = body instanceof FormData || body instanceof Blob
+    if (body !== undefined && !raw) {
       headers['Content-Type'] = 'application/json'
     }
 
     const response = await this.send(this.buildUrl(path, query), {
       method,
       headers,
-      body: body === undefined ? undefined : JSON.stringify(body),
+      body: body === undefined ? undefined : raw ? body : JSON.stringify(body),
       signal,
     })
 
@@ -100,13 +104,22 @@ export class HttpClient {
     }
     // 204, or a 202 that only says "started": no body to parse
     const text = await response.text()
-    return (text ? JSON.parse(text) : undefined) as T
+    if (!text) {
+      return undefined as T
+    }
+    try {
+      return JSON.parse(text) as T
+    } catch {
+      throw new ApiError(response.status, 'unknown_error')
+    }
   }
 
   private async send(url: string, init: RequestInit): Promise<Response> {
     try {
       // include: also works when the API is on another origin (development)
-      return await this.fetchFn(url, { ...init, credentials: 'include' })
+      const timeout = AbortSignal.timeout(REQUEST_TIMEOUT_MS)
+      const signal = init.signal ? AbortSignal.any([init.signal, timeout]) : timeout
+      return await this.fetchFn(url, { ...init, signal, credentials: 'include' })
     } catch (error) {
       // a cancelled query is not a network failure
       if (init.signal?.aborted) {
