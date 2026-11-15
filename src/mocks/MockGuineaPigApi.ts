@@ -1,6 +1,11 @@
 import type { GuineaPigApi } from '../api/DashboardApi'
 import type { DateRange } from '../types/DateRange'
-import type { GuineaPig, GuineaPigHistory, NewGuineaPig } from '../types/GuineaPig'
+import type {
+  GuineaPig,
+  GuineaPigHistory,
+  GuineaPigPhotoRequest,
+  NewGuineaPig,
+} from '../types/GuineaPig'
 import { MAX_NOTES_LENGTH, MAX_WEIGHT_GRAMS, MIN_WEIGHT_GRAMS } from '../types/GuineaPigProfile'
 import type { CatalogKind } from '../types/Catalog'
 import { mockBaseline, mockCatalog, mockTransitions, mockWindows } from './data'
@@ -22,11 +27,7 @@ export class MockGuineaPigApi extends MockResource implements GuineaPigApi {
     if (!this.db.hasCage(cageId)) {
       return this.notFound()
     }
-    if (
-      !body.photo ||
-      !PHOTO_TYPES.includes(body.photoContentType) ||
-      Math.floor((body.photo.length * 3) / 4) > MAX_PHOTO_BYTES
-    ) {
+    if (!isValidPhoto(body)) {
       return this.fail(400, 'bad_request', { photo: 'invalid' })
     }
     // the same limits as the backend
@@ -80,6 +81,33 @@ export class MockGuineaPigApi extends MockResource implements GuineaPigApi {
     return this.respond(undefined)
   }
 
+  setPhoto(cageId: string, id: number, body: GuineaPigPhotoRequest): Promise<void> {
+    const guineaPig = this.find(cageId, id)
+    if (!guineaPig) {
+      return this.notFound()
+    }
+    if (!isValidPhoto(body)) {
+      return this.fail(400, 'bad_request', { photo: 'invalid' })
+    }
+    guineaPig.photoUrl = `data:${body.photoContentType};base64,${body.photo}`
+    return this.respond(undefined)
+  }
+
+  removePhoto(cageId: string, id: number): Promise<void> {
+    const guineaPig = this.find(cageId, id)
+    if (!guineaPig) {
+      return this.notFound()
+    }
+    guineaPig.photoUrl = null
+    return this.respond(undefined)
+  }
+
+  private find(cageId: string, id: number): GuineaPig | undefined {
+    return this.db.hasCage(cageId)
+      ? this.db.guineaPigsOf(cageId).find((g) => g.id === id)
+      : undefined
+  }
+
   getHistory(id: number, range?: DateRange): Promise<GuineaPigHistory> {
     if (!this.db.findGuineaPig(id)) {
       return this.notFound()
@@ -97,6 +125,14 @@ export class MockGuineaPigApi extends MockResource implements GuineaPigApi {
       baseline: mockBaseline(id),
     })
   }
+}
+
+function isValidPhoto(body: GuineaPigPhotoRequest): boolean {
+  return (
+    Boolean(body.photo) &&
+    PHOTO_TYPES.includes(body.photoContentType) &&
+    Math.floor((body.photo.length * 3) / 4) <= MAX_PHOTO_BYTES
+  )
 }
 
 // a code the catalog does not have is a 400 in the backend too
