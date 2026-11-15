@@ -148,7 +148,8 @@ export function Register() {
         />
         <PasswordChecklist password={form.password} username={form.username} email={form.email} />
         {register.isError && <FormError message={t(errorMessageKey(register.error, 'register'))} />}
-        <Button type="submit" variant="primary" fullWidth disabled={register.isPending}>
+        <Button type="submit" variant="primary" fullWidth disabled={register.isPending}
+          aria-busy={register.isPending}>
           {register.isPending ? t('auth.register.submitting') : t('auth.register.submit')}
         </Button>
       </form>

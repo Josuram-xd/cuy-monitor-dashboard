@@ -92,7 +92,8 @@ export function Login() {
           onBlur={() => setTouched((current) => ({ ...current, password: true }))}
         />
         {login.isError && <FormError message={t(errorMessageKey(login.error, 'login'))} />}
-        <Button type="submit" variant="primary" fullWidth disabled={login.isPending}>
+        <Button type="submit" variant="primary" fullWidth disabled={login.isPending}
+          aria-busy={login.isPending}>
           {login.isPending ? t('auth.login.submitting') : t('auth.login.submit')}
         </Button>
       </form>
