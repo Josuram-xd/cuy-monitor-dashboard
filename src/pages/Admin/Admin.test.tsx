@@ -131,7 +131,7 @@ describe('Admin', () => {
     const section = await accounts()
     const row = (await within(section).findByText('Ana Quispe')).closest('li') as HTMLElement
 
-    await user.click(within(row).getByRole('button', { name: 'Hacer administrador' }))
+    await user.click(within(row).getByRole('button', { name: /^Hacer administrador a / }))
 
     const dialog = await screen.findByRole('dialog')
     expect(dialog).toHaveTextContent(/editar el catálogo/i)
@@ -158,7 +158,7 @@ describe('Admin', () => {
     const section = await accounts()
     const row = (await within(section).findByText('Ana Quispe')).closest('li') as HTMLElement
 
-    await user.click(within(row).getByRole('button', { name: 'Deshabilitar' }))
+    await user.click(within(row).getByRole('button', { name: /^Deshabilitar a / }))
 
     const dialog = await screen.findByRole('dialog')
     expect(dialog).toHaveTextContent(/no se borran/i)
@@ -167,6 +167,23 @@ describe('Admin', () => {
     await waitFor(() => {
       expect(within(row).getByText('Deshabilitada')).toBeInTheDocument()
     })
-    expect(within(row).getByRole('button', { name: 'Habilitar' })).toBeInTheDocument()
+    expect(within(row).getByRole('button', { name: /^Habilitar a / })).toBeInTheDocument()
+  })
+
+  it('shows a breeder the refusal and never asks the admin endpoints', async () => {
+    mockSession.start()
+    const api = createMockApi(new MockDatabase(), 0)
+    const profile = await api.account.getProfile()
+    vi.spyOn(api.account, 'getProfile').mockResolvedValue({ ...profile, role: 'BREEDER' })
+    const users = vi.spyOn(api.admin, 'listUsers')
+    const options = vi.spyOn(api.admin, 'listCatalog')
+    vi.mocked(getDashboardApi).mockResolvedValue(api)
+    renderWithProviders(<Admin />)
+
+    expect(
+      await screen.findByText('Esta sección es solo para administradores.'),
+    ).toBeInTheDocument()
+    expect(users).not.toHaveBeenCalled()
+    expect(options).not.toHaveBeenCalled()
   })
 })

@@ -146,12 +146,19 @@ export function UsersSection({ myUsername }: { myUsername?: string }) {
                       setPending({ kind: 'role', user, makeAdmin: user.role !== 'ADMIN' })
                     }
                     disabled={busy}
+                    aria-label={t(
+                      user.role === 'ADMIN' ? 'admin.users.demoteOne' : 'admin.users.promoteOne',
+                      { name: user.fullName },
+                    )}
                   >
                     {user.role === 'ADMIN' ? t('admin.users.demote') : t('admin.users.promote')}
                   </Button>
                   <Button
                     onClick={() => setPending({ kind: 'enabled', user, enable: disabled })}
                     disabled={busy}
+                    aria-label={t(disabled ? 'admin.users.enableOne' : 'admin.users.disableOne', {
+                      name: user.fullName,
+                    })}
                   >
                     {disabled ? t('admin.users.enable') : t('admin.users.disable')}
                   </Button>
