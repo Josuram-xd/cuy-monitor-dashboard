@@ -4,6 +4,8 @@ import { AlertList } from '../../components/AlertList/AlertList'
 import { ButtonLink } from '../../components/Button/Button'
 import { CoatSwatch } from '../../components/CoatSwatch/CoatSwatch'
 import { GuineaPigPhoto } from '../../components/GuineaPigPhoto/GuineaPigPhoto'
+import { FormError } from '../../components/FormError/FormError'
+import { PhotoField } from '../../components/PhotoField/PhotoField'
 import { EmptyState } from '../../components/EmptyState/EmptyState'
 import { ErrorState } from '../../components/ErrorState/ErrorState'
 import { Icon } from '../../components/Icon/Icon'
@@ -18,13 +20,15 @@ import type { RangePreset } from '../../charts/timeRange'
 import { useAlerts } from '../../hooks/useAlerts'
 import { cagePath, useCageId } from '../../hooks/useCageId'
 import { useGuineaPigHistory } from '../../hooks/useGuineaPigHistory'
+import { useGuineaPigPhoto } from '../../hooks/useGuineaPigPhoto'
 import { useGuineaPigs } from '../../hooks/useGuineaPigs'
 import { useNow } from '../../hooks/useNow'
 import { t } from '../../i18n'
 import type { GuineaPig } from '../../types/GuineaPig'
 import { formatRelative } from '../../utils/time'
 import styles from './GuineaPigDetail.module.css'
-import { guineaPigLabel } from '../../utils/guineaPig'
+import { guineaPigLabel, photoSrc } from '../../utils/guineaPig'
+import type { PreparedPhoto } from '../../utils/photo'
 
 function Fact({ label, children }: { label: string; children: ReactNode }) {
   return (
@@ -73,6 +77,53 @@ function Alerts({ cageId, guineaPig, now }: { cageId: string; guineaPig: GuineaP
         </ButtonLink>
       )}
     </>
+  )
+}
+
+// The photo has its own endpoint, so it saves the moment it is picked, like the one of the account.
+function PhotoCard({ cageId, guineaPig }: { cageId: string; guineaPig: GuineaPig }) {
+  const photo = useGuineaPigPhoto(cageId, guineaPig.id)
+  const [picked, setPicked] = useState<PreparedPhoto | null>(null)
+  const [done, setDone] = useState<'saved' | 'removed' | null>(null)
+
+  function handleChange(next: PreparedPhoto | null) {
+    setPicked(next)
+    setDone(null)
+    if (next) {
+      photo.mutate(
+        { photo: next.base64, photoContentType: next.contentType },
+        { onSuccess: () => setDone('saved') },
+      )
+    }
+  }
+
+  function handleRemove() {
+    setPicked(null)
+    setDone(null)
+    photo.mutate(null, { onSuccess: () => setDone('removed') })
+  }
+
+  return (
+    <section className={styles.card} aria-labelledby="photo-heading">
+      <h2 id="photo-heading" className={styles.cardTitle}>
+        {t('guineaPig.detail.photoTitle')}
+      </h2>
+      <PhotoField
+        label={t('guineaPig.detail.photoField')}
+        // once the new one is saved the list brings it back, so the picked preview is not needed
+        value={photo.isSuccess ? null : picked}
+        existingUrl={photoSrc(guineaPig.photoUrl)}
+        onChange={handleChange}
+        onRemove={handleRemove}
+        busy={photo.isPending}
+      />
+      {photo.isError && <FormError message={t('guineaPig.detail.photoFailed')} />}
+      {done && (
+        <p className={styles.photoDone} role="status">
+          {t(done === 'saved' ? 'guineaPig.detail.photoSaved' : 'guineaPig.detail.photoRemoved')}
+        </p>
+      )}
+    </section>
   )
 }
 
@@ -217,6 +268,8 @@ export function GuineaPigDetail() {
           </div>
         )}
       </section>
+
+      <PhotoCard key={guineaPig.id} cageId={cageId} guineaPig={guineaPig} />
 
       {/* how it has been doing first, then its latest alerts */}
       <History guineaPig={guineaPig} />
