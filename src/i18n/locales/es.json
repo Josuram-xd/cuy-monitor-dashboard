@@ -312,7 +312,8 @@
       "toLogin": "Inicia sesión"
     },
     "password": {
-      "show": "Mostrar contraseña"
+      "show": "Mostrar contraseña",
+      "hide": "Ocultar contraseña"
     },
     "google": {
       "or": "o",

@@ -303,7 +303,8 @@
       "toLogin": "Log in"
     },
     "password": {
-      "show": "Show password"
+      "show": "Show password",
+      "hide": "Hide password"
     },
     "google": {
       "or": "or",

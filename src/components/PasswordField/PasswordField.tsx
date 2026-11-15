@@ -18,7 +18,7 @@ export function PasswordField(props: PasswordFieldProps) {
         <button
           type="button"
           className={styles.toggle}
-          aria-label={t('auth.password.show')}
+          aria-label={t(visible ? 'auth.password.hide' : 'auth.password.show')}
           aria-pressed={visible}
           onClick={() => setVisible((v) => !v)}
         >
