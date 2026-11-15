@@ -61,6 +61,10 @@
   animation: rise var(--rise-duration) both;
 }
 
+.photoDone {
+  font-weight: 600;
+}
+
 .cardTitle {
   padding-left: var(--space-3);
   border-left: 3px solid var(--color-primary);

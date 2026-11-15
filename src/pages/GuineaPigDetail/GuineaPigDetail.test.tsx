@@ -7,9 +7,22 @@ import type { DashboardApi } from '../../api/DashboardApi'
 import { createMockApi } from '../../mocks/createMockApi'
 import { MockDatabase } from '../../mocks/MockDatabase'
 import { renderWithProviders } from '../../test/render'
+import { ApiError } from '../../api/ApiError'
+import type { PreparedPhoto } from '../../utils/photo'
 import { GuineaPigDetail } from './GuineaPigDetail'
 
 vi.mock('../../api/apiProvider', () => ({ getDashboardApi: vi.fn() }))
+
+// jsdom has no canvas: the shrinking is replaced by a fixed small JPEG
+const PHOTO: PreparedPhoto = {
+  base64: '/9j/4AAQSkZJRg==',
+  contentType: 'image/jpeg',
+  dataUrl: 'data:image/jpeg;base64,/9j/4AAQSkZJRg==',
+}
+vi.mock('../../utils/photo', async (importOriginal) => ({
+  ...(await importOriginal<typeof import('../../utils/photo')>()),
+  preparePhoto: vi.fn(async () => PHOTO),
+}))
 
 function renderAt(api: DashboardApi, id: string) {
   vi.mocked(getDashboardApi).mockResolvedValue(api)
@@ -137,5 +150,57 @@ describe('GuineaPigDetail', () => {
     )
     const [, range] = getHistory.mock.calls.at(-1) ?? []
     expect(Date.parse(range?.to ?? '') - Date.parse(range?.from ?? '')).toBe(7 * 86_400_000)
+  })
+
+  describe('photo', () => {
+    const pick = async () =>
+      userEvent.upload(
+        await screen.findByLabelText('Elige la foto de este cuy'),
+        new File(['x'], 'cuy.jpg', { type: 'image/jpeg' }),
+      )
+
+    it('saves a new photo as soon as it is picked and shows it', async () => {
+      const setPhoto = vi.spyOn(api.guineaPigs, 'setPhoto')
+      renderAt(api, '1')
+
+      await pick()
+
+      expect(await screen.findByText('Listo, cambiamos la foto.')).toBeInTheDocument()
+      expect(setPhoto).toHaveBeenCalledWith('cage-1', 1, {
+        photo: PHOTO.base64,
+        photoContentType: 'image/jpeg',
+      })
+      await waitFor(() =>
+        expect(screen.getByRole('img', { name: 'Foto de Cuy Rojo' })).toHaveAttribute(
+          'src',
+          PHOTO.dataUrl,
+        ),
+      )
+    })
+
+    it('removes the photo and falls back to the placeholder', async () => {
+      const removePhoto = vi.spyOn(api.guineaPigs, 'removePhoto')
+      renderAt(api, '1')
+
+      await userEvent.click(await screen.findByRole('button', { name: 'Quitar foto' }))
+
+      expect(await screen.findByText('Quitamos la foto.')).toBeInTheDocument()
+      expect(removePhoto).toHaveBeenCalledWith('cage-1', 1)
+      await waitFor(() => expect(document.querySelector('img[alt="Foto de Cuy Rojo"]')).toBeNull())
+      expect(screen.queryByRole('button', { name: 'Quitar foto' })).not.toBeInTheDocument()
+    })
+
+    it('says it could not save and keeps the old photo', async () => {
+      vi.spyOn(api.guineaPigs, 'setPhoto').mockRejectedValue(new ApiError(500, 'server_error'))
+      renderAt(api, '1')
+      const before = (await screen.findByRole('img', { name: 'Foto de Cuy Rojo' })).getAttribute(
+        'src',
+      )
+
+      await pick()
+
+      expect(await screen.findByText(/No pudimos guardar la foto/)).toBeInTheDocument()
+      expect(screen.getByRole('img', { name: 'Foto de Cuy Rojo' })).toHaveAttribute('src', before)
+    })
   })
 })
