@@ -1,7 +1,7 @@
 // Where to go after logging in. Only paths of this app: "/alerts" yes,
 // "//evil.com" or "https://evil.com" no (open redirect).
 export function safeNextPath(next: string | null | undefined): string {
-  if (!next || !next.startsWith('/') || next.startsWith('//')) {
+  if (!next || !next.startsWith('/') || next.startsWith('//') || next.startsWith('/\\')) {
     return '/'
   }
   return next
