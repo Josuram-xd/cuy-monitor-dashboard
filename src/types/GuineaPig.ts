@@ -29,6 +29,9 @@ export interface NewGuineaPig {
   notes?: string
 }
 
+// the body of PUT .../photo: the same image fields a new guinea pig is registered with
+export type GuineaPigPhotoRequest = Pick<NewGuineaPig, 'photo' | 'photoContentType'>
+
 export interface StatusTransition {
   fromStatus: HealthStatus
   toStatus: HealthStatus
