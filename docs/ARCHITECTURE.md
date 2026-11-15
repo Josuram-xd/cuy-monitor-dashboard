@@ -251,6 +251,16 @@ EXPOSE 80
 }
 ```
 
+### 8.1 Security headers and token storage
+
+The inner `Caddyfile` sends `Content-Security-Policy`, `X-Frame-Options: DENY`, `Permissions-Policy` (camera, microphone, geolocation denied: the photo field is a plain file input), `Strict-Transport-Security`, `Referrer-Policy` and `X-Content-Type-Options`.
+
+- CSP: `script-src 'self'` and `style-src 'self'` with no `unsafe-inline` or `unsafe-eval`. The build emits no inline script or style, and nothing in `src/` uses `eval`, `new Function` or `dangerouslySetInnerHTML`. React sets `style={{...}}` through the CSSOM, which CSP allows.
+- Only Google is allowed beyond the own origin, for "Continuar con Google" (`accounts.google.com/gsi/client` script, `/gsi/style`, `/gsi/` frame and connect). Fonts are self-hosted (`@fontsource`). `blob:` and `data:` images are for the photo preview.
+- `connect-src` lists `wss://cuymonitor.duckdns.org` explicitly because some browsers do not match `'self'` against `wss:`. If the domain changes, update it.
+- Token trade-off: the JWT lives in `sessionStorage`, so injected script could read it. It lasts 30 min with no refresh and dies with the tab. The CSP above is the main defence: without inline or third-party scripts an XSS has little room. Any new `<script>`, CDN or `unsafe-*` weakens it and needs a review.
+- Update `Caddyfile` and `src/caddyfile.test.ts` together when a new external origin is needed.
+
 - The image is built and run by `cuy-monitor-backend/infra/docker-compose.yml` (`build: ../../cuy-monitor-dashboard`, no published ports). The main Caddy sends `/` to `dashboard:80` (backend Task 23).
 - Update on the EC2: `git -C ../../cuy-monitor-dashboard pull && docker compose up -d --build dashboard`.
 - Amplify is no longer used (ADR-011: same domain as the API for auth and WebSocket).
@@ -274,5 +284,5 @@ EXPOSE 80
 | CSS Modules + tokens, no UI kit | Small bundle, full control over accessibility and status colors |
 | i18next with only `es.json` | Spanish UI now; English is one file away |
 | Own login against the backend (no Cognito/Amplify Auth) | One user type; the backend already issues JWTs (backend ADR-011) |
-| Session in `HttpOnly` cookies, not in `sessionStorage` | No script (nor an XSS) can read it and DevTools storage shows nothing; it also survives reloads and new tabs. `SameSite=Strict` + same site replaces a CSRF token |
+| Session token in `sessionStorage` (and memory), not in `HttpOnly` cookies | The backend returns a JWT in the response body, so the client sends it as `Authorization: Bearer`. It is wiped when the tab closes and never goes to `localStorage`. Trade-off: an XSS could read it (cookies would hide it from scripts); see section 8.1 for what limits that |
 | Served by Caddy on the EC2 instead of Amplify | Same origin for REST, auth and WebSocket → no CORS; everything in Docker on AWS (backend ADR-010/011) |
