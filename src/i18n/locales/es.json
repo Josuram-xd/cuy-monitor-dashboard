@@ -46,6 +46,7 @@
   },
   "errors": {
     "network": "No hay conexión con el servidor. Revisa tu internet e inténtalo otra vez.",
+    "tooManyRequests": "Hiciste demasiados intentos. Espera un momento e inténtalo otra vez.",
     "invalidData": "Revisa los datos e inténtalo otra vez.",
     "generic": "Algo salió mal. Inténtalo otra vez en un momento.",
     "forbidden": "Esta jaula no es tuya."
@@ -311,7 +312,8 @@
       "toLogin": "Inicia sesión"
     },
     "password": {
-      "show": "Mostrar contraseña"
+      "show": "Mostrar contraseña",
+      "hide": "Ocultar contraseña"
     },
     "google": {
       "or": "o",

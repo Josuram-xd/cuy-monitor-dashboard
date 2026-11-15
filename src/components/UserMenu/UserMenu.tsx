@@ -12,6 +12,7 @@ export function UserMenu() {
   const me = useProfile()
   const [open, setOpen] = useState(false)
   const rootRef = useRef<HTMLDivElement>(null)
+  const avatarRef = useRef<HTMLButtonElement>(null)
   const panelId = useId()
 
   // close with Escape or a click outside
@@ -27,6 +28,7 @@ export function UserMenu() {
     function onKeyDown(event: KeyboardEvent) {
       if (event.key === 'Escape') {
         setOpen(false)
+        avatarRef.current?.focus()
       }
     }
     document.addEventListener('pointerdown', onPointerDown)
@@ -41,6 +43,7 @@ export function UserMenu() {
     <div className={styles.root} ref={rootRef}>
       <button
         type="button"
+        ref={avatarRef}
         className={styles.avatar}
         aria-label={t('account.menu')}
         aria-expanded={open}

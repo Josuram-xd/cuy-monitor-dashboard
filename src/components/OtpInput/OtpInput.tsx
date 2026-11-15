@@ -1,4 +1,4 @@
-import { useId, useState, type ChangeEvent } from 'react'
+import { useId, useState, type ChangeEvent, type Ref } from 'react'
 import { t } from '../../i18n'
 import { cx } from '../../utils/cx'
 import { Icon } from '../Icon/Icon'
@@ -12,6 +12,10 @@ interface OtpInputProps {
   length?: number
   error?: string
   disabled?: boolean
+  // keeps focus while a check is running, unlike disabled
+  readOnly?: boolean
+  busy?: boolean
+  inputRef?: Ref<HTMLInputElement>
   autoFocus?: boolean
 }
 
@@ -23,6 +27,9 @@ export function OtpInput({
   length = 6,
   error,
   disabled = false,
+  readOnly = false,
+  busy = false,
+  inputRef,
   autoFocus = false,
 }: OtpInputProps) {
   const [focused, setFocused] = useState(false)
@@ -66,6 +73,9 @@ export function OtpInput({
           onFocus={() => setFocused(true)}
           onBlur={() => setFocused(false)}
           disabled={disabled}
+          readOnly={readOnly}
+          aria-busy={busy || undefined}
+          ref={inputRef}
           autoFocus={autoFocus}
           aria-label={t('auth.verify.codeLabel', { length })}
           aria-invalid={error ? true : undefined}

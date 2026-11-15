@@ -32,8 +32,16 @@
 }
 
 .button:disabled {
+  border-color: transparent;
+  background: var(--color-border);
+  box-shadow: none;
+  color: var(--color-text-muted);
   cursor: not-allowed;
-  opacity: 0.4;
+}
+
+/* pending submit: disabled but working */
+.button:disabled[aria-busy='true'] {
+  cursor: progress;
 }
 
 .primary {
