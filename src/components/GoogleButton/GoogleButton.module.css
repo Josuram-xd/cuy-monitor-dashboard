@@ -31,6 +31,9 @@
 /* The iframe cannot be styled from here, so the app's own look goes around it: the same pill, the
    same card shadow, and the same lift on hover as a house button. */
 .button {
+  /* the page is color-scheme: dark in dark mode, and a light iframe inside a dark page gets an
+     opaque white backdrop from the browser: that was the white square behind Google's button */
+  color-scheme: light;
   width: 100%;
   display: flex;
   justify-content: center;

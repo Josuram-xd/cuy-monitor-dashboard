@@ -235,10 +235,3 @@
     transform: none;
   }
 }
-
-/* scrolling down: out of the way */
-.tucked {
-  transform: translateY(calc(100% + var(--space-6)));
-  opacity: 0;
-  pointer-events: none;
-}
