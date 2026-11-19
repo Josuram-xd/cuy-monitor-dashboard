@@ -1,4 +1,5 @@
 import { useState } from 'react'
+import { Navigate } from 'react-router'
 import { Button } from '../../components/Button/Button'
 import { CageCard } from '../../components/CageCard/CageCard'
 import {
@@ -52,6 +53,11 @@ export function CageList() {
         toast.show({ message: t('toast.simulationFailed'), tone: 'info' })
       },
     })
+  }
+
+  // an admin's home is the monitoring panel
+  if (profile.data?.role === 'ADMIN') {
+    return <Navigate to="/admin" replace />
   }
 
   let content

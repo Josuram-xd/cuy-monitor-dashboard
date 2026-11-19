@@ -1,5 +1,6 @@
 import { useLayoutEffect, useRef, type CSSProperties } from 'react'
 import { Link, useLocation } from 'react-router'
+import { useProfile } from '../../hooks/useProfile'
 import { t } from '../../i18n'
 import { cx } from '../../utils/cx'
 import { Icon, type IconName } from '../Icon/Icon'
@@ -13,7 +14,7 @@ interface NavItem {
   owns: (pathname: string) => boolean
 }
 
-const ITEMS: NavItem[] = [
+const CAGES_AND_ALERTS: NavItem[] = [
   {
     to: '/',
     labelKey: 'nav.cages',
@@ -26,6 +27,17 @@ const ITEMS: NavItem[] = [
     icon: 'bell',
     owns: (path) => path.startsWith('/alerts'),
   },
+]
+
+// an admin monitors: no cages or alerts of their own in the bar, the panel instead
+const MONITORING: NavItem = {
+  to: '/admin',
+  labelKey: 'nav.monitoring',
+  icon: 'activity',
+  owns: (path) => path.startsWith('/admin'),
+}
+
+const HELP_AND_ACCOUNT: NavItem[] = [
   {
     to: '/how-it-works',
     labelKey: 'nav.help',
@@ -57,6 +69,8 @@ export function BottomNav() {
   const navRef = useRef<HTMLElement>(null)
   const indicatorRef = useRef<HTMLSpanElement>(null)
   const { pathname } = useLocation()
+  const isAdmin = useProfile().data?.role === 'ADMIN'
+  const items = [...(isAdmin ? [MONITORING] : CAGES_AND_ALERTS), ...HELP_AND_ACCOUNT]
 
   // the indicator is moved by hand (a transform, never a layout property), so React never re-renders for it
   useLayoutEffect(() => {
@@ -76,7 +90,7 @@ export function BottomNav() {
     place()
     addEventListener('resize', place)
     return () => removeEventListener('resize', place)
-  }, [pathname])
+  }, [pathname, isAdmin])
 
   return (
     <nav ref={navRef} className={styles.nav} aria-label={t('nav.label')}>
@@ -86,7 +100,7 @@ export function BottomNav() {
         style={{ '--indicator-x': '0px', '--indicator-width': '0px' } as CSSProperties}
         aria-hidden="true"
       />
-      {ITEMS.map((item) => {
+      {items.map((item) => {
         const active = item.owns(pathname)
         return (
           <Link

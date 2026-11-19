@@ -56,7 +56,8 @@
     "alerts": "Alerts",
     "account": "Account",
     "cages": "Cages",
-    "help": "Help"
+    "help": "Help",
+    "monitoring": "Monitoring"
   },
   "notFound": {
     "message": "We couldn't find this page.",
@@ -548,8 +549,8 @@
     }
   },
   "admin": {
-    "title": "Admin panel",
-    "subtitle": "Here you see how the accounts are used and what the AI does, and you manage the catalog. Your cages are still in “My cages”.",
+    "title": "Monitoring",
+    "subtitle": "The accounts, who can administer, and what you and the AI do.",
     "loadFailed": "We could not load this.",
     "notAllowed": "This section is for admins only.",
     "backHome": "Back to my cages",
@@ -622,7 +623,10 @@
       "failed": "We could not apply the change. Please try again.",
       "summary": "{{cages}} cages · {{guineaPigs}} guinea pigs · {{openAlerts}} open alerts",
       "lastActivity": "Last data {{when}}",
-      "noActivity": "No data yet"
+      "noActivity": "No data yet",
+      "continue": "Continue",
+      "promoteFinalTitle": "Final confirmation: make {{name}} an admin?",
+      "promoteFinalExplain": "The account {{email}} will see this panel, change the catalog and give or take this same permission. It applies when you confirm."
     },
     "aiLog": {
       "title": "AI log",
@@ -633,6 +637,17 @@
         "AUDIO": "Sound",
         "NOTE": "Advice"
       }
+    },
+    "actions": {
+      "title": "Action log",
+      "intro": "What you did on the accounts, with the time. It is kept in this browser.",
+      "empty": "No account changes yet.",
+      "done": "Done",
+      "failed": "Failed",
+      "promoted": "You made {{who}} an admin",
+      "demoted": "You removed the admin role from {{who}}",
+      "enabled": "You switched on the account of {{who}}",
+      "disabled": "You switched off the account of {{who}}"
     }
   }
 }
