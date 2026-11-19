@@ -10,6 +10,7 @@ import type {
   AdminCatalogOptionInput,
   AdminUser,
   AiLogEntry,
+  AdminSetting,
   UserRole,
 } from '../types/Admin'
 import type { Alert, AlertHistoryFilter, AlertHistoryPage, AlertStatus } from '../types/Alert'
@@ -129,6 +130,10 @@ export interface AdminApi {
   setUserEnabled(id: string, enabled: boolean): Promise<AdminUser>
   // newest first, 1 to 200 lines
   aiLog(limit?: number, signal?: AbortSignal): Promise<AiLogEntry[]>
+  // "Reglas y mensajes": applied at once by the backend; 400 and nothing changes if one value is out of range
+  listSettings(signal?: AbortSignal): Promise<AdminSetting[]>
+  updateSettings(changes: Record<string, string>): Promise<AdminSetting[]>
+  resetSettings(): Promise<AdminSetting[]>
 }
 
 export interface DashboardApi {

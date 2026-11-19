@@ -659,7 +659,117 @@
       "promoted": "Hiciste administrador a {{who}}",
       "demoted": "Le quitaste el rol de administrador a {{who}}",
       "enabled": "Activaste la cuenta de {{who}}",
-      "disabled": "Desactivaste la cuenta de {{who}}"
+      "disabled": "Desactivaste la cuenta de {{who}}",
+      "settingsChanged": "Cambiaste reglas y mensajes — {{summary}}",
+      "settingsReset": "Volviste las reglas y mensajes a los valores de fábrica"
+    },
+    "settings": {
+      "title": "Reglas y mensajes",
+      "intro": "Cuándo un cuy pasa a observación, alerta o crítico, qué dicen las alertas y cuánto se puede preguntar al asistente. Se aplica al guardar, sin reiniciar nada.",
+      "groups": {
+        "health": "Reglas de salud",
+        "message": "Textos de las alertas",
+        "assistant": "Asistente"
+      },
+      "keys": {
+        "health.maxEventAgeMinutes": {
+          "label": "Antigüedad máxima de un evento (minutos)",
+          "help": "Un dato más viejo que esto se descarta: llegó tarde y ya no dice cómo está el cuy."
+        },
+        "health.minDetectionConfidence": {
+          "label": "Confianza mínima de la IA (0 a 1)",
+          "help": "Si la IA está menos segura que esto de qué cuy vio, la ventana no cuenta."
+        },
+        "health.consecutiveAnomalyWindows": {
+          "label": "Ventanas raras seguidas para observar",
+          "help": "Cuántos minutos seguidos con comportamiento raro hacen falta para pasar a «En observación»."
+        },
+        "health.distressProbability": {
+          "label": "Certeza para una alerta de sonido (0 a 1)",
+          "help": "Qué tan seguro debe estar el clasificador de que oyó un chillido de angustia para avisar."
+        },
+        "health.observedToAlertMinutes": {
+          "label": "Minutos en observación antes de la alerta",
+          "help": "Si el comportamiento raro sigue este tiempo, el cuy pasa a «Alerta»."
+        },
+        "health.alertToCriticalMinutes": {
+          "label": "Minutos en alerta antes de crítico",
+          "help": "Si sigue en alerta este tiempo, pasa a «Crítico»."
+        },
+        "health.recoveryWindows": {
+          "label": "Ventanas normales para recuperarse",
+          "help": "Cuántos minutos seguidos normales necesita un cuy para volver a «Normal»."
+        },
+        "health.classifierThreshold": {
+          "label": "Umbral de anomalía de la IA (0 a 1)",
+          "help": "Desde esta probabilidad, el veredicto de la IA basta para marcar la ventana como rara."
+        },
+        "health.stillFactor": {
+          "label": "Veces más quieto que lo normal",
+          "help": "Quieto este número de veces más de lo que suele estar, y sin ir al comedero, cuenta como raro."
+        },
+        "health.groupDistanceFactor": {
+          "label": "Veces más lejos del grupo",
+          "help": "Alejado del grupo este número de veces más de lo normal cuenta como raro."
+        },
+        "health.baselineMinSamples": {
+          "label": "Ventanas para conocer a un cuy",
+          "help": "Cuántas ventanas normales hacen falta antes de comparar a un cuy consigo mismo."
+        },
+        "health.baselineWarmupSamples": {
+          "label": "Ventanas para fijar su perfil",
+          "help": "Después de esto, su perfil normal cambia despacio y una ventana rara casi no lo mueve."
+        },
+        "health.weightDropPercent": {
+          "label": "Caída de peso para alertar (%)",
+          "help": "Si la jaula pesa este porcentaje menos que en los días anteriores, se avisa."
+        },
+        "health.weightRecentHours": {
+          "label": "Horas recientes para el peso",
+          "help": "El peso de ahora se calcula con las lecturas de estas últimas horas."
+        },
+        "health.weightBaselineDays": {
+          "label": "Días anteriores para comparar el peso",
+          "help": "Contra cuántos días anteriores se compara."
+        },
+        "health.weightMinReadings": {
+          "label": "Lecturas mínimas de peso",
+          "help": "Lecturas estables necesarias en cada periodo para poder comparar."
+        },
+        "message.alert": {
+          "label": "Texto de una alerta",
+          "help": "Lo que lee el criador cuando un cuy pasa a «Alerta»."
+        },
+        "message.critical": {
+          "label": "Texto de una alerta crítica",
+          "help": "Lo que lee cuando pasa a «Crítico»."
+        },
+        "message.distress": {
+          "label": "Texto de la alerta de sonido",
+          "help": "Lo que lee cuando se oyen chillidos de angustia en la jaula."
+        },
+        "message.weightDrop": {
+          "label": "Texto de la alerta de peso",
+          "help": "Lo que lee cuando la jaula pierde peso. {porcentaje} se cambia por cuánto bajó."
+        },
+        "assistant.maxQuestions": {
+          "label": "Preguntas por cuenta al asistente",
+          "help": "Máximo de preguntas a Cuchi en la ventana de abajo. 0 = sin límite."
+        },
+        "assistant.windowMinutes": {
+          "label": "Ventana del límite (minutos)",
+          "help": "El periodo en el que se cuentan esas preguntas."
+        }
+      },
+      "default": "De fábrica: {{value}}.",
+      "range": "Entre {{min}} y {{max}}.",
+      "save": "Guardar {{count}} cambios",
+      "saved": "Listo, las reglas nuevas ya se aplican.",
+      "saveFailed": "No se guardó: algún valor está fuera de su rango. Revisa los límites.",
+      "reset": "Volver a los valores de fábrica",
+      "resetTitle": "¿Volver a los valores de fábrica?",
+      "resetExplain": "Todas las reglas, los textos y el límite del asistente vuelven a como venían. Se aplica al instante.",
+      "restored": "Volvieron los valores de fábrica."
     }
   }
 }

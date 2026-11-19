@@ -239,4 +239,35 @@ describe('Admin', () => {
     expect(within(region).getByText('Recomendación')).toBeInTheDocument()
     expect(within(region).getByText(/DISTRESS/)).toBeInTheDocument()
   })
+
+  it('saves only the rule that changed, says so, and logs the old and new value', async () => {
+    const user = userEvent.setup()
+    const { api } = setup()
+    const update = vi.spyOn(api.admin, 'updateSettings')
+    const region = await screen.findByRole('region', { name: 'Reglas y mensajes' })
+    const field = await within(region).findByLabelText('Minutos en observación antes de la alerta')
+
+    await user.clear(field)
+    await user.type(field, '20')
+    await user.click(within(region).getByRole('button', { name: 'Guardar 1 cambios' }))
+
+    await waitFor(() => expect(update).toHaveBeenCalledWith({ 'health.observedToAlertMinutes': '20' }))
+    const log = screen.getByRole('region', { name: 'Registro de acciones' })
+    expect(
+      await within(log).findByText(/Minutos en observación antes de la alerta: «30» → «20»/),
+    ).toBeInTheDocument()
+  })
+
+  it('goes back to the defaults after confirming', async () => {
+    const user = userEvent.setup()
+    const { api } = setup()
+    const reset = vi.spyOn(api.admin, 'resetSettings')
+    const region = await screen.findByRole('region', { name: 'Reglas y mensajes' })
+
+    await user.click(within(region).getByRole('button', { name: 'Volver a los valores de fábrica' }))
+    const dialog = await screen.findByRole('dialog')
+    await user.click(within(dialog).getByRole('button', { name: 'Volver a los valores de fábrica' }))
+
+    await waitFor(() => expect(reset).toHaveBeenCalledTimes(1))
+  })
 })

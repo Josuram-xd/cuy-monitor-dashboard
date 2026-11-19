@@ -4,6 +4,7 @@ import type {
   AdminCatalogOptionInput,
   AdminUser,
   AiLogEntry,
+  AdminSetting,
   UserRole,
 } from '../../types/Admin'
 import type { AdminApi } from '../DashboardApi'
@@ -30,6 +31,18 @@ export class HttpAdminApi implements AdminApi {
 
   listUsers(signal?: AbortSignal): Promise<AdminUser[]> {
     return this.http.get<AdminUser[]>('/api/v1/admin/users', { signal })
+  }
+
+  listSettings(signal?: AbortSignal): Promise<AdminSetting[]> {
+    return this.http.get<AdminSetting[]>('/api/v1/admin/settings', { signal })
+  }
+
+  updateSettings(changes: Record<string, string>): Promise<AdminSetting[]> {
+    return this.http.put<AdminSetting[]>('/api/v1/admin/settings', changes)
+  }
+
+  resetSettings(): Promise<AdminSetting[]> {
+    return this.http.delete<AdminSetting[]>('/api/v1/admin/settings')
   }
 
   aiLog(limit = 100, signal?: AbortSignal): Promise<AiLogEntry[]> {
