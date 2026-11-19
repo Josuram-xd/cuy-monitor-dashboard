@@ -44,11 +44,20 @@
     transform var(--transition-lift);
 }
 
-/* Before its iframe loads, Google draws a stand-in button right here with an unsized SVG logo,
-   and the CSP keeps Google's inline styles out: the logo filled the whole width for a moment */
+/* Before its iframe loads, Google draws a stand-in button right here, and the CSP keeps its inline
+   styles out: an unsized logo and its screen-reader text showed for a moment. The stand-in keeps
+   its place (no jump) but is not seen; only Google's iframe is. */
 .button svg {
   width: 18px;
   height: 18px;
+}
+
+.button > * {
+  visibility: hidden;
+}
+
+.button iframe {
+  visibility: visible;
 }
 
 .button:hover {
