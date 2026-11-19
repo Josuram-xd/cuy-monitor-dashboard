@@ -1,9 +1,9 @@
-import { Link } from 'react-router'
-import { EmptyState } from '../../components/EmptyState/EmptyState'
+import { Navigate } from 'react-router'
 import { ErrorState } from '../../components/ErrorState/ErrorState'
 import { Skeleton } from '../../components/Skeleton/Skeleton'
 import { useProfile } from '../../hooks/useProfile'
 import { t } from '../../i18n'
+import { AiLogSection } from './AiLogSection'
 import { CatalogSection } from './CatalogSection'
 import { UsersSection } from './UsersSection'
 import styles from './Admin.module.css'
@@ -23,15 +23,10 @@ export function Admin() {
   if (me.isError) {
     return <ErrorState message={t('admin.loadFailed')} onRetry={() => void me.refetch()} />
   }
+  // a breeder gets here through a ?next=/admin left behind by an admin's session: straight to the cages.
+  // The backend refuses every admin call from a breeder anyway
   if (me.data.role !== 'ADMIN') {
-    return (
-      <div className={styles.page}>
-        <EmptyState
-          message={t('admin.notAllowed')}
-          action={<Link to="/">{t('admin.backHome')}</Link>}
-        />
-      </div>
-    )
+    return <Navigate to="/" replace />
   }
 
   return (
@@ -40,8 +35,9 @@ export function Admin() {
         <h1 className={styles.title}>{t('admin.title')}</h1>
         <p className={styles.subtitle}>{t('admin.subtitle')}</p>
       </header>
-      <CatalogSection />
       <UsersSection myUsername={me.data.username} />
+      <AiLogSection />
+      <CatalogSection />
     </div>
   )
 }

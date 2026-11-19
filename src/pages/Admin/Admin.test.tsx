@@ -5,6 +5,7 @@ import { getDashboardApi } from '../../api/apiProvider'
 import { createMockApi } from '../../mocks/createMockApi'
 import { MockDatabase } from '../../mocks/MockDatabase'
 import { mockSession } from '../../mocks/mockSession'
+import { Route, Routes } from 'react-router'
 import { renderWithProviders } from '../../test/render'
 import { Admin } from './Admin'
 
@@ -170,7 +171,7 @@ describe('Admin', () => {
     expect(within(row).getByRole('button', { name: /^Habilitar a / })).toBeInTheDocument()
   })
 
-  it('shows a breeder the refusal and never asks the admin endpoints', async () => {
+  it('takes a breeder to the cages, without a warning and without asking the admin endpoints', async () => {
     mockSession.start()
     const api = createMockApi(new MockDatabase(), 0)
     const profile = await api.account.getProfile()
@@ -178,12 +179,36 @@ describe('Admin', () => {
     const users = vi.spyOn(api.admin, 'listUsers')
     const options = vi.spyOn(api.admin, 'listCatalog')
     vi.mocked(getDashboardApi).mockResolvedValue(api)
-    renderWithProviders(<Admin />)
+    renderWithProviders(
+      <Routes>
+        <Route path="/admin" element={<Admin />} />
+        <Route path="/" element={<p>{'the cages'}</p>} />
+      </Routes>,
+      { route: '/admin' },
+    )
 
-    expect(
-      await screen.findByText('Esta sección es solo para administradores.'),
-    ).toBeInTheDocument()
+    expect(await screen.findByText('the cages')).toBeInTheDocument()
+    expect(screen.queryByText('Esta sección es solo para administradores.')).not.toBeInTheDocument()
     expect(users).not.toHaveBeenCalled()
     expect(options).not.toHaveBeenCalled()
+  })
+
+  it('sums up each account without showing its cages', async () => {
+    setup()
+
+    const region = await accounts()
+    expect(
+      await within(region).findByText(/30 jaulas · 96 cuyes · 7 alertas abiertas/),
+    ).toBeInTheDocument()
+    expect(within(region).getByText(/Aún no recibe datos/)).toBeInTheDocument()
+  })
+
+  it('lists what the AI did, its advice included', async () => {
+    setup()
+
+    const region = await screen.findByRole('region', { name: 'Registro de la IA' })
+    expect(await within(region).findByText(/revísalo y, si sigue así/)).toBeInTheDocument()
+    expect(within(region).getByText('Recomendación')).toBeInTheDocument()
+    expect(within(region).getByText(/DISTRESS/)).toBeInTheDocument()
   })
 })

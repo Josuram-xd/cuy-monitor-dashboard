@@ -26,6 +26,12 @@ export function useGoogleLoginMutation() {
   })
 }
 
+export function useDemoLoginMutation() {
+  return useMutation({
+    mutationFn: async () => (await getDashboardApi()).auth.demoLogin(),
+  })
+}
+
 export function useVerifyOtpMutation() {
   return useMutation({
     mutationFn: async (body: VerifyOtpRequest) => (await getDashboardApi()).auth.verifyOtp(body),

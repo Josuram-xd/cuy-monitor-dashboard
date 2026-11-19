@@ -3,6 +3,7 @@ import type {
   AdminCatalogOption,
   AdminCatalogOptionInput,
   AdminUser,
+  AiLogEntry,
   UserRole,
 } from '../../types/Admin'
 import type { AdminApi } from '../DashboardApi'
@@ -29,6 +30,10 @@ export class HttpAdminApi implements AdminApi {
 
   listUsers(signal?: AbortSignal): Promise<AdminUser[]> {
     return this.http.get<AdminUser[]>('/api/v1/admin/users', { signal })
+  }
+
+  aiLog(limit = 100, signal?: AbortSignal): Promise<AiLogEntry[]> {
+    return this.http.get<AiLogEntry[]>('/api/v1/admin/ai-log', { query: { limit: String(limit) }, signal })
   }
 
   changeUserRole(id: string, role: UserRole): Promise<AdminUser> {

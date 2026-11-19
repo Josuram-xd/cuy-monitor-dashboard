@@ -9,6 +9,7 @@ import type {
   AdminCatalogOption,
   AdminCatalogOptionInput,
   AdminUser,
+  AiLogEntry,
   UserRole,
 } from '../types/Admin'
 import type { Alert, AlertHistoryFilter, AlertHistoryPage, AlertStatus } from '../types/Alert'
@@ -87,6 +88,8 @@ export interface AuthApi {
   login(body: LoginRequest): Promise<LoginChallenge>
   // sign in or sign up with the ID token of Google's button; no code, the session arrives as cookies
   googleLogin(body: GoogleLoginRequest): Promise<void>
+  // "Iniciar como usuario normal": the public demo account, no password or code. 404 when it is off
+  demoLogin(): Promise<void>
   // the answer is empty: the session arrives as HttpOnly cookies the page cannot read
   verifyOtp(body: VerifyOtpRequest): Promise<void>
   // ends the session on the server; it expires the cookies and revokes the tokens
@@ -124,6 +127,8 @@ export interface AdminApi {
   // 400 when it would be your own account or the last admin
   changeUserRole(id: string, role: UserRole): Promise<AdminUser>
   setUserEnabled(id: string, enabled: boolean): Promise<AdminUser>
+  // newest first, 1 to 200 lines
+  aiLog(limit?: number, signal?: AbortSignal): Promise<AiLogEntry[]>
 }
 
 export interface DashboardApi {

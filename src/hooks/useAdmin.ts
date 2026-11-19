@@ -19,6 +19,14 @@ export function useAdminUsers(enabled = true) {
   })
 }
 
+export function useAiLog(enabled = true) {
+  return useQuery({
+    queryKey: queryKeys.adminAiLog,
+    queryFn: async ({ signal }) => (await getDashboardApi()).admin.aiLog(100, signal),
+    enabled,
+  })
+}
+
 export function useSaveCatalogOptionMutation() {
   const queryClient = useQueryClient()
   return useMutation({

@@ -157,6 +157,16 @@ describe('auth flow with the mocks', () => {
     }
   })
 
+  it('opens the demo account from the button under "Iniciar sesión", with no code', async () => {
+    renderApp('/login')
+
+    await userEvent.click(
+      await screen.findByRole('button', { name: 'Iniciar sesión como usuario normal' }),
+    )
+
+    expect(await screen.findByText('private cage')).toBeInTheDocument()
+  })
+
   it('also offers Google when registering', async () => {
     const original = config.useMocks
     config.useMocks = true

@@ -70,6 +70,11 @@ export class MockAuthApi extends MockResource implements AuthApi {
     return this.respond(undefined)
   }
 
+  // no backend: the demo account is the same Google demo user, already active
+  demoLogin(): Promise<void> {
+    return this.googleLogin({ idToken: MOCK_GOOGLE_TOKEN })
+  }
+
   verifyOtp(body: VerifyOtpRequest): Promise<void> {
     const challenge = this.db.challenges.get(body.challengeId)
     const valid =
