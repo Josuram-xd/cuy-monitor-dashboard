@@ -1,8 +1,11 @@
+import { useState } from 'react'
 import { Navigate } from 'react-router'
 import { ErrorState } from '../../components/ErrorState/ErrorState'
 import { Skeleton } from '../../components/Skeleton/Skeleton'
 import { useProfile } from '../../hooks/useProfile'
 import { t } from '../../i18n'
+import { ActionLogSection } from './ActionLogSection'
+import { readActions, recordAction } from './actionLog'
 import { AiLogSection } from './AiLogSection'
 import { CatalogSection } from './CatalogSection'
 import { UsersSection } from './UsersSection'
@@ -15,6 +18,7 @@ import styles from './Admin.module.css'
  */
 export function Admin() {
   const me = useProfile()
+  const [actions, setActions] = useState(readActions)
 
   // the role is known before any admin call goes out: otherwise a breeder's page fires them and gets 403s
   if (me.isPending) {
@@ -35,7 +39,11 @@ export function Admin() {
         <h1 className={styles.title}>{t('admin.title')}</h1>
         <p className={styles.subtitle}>{t('admin.subtitle')}</p>
       </header>
-      <UsersSection myUsername={me.data.username} />
+      <UsersSection
+        myUsername={me.data.username}
+        onAction={(text, ok) => setActions(recordAction(text, ok))}
+      />
+      <ActionLogSection actions={actions} />
       <AiLogSection />
       <CatalogSection />
     </div>

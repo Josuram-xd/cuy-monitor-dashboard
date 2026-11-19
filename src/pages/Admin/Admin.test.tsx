@@ -30,6 +30,7 @@ describe('Admin', () => {
 
   afterEach(() => {
     mockSession.end()
+    localStorage.clear()
   })
 
   it('shows the breeds first, with the code that gets stored', async () => {
@@ -126,21 +127,48 @@ describe('Admin', () => {
     expect(within(me as HTMLElement).queryByRole('button')).toBeNull()
   })
 
-  it('names another admin after explaining what that gives them', async () => {
+  it('names another admin only after confirming twice, and logs it with the email', async () => {
     const user = userEvent.setup()
-    setup()
+    const { api } = setup()
+    const changeRole = vi.spyOn(api.admin, 'changeUserRole')
     const section = await accounts()
     const row = (await within(section).findByText('Ana Quispe')).closest('li') as HTMLElement
 
     await user.click(within(row).getByRole('button', { name: /^Hacer administrador a / }))
 
-    const dialog = await screen.findByRole('dialog')
-    expect(dialog).toHaveTextContent(/editar el catálogo/i)
-    await user.click(within(dialog).getByRole('button', { name: 'Hacer administrador' }))
+    const first = await screen.findByRole('dialog')
+    expect(first).toHaveTextContent(/editar el catálogo/i)
+    await user.click(within(first).getByRole('button', { name: 'Continuar' }))
+    // nothing changed yet: the first yes only opens the final confirmation
+    expect(changeRole).not.toHaveBeenCalled()
+
+    const final = await screen.findByRole('dialog')
+    expect(final).toHaveTextContent(/Confirmación final/)
+    expect(final).toHaveTextContent('ana@cuymonitor.local')
+    await user.click(within(final).getByRole('button', { name: 'Hacer administrador' }))
 
     await waitFor(() => {
       expect(within(row).getByText('Administrador')).toBeInTheDocument()
     })
+    const log = screen.getByRole('region', { name: 'Registro de acciones' })
+    expect(
+      within(log).getByText('Hiciste administrador a Ana Quispe (ana@cuymonitor.local)'),
+    ).toBeInTheDocument()
+    expect(within(log).getByText('Hecho')).toBeInTheDocument()
+  })
+
+  it('changes nothing when the final confirmation is cancelled', async () => {
+    const user = userEvent.setup()
+    const { api } = setup()
+    const changeRole = vi.spyOn(api.admin, 'changeUserRole')
+    const row = (await within(await accounts()).findByText('Ana Quispe')).closest('li') as HTMLElement
+
+    await user.click(within(row).getByRole('button', { name: /^Hacer administrador a / }))
+    await user.click(within(await screen.findByRole('dialog')).getByRole('button', { name: 'Continuar' }))
+    await user.click(within(await screen.findByRole('dialog')).getByRole('button', { name: 'Cancelar' }))
+
+    expect(changeRole).not.toHaveBeenCalled()
+    expect(within(row).getByText('Criador')).toBeInTheDocument()
   })
 
   it('leaves no way to demote the only admin', async () => {

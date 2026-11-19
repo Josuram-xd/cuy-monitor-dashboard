@@ -16,11 +16,19 @@ import type { AdminUser } from '../../types/Admin'
 import styles from './Admin.module.css'
 
 type Pending =
-  | { kind: 'role'; user: AdminUser; makeAdmin: boolean }
+  // making someone an admin asks twice: step 1 explains, step 2 is the final yes
+  | { kind: 'role'; user: AdminUser; makeAdmin: boolean; step?: 1 | 2 }
   | { kind: 'enabled'; user: AdminUser; enable: boolean }
 
 /** The accounts. Your own row has no buttons: the backend refuses those changes, and so does this. */
-export function UsersSection({ myUsername }: { myUsername?: string }) {
+export function UsersSection({
+  myUsername,
+  onAction = () => {},
+}: {
+  myUsername?: string
+  // every change, done or failed, for the action log
+  onAction?: (text: string, ok: boolean) => void
+}) {
   const users = useAdminUsers()
   const changeRole = useChangeUserRoleMutation()
   const setEnabled = useSetUserEnabledMutation()
@@ -31,15 +39,22 @@ export function UsersSection({ myUsername }: { myUsername?: string }) {
 
   function confirm() {
     if (!pending) return
+    if (pending.kind === 'role' && pending.makeAdmin && pending.step !== 2) {
+      setPending({ ...pending, step: 2 })
+      return
+    }
     const { user } = pending
+    const who = `${user.fullName} (${user.email})`
     const done = (message: string) => {
       setPending(null)
       toast.show({ message })
+      onAction(t(actionKey(pending), { who }), true)
     }
     // the backend has the last word on both rules (your own account, the last admin): a 400 is shown as is
     const onError = () => {
       setPending(null)
       toast.show({ message: t('admin.users.failed') })
+      onAction(t(actionKey(pending), { who }), false)
     }
 
     if (pending.kind === 'role') {
@@ -74,6 +89,9 @@ export function UsersSection({ myUsername }: { myUsername?: string }) {
   }
 
   function dialogTitle(p: Pending): string {
+    if (p.kind === 'role' && p.makeAdmin && p.step === 2) {
+      return t('admin.users.promoteFinalTitle', { name: p.user.fullName })
+    }
     if (p.kind === 'role') {
       return p.makeAdmin
         ? t('admin.users.promoteTitle', { name: p.user.fullName })
@@ -85,6 +103,9 @@ export function UsersSection({ myUsername }: { myUsername?: string }) {
   }
 
   function dialogConfirm(p: Pending): string {
+    if (p.kind === 'role' && p.makeAdmin && p.step !== 2) {
+      return t('admin.users.continue')
+    }
     if (p.kind === 'role') {
       return p.makeAdmin ? t('admin.users.promote') : t('admin.users.demote')
     }
@@ -92,6 +113,9 @@ export function UsersSection({ myUsername }: { myUsername?: string }) {
   }
 
   function dialogExplain(p: Pending): string {
+    if (p.kind === 'role' && p.makeAdmin && p.step === 2) {
+      return t('admin.users.promoteFinalExplain', { email: p.user.email })
+    }
     if (p.kind === 'role') {
       return p.makeAdmin ? t('admin.users.promoteExplain') : t('admin.users.demoteExplain')
     }
@@ -195,4 +219,11 @@ export function UsersSection({ myUsername }: { myUsername?: string }) {
       )}
     </section>
   )
+}
+
+function actionKey(p: Pending): string {
+  if (p.kind === 'role') {
+    return p.makeAdmin ? 'admin.actions.promoted' : 'admin.actions.demoted'
+  }
+  return p.enable ? 'admin.actions.enabled' : 'admin.actions.disabled'
 }

@@ -56,7 +56,8 @@
     "alerts": "Alertas",
     "account": "Cuenta",
     "cages": "Jaulas",
-    "help": "Ayuda"
+    "help": "Ayuda",
+    "monitoring": "Monitoreo"
   },
   "notFound": {
     "message": "No encontramos esta página.",
@@ -560,8 +561,8 @@
     }
   },
   "admin": {
-    "title": "Panel de administración",
-    "subtitle": "Aquí ves cómo se usan las cuentas y lo que hace la IA, y gestionas el catálogo. Tus jaulas siguen en «Mis jaulas».",
+    "title": "Monitoreo",
+    "subtitle": "Las cuentas, quién puede administrar y lo que hacen tú y la IA.",
     "loadFailed": "No pudimos cargar esta información.",
     "notAllowed": "Esta sección es solo para administradores.",
     "backHome": "Volver a mis jaulas",
@@ -634,7 +635,10 @@
       "failed": "No pudimos aplicar el cambio. Vuelve a intentarlo.",
       "summary": "{{cages}} jaulas · {{guineaPigs}} cuyes · {{openAlerts}} alertas abiertas",
       "lastActivity": "Últimos datos {{when}}",
-      "noActivity": "Aún no recibe datos"
+      "noActivity": "Aún no recibe datos",
+      "continue": "Continuar",
+      "promoteFinalTitle": "Confirmación final: ¿hacer administrador a {{name}}?",
+      "promoteFinalExplain": "La cuenta {{email}} podrá ver este panel, cambiar el catálogo y dar o quitar este mismo permiso a otros. El cambio se aplica al confirmar."
     },
     "aiLog": {
       "title": "Registro de la IA",
@@ -645,6 +649,17 @@
         "AUDIO": "Sonido",
         "NOTE": "Recomendación"
       }
+    },
+    "actions": {
+      "title": "Registro de acciones",
+      "intro": "Lo que hiciste sobre las cuentas, con la hora. Se guarda en este navegador.",
+      "empty": "Todavía no hiciste cambios en las cuentas.",
+      "done": "Hecho",
+      "failed": "Falló",
+      "promoted": "Hiciste administrador a {{who}}",
+      "demoted": "Le quitaste el rol de administrador a {{who}}",
+      "enabled": "Activaste la cuenta de {{who}}",
+      "disabled": "Desactivaste la cuenta de {{who}}"
     }
   }
 }
