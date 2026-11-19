@@ -8,6 +8,7 @@ import { ActionLogSection } from './ActionLogSection'
 import { readActions, recordAction } from './actionLog'
 import { AiLogSection } from './AiLogSection'
 import { CatalogSection } from './CatalogSection'
+import { SettingsSection } from './SettingsSection'
 import { UsersSection } from './UsersSection'
 import styles from './Admin.module.css'
 
@@ -43,6 +44,7 @@ export function Admin() {
         myUsername={me.data.username}
         onAction={(text, ok) => setActions(recordAction(text, ok))}
       />
+      <SettingsSection onAction={(text, ok) => setActions(recordAction(text, ok))} />
       <ActionLogSection actions={actions} />
       <AiLogSection />
       <CatalogSection />

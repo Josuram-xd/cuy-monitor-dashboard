@@ -647,7 +647,117 @@
       "promoted": "You made {{who}} an admin",
       "demoted": "You removed the admin role from {{who}}",
       "enabled": "You switched on the account of {{who}}",
-      "disabled": "You switched off the account of {{who}}"
+      "disabled": "You switched off the account of {{who}}",
+      "settingsChanged": "You changed rules and messages — {{summary}}",
+      "settingsReset": "You put rules and messages back to the defaults"
+    },
+    "settings": {
+      "title": "Rules and messages",
+      "intro": "When a guinea pig goes to observed, alert or critical, what the alerts say and how much the assistant can be asked. It applies on saving, nothing restarts.",
+      "groups": {
+        "health": "Health rules",
+        "message": "Alert texts",
+        "assistant": "Assistant"
+      },
+      "keys": {
+        "health.maxEventAgeMinutes": {
+          "label": "Oldest event accepted (minutes)",
+          "help": "Older data is dropped: it came late and no longer says how the guinea pig is."
+        },
+        "health.minDetectionConfidence": {
+          "label": "Minimum AI confidence (0 to 1)",
+          "help": "If the AI is less sure than this about which guinea pig it saw, the window does not count."
+        },
+        "health.consecutiveAnomalyWindows": {
+          "label": "Odd windows in a row to observe",
+          "help": "How many minutes in a row of odd behavior move it to “Observed”."
+        },
+        "health.distressProbability": {
+          "label": "Certainty for a sound alert (0 to 1)",
+          "help": "How sure the classifier must be that it heard a distress squeal."
+        },
+        "health.observedToAlertMinutes": {
+          "label": "Minutes observed before an alert",
+          "help": "If the odd behavior lasts this long, it goes to “Alert”."
+        },
+        "health.alertToCriticalMinutes": {
+          "label": "Minutes in alert before critical",
+          "help": "If it stays in alert this long, it goes to “Critical”."
+        },
+        "health.recoveryWindows": {
+          "label": "Normal windows to recover",
+          "help": "How many normal minutes in a row it needs to go back to “Normal”."
+        },
+        "health.classifierThreshold": {
+          "label": "AI anomaly threshold (0 to 1)",
+          "help": "From this probability on, the AI verdict alone marks the window as odd."
+        },
+        "health.stillFactor": {
+          "label": "Times stiller than usual",
+          "help": "This many times stiller than usual, and not at the feeder, counts as odd."
+        },
+        "health.groupDistanceFactor": {
+          "label": "Times farther from the group",
+          "help": "This many times farther from the group than usual counts as odd."
+        },
+        "health.baselineMinSamples": {
+          "label": "Windows to know a guinea pig",
+          "help": "Normal windows needed before comparing a guinea pig with itself."
+        },
+        "health.baselineWarmupSamples": {
+          "label": "Windows to settle its profile",
+          "help": "After this, its normal profile changes slowly."
+        },
+        "health.weightDropPercent": {
+          "label": "Weight drop to alert (%)",
+          "help": "If the cage weighs this percent less than the days before, an alert goes out."
+        },
+        "health.weightRecentHours": {
+          "label": "Recent hours for the weight",
+          "help": "The weight now is worked out from these last hours."
+        },
+        "health.weightBaselineDays": {
+          "label": "Previous days to compare",
+          "help": "How many days before it is compared with."
+        },
+        "health.weightMinReadings": {
+          "label": "Minimum weight readings",
+          "help": "Stable readings needed in each period to compare."
+        },
+        "message.alert": {
+          "label": "Text of an alert",
+          "help": "What the breeder reads when a guinea pig goes to “Alert”."
+        },
+        "message.critical": {
+          "label": "Text of a critical alert",
+          "help": "What they read when it goes to “Critical”."
+        },
+        "message.distress": {
+          "label": "Text of the sound alert",
+          "help": "What they read when distress squeals are heard."
+        },
+        "message.weightDrop": {
+          "label": "Text of the weight alert",
+          "help": "What they read when the cage gets lighter. {porcentaje} becomes the drop."
+        },
+        "assistant.maxQuestions": {
+          "label": "Questions per account to the assistant",
+          "help": "Most questions to Cuchi in the window below. 0 = no limit."
+        },
+        "assistant.windowMinutes": {
+          "label": "Limit window (minutes)",
+          "help": "The period those questions are counted in."
+        }
+      },
+      "default": "Default: {{value}}.",
+      "range": "Between {{min}} and {{max}}.",
+      "save": "Save {{count}} changes",
+      "saved": "Done, the new rules apply now.",
+      "saveFailed": "Not saved: a value is out of its range. Check the limits.",
+      "reset": "Back to the defaults",
+      "resetTitle": "Back to the defaults?",
+      "resetExplain": "Every rule, text and the assistant limit go back to how they came. It applies at once.",
+      "restored": "The defaults are back."
     }
   }
 }

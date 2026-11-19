@@ -53,3 +53,15 @@ export interface AiLogEntry {
   kind: 'BEHAVIOR' | 'AUDIO' | 'NOTE'
   detail: string
 }
+
+/** GET /api/v1/admin/settings: a health rule, an alert text or the assistant's limit. Values travel as text. */
+export interface AdminSetting {
+  key: string
+  kind: 'INTEGER' | 'DECIMAL' | 'TEXT'
+  value: string
+  // what "volver a los valores de fábrica" goes back to
+  defaultValue: string
+  // the range a number must stay in; for TEXT, its length
+  min: number
+  max: number
+}

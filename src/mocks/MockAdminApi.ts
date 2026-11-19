@@ -5,6 +5,7 @@ import type {
   AdminCatalogOptionInput,
   AdminUser,
   AiLogEntry,
+  AdminSetting,
   UserRole,
 } from '../types/Admin'
 import { mockCatalog } from './data'
@@ -76,6 +77,7 @@ const DEMO_USERS: AdminUser[] = [
 export class MockAdminApi extends MockResource implements AdminApi {
   private catalog = seedCatalog()
   private users = structuredClone(DEMO_USERS)
+  private settings = seedSettings()
 
   listCatalog(): Promise<AdminCatalogOption[]> {
     return this.respond(this.catalog)
@@ -109,6 +111,36 @@ export class MockAdminApi extends MockResource implements AdminApi {
 
   listUsers(): Promise<AdminUser[]> {
     return this.respond(this.users)
+  }
+
+  listSettings(): Promise<AdminSetting[]> {
+    return this.respond(this.settings)
+  }
+
+  updateSettings(changes: Record<string, string>): Promise<AdminSetting[]> {
+    const next = this.settings.map((s) => ({ ...s }))
+    for (const [key, value] of Object.entries(changes)) {
+      const setting = next.find((s) => s.key === key)
+      if (!setting) return this.fail(400, 'bad_request')
+      if (setting.kind === 'TEXT') {
+        if (value.trim().length < setting.min || value.trim().length > setting.max) {
+          return this.fail(400, 'bad_request')
+        }
+      } else {
+        const number = Number(value)
+        if (!Number.isFinite(number) || number < setting.min || number > setting.max) {
+          return this.fail(400, 'bad_request')
+        }
+      }
+      setting.value = value.trim()
+    }
+    this.settings = next
+    return this.respond(this.settings)
+  }
+
+  resetSettings(): Promise<AdminSetting[]> {
+    this.settings = this.settings.map((s) => ({ ...s, value: s.defaultValue }))
+    return this.respond(this.settings)
   }
 
   aiLog(limit = 100): Promise<AiLogEntry[]> {
@@ -160,4 +192,48 @@ export class MockAdminApi extends MockResource implements AdminApi {
     this.users = this.users.map((u) => (u.id === user.id ? user : u))
     return user
   }
+}
+
+// the same keys, ranges and defaults as the backend (application.yml), so the panel can be shown without it
+function seedSettings(): AdminSetting[] {
+  const n = (key: string, kind: 'INTEGER' | 'DECIMAL', value: string, min: number, max: number) => ({
+    key,
+    kind,
+    value,
+    defaultValue: value,
+    min,
+    max,
+  })
+  const text = (key: string, value: string) => ({
+    key,
+    kind: 'TEXT' as const,
+    value,
+    defaultValue: value,
+    min: 1,
+    max: 500,
+  })
+  return [
+    n('health.maxEventAgeMinutes', 'INTEGER', '10', 1, 60),
+    n('health.minDetectionConfidence', 'DECIMAL', '0.5', 0, 1),
+    n('health.consecutiveAnomalyWindows', 'INTEGER', '3', 1, 20),
+    n('health.distressProbability', 'DECIMAL', '0.8', 0.5, 1),
+    n('health.observedToAlertMinutes', 'INTEGER', '30', 1, 240),
+    n('health.alertToCriticalMinutes', 'INTEGER', '60', 1, 480),
+    n('health.recoveryWindows', 'INTEGER', '5', 1, 30),
+    n('health.classifierThreshold', 'DECIMAL', '0.7', 0.1, 1),
+    n('health.stillFactor', 'DECIMAL', '1.5', 1.05, 5),
+    n('health.groupDistanceFactor', 'DECIMAL', '2', 1.05, 5),
+    n('health.baselineMinSamples', 'INTEGER', '30', 1, 500),
+    n('health.baselineWarmupSamples', 'INTEGER', '60', 1, 1000),
+    n('health.weightDropPercent', 'INTEGER', '10', 1, 50),
+    n('health.weightRecentHours', 'INTEGER', '24', 1, 72),
+    n('health.weightBaselineDays', 'INTEGER', '6', 1, 30),
+    n('health.weightMinReadings', 'INTEGER', '5', 1, 100),
+    text('message.alert', 'Comportamiento fuera de lo normal de forma sostenida'),
+    text('message.critical', 'El comportamiento fuera de lo normal empeoró y sigue'),
+    text('message.distress', 'Se escucharon chillidos de angustia en la jaula'),
+    text('message.weightDrop', 'El peso de la jaula bajó un {porcentaje} % frente a los días anteriores'),
+    n('assistant.maxQuestions', 'INTEGER', '0', 0, 1000),
+    n('assistant.windowMinutes', 'INTEGER', '10', 1, 1440),
+  ]
 }

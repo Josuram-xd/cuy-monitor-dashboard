@@ -235,3 +235,13 @@
     min-width: 0;
   }
 }
+
+/* "Reglas y mensajes": one block per group of settings */
+.settingGroup {
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-4);
+  margin: 0 0 var(--space-5);
+  padding: 0;
+  border: 0;
+}

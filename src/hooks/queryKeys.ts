@@ -20,6 +20,7 @@ export const queryKeys = {
   adminCatalog: ['admin', 'catalog'] as const,
   adminUsers: ['admin', 'users'] as const,
   adminAiLog: ['admin', 'ai-log'] as const,
+  adminSettings: ['admin', 'settings'] as const,
   // invalidating ['alerts'] refreshes every status and cage filter at once
   alerts: (status?: AlertStatus, cageId?: string) =>
     ['alerts', status ?? 'ALL', cageId ?? 'ALL'] as const,

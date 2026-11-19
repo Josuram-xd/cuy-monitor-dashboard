@@ -27,6 +27,30 @@ export function useAiLog(enabled = true) {
   })
 }
 
+export function useAdminSettings() {
+  return useQuery({
+    queryKey: queryKeys.adminSettings,
+    queryFn: async ({ signal }) => (await getDashboardApi()).admin.listSettings(signal),
+  })
+}
+
+export function useUpdateSettingsMutation() {
+  const queryClient = useQueryClient()
+  return useMutation({
+    mutationFn: async (changes: Record<string, string>) =>
+      (await getDashboardApi()).admin.updateSettings(changes),
+    onSuccess: (settings) => queryClient.setQueryData(queryKeys.adminSettings, settings),
+  })
+}
+
+export function useResetSettingsMutation() {
+  const queryClient = useQueryClient()
+  return useMutation({
+    mutationFn: async () => (await getDashboardApi()).admin.resetSettings(),
+    onSuccess: (settings) => queryClient.setQueryData(queryKeys.adminSettings, settings),
+  })
+}
+
 export function useSaveCatalogOptionMutation() {
   const queryClient = useQueryClient()
   return useMutation({
