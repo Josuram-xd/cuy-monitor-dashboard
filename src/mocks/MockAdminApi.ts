@@ -4,6 +4,7 @@ import type {
   AdminCatalogOption,
   AdminCatalogOptionInput,
   AdminUser,
+  AiLogEntry,
   UserRole,
 } from '../types/Admin'
 import { mockCatalog } from './data'
@@ -38,6 +39,10 @@ const DEMO_USERS: AdminUser[] = [
     status: 'ACTIVE',
     role: 'ADMIN',
     createdAt: '2026-01-10T12:00:00Z',
+    cages: 2,
+    guineaPigs: 4,
+    openAlerts: 1,
+    lastActivityAt: new Date(Date.now() - 4 * 60_000).toISOString(),
   },
   {
     id: '00000000-0000-4000-8000-000000000002',
@@ -47,6 +52,10 @@ const DEMO_USERS: AdminUser[] = [
     status: 'ACTIVE',
     role: 'BREEDER',
     createdAt: '2026-03-02T09:30:00Z',
+    cages: 30,
+    guineaPigs: 96,
+    openAlerts: 7,
+    lastActivityAt: new Date(Date.now() - 2 * 3_600_000).toISOString(),
   },
   {
     id: '00000000-0000-4000-8000-000000000003',
@@ -56,6 +65,10 @@ const DEMO_USERS: AdminUser[] = [
     status: 'PENDING_VERIFICATION',
     role: 'BREEDER',
     createdAt: '2026-11-01T18:05:00Z',
+    cages: 0,
+    guineaPigs: 0,
+    openAlerts: 0,
+    lastActivityAt: null,
   },
 ]
 
@@ -96,6 +109,26 @@ export class MockAdminApi extends MockResource implements AdminApi {
 
   listUsers(): Promise<AdminUser[]> {
     return this.respond(this.users)
+  }
+
+  aiLog(limit = 100): Promise<AiLogEntry[]> {
+    const ago = (minutes: number) => new Date(Date.now() - minutes * 60_000).toISOString()
+    const log: AiLogEntry[] = [
+      {
+        at: ago(2),
+        cageCode: 'cage-1',
+        kind: 'NOTE',
+        detail: 'El cuy rojo lleva casi una hora quieto y sin comer: revísalo y, si sigue así, llama al veterinario.',
+      },
+      {
+        at: ago(3),
+        cageCode: 'cage-1',
+        kind: 'BEHAVIOR',
+        detail: 'RED: quieto 55.0 s de 60 s, comedero 0, bebedero 0, anomalía 0.3',
+      },
+      { at: ago(9), cageCode: 'cage-1', kind: 'AUDIO', detail: 'DISTRESS (probabilidad 0.91)' },
+    ]
+    return this.respond(log.slice(0, limit))
   }
 
   changeUserRole(id: string, role: UserRole): Promise<AdminUser> {

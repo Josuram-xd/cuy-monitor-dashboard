@@ -37,4 +37,19 @@ export interface AdminUser {
   status: 'PENDING_VERIFICATION' | 'ACTIVE' | 'DISABLED'
   role: UserRole
   createdAt: string
+  // a summary of its use, never what is inside its cages: active cages, their guinea pigs, open alerts
+  cages: number
+  guineaPigs: number
+  openAlerts: number
+  // when the last event arrived for any of its cages; null when none ever did
+  lastActivityAt: string | null
+}
+
+/** GET /api/v1/admin/ai-log: what the AI did, newest first. `detail` comes already written in Spanish. */
+export interface AiLogEntry {
+  at: string
+  cageCode: string
+  // a window analysed, a sound classified, or what the assistant wrote about an alert
+  kind: 'BEHAVIOR' | 'AUDIO' | 'NOTE'
+  detail: string
 }

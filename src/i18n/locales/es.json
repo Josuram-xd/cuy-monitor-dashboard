@@ -351,6 +351,10 @@
       "weakPassword": "La contraseña no cumple todos los requisitos.",
       "googleFailed": "No pudimos entrar con Google. Inténtalo otra vez.",
       "googleOff": "El acceso con Google no está disponible por ahora."
+    },
+    "demo": {
+      "button": "Iniciar sesión como usuario normal",
+      "failed": "La cuenta de prueba no está disponible ahora."
     }
   },
   "account": {
@@ -553,7 +557,7 @@
   },
   "admin": {
     "title": "Panel de administración",
-    "subtitle": "Lo que los criadores eligen en la aplicación sale de aquí, no del código.",
+    "subtitle": "Aquí ves cómo se usan las cuentas y lo que hace la IA, y gestionas el catálogo. Tus jaulas siguen en «Mis jaulas».",
     "loadFailed": "No pudimos cargar esta información.",
     "notAllowed": "Esta sección es solo para administradores.",
     "backHome": "Volver a mis jaulas",
@@ -592,7 +596,7 @@
     },
     "users": {
       "title": "Cuentas",
-      "intro": "Quién entra a la aplicación y quién puede editar el catálogo.",
+      "intro": "Un resumen de cada cuenta: cuántas jaulas, cuyes y alertas abiertas tiene, y cuándo recibió datos por última vez. No muestra lo que hay dentro de sus jaulas.",
       "you": "Tú",
       "roles": {
         "BREEDER": "Criador",
@@ -623,7 +627,20 @@
       "demoted": "{{name}} ya no es administrador.",
       "enabled": "La cuenta de {{name}} está habilitada.",
       "disabled": "La cuenta de {{name}} está deshabilitada.",
-      "failed": "No pudimos aplicar el cambio. Vuelve a intentarlo."
+      "failed": "No pudimos aplicar el cambio. Vuelve a intentarlo.",
+      "summary": "{{cages}} jaulas · {{guineaPigs}} cuyes · {{openAlerts}} alertas abiertas",
+      "lastActivity": "Últimos datos {{when}}",
+      "noActivity": "Aún no recibe datos"
+    },
+    "aiLog": {
+      "title": "Registro de la IA",
+      "intro": "Lo último que hizo la IA en todas las jaulas: ventanas de video analizadas, sonidos clasificados y las recomendaciones que escribió sobre las alertas.",
+      "empty": "La IA todavía no ha registrado nada.",
+      "kinds": {
+        "BEHAVIOR": "Comportamiento",
+        "AUDIO": "Sonido",
+        "NOTE": "Recomendación"
+      }
     }
   }
 }

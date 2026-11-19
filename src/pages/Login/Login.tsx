@@ -12,17 +12,19 @@ import { GoogleSignIn } from '../../components/GoogleButton/GoogleSignIn'
 import { PasswordField } from '../../components/PasswordField/PasswordField'
 import { SessionNotice } from '../../components/SessionNotice/SessionNotice'
 import { TextField } from '../../components/TextField/TextField'
-import { useLoginMutation } from '../../hooks/useAuthMutations'
+import { useDemoLoginMutation, useLoginMutation } from '../../hooks/useAuthMutations'
 import { t } from '../../i18n'
 import styles from '../authForm.module.css'
 
 export function Login() {
-  const { lastLogoutReason } = useAuth()
+  const { lastLogoutReason, signIn } = useAuth()
   const navigate = useNavigate()
   const [searchParams] = useSearchParams()
   const next = safeNextPath(searchParams.get('next'))
   const nextQuery = next === '/' ? '' : `?next=${encodeURIComponent(next)}`
   const login = useLoginMutation()
+  // the public demo account: no password and no code, PublicOnlyRoute takes it in after signIn
+  const demo = useDemoLoginMutation()
   const [username, setUsername] = useState('')
   const [password, setPassword] = useState('')
   // errors show after leaving a field or trying to submit, not while typing the first letters
@@ -96,6 +98,17 @@ export function Login() {
           aria-busy={login.isPending}>
           {login.isPending ? t('auth.login.submitting') : t('auth.login.submit')}
         </Button>
+        <Button
+          type="button"
+          variant="secondary"
+          fullWidth
+          disabled={demo.isPending}
+          aria-busy={demo.isPending}
+          onClick={() => demo.mutate(undefined, { onSuccess: () => signIn() })}
+        >
+          {t('auth.demo.button')}
+        </Button>
+        {demo.isError && <FormError message={t('auth.demo.failed')} />}
       </form>
       <GoogleSignIn text="signin_with" />
     </AuthLayout>

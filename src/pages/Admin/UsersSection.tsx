@@ -1,3 +1,4 @@
+import { formatRelative } from '../../utils/time'
 import { useState } from 'react'
 import { Button } from '../../components/Button/Button'
 import { ConfirmDialog } from '../../components/ConfirmDialog/ConfirmDialog'
@@ -129,6 +130,17 @@ export function UsersSection({ myUsername }: { myUsername?: string }) {
                 </p>
                 <p className={styles.userMeta}>
                   @{user.username} · {user.email}
+                </p>
+                <p className={styles.userMeta}>
+                  {t('admin.users.summary', {
+                    cages: user.cages,
+                    guineaPigs: user.guineaPigs,
+                    openAlerts: user.openAlerts,
+                  })}
+                  {' · '}
+                  {user.lastActivityAt
+                    ? t('admin.users.lastActivity', { when: formatRelative(user.lastActivityAt) })
+                    : t('admin.users.noActivity')}
                 </p>
               </div>
               <div className={styles.userTags}>

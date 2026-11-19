@@ -342,6 +342,10 @@
       "weakPassword": "The password doesn't meet every requirement.",
       "googleFailed": "We couldn't log you in with Google. Try again.",
       "googleOff": "Google sign-in is not available right now."
+    },
+    "demo": {
+      "button": "Sign in as a regular user",
+      "failed": "The demo account is not available right now."
     }
   },
   "account": {
@@ -541,7 +545,7 @@
   },
   "admin": {
     "title": "Admin panel",
-    "subtitle": "What breeders pick from in the app comes from here, not from the code.",
+    "subtitle": "Here you see how the accounts are used and what the AI does, and you manage the catalog. Your cages are still in “My cages”.",
     "loadFailed": "We could not load this.",
     "notAllowed": "This section is for admins only.",
     "backHome": "Back to my cages",
@@ -580,7 +584,7 @@
     },
     "users": {
       "title": "Accounts",
-      "intro": "Who gets into the app, and who can edit the catalog.",
+      "intro": "A summary of each account: how many cages, guinea pigs and open alerts it has, and when it last got data. It does not show what is inside its cages.",
       "you": "You",
       "roles": {
         "BREEDER": "Breeder",
@@ -611,7 +615,20 @@
       "demoted": "{{name}} is no longer an admin.",
       "enabled": "{{name}}'s account is enabled.",
       "disabled": "{{name}}'s account is disabled.",
-      "failed": "We could not apply the change. Please try again."
+      "failed": "We could not apply the change. Please try again.",
+      "summary": "{{cages}} cages · {{guineaPigs}} guinea pigs · {{openAlerts}} open alerts",
+      "lastActivity": "Last data {{when}}",
+      "noActivity": "No data yet"
+    },
+    "aiLog": {
+      "title": "AI log",
+      "intro": "What the AI did lately in every cage: video windows analysed, sounds classified and the advice it wrote about the alerts.",
+      "empty": "The AI has not logged anything yet.",
+      "kinds": {
+        "BEHAVIOR": "Behavior",
+        "AUDIO": "Sound",
+        "NOTE": "Advice"
+      }
     }
   }
 }
