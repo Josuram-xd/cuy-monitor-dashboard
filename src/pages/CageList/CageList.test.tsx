@@ -115,4 +115,20 @@ describe('CageList', () => {
     ).toBeInTheDocument()
     expect(screen.getByRole('button', { name: 'Crear mi primera jaula' })).toBeInTheDocument()
   })
+
+  it('starts the simulation in every cage at once after confirming', async () => {
+    const user = userEvent.setup()
+    const api = createMockApi(new MockDatabase(), 0)
+    vi.mocked(getDashboardApi).mockResolvedValue(api)
+    const start = vi.spyOn(api.cages, 'startSimulation')
+    renderWithProviders(<CageList />)
+    const cages = await api.cages.list()
+
+    await user.click(await screen.findByRole('button', { name: 'Simular todas las jaulas' }))
+    const dialog = await screen.findByRole('dialog')
+    await user.click(within(dialog).getByRole('button', { name: 'Simular todas las jaulas' }))
+
+    await waitFor(() => expect(start).toHaveBeenCalledTimes(cages.length))
+    expect(start.mock.calls.map(([id]) => id)).toEqual(cages.map((c) => c.cageId))
+  })
 })

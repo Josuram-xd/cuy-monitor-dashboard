@@ -447,7 +447,10 @@
     },
     "error": {
       "alreadyGone": "Esta jaula ya no existe. Actualiza la página."
-    }
+    },
+    "simulateAll": "Simular todas las jaulas",
+    "simulateAllTitle": "¿Simular en tus {{count}} jaulas a la vez?",
+    "simulateAllExplain": "La IA analizará durante unos 35 minutos una jaula dibujada en cada una, con un cuy que se ve enfermo, como si las cámaras enviaran video. Llega una alerta de sonido por jaula al instante, los cuyes pasan a observación en unos minutos y a alerta hacia los 30. Las jaulas sin cuyes se saltan."
   },
   "toast": {
     "cageCreated": "Jaula «{{name}}» creada",
@@ -461,7 +464,8 @@
     "alertReviewed": "Alerta marcada como revisada",
     "allReviewed_one": "{{count}} alerta marcada como revisada",
     "allReviewed_many": "{{count}} alertas marcadas como revisadas",
-    "allReviewed_other": "{{count}} alertas marcadas como revisadas"
+    "allReviewed_other": "{{count}} alertas marcadas como revisadas",
+    "simulationsStarted": "Simulación en marcha en {{count}} jaulas: la IA ya las está mirando."
   },
   "settings": {
     "title": "Ajustes",

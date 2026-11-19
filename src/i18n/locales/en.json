@@ -436,7 +436,10 @@
     },
     "error": {
       "alreadyGone": "This cage no longer exists. Refresh the page."
-    }
+    },
+    "simulateAll": "Simulate every cage",
+    "simulateAllTitle": "Simulate in your {{count}} cages at once?",
+    "simulateAllExplain": "For about 35 minutes the AI will analyse a drawn cage in each one, with a guinea pig that looks sick, as if the cameras were sending video. A sound alert per cage arrives at once, the guinea pigs go to observed in a few minutes and to alert around minute 30. Cages without guinea pigs are skipped."
   },
   "toast": {
     "cageCreated": "Cage “{{name}}” created",
@@ -449,7 +452,8 @@
     "guineaPigDeleted": "{{name}} left the cage",
     "alertReviewed": "Alert marked as reviewed",
     "allReviewed_one": "{{count}} alert marked as reviewed",
-    "allReviewed_other": "{{count}} alerts marked as reviewed"
+    "allReviewed_other": "{{count}} alerts marked as reviewed",
+    "simulationsStarted": "Simulation running in {{count}} cages: the AI is watching them."
   },
   "settings": {
     "title": "Settings",
