@@ -89,7 +89,7 @@ describe('AssistantChat', () => {
     expect(ask).toHaveBeenCalledTimes(2)
   })
 
-  it('steps aside while the page scrolls down and comes back when it scrolls up', async () => {
+  it('stays in view however far the page scrolls', async () => {
     renderWithProviders(<AssistantChat />)
     const toggle = screen.getByRole('button', { name: 'Abrir la ayuda de Cuchi' })
     const root = toggle.parentElement!
@@ -98,14 +98,9 @@ describe('AssistantChat', () => {
       window.dispatchEvent(new Event('scroll'))
     }
 
-    act(() => scrollTo(400))
-    expect(root.className).toMatch(/tucked/)
+    act(() => scrollTo(5000))
 
-    // a small nudge up made by the layout itself does not bring it back
-    act(() => scrollTo(392))
-    expect(root.className).toMatch(/tucked/)
-
-    act(() => scrollTo(200))
     expect(root.className).not.toMatch(/tucked/)
+    expect(toggle).toBeVisible()
   })
 })
