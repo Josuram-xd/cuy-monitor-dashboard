@@ -160,6 +160,59 @@
     "weightTitle": "Peso de la jaula",
     "weightError": "No pudimos cargar el peso."
   },
+  "camera": {
+    "title": "Cámara",
+    "configure": "Configurar cámara",
+    "change": "Cambiar cámara",
+    "loadError": "No pudimos cargar la cámara. Revisa la conexión e inténtalo otra vez.",
+    "typeLabel": "¿Qué cámara usas?",
+    "type": {
+      "RTSP": "Cámara Tapo (wifi)",
+      "PHONE": "Celular con IP Webcam"
+    },
+    "host": "Dirección IP de la cámara",
+    "hostHint": "Algo como 192.168.1.60. Abajo te mostramos dónde encontrarla.",
+    "port": "Puerto",
+    "advanced": "Opciones avanzadas",
+    "username": "Usuario de la cámara",
+    "password": "Contraseña de la cámara",
+    "passwordKeep": "Déjala vacía para conservar la que ya guardaste.",
+    "quality": "Calidad de video",
+    "stream": {
+      "stream1": "Alta",
+      "stream2": "Baja (para laptops lentas)"
+    },
+    "save": "Guardar y probar",
+    "invalid": "Revisa los datos: la IP debe ser de tu red de casa (por ejemplo 192.168.1.60).",
+    "notConnected": "Primero conecta el equipo a esta jaula.",
+    "saveFailed": "No se pudo guardar. Inténtalo de nuevo.",
+    "status": {
+      "NOT_CONFIGURED": "Aún no hay una cámara configurada.",
+      "PENDING": "Probando la cámara desde la laptop de la granja…",
+      "CONNECTED": "Cámara conectada.",
+      "AUTH_FAILED": "La cámara rechazó el usuario o la contraseña. Revisa la cuenta de la cámara en la app Tapo.",
+      "UNREACHABLE": "La laptop no encuentra la cámara. Revisa la IP y que ambas estén en el mismo wifi.",
+      "FFMPEG_MISSING": "A la laptop le falta un programa para leer la cámara Tapo. Pide ayuda a soporte o usa el celular.",
+      "OFFLINE": "La laptop de la granja no responde. Revisa que esté encendida y con internet."
+    },
+    "help": {
+      "title": "¿Cómo conecto la cámara?",
+      "tapoTitle": "Cámara Tapo C200",
+      "tapo1": "Instala la cámara con la app Tapo y conéctala al mismo wifi que la laptop. Usa una red de 2.4 GHz: la C200 no funciona con 5 GHz.",
+      "tapo2": "En la app Tapo toca la cámara → Configuración (engranaje) → Configuración avanzada → Cuenta de la cámara. Crea un usuario y una contraseña. No es tu cuenta de TP-Link.",
+      "tapo3": "En Configuración → Información del dispositivo, copia la dirección IP (por ejemplo 192.168.1.60).",
+      "tapo4": "Para que la IP no cambie, resérvala en tu router (IP fija o \"reserva DHCP\"). Si no sabes cómo, pide ayuda a quien instaló tu internet.",
+      "tapo5": "Calidad de video: deja \"Baja (para laptops lentas)\" si la laptop va lenta o si no estás seguro. \"Alta\" se ve mejor, pero exige más a la laptop.",
+      "tapo6": "Aquí elige \"Cámara Tapo (wifi)\", escribe la IP, el usuario y la contraseña, y toca \"Guardar y probar\".",
+      "tapo7": "En unos segundos verás \"Cámara conectada\" o qué revisar.",
+      "phoneTitle": "Celular con IP Webcam",
+      "phone1": "Abre IP Webcam en el celular y toca \"Iniciar servidor\".",
+      "phone2": "Copia la IP y el puerto que salen abajo en la pantalla (por ejemplo 192.168.1.50:8080).",
+      "phone3": "Con el celular en el mismo wifi que la laptop, elige \"Celular con IP Webcam\", escribe la IP y el puerto y toca \"Guardar y probar\"."
+    },
+    "usernameRequired": "Escribe el usuario de la cámara.",
+    "portInvalid": "El puerto debe ser un número entre 1 y 65535."
+  },
   "alerts": {
     "title": "Alertas",
     "intro": "Cuando un cuy se comporta distinto a lo normal, aparece aquí. Márcala como revisada cuando ya lo viste.",
