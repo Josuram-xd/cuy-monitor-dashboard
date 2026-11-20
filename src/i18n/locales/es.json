@@ -700,7 +700,10 @@
       "enabled": "Activaste la cuenta de {{who}}",
       "disabled": "Desactivaste la cuenta de {{who}}",
       "settingsChanged": "Cambiaste reglas y mensajes — {{summary}}",
-      "settingsReset": "Volviste las reglas y mensajes a los valores de fábrica"
+      "settingsReset": "Volviste las reglas y mensajes a los valores de fábrica",
+      "catalogAdded": "Añadiste «{{label}}» al catálogo",
+      "catalogUpdated": "Volviste a mostrar «{{label}}» en el catálogo",
+      "catalogRemoved": "Ocultaste «{{label}}» del catálogo"
     },
     "settings": {
       "title": "Reglas y mensajes",

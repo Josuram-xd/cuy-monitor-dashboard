@@ -688,7 +688,10 @@
       "enabled": "You switched on the account of {{who}}",
       "disabled": "You switched off the account of {{who}}",
       "settingsChanged": "You changed rules and messages — {{summary}}",
-      "settingsReset": "You put rules and messages back to the defaults"
+      "settingsReset": "You put rules and messages back to the defaults",
+      "catalogAdded": "You added «{{label}}» to the catalog",
+      "catalogUpdated": "You showed «{{label}}» again in the catalog",
+      "catalogRemoved": "You hid «{{label}}» from the catalog"
     },
     "settings": {
       "title": "Rules and messages",
