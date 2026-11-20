@@ -1,6 +1,7 @@
 import { useMutation, useQueryClient } from '@tanstack/react-query'
 import { queryKeys } from './queryKeys'
 import type { CageHealth } from '../types/CageHealth'
+import { SIMULATION_CODE_PREFIX } from '../types/Cage'
 import { getDashboardApi } from '../api/apiProvider'
 
 export function useStartSimulation(cageId: string) {
@@ -19,7 +20,13 @@ export function useStartSimulation(cageId: string) {
 export const DEMO_LIMIT = 10
 
 export function selectDemoCages(states: CageHealth[]): string[] {
-  const eligible = states.filter((cage) => !cage.monitoring && cage.guineaPigs.length > 0)
+  // the simulation cage plays its own video: it is not one of the drawn demo cages
+  const eligible = states.filter(
+    (cage) =>
+      !cage.monitoring &&
+      cage.guineaPigs.length > 0 &&
+      !cage.cageId.startsWith(SIMULATION_CODE_PREFIX),
+  )
   const groups = (['CRITICAL', 'ALERT', 'OBSERVED', 'NORMAL'] as const).map((status) =>
     eligible.filter((cage) => cage.status === status),
   )
