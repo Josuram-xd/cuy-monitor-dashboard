@@ -44,7 +44,9 @@
   "footer": {
     "label": "Footer",
     "howItWorks": "How it works",
-    "legal": "© {{year}} Guinea Pig Monitor · Design Patterns Project"
+    "legal": "© {{year}} Guinea Pig Monitor · Design Patterns Project",
+    "privacy": "Privacy",
+    "terms": "Terms"
   },
   "howItWorks": {
     "title": "How it works",
@@ -831,5 +833,92 @@
     "negative": "The scale is sending negative grams. Check tare and calibration.",
     "unknown": "Unrecognized USB data. Check the sketch and baud rate.",
     "lost": "Communication with the USB port was interrupted."
+  },
+  "legal": {
+    "label": "Legal documents",
+    "updated": "Last updated: November 20, 2026",
+    "back": "Back to home",
+    "acceptRegister": "By creating your account you accept the",
+    "and": "and the",
+    "privacy": {
+      "title": "Privacy policy",
+      "intro": "This policy explains what data the Guinea Pig Health Monitor collects, what it is used for and what you can do with it. It is an academic project; even so, we handle your data with care and follow Colombia's personal data protection law (Ley 1581 de 2012).",
+      "sections": {
+        "who": {
+          "title": "Who is responsible",
+          "text": "The student team that builds the Guinea Pig Health Monitor is responsible for the data stored in the app. You can reach us through the system administrators."
+        },
+        "collect": {
+          "title": "What we collect",
+          "text": "• Your account: name, username, email, a profile photo if you upload one, and your password stored encrypted (never in plain text).\n• If you sign in with Google: the name and email Google verified.\n• Your guinea pigs and cages: names, color marks, photos, weights, alerts and health history.\n• The cage devices: scale readings and the images and sounds sent for analysis.\n• What you write to the help assistant."
+        },
+        "use": {
+          "title": "What we use it for",
+          "text": "To create and protect your account (including the verification code we email you), show the state of your guinea pigs, warn you about alerts and answer your questions in the assistant. We do not sell your data or use it for advertising."
+        },
+        "providers": {
+          "title": "Who it is shared with",
+          "text": "Only with the services the app needs to work: Amazon Web Services hosts the server and the database; Amazon Bedrock analyses the images and sounds of the cage and answers in the assistant; Google handles Google sign-in; and Gmail sends the emails with the codes. No other account can see your cages or guinea pigs."
+        },
+        "cookies": {
+          "title": "Cookies and storage",
+          "text": "We use secure (HttpOnly) cookies only to keep you signed in. Your preferences, like language or theme, are saved in your browser. We do not use advertising or tracking cookies."
+        },
+        "keep": {
+          "title": "How long we keep it",
+          "text": "While your account is active. If you disable it, you can no longer sign in and your data stops being shown. Alerts you delete are removed for good."
+        },
+        "rights": {
+          "title": "Your rights",
+          "text": "You can see and correct your data in My account, change your photo and password, delete alerts and guinea pigs, and disable your account. You can also ask the administrators what data we hold or to delete it."
+        },
+        "changes": {
+          "title": "Changes to this policy",
+          "text": "If we change this policy we will update the date above. If the change is important, we will tell you in the app."
+        }
+      }
+    },
+    "terms": {
+      "title": "Terms of use",
+      "intro": "These terms govern the use of the Guinea Pig Health Monitor. Please read them before creating your account.",
+      "sections": {
+        "accept": {
+          "title": "Acceptance",
+          "text": "By creating an account or using the app you accept these terms and the Privacy policy. If you do not agree, do not use the app."
+        },
+        "service": {
+          "title": "What the service offers",
+          "text": "A tool to follow the health of your guinea pigs: the state of each one, alerts, history, weight and a help assistant. It is an academic project offered free and as is, and it may change or stop being available."
+        },
+        "account": {
+          "title": "Your account",
+          "text": "Give true details and keep your password and the codes we send you safe. You are responsible for what is done with your account. Tell us if you think someone got in without your permission."
+        },
+        "use": {
+          "title": "Acceptable use",
+          "text": "Do not try to get into other people's accounts or cages, attack or overload the service, or upload illegal or offensive content. We may disable accounts that do."
+        },
+        "demo": {
+          "title": "Demo accounts",
+          "text": "The demo buttons open shared accounts to try the app. Do not store personal data in them: anyone can see them."
+        },
+        "health": {
+          "title": "Not a substitute for a vet",
+          "text": "Alerts and assistant answers are generated automatically and can be wrong. They are a help, not a diagnosis: if you have any doubt about a guinea pig's health, see a vet."
+        },
+        "liability": {
+          "title": "Liability",
+          "text": "We are not liable for losses or damage resulting from failures of the service, of the cage devices, or from decisions taken only on the app's information."
+        },
+        "end": {
+          "title": "Ending use",
+          "text": "You can stop using the app and disable your account at any time. We may suspend an account that breaks these terms."
+        },
+        "changes": {
+          "title": "Changes and governing law",
+          "text": "We may update these terms; the date above shows the latest version. They are governed by the laws of the Republic of Colombia."
+        }
+      }
+    }
   }
 }

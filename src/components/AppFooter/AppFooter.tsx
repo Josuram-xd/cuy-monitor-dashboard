@@ -10,6 +10,8 @@ const LINKS = [
   { to: '/alerts', labelKey: 'nav.alerts' },
   { to: '/account', labelKey: 'nav.account' },
   { to: '/settings', labelKey: 'account.settings' },
+  { to: '/privacy', labelKey: 'footer.privacy' },
+  { to: '/terms', labelKey: 'footer.terms' },
 ]
 
 // Green like the header, with the same gradient and a wave on top. The links go first and the name

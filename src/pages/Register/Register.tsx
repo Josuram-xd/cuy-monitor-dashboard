@@ -148,8 +148,23 @@ export function Register() {
         />
         <PasswordChecklist password={form.password} username={form.username} email={form.email} />
         {register.isError && <FormError message={t(errorMessageKey(register.error, 'register'))} />}
-        <Button type="submit" variant="primary" fullWidth disabled={register.isPending}
-          aria-busy={register.isPending}>
+        <p className={styles.row}>
+          {t('legal.acceptRegister')}
+          <Link to="/terms" className={styles.link}>
+            {t('legal.terms.title')}
+          </Link>
+          {t('legal.and')}
+          <Link to="/privacy" className={styles.link}>
+            {t('legal.privacy.title')}
+          </Link>
+        </p>
+        <Button
+          type="submit"
+          variant="primary"
+          fullWidth
+          disabled={register.isPending}
+          aria-busy={register.isPending}
+        >
           {register.isPending ? t('auth.register.submitting') : t('auth.register.submit')}
         </Button>
       </form>

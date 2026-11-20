@@ -44,7 +44,9 @@
   "footer": {
     "label": "Pie de página",
     "howItWorks": "Cómo funciona",
-    "legal": "© {{year}} Monitor de Cuyes · Proyecto de Patrones de Diseño"
+    "legal": "© {{year}} Monitor de Cuyes · Proyecto de Patrones de Diseño",
+    "privacy": "Privacidad",
+    "terms": "Términos"
   },
   "howItWorks": {
     "title": "Cómo funciona",
@@ -845,5 +847,92 @@
     "negative": "La báscula envía gramos negativos. Revisa la tara y la calibración.",
     "unknown": "Llegaron datos por USB en un formato desconocido. Revisa el sketch y los baudios.",
     "lost": "Se interrumpió la comunicación con el puerto USB."
+  },
+  "legal": {
+    "label": "Documentos legales",
+    "updated": "Última actualización: 20 de noviembre de 2026",
+    "back": "Volver al inicio",
+    "acceptRegister": "Al crear tu cuenta aceptas los",
+    "and": "y la",
+    "privacy": {
+      "title": "Política de privacidad",
+      "intro": "Esta política explica qué datos recoge el Monitor de Salud de Cuyes, para qué los usa y qué puedes hacer con ellos. Es un proyecto académico; aun así tratamos tus datos con cuidado y siguiendo la Ley 1581 de 2012 de protección de datos personales de Colombia.",
+      "sections": {
+        "who": {
+          "title": "Quién es responsable",
+          "text": "El equipo de estudiantes que desarrolla el Monitor de Salud de Cuyes es responsable de los datos que se guardan en la aplicación. Puedes escribirnos a través de los administradores del sistema."
+        },
+        "collect": {
+          "title": "Qué datos recogemos",
+          "text": "• De tu cuenta: nombre, nombre de usuario, correo, foto de perfil si la subes, y tu contraseña guardada cifrada (nunca en texto plano).\n• Si entras con Google: tu nombre y correo verificados por Google.\n• De tus cuyes y jaulas: nombres, marcas de color, fotos, pesos, alertas y el historial de salud.\n• De los equipos de la jaula: lecturas de la báscula e imágenes y sonidos que se envían para analizarlos.\n• Lo que escribes al asistente de ayuda."
+        },
+        "use": {
+          "title": "Para qué los usamos",
+          "text": "Para crear y proteger tu cuenta (incluido el código de verificación que te enviamos por correo), mostrarte el estado de tus cuyes, avisarte de alertas y responder tus preguntas en el asistente. No vendemos tus datos ni los usamos para publicidad."
+        },
+        "providers": {
+          "title": "Con quién se comparten",
+          "text": "Solo con los servicios necesarios para que la aplicación funcione: Amazon Web Services aloja el servidor y la base de datos; Amazon Bedrock analiza las imágenes y sonidos de la jaula y responde en el asistente; Google gestiona el inicio de sesión con Google; y Gmail envía los correos con los códigos. Ninguna otra cuenta puede ver tus jaulas ni tus cuyes."
+        },
+        "cookies": {
+          "title": "Cookies y almacenamiento",
+          "text": "Usamos cookies seguras (HttpOnly) solo para mantener tu sesión abierta. Tus preferencias, como el idioma o el tema, se guardan en tu navegador. No usamos cookies de publicidad ni de rastreo."
+        },
+        "keep": {
+          "title": "Cuánto tiempo los guardamos",
+          "text": "Mientras tu cuenta esté activa. Si la desactivas, dejas de poder entrar y tus datos dejan de mostrarse. Las alertas que eliminas se borran para siempre."
+        },
+        "rights": {
+          "title": "Tus derechos",
+          "text": "Puedes ver y corregir tus datos en Mi cuenta, cambiar tu foto y contraseña, eliminar alertas y cuyes, y desactivar tu cuenta. También puedes pedir a los administradores que te informen qué datos tenemos o que los borren."
+        },
+        "changes": {
+          "title": "Cambios a esta política",
+          "text": "Si cambiamos esta política, actualizaremos la fecha de arriba. Si el cambio es importante, te lo avisaremos en la aplicación."
+        }
+      }
+    },
+    "terms": {
+      "title": "Términos de uso",
+      "intro": "Estos términos regulan el uso del Monitor de Salud de Cuyes. Léelos antes de crear tu cuenta.",
+      "sections": {
+        "accept": {
+          "title": "Aceptación",
+          "text": "Al crear una cuenta o usar la aplicación aceptas estos términos y la Política de privacidad. Si no estás de acuerdo, no uses la aplicación."
+        },
+        "service": {
+          "title": "Qué ofrece el servicio",
+          "text": "Una herramienta para seguir la salud de tus cuyes: estado de cada uno, alertas, historial, peso y un asistente de ayuda. Es un proyecto académico, se ofrece gratis y tal como está, y puede cambiar o dejar de estar disponible."
+        },
+        "account": {
+          "title": "Tu cuenta",
+          "text": "Debes dar datos verdaderos y cuidar tu contraseña y los códigos que te enviamos. Eres responsable de lo que se haga con tu cuenta. Avísanos si crees que alguien entró sin tu permiso."
+        },
+        "use": {
+          "title": "Uso permitido",
+          "text": "No intentes entrar a cuentas o jaulas de otras personas, atacar o sobrecargar el servicio, ni subir contenido ilegal u ofensivo. Podemos desactivar las cuentas que lo hagan."
+        },
+        "demo": {
+          "title": "Cuentas de demostración",
+          "text": "Los botones de demostración abren cuentas compartidas para conocer la aplicación. No guardes en ellas datos personales: cualquiera puede verlas."
+        },
+        "health": {
+          "title": "No reemplaza al veterinario",
+          "text": "Las alertas y las respuestas del asistente se generan de forma automática y pueden equivocarse. Son una ayuda, no un diagnóstico: ante cualquier duda sobre la salud de un cuy, consulta a un veterinario."
+        },
+        "liability": {
+          "title": "Responsabilidad",
+          "text": "No respondemos por pérdidas o daños que resulten de fallas del servicio, de los equipos de la jaula o de decisiones tomadas solo con la información de la aplicación."
+        },
+        "end": {
+          "title": "Fin del uso",
+          "text": "Puedes dejar de usar la aplicación y desactivar tu cuenta cuando quieras. Podemos suspender una cuenta que incumpla estos términos."
+        },
+        "changes": {
+          "title": "Cambios y ley aplicable",
+          "text": "Podemos actualizar estos términos; la fecha de arriba indica la última versión. Se rigen por las leyes de la República de Colombia."
+        }
+      }
+    }
   }
 }
