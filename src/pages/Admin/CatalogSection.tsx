@@ -22,7 +22,12 @@ const DEFAULT_HEX = '#2e9e44'
 
 // What the professor asked for: the breeds and colors the pickers show are rows in the database, and this
 // is where they are edited. Adding "Cuy colombiano" here makes it appear in the pickers with no release.
-export function CatalogSection() {
+export function CatalogSection({
+  onAction = () => {},
+}: {
+  // every change, done or failed, for the action log
+  onAction?: (text: string, ok: boolean) => void
+}) {
   const catalog = useAdminCatalog()
   const save = useSaveCatalogOptionMutation()
   const deactivate = useDeactivateCatalogOptionMutation()
@@ -61,11 +66,12 @@ export function CatalogSection() {
     if (duplicate) return setError(t('admin.catalog.codeTaken'))
     if (needsHex(kind) && !isValidHex(hex)) return setError(t('admin.catalog.hexInvalid'))
 
+    const name = label.trim()
     save.mutate(
       {
         kind,
         code: effectiveCode,
-        label: label.trim(),
+        label: name,
         hex: needsHex(kind) ? hex : null,
         // last, so a new option lands at the end of the picker instead of in the middle of it
         sortOrder: options.length + 1,
@@ -74,8 +80,12 @@ export function CatalogSection() {
         onSuccess: (option) => {
           reset()
           toast.show({ message: t('admin.catalog.added', { label: option.label }) })
+          onAction(t('admin.actions.catalogAdded', { label: name }), true)
         },
-        onError: () => setError(t('admin.catalog.saveFailed')),
+        onError: () => {
+          setError(t('admin.catalog.saveFailed'))
+          onAction(t('admin.actions.catalogAdded', { label: name }), false)
+        },
       },
     )
   }
@@ -89,10 +99,12 @@ export function CatalogSection() {
         onSuccess: () => {
           setTurningOff(null)
           toast.show({ message: t('admin.catalog.turnedOff', { label: option.label }) })
+          onAction(t('admin.actions.catalogRemoved', { label: option.label }), true)
         },
         onError: () => {
           setTurningOff(null)
           toast.show({ message: t('admin.catalog.turnOffFailed') })
+          onAction(t('admin.actions.catalogRemoved', { label: option.label }), false)
         },
       },
     )
@@ -102,8 +114,12 @@ export function CatalogSection() {
     save.mutate(
       { ...option, active: true },
       {
-        onSuccess: () =>
-          toast.show({ message: t('admin.catalog.turnedOn', { label: option.label }) }),
+        onSuccess: () => {
+          toast.show({ message: t('admin.catalog.turnedOn', { label: option.label }) })
+          onAction(t('admin.actions.catalogUpdated', { label: option.label }), true)
+        },
+        onError: () =>
+          onAction(t('admin.actions.catalogUpdated', { label: option.label }), false),
       },
     )
   }
