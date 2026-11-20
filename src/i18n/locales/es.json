@@ -35,7 +35,17 @@
     "waiting": "Esperando lecturas nuevas",
     "partial": "Medición parcial · {{count}} de 3 señales",
     "complete": "Medición completa · 3 de 3 señales",
-    "offline": "No se pudo actualizar la conexión. Los datos visibles son los últimos recibidos."
+    "offline": "No se pudo actualizar la conexión. Los datos visibles son los últimos recibidos.",
+    "liveTitle": "Lo que la IA ve en cada cuy",
+    "symptomsLead": "presenta en el último minuto:",
+    "symptomsNone": "sin síntomas en el último minuto: quieto {{seconds}} de {{window}} s, {{feeder}} visitas al comedero y {{water}} al bebedero.",
+    "detection": "detección {{confidence}} %",
+    "symptom": {
+      "UNUSUAL": "Se mueve distinto a como suele hacerlo",
+      "VERY_STILL": "Casi no se mueve: estuvo quieto {{seconds}} de {{window}} segundos, mucho más de lo normal para él",
+      "NOT_EATING": "No fue al comedero, aunque normalmente sí va",
+      "APART": "Se mantiene apartado del grupo"
+    }
   },
   "app": {
     "title": "Monitor de Salud de Cuyes",

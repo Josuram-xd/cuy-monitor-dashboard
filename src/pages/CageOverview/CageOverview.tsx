@@ -209,6 +209,10 @@ function SensorMeasurement({
   const timedOut = session && now - session.startedAt >= 20_000
   const waitingForScale = !!session && !sessionWeight && !timedOut && !failed
   const observation = health.monitoring?.observation
+  // only what arrived since the equipment was connected to this cage
+  const live = (health.monitoring?.guineaPigs ?? []).filter(
+    (pig) => Date.parse(pig.at) >= connectedAt,
+  )
   const observationAt = health.monitoring?.lastBehaviorAt
   const lastAnalysis = Date.parse(observationAt ?? '')
   let aiStatus = 'monitor.aiWaiting'
@@ -274,22 +278,67 @@ function SensorMeasurement({
       )}
       {!failed && sessionWeight && <p role="status">{t('monitor.scaleActive')}</p>}
       {!freshWeight && <ScaleUsbCheck />}
-      {observation && observationAt && Date.parse(observationAt) >= connectedAt && (
+      {live.length > 0 ? (
         <div>
-          <h3>{t('monitor.observation')}</h3>
-          <p>
-            <MarkColorDot color={observation.color} />
-            {' · '}
-            {t('monitor.stillEstimate', {
-              seconds: Math.round(observation.stillSeconds),
-              window: observation.windowSeconds,
-              confidence: Math.round(observation.detectionConfidence * 100),
-            })}
-          </p>
-          <time dateTime={observationAt}>
-            {new Date(observationAt).toLocaleString(dateLocale())}
-          </time>
+          <h3>{t('monitor.liveTitle')}</h3>
+          {/* polite: the screen reader reads the new symptoms when a minute is analysed */}
+          <ul className={styles.liveList} aria-live="polite">
+            {live.map((pig) => (
+              <li key={pig.guineaPigId} className={styles.liveItem}>
+                <p>
+                  <MarkColorDot color={pig.color} />{' '}
+                  {pig.symptoms.length === 0
+                    ? t('monitor.symptomsNone', {
+                        seconds: Math.round(pig.window.stillSeconds),
+                        window: pig.window.windowSeconds,
+                        feeder: pig.window.feederVisits,
+                        water: pig.window.watererVisits,
+                      })
+                    : t('monitor.symptomsLead')}
+                </p>
+                {pig.symptoms.length > 0 && (
+                  <ul className={styles.symptoms}>
+                    {pig.symptoms.map((symptom) => (
+                      <li key={symptom}>
+                        {t(`monitor.symptom.${symptom}`, {
+                          seconds: Math.round(pig.window.stillSeconds),
+                          window: pig.window.windowSeconds,
+                        })}
+                      </li>
+                    ))}
+                  </ul>
+                )}
+                <small>
+                  <time dateTime={pig.at}>{new Date(pig.at).toLocaleTimeString(dateLocale())}</time>
+                  {' · '}
+                  {t('monitor.detection', {
+                    confidence: Math.round(pig.window.detectionConfidence * 100),
+                  })}
+                </small>
+              </li>
+            ))}
+          </ul>
         </div>
+      ) : (
+        observation &&
+        observationAt &&
+        Date.parse(observationAt) >= connectedAt && (
+          <div>
+            <h3>{t('monitor.observation')}</h3>
+            <p>
+              <MarkColorDot color={observation.color} />
+              {' · '}
+              {t('monitor.stillEstimate', {
+                seconds: Math.round(observation.stillSeconds),
+                window: observation.windowSeconds,
+                confidence: Math.round(observation.detectionConfidence * 100),
+              })}
+            </p>
+            <time dateTime={observationAt}>
+              {new Date(observationAt).toLocaleString(dateLocale())}
+            </time>
+          </div>
+        )
       )}
       {failed && <p role="status">{t('monitor.offline')}</p>}
       {session && !failed && (
