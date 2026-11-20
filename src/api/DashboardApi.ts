@@ -34,6 +34,7 @@ import type {
 } from '../types/GuineaPig'
 import type { User } from '../types/User'
 import type { CageWeight } from '../types/WeightReading'
+import type { StationCamera, StationCameraInput } from '../types/StationCamera'
 
 // One interface per resource. The hooks only know these, never whether the answer
 // comes from the backend (HttpXxxApi) or from the fake data (MockXxxApi).
@@ -51,6 +52,10 @@ export interface CageApi {
   // the Simulación button: the AI service analyses a drawn cage where the first guinea pig is sick
   setEquipment(cageId: string, connect: boolean): Promise<void>
   startSimulation(cageId: string): Promise<void>
+  // the camera of the farm station; the status comes from the edge agent (PENDING until it answers)
+  getCamera(cageId: string, signal?: AbortSignal): Promise<StationCamera>
+  // 204. 400 for an invalid camera, 409 when the station is not connected to this cage
+  saveCamera(cageId: string, body: StationCameraInput): Promise<void>
 }
 
 export interface GuineaPigApi {
