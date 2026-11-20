@@ -12,62 +12,47 @@ export type ErrorContext =
   | 'assistant'
   | 'general'
 
+// Chain of Responsibility: each rule returns a key if it handles the error, or undefined to pass it on. Order matters.
+type ErrorRule = (error: ApiError, context: ErrorContext) => string | undefined
+
+const RULES: readonly ErrorRule[] = [
+  (e) => (e.isNetworkError ? 'errors.network' : undefined),
+  (e, c) => (e.isUnauthorized && c === 'login' ? 'auth.error.invalidCredentials' : undefined),
+  (e, c) => (e.isUnauthorized && c === 'verify' ? 'auth.error.invalidCode' : undefined),
+  (e, c) => (c === 'google' && e.status === 404 ? 'auth.error.googleOff' : undefined),
+  (e, c) =>
+    c === 'google' && (e.isUnauthorized || e.status === 400)
+      ? 'auth.error.googleFailed'
+      : undefined,
+  (e, c) => (e.isUnauthorized && c === 'account' ? 'account.error.wrongPassword' : undefined),
+  (e, c) =>
+    e.status === 400 && c === 'account' && 'password' in e.fields
+      ? 'auth.error.weakPassword'
+      : undefined,
+  (e, c) => (e.status === 404 && c === 'guineaPig' ? 'guineaPig.error.alreadyGone' : undefined),
+  (e, c) => (e.status === 409 && c === 'guineaPig' ? 'guineaPig.error.colorTaken' : undefined),
+  (e, c) => (e.status === 404 && c === 'cage' ? 'cages.error.alreadyGone' : undefined),
+  (e, c) => (c === 'assistant' && e.status === 429 ? 'assistant.error.tooMany' : undefined),
+  (e, c) => (c === 'assistant' && e.status === 503 ? 'assistant.error.unavailable' : undefined),
+  // the cage access proxy of the backend refused it: it is another account's cage
+  (e) => (e.status === 403 ? 'errors.forbidden' : undefined),
+  (e, c) => (e.status === 409 && c === 'register' ? 'auth.error.userExists' : undefined),
+  (e, c) =>
+    e.status === 400 && c === 'register' && 'password' in e.fields
+      ? 'auth.error.weakPassword'
+      : undefined,
+  (e) => (e.status === 429 ? 'errors.tooManyRequests' : undefined),
+  (e) => (e.status === 400 ? 'errors.invalidData' : undefined),
+]
+
 // Maps a failed call to an es.json key. The backend message is never shown as is.
 export function errorMessageKey(error: unknown, context: ErrorContext = 'general'): string {
   if (!(error instanceof ApiError)) {
     return 'errors.generic'
   }
-  if (error.isNetworkError) {
-    return 'errors.network'
-  }
-  if (error.isUnauthorized && context === 'login') {
-    return 'auth.error.invalidCredentials'
-  }
-  if (error.isUnauthorized && context === 'verify') {
-    return 'auth.error.invalidCode'
-  }
-  if (context === 'google' && error.status === 404) {
-    return 'auth.error.googleOff'
-  }
-  if (context === 'google' && (error.isUnauthorized || error.status === 400)) {
-    return 'auth.error.googleFailed'
-  }
-  if (error.isUnauthorized && context === 'account') {
-    return 'account.error.wrongPassword'
-  }
-  if (error.status === 400 && context === 'account' && 'password' in error.fields) {
-    return 'auth.error.weakPassword'
-  }
-  if (error.status === 404 && context === 'guineaPig') {
-    return 'guineaPig.error.alreadyGone'
-  }
-  if (error.status === 409 && context === 'guineaPig') {
-    return 'guineaPig.error.colorTaken'
-  }
-  if (error.status === 404 && context === 'cage') {
-    return 'cages.error.alreadyGone'
-  }
-  if (context === 'assistant' && error.status === 429) {
-    return 'assistant.error.tooMany'
-  }
-  if (context === 'assistant' && error.status === 503) {
-    return 'assistant.error.unavailable'
-  }
-  // the cage access proxy of the backend refused it: it is another account's cage
-  if (error.status === 403) {
-    return 'errors.forbidden'
-  }
-  if (error.status === 409 && context === 'register') {
-    return 'auth.error.userExists'
-  }
-  if (error.status === 400 && context === 'register' && 'password' in error.fields) {
-    return 'auth.error.weakPassword'
-  }
-  if (error.status === 429) {
-    return 'errors.tooManyRequests'
-  }
-  if (error.status === 400) {
-    return 'errors.invalidData'
+  for (const rule of RULES) {
+    const key = rule(error, context)
+    if (key) return key
   }
   return 'errors.generic'
 }
