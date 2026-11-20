@@ -1,4 +1,31 @@
 {
+  "monitor": {
+    "observation": "Latest camera observation",
+    "stillEstimate": "Estimated stillness: {{seconds}} of {{window}} seconds. Detection confidence: {{confidence}}%.",
+    "scaleMissing": "No scale readings yet. Check the USB connection and let the weight settle.",
+    "scaleStale": "Weight updates have stopped. Check the scale and the laptop connection.",
+    "scaleActive": "Scale readings are arriving.",
+    "lastWeight": "Last reading: ",
+    "connect": "Connect equipment",
+    "disconnect": "Disconnect equipment",
+    "busy": "The equipment is in use. Disconnect it from its current cage before switching.",
+    "failed": "Could not change the equipment connection. Please try again.",
+    "title": "Sensor monitoring",
+    "hint": "Sensors record continuously. Start a measurement to see results from that point onward. The camera analyzes roughly one minute at a time.",
+    "start": "Start measurement",
+    "scale": "Scale",
+    "camera": "Camera",
+    "microphone": "Microphone",
+    "grams": "{{value}} g",
+    "window": "Behavior recorded",
+    "NORMAL": "Normal sound",
+    "DISTRESS": "Possible distress",
+    "noData": "No new data",
+    "waiting": "Waiting for new readings",
+    "partial": "Partial measurement · {{count}} of 3 signals",
+    "complete": "Measurement complete · 3 of 3 signals",
+    "offline": "Unable to refresh. The screen shows the last results received."
+  },
   "app": {
     "title": "Guinea Pig Health Monitor",
     "shortTitle": "Guinea Pig Monitor"

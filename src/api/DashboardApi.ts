@@ -49,6 +49,7 @@ export interface CageApi {
   getHealth(cageId: string, signal?: AbortSignal): Promise<CageHealth>
   getWeight(cageId: string, range?: DateRange, signal?: AbortSignal): Promise<CageWeight>
   // the Simulación button: the AI service analyses a drawn cage where the first guinea pig is sick
+  setEquipment(cageId: string, connect: boolean): Promise<void>
   startSimulation(cageId: string): Promise<void>
 }
 

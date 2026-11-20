@@ -40,6 +40,11 @@ export class HttpCageApi implements CageApi {
     return this.http.get<CageWeight>(`${this.path(cageId)}/weight`, { query: { ...range }, signal })
   }
 
+  setEquipment(cageId: string, connect: boolean): Promise<void> {
+    const path = `${this.path(cageId)}/equipment`
+    return connect ? this.http.put<void>(path, undefined) : this.http.delete<void>(path)
+  }
+
   startSimulation(cageId: string): Promise<void> {
     return this.http.post<void>(`${this.path(cageId)}/simulation`, undefined)
   }

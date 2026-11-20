@@ -1,4 +1,31 @@
 {
+  "monitor": {
+    "observation": "Última observación de la cámara",
+    "stillEstimate": "Quietud estimada: {{seconds}} de {{window}} segundos. Confianza de detección: {{confidence}} %.",
+    "scaleMissing": "Báscula sin lecturas. Comprueba el USB y deja el peso quieto hasta que se estabilice.",
+    "scaleStale": "El peso dejó de actualizarse. Revisa la báscula y la conexión del portátil.",
+    "scaleActive": "Báscula recibiendo peso.",
+    "lastWeight": "Última lectura: ",
+    "connect": "Conectar equipo",
+    "disconnect": "Desconectar equipo",
+    "busy": "El equipo ya está conectado a otra jaula. Desconéctalo desde esa jaula para cambiarlo.",
+    "failed": "No se pudo cambiar la conexión del equipo. Vuelve a intentarlo.",
+    "title": "Monitoreo de sensores",
+    "hint": "Los sensores registran continuamente. Inicia una medición para ver lo que llega a partir de ese momento. La cámara analiza intervalos de alrededor de un minuto.",
+    "start": "Iniciar medición",
+    "scale": "Báscula",
+    "camera": "Cámara",
+    "microphone": "Micrófono",
+    "grams": "{{value}} g",
+    "window": "Comportamiento registrado",
+    "NORMAL": "Sonido normal",
+    "DISTRESS": "Posible angustia",
+    "noData": "Sin datos nuevos",
+    "waiting": "Esperando lecturas nuevas",
+    "partial": "Medición parcial · {{count}} de 3 señales",
+    "complete": "Medición completa · 3 de 3 señales",
+    "offline": "No se pudo actualizar la conexión. Los datos visibles son los últimos recibidos."
+  },
   "app": {
     "title": "Monitor de Salud de Cuyes",
     "shortTitle": "Monitor de Cuyes"
