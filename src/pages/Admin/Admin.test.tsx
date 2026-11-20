@@ -70,6 +70,20 @@ describe('Admin', () => {
     expect(await within(section).findByRole('alert')).toHaveTextContent(/código/i)
   })
 
+  it('logs a catalog change in the action log', async () => {
+    const user = userEvent.setup()
+    setup()
+    const section = await catalog()
+    await within(section).findByText('Americano')
+
+    await user.type(within(section).getByLabelText('Nombre'), 'Cuy colombiano')
+    await user.click(within(section).getByRole('button', { name: 'Añadir' }))
+    await within(section).findByText('Cuy colombiano')
+
+    const log = screen.getByRole('region', { name: 'Registro de acciones' })
+    expect(within(log).getByText('Añadiste «Cuy colombiano» al catálogo')).toBeInTheDocument()
+  })
+
   it('will not add a code that is already in the list', async () => {
     const user = userEvent.setup()
     setup()
