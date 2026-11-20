@@ -166,19 +166,26 @@ function WeightSection({ cageId }: { cageId: string }) {
 function SensorMeasurement({
   health,
   refresh,
+  updatedLocallyAt,
   failed,
 }: {
   health: CageHealth
-  refresh: () => Promise<string | undefined>
+  refresh: () => void
+  updatedLocallyAt: number
   failed: boolean
 }) {
-  const [start, setStart] = useState<number | null>(null)
-  const [starting, setStarting] = useState(false)
+  const [session, setSession] = useState<{ startedAt: number; serverStart: number } | null>(null)
+  const now = useNow(1_000)
+  // Anchor freshness to the server clock even when the phone clock is wrong.
+  const serverTime = Date.parse(health.updatedAt)
+  const serverNow = serverTime + Math.max(0, now - updatedLocallyAt)
   const connectedAt = Date.parse(health.monitoring!.connectedAt)
   const measuredAt = Date.parse(health.weight.lastMeasuredAt ?? '')
   const hasWeight = health.weight.lastGrams != null && measuredAt >= connectedAt
-  // The bridge normally sends every 10 s. Allow missed samples and network delay.
-  const freshWeight = hasWeight && Date.parse(health.updatedAt) - measuredAt < 45_000
+  const freshWeight = hasWeight && serverNow - measuredAt < 45_000
+  const sessionWeight = freshWeight && (!session || measuredAt > session.serverStart)
+  const timedOut = session && now - session.startedAt >= 20_000
+  const waitingForScale = !!session && !sessionWeight && !timedOut && !failed
   const observation = health.monitoring?.observation
   const observationAt = health.monitoring?.lastBehaviorAt
   const signals = [
@@ -199,35 +206,45 @@ function SensorMeasurement({
         : '',
     },
   ]
-  const received = (at?: string | null) => !!at && Date.parse(at) > (start ?? connectedAt)
+  const received = (at?: string | null) =>
+    !!at && Date.parse(at) > (session?.serverStart ?? connectedAt)
   const count = signals.filter(
     (signal) => received(signal.at) && (signal.key !== 'scale' || freshWeight),
   ).length
-  async function begin() {
-    setStarting(true)
-    try {
-      const serverTime = await refresh()
-      if (serverTime) setStart(Date.parse(serverTime))
-    } finally {
-      setStarting(false)
-    }
+  function begin() {
+    const startedAt = Date.now()
+    setSession({ startedAt, serverStart: serverTime + Math.max(0, startedAt - updatedLocallyAt) })
+    refresh()
   }
   return (
     <section className={styles.panel} aria-label={t('monitor.title')}>
       <h2 className={styles.sectionTitle}>{t('monitor.title')}</h2>
       <p>{t('monitor.hint')}</p>
       <div>
-        <Button onClick={begin} disabled={starting}>
-          {t('monitor.start')}
+        <Button onClick={begin} disabled={waitingForScale}>
+          {t(
+            waitingForScale
+              ? 'monitor.reading'
+              : session
+                ? 'monitor.measureAgain'
+                : 'monitor.start',
+          )}
         </Button>
       </div>
-      {!failed && !freshWeight && (
+      {waitingForScale && <p role="status">{t('monitor.readingHint')}</p>}
+      {!failed && !sessionWeight && !waitingForScale && (
         <p role="alert" className={styles.sensorNotice}>
-          {t(hasWeight ? 'monitor.scaleStale' : 'monitor.scaleMissing')}
+          {t(
+            session && !received(health.weight.lastMeasuredAt)
+              ? 'monitor.readTimeout'
+              : hasWeight
+                ? 'monitor.scaleStale'
+                : 'monitor.scaleMissing',
+          )}
         </p>
       )}
-      {!failed && freshWeight && <p role="status">{t('monitor.scaleActive')}</p>}
-      {observation && observationAt && received(observationAt) && (
+      {!failed && sessionWeight && <p role="status">{t('monitor.scaleActive')}</p>}
+      {observation && observationAt && Date.parse(observationAt) >= connectedAt && (
         <div>
           <h3>{t('monitor.observation')}</h3>
           <p>
@@ -245,7 +262,7 @@ function SensorMeasurement({
         </div>
       )}
       {failed && <p role="status">{t('monitor.offline')}</p>}
-      {start !== null && (
+      {session && !failed && (
         <p role="status">
           {t(
             count === 3 ? 'monitor.complete' : count === 0 ? 'monitor.waiting' : 'monitor.partial',
@@ -357,13 +374,11 @@ export function CageOverview() {
       <CageStatusBanner health={health.data} now={now} liveIndicator={<LiveIndicator />} />
       {health.data?.monitoring && (
         <SensorMeasurement
-          key={cageId}
+          key={cageId + health.data.monitoring.connectedAt}
+          updatedLocallyAt={health.dataUpdatedAt}
           health={health.data}
           failed={health.isError}
-          refresh={async () => {
-            const result = await health.refetch()
-            return result.isSuccess ? result.data.updatedAt : undefined
-          }}
+          refresh={() => void health.refetch()}
         />
       )}
       <div className={styles.columns}>

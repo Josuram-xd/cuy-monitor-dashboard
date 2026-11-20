@@ -1,4 +1,4 @@
-import { screen, waitFor, within } from '@testing-library/react'
+import { act, screen, waitFor, within } from '@testing-library/react'
 import userEvent from '@testing-library/user-event'
 import { beforeEach, describe, expect, it, vi } from 'vitest'
 import { ApiError } from '../../api/ApiError'
@@ -58,8 +58,32 @@ describe('CageOverview', () => {
     expect(panel.getByRole('alert')).toHaveTextContent('El peso dejó de actualizarse')
     expect(panel.getByText(/12 de 60 segundos/)).toBeInTheDocument()
     await userEvent.click(panel.getByRole('button', { name: 'Iniciar medición' }))
+    expect(panel.getByRole('button', { name: 'Leyendo báscula…' })).toBeDisabled()
     expect(await panel.findByText('Esperando lecturas nuevas')).toBeInTheDocument()
+    expect(panel.getByText(/12 de 60 segundos/)).toBeInTheDocument()
     expect(panel.getAllByText(/Sin datos nuevos/)).toHaveLength(3)
+
+    const clock = vi.spyOn(Date, 'now').mockReturnValue(Date.now() + 21_000)
+    try {
+      expect(
+        await panel.findByText(/No se pudo leer el peso en 20 segundos/, {}, { timeout: 3000 }),
+      ).toBeInTheDocument()
+      const previous = await api.cages.getHealth('cage-1')
+      const at = '2026-11-19T10:00:22Z'
+      api.cages.getHealth = async () => ({
+        ...previous,
+        updatedAt: at,
+        weight: { status: 'NORMAL', lastGrams: 0, lastMeasuredAt: at },
+      })
+      await act(async () => {
+        await screen.getByRole('button', { name: 'Actualizar' }).click()
+      })
+      expect(await panel.findByText('Báscula recibiendo peso.')).toBeInTheDocument()
+      expect(panel.queryByRole('alert')).not.toBeInTheDocument()
+      expect(panel.getByText(/0 g/)).toBeInTheDocument()
+    } finally {
+      clock.mockRestore()
+    }
   })
 
   it('puts the guinea pigs that need attention first', async () => {

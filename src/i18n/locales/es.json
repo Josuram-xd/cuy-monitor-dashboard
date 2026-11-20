@@ -1,5 +1,9 @@
 {
   "monitor": {
+    "reading": "Leyendo báscula…",
+    "readingHint": "Esperando un peso estable del Arduino. Mantén el peso quieto.",
+    "readTimeout": "No se pudo leer el peso en 20 segundos. Comprueba el USB, cierra el monitor serie y verifica que el servicio de la báscula esté activo. Seguimos esperando la lectura.",
+    "measureAgain": "Volver a medir",
     "chooseCage": "Elige la jaula que usará el equipo",
     "observation": "Última observación de la cámara",
     "stillEstimate": "Quietud estimada: {{seconds}} de {{window}} segundos. Confianza de detección: {{confidence}} %.",
