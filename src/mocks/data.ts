@@ -1,6 +1,7 @@
 import type { Alert } from '../types/Alert'
 import type { Catalog } from '../types/Catalog'
 import type { Cage } from '../types/Cage'
+import type { SimulationCredit } from '../types/Simulation'
 import type {
   BaselineProfile,
   BehaviorWindow,
@@ -27,14 +28,39 @@ export const mockCages: Cage[] = [
     name: 'Jaula piloto',
     location: 'Galpón',
     createdAt: minutesAgo(60 * 24 * 30),
+    simulated: false,
+    monitored: false,
   },
   {
     cageId: mockSecondCageId,
     name: 'Jaula del patio',
     location: 'Patio trasero',
     createdAt: minutesAgo(60 * 24 * 3),
+    simulated: false,
+    monitored: false,
   },
 ]
+
+// the simulation cage of the demo: three cuyes with the marks of the clip (createDemoMockApi adds it)
+export const mockSimulationCageId = 'sim-demo1234'
+
+export const mockSimulationCage: Cage = {
+  cageId: mockSimulationCageId,
+  name: 'Simulación',
+  location: null,
+  createdAt: minutesAgo(60 * 24),
+  simulated: true,
+  monitored: false,
+}
+
+// placeholder credit of the video until the real clip is chosen (the backend sends the one of its manifest)
+export const mockSimulationCredit: SimulationCredit = {
+  title: 'Video de ejemplo de cuyes',
+  author: 'Autor de ejemplo',
+  license: 'CC BY 4.0',
+  licenseUrl: 'https://creativecommons.org/licenses/by/4.0/',
+  sourceUrl: 'https://commons.wikimedia.org/',
+}
 
 // The mocks carry no pictures of animals: each cuy gets a drawing in the color of its mark, as a data:
 // URL, which the dashboard shows like a real photoUrl
@@ -74,6 +100,16 @@ export const mockSecondCageGuineaPigs: GuineaPig[] = [
     statusSince: minutesAgo(900),
   },
 ]
+
+export const mockSimulationGuineaPigs: GuineaPig[] = ['RED', 'BLUE', 'GREEN'].map(
+  (markColor, index) => ({
+    id: 31 + index,
+    photoUrl: mockPhoto(markColor),
+    markColor,
+    status: 'NORMAL' as const,
+    statusSince: minutesAgo(600),
+  }),
+)
 
 // The same rows migration V10 of cuy-monitor-db inserts, in the same order.
 export const mockCatalog: Catalog = {

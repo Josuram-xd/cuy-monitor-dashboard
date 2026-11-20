@@ -5,7 +5,14 @@ export interface Cage {
   name: string
   location: string | null
   createdAt: string
+  // the video simulation cage of the account (its code starts with SIMULATION_CODE_PREFIX)
+  simulated: boolean
+  // the kit (camera and scale) is connected to this cage: the real equipment
+  monitored: boolean
 }
+
+// the code of a simulation cage starts with this (backend Cage.SIMULATION_PREFIX)
+export const SIMULATION_CODE_PREFIX = 'sim-'
 
 // body of POST /api/v1/cages and PUT /api/v1/cages/{cageId}
 export interface CageInput {

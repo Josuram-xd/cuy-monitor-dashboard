@@ -33,7 +33,7 @@ function createHttpApi(): DashboardApi {
 // The mocks are a dynamic import so they stay out of the production bundle.
 export function getDashboardApi(): Promise<DashboardApi> {
   api ??= config.useMocks
-    ? import('../mocks/createMockApi').then(({ createMockApi }) => createMockApi())
+    ? import('../mocks/createMockApi').then(({ createDemoMockApi }) => createDemoMockApi())
     : Promise.resolve(createHttpApi())
   return api
 }

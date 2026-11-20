@@ -1,16 +1,23 @@
 import type { CageApi } from '../api/DashboardApi'
 import type { Cage, CageInput } from '../types/Cage'
-import { MAX_CAGE_LOCATION_LENGTH, MAX_CAGE_NAME_LENGTH } from '../types/Cage'
+import { MAX_CAGE_LOCATION_LENGTH, MAX_CAGE_NAME_LENGTH, SIMULATION_CODE_PREFIX } from '../types/Cage'
 import type { CageHealth } from '../types/CageHealth'
 import type { StationCamera, StationCameraInput } from '../types/StationCamera'
 import type { DateRange } from '../types/DateRange'
+import type { SimulationStatus } from '../types/Simulation'
 import { worstStatus } from '../types/HealthStatus'
 import type { CageWeight } from '../types/WeightReading'
-import { mockAudio } from './data'
+import { mockAudio, mockPhoto, mockSimulationCredit } from './data'
 import { MockResource } from './MockResource'
 
 // how long the mock keeps a saved camera PENDING, so the connecting progress can be seen in demo mode
 const MOCK_PENDING_MS = 8_000
+// like the AI service: at most two videos at once, each one stops by itself after an hour
+const MOCK_MAX_SIMULATIONS = 2
+const MOCK_SIMULATION_MS = 60 * 60_000
+// the mark colors of the clip, and how many frames it has (one per second)
+const SIMULATION_MARK_COLORS = ['RED', 'BLUE', 'GREEN']
+const MOCK_CLIP_FRAMES = 180
 
 const NO_CAMERA: StationCamera = {
   type: null,
@@ -30,6 +37,8 @@ export class MockCageApi extends MockResource implements CageApi {
   private readonly connected = new Map<string, string>()
   // when each PENDING camera turns CONNECTED
   private readonly pendingUntil = new Map<string, number>()
+  // cage id -> when its video simulation started
+  private readonly simulations = new Map<string, number>()
 
   list(): Promise<Cage[]> {
     return this.respond(this.db.cages)
@@ -52,9 +61,41 @@ export class MockCageApi extends MockResource implements CageApi {
         .padStart(8, '0')}`,
       ...fields,
       createdAt: new Date().toISOString(),
+      simulated: false,
+      monitored: false,
     }
     this.db.cages.push(created)
     return this.respond(created)
+  }
+
+  // one per account, like the backend: the existing one, or a new one with a guinea pig per clip color
+  createSimulationCage(): Promise<Cage> {
+    const existing = this.db.cages.find((c) => c.simulated)
+    if (existing) {
+      return this.respond(existing)
+    }
+    const cage: Cage = {
+      cageId: `${SIMULATION_CODE_PREFIX}${Math.floor(Math.random() * 0xffffffff)
+        .toString(16)
+        .padStart(8, '0')}`,
+      name: 'Simulación',
+      location: null,
+      createdAt: new Date().toISOString(),
+      simulated: true,
+      monitored: false,
+    }
+    this.db.cages.push(cage)
+    const guineaPigs = this.db.guineaPigsOf(cage.cageId)
+    for (const markColor of SIMULATION_MARK_COLORS) {
+      guineaPigs.push({
+        id: this.db.nextGuineaPigId(),
+        photoUrl: mockPhoto(markColor),
+        markColor,
+        status: 'NORMAL',
+        statusSince: cage.createdAt,
+      })
+    }
+    return this.respond(cage)
   }
 
   update(cageId: string, body: CageInput): Promise<Cage> {
@@ -118,7 +159,8 @@ export class MockCageApi extends MockResource implements CageApi {
 
   // no AI service in mock mode: only the connected flag changes, so the camera panel can be tried in the demo
   setEquipment(cageId: string, connect: boolean): Promise<void> {
-    if (!this.db.hasCage(cageId)) {
+    const cage = this.db.cages.find((c) => c.cageId === cageId)
+    if (!cage) {
       return this.notFound()
     }
     if (connect) {
@@ -126,11 +168,59 @@ export class MockCageApi extends MockResource implements CageApi {
     } else {
       this.connected.delete(cageId)
     }
+    cage.monitored = connect
     return this.respond(undefined)
   }
 
+  // a drawn cage only checks that it exists; a simulation cage starts its video (the second start does nothing)
   startSimulation(cageId: string): Promise<void> {
-    return this.db.hasCage(cageId) ? this.respond(undefined) : this.notFound()
+    const cage = this.db.cages.find((c) => c.cageId === cageId)
+    if (!cage) {
+      return this.notFound()
+    }
+    if (!cage.simulated || this.startedAt(cageId) !== undefined) {
+      return this.respond(undefined)
+    }
+    const running = this.db.cages.filter((c) => this.startedAt(c.cageId) !== undefined).length
+    if (running >= MOCK_MAX_SIMULATIONS) {
+      return this.fail(409, 'conflict')
+    }
+    this.simulations.set(cageId, Date.now())
+    return this.respond(undefined)
+  }
+
+  stopSimulation(cageId: string): Promise<void> {
+    if (!this.db.hasCage(cageId)) {
+      return this.notFound()
+    }
+    this.simulations.delete(cageId)
+    return this.respond(undefined)
+  }
+
+  getSimulationStatus(cageId: string): Promise<SimulationStatus> {
+    const cage = this.db.cages.find((c) => c.cageId === cageId)
+    if (!cage) {
+      return this.notFound()
+    }
+    const startedAt = this.startedAt(cageId)
+    const running = startedAt !== undefined
+    return this.respond({
+      running,
+      startedAt: running ? new Date(startedAt).toISOString() : null,
+      framesSent: running ? Math.floor((Date.now() - startedAt) / 1000) : 0,
+      frameCount: MOCK_CLIP_FRAMES,
+      credit: cage.simulated ? mockSimulationCredit : null,
+    })
+  }
+
+  // when the video of a cage started, or undefined when it does not run (an hour later it stops by itself)
+  private startedAt(cageId: string): number | undefined {
+    const startedAt = this.simulations.get(cageId)
+    if (startedAt !== undefined && Date.now() - startedAt >= MOCK_SIMULATION_MS) {
+      this.simulations.delete(cageId)
+      return undefined
+    }
+    return startedAt
   }
 
   getWeight(cageId: string, range?: DateRange): Promise<CageWeight> {

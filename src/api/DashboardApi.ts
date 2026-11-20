@@ -24,6 +24,7 @@ import type {
 } from '../types/Auth'
 import type { Cage, CageInput } from '../types/Cage'
 import type { CageHealth } from '../types/CageHealth'
+import type { SimulationStatus } from '../types/Simulation'
 import type { Catalog } from '../types/Catalog'
 import type { DateRange } from '../types/DateRange'
 import type {
@@ -49,9 +50,16 @@ export interface CageApi {
   remove(cageId: string): Promise<void>
   getHealth(cageId: string, signal?: AbortSignal): Promise<CageHealth>
   getWeight(cageId: string, range?: DateRange, signal?: AbortSignal): Promise<CageWeight>
-  // the Simulación button: the AI service analyses a drawn cage where the first guinea pig is sick
+  // the Simulación button: the AI service analyses a drawn cage where the first guinea pig is sick.
+  // In a simulation cage it starts the video instead. 409 when two videos already run
   setEquipment(cageId: string, connect: boolean): Promise<void>
   startSimulation(cageId: string): Promise<void>
+  // the simulation cage of the account: created the first time, the same one after that. 503 when the video is not available
+  createSimulationCage(): Promise<Cage>
+  // whether the video runs, how far it is and the credit of the video
+  getSimulationStatus(cageId: string, signal?: AbortSignal): Promise<SimulationStatus>
+  // stops the video of a simulation cage (204)
+  stopSimulation(cageId: string): Promise<void>
   // the camera of the farm station; the status comes from the edge agent (PENDING until it answers)
   getCamera(cageId: string, signal?: AbortSignal): Promise<StationCamera>
   // 204. 400 for an invalid camera, 409 when the station is not connected to this cage

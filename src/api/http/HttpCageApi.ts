@@ -3,6 +3,7 @@ import type { CageHealth } from '../../types/CageHealth'
 import type { DateRange } from '../../types/DateRange'
 import type { CageWeight } from '../../types/WeightReading'
 import type { StationCamera, StationCameraInput } from '../../types/StationCamera'
+import type { SimulationStatus } from '../../types/Simulation'
 import type { CageApi } from '../DashboardApi'
 import type { HttpClient } from '../HttpClient'
 
@@ -48,6 +49,18 @@ export class HttpCageApi implements CageApi {
 
   startSimulation(cageId: string): Promise<void> {
     return this.http.post<void>(`${this.path(cageId)}/simulation`, undefined)
+  }
+
+  createSimulationCage(): Promise<Cage> {
+    return this.http.post<Cage>('/api/v1/simulation-cage', undefined)
+  }
+
+  getSimulationStatus(cageId: string, signal?: AbortSignal): Promise<SimulationStatus> {
+    return this.http.get<SimulationStatus>(`${this.path(cageId)}/simulation`, { signal })
+  }
+
+  stopSimulation(cageId: string): Promise<void> {
+    return this.http.delete<void>(`${this.path(cageId)}/simulation`)
   }
 
   getCamera(cageId: string, signal?: AbortSignal): Promise<StationCamera> {
