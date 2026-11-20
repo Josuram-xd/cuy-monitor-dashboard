@@ -60,3 +60,103 @@
   padding-inline-start: var(--space-5);
   line-height: var(--text-body-line);
 }
+
+.progress {
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-2);
+  padding: var(--space-3) var(--space-4);
+  border: 1px solid var(--color-border);
+  border-radius: var(--radius-md);
+  background: var(--color-primary-soft);
+}
+
+/* a dot that breathes while the camera is being tested: transform and opacity only */
+.pulse {
+  width: 12px;
+  height: 12px;
+  border-radius: var(--radius-full);
+  background: var(--color-primary);
+  animation: breathe var(--pulse-duration) ease-in-out infinite;
+}
+
+@keyframes breathe {
+  0%,
+  100% {
+    transform: scale(0.6);
+    opacity: 0.4;
+  }
+
+  50% {
+    transform: scale(1);
+    opacity: 1;
+  }
+}
+
+.visuallyHidden {
+  position: absolute;
+  width: 1px;
+  height: 1px;
+  overflow: hidden;
+  clip-path: inset(50%);
+  white-space: nowrap;
+}
+
+.success {
+  display: flex;
+  align-items: center;
+  gap: var(--space-2);
+  color: var(--status-normal-fg);
+  font-weight: 600;
+}
+
+.progressSteps {
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-2);
+  margin: 0;
+  padding: 0;
+  list-style: none;
+}
+
+.progressStep {
+  display: flex;
+  align-items: center;
+  gap: var(--space-2);
+  line-height: var(--text-body-line);
+}
+
+.stepMark {
+  display: inline-flex;
+  width: 20px;
+  height: 20px;
+  flex: 0 0 auto;
+  align-items: center;
+  justify-content: center;
+  border: 2px solid var(--color-border);
+  border-radius: var(--radius-full);
+  background: var(--color-surface);
+  color: var(--color-on-primary);
+}
+
+.done .stepMark {
+  border-color: var(--color-primary);
+  background: var(--color-primary);
+}
+
+.current .stepMark {
+  border-color: var(--color-primary);
+  animation: breathe var(--pulse-duration) ease-in-out infinite;
+}
+
+/* the steps still to come, and the ones after a stop, are muted */
+.pending {
+  color: var(--color-text-muted);
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .pulse,
+  .current .stepMark {
+    animation: none;
+  }
+}

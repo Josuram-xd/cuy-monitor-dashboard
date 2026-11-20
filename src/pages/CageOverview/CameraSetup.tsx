@@ -1,8 +1,9 @@
-import { useState } from 'react'
+import { useEffect, useState } from 'react'
 import { ApiError } from '../../api/ApiError'
 import { Button } from '../../components/Button/Button'
 import { ErrorState } from '../../components/ErrorState/ErrorState'
 import { FormError } from '../../components/FormError/FormError'
+import { Icon } from '../../components/Icon/Icon'
 import { PasswordField } from '../../components/PasswordField/PasswordField'
 import { SegmentedControl } from '../../components/SegmentedControl/SegmentedControl'
 import { Skeleton } from '../../components/Skeleton/Skeleton'
@@ -10,17 +11,22 @@ import { TextField } from '../../components/TextField/TextField'
 import { useSaveStationCamera, useStationCamera } from '../../hooks/useStationCamera'
 import { dateLocale, t } from '../../i18n'
 import type {
+  CameraStatus,
   CameraStream,
   CameraType,
   StationCamera,
   StationCameraInput,
 } from '../../types/StationCamera'
+import { cx } from '../../utils/cx'
 import pageStyles from './CageOverview.module.css'
 import styles from './CameraSetup.module.css'
 
 const PRIVATE_IPV4 = /^(10\.\d{1,3}|172\.(1[6-9]|2\d|3[01])|192\.168)\.\d{1,3}\.\d{1,3}$/
 const TAPO_STEPS = ['tapo1', 'tapo2', 'tapo3', 'tapo4', 'tapo5', 'tapo6', 'tapo7'] as const
 const PHONE_STEPS = ['phone1', 'phone2', 'phone3'] as const
+// the edge agent has no progress to report, so the steps are a guess that stops at the last one
+const PROGRESS_STEPS = ['search', 'login', 'video'] as const
+const PROGRESS_STEP_MS = 2_500
 
 // the same rule as the backend: an address of the home network, never a name or an internet address
 function isHomeAddress(host: string): boolean {
@@ -186,6 +192,76 @@ function CameraForm({
   )
 }
 
+type StepState = 'done' | 'current' | 'pending'
+
+// Simulated progress while the edge agent tests the camera. It shows from the first PENDING of this visit,
+// so the outcome stays on screen after the test; a visit that finds the camera already settled shows nothing.
+function CameraProgress({ status }: { status: CameraStatus }) {
+  const [tested, setTested] = useState(status === 'PENDING')
+  const [step, setStep] = useState(0)
+  const [prevStatus, setPrevStatus] = useState(status)
+  // a new test starts again from the first step (state adjusted while rendering, not in an effect)
+  if (status !== prevStatus) {
+    setPrevStatus(status)
+    if (status === 'PENDING') {
+      setTested(true)
+      setStep(0)
+    }
+  }
+
+  const running = status === 'PENDING'
+  useEffect(() => {
+    if (!running) return
+    const id = window.setInterval(
+      () => setStep((current) => Math.min(current + 1, PROGRESS_STEPS.length - 1)),
+      PROGRESS_STEP_MS,
+    )
+    return () => window.clearInterval(id)
+  }, [running])
+
+  if (!tested) return null
+  const connected = status === 'CONNECTED'
+  // a finished test ticks every step (CONNECTED), or stops where it was (an error)
+  const done = connected ? PROGRESS_STEPS.length : step
+  const stateOf = (index: number): StepState =>
+    index < done ? 'done' : index === step && running ? 'current' : 'pending'
+
+  return (
+    <div className={styles.progress}>
+      <div role="status" aria-live="polite">
+        {running && (
+          <>
+            <span className={styles.pulse} aria-hidden="true" />
+            {/* the steps list below shows the text; this copy is for screen readers only */}
+            <span className={styles.visuallyHidden}>
+              {t(`camera.progress.${PROGRESS_STEPS[step]}`)}
+            </span>
+          </>
+        )}
+        {connected && (
+          <p className={styles.success}>
+            <Icon name="check-circle" size={18} />
+            {t('camera.progress.done')}
+          </p>
+        )}
+      </div>
+      <ol className={styles.progressSteps}>
+        {PROGRESS_STEPS.map((key, index) => {
+          const state = stateOf(index)
+          return (
+            <li key={key} data-state={state} className={cx(styles.progressStep, styles[state])}>
+              <span className={styles.stepMark} aria-hidden="true">
+                {state === 'done' && <Icon name="check" size={14} />}
+              </span>
+              {t(`camera.progress.${key}`)}
+            </li>
+          )
+        })}
+      </ol>
+    </div>
+  )
+}
+
 // The farm camera of the cage's station: its status, the form to change it and a guide to set it up
 export function CameraSetup({ cageId }: { cageId: string }) {
   const camera = useStationCamera(cageId)
@@ -208,6 +284,7 @@ export function CameraSetup({ cageId }: { cageId: string }) {
               </time>
             </small>
           )}
+          <CameraProgress status={camera.data.status} />
           {editing ? (
             <CameraForm
               cageId={cageId}
