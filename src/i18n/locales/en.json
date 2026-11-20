@@ -1,5 +1,6 @@
 {
   "monitor": {
+    "chooseCage": "Choose the cage for the equipment",
     "observation": "Latest camera observation",
     "stillEstimate": "Estimated stillness: {{seconds}} of {{window}} seconds. Detection confidence: {{confidence}}%.",
     "scaleMissing": "No scale readings yet. Check the USB connection and let the weight settle.",
@@ -465,9 +466,9 @@
     "error": {
       "alreadyGone": "This cage no longer exists. Refresh the page."
     },
-    "simulateAll": "Simulate every cage",
-    "simulateAllTitle": "Simulate in your {{count}} cages at once?",
-    "simulateAllExplain": "For about 35 minutes the AI will analyse a drawn cage in each one, with a guinea pig that looks sick, as if the cameras were sending video. A sound alert per cage arrives at once, the guinea pigs go to observed in a few minutes and to alert around minute 30. Cages without guinea pigs are skipped."
+    "simulateAll": "Simulate up to 10 cages",
+    "simulateAllTitle": "Start the simulation in up to {{count}} cages?",
+    "simulateAllExplain": "Cages with animals in different health states are selected, including critical cages when available. The cage using physical equipment is excluded. The simulation runs for about 35 minutes."
   },
   "toast": {
     "cageCreated": "Cage “{{name}}” created",

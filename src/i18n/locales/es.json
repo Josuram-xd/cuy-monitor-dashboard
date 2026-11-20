@@ -1,5 +1,6 @@
 {
   "monitor": {
+    "chooseCage": "Elige la jaula que usará el equipo",
     "observation": "Última observación de la cámara",
     "stillEstimate": "Quietud estimada: {{seconds}} de {{window}} segundos. Confianza de detección: {{confidence}} %.",
     "scaleMissing": "Báscula sin lecturas. Comprueba el USB y deja el peso quieto hasta que se estabilice.",
@@ -476,9 +477,9 @@
     "error": {
       "alreadyGone": "Esta jaula ya no existe. Actualiza la página."
     },
-    "simulateAll": "Simular todas las jaulas",
-    "simulateAllTitle": "¿Simular en tus {{count}} jaulas a la vez?",
-    "simulateAllExplain": "La IA analizará durante unos 35 minutos una jaula dibujada en cada una, con un cuy que se ve enfermo, como si las cámaras enviaran video. Llega una alerta de sonido por jaula al instante, los cuyes pasan a observación en unos minutos y a alerta hacia los 30. Las jaulas sin cuyes se saltan."
+    "simulateAll": "Simular hasta 10 jaulas",
+    "simulateAllTitle": "¿Iniciar la simulación en hasta {{count}} jaulas?",
+    "simulateAllExplain": "Se eligen jaulas con cuyes de distintos estados, incluidas las críticas cuando las hay. La jaula con el equipo físico queda fuera. La simulación dura unos 35 minutos."
   },
   "toast": {
     "cageCreated": "Jaula «{{name}}» creada",

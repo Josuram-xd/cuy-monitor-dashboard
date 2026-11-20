@@ -6,6 +6,7 @@ import { getDashboardApi } from '../../api/apiProvider'
 import { createMockApi } from '../../mocks/createMockApi'
 import { MockDatabase } from '../../mocks/MockDatabase'
 import { renderWithProviders } from '../../test/render'
+import { selectDemoCages } from '../../hooks/useStartSimulation'
 import { CageList } from './CageList'
 
 vi.mock('../../api/apiProvider', () => ({ getDashboardApi: vi.fn() }))
@@ -116,6 +117,42 @@ describe('CageList', () => {
     expect(screen.getByRole('button', { name: 'Crear mi primera jaula' })).toBeInTheDocument()
   })
 
+  it('includes critical and other available states within ten eligible cages', async () => {
+    const api = createMockApi(new MockDatabase(), 0)
+    const base = await api.cages.getHealth('cage-1')
+    const normal = Array.from({ length: 14 }, (_, i) => ({
+      ...base,
+      cageId: String(i),
+      status: 'NORMAL' as const,
+    }))
+    const ids = selectDemoCages([
+      ...normal,
+      { ...base, cageId: 'empty', guineaPigs: [], status: 'CRITICAL' },
+      {
+        ...base,
+        cageId: 'hardware',
+        monitoring: { connectedAt: base.updatedAt, lastBehaviorAt: null, lastAudioLabel: null },
+      },
+      { ...base, cageId: 'critical', status: 'CRITICAL' },
+      { ...base, cageId: 'alert', status: 'ALERT' },
+      { ...base, cageId: 'observed', status: 'OBSERVED' },
+    ])
+    expect(ids).toHaveLength(10)
+    expect(ids).toEqual(expect.arrayContaining(['critical', 'alert', 'observed', '0']))
+    expect(ids).not.toContain('empty')
+    expect(ids).not.toContain('hardware')
+  })
+
+  it('connects the cage chosen on the home page', async () => {
+    const { api, db } = setup()
+    const connect = vi.spyOn(api.cages, 'setEquipment').mockResolvedValue()
+    await userEvent.click(await screen.findByRole('button', { name: 'Conectar equipo' }))
+    const dialog = within(await screen.findByRole('dialog'))
+    await userEvent.selectOptions(dialog.getByRole('combobox'), db.cages[1].cageId)
+    await userEvent.click(dialog.getByRole('button', { name: 'Conectar equipo' }))
+    await waitFor(() => expect(connect).toHaveBeenCalledWith(db.cages[1].cageId, true))
+  })
+
   it('starts the simulation in every cage at once after confirming', async () => {
     const user = userEvent.setup()
     const api = createMockApi(new MockDatabase(), 0)
@@ -124,11 +161,11 @@ describe('CageList', () => {
     renderWithProviders(<CageList />)
     const cages = await api.cages.list()
 
-    await user.click(await screen.findByRole('button', { name: 'Simular todas las jaulas' }))
+    await user.click(await screen.findByRole('button', { name: 'Simular hasta 10 jaulas' }))
     const dialog = await screen.findByRole('dialog')
-    await user.click(within(dialog).getByRole('button', { name: 'Simular todas las jaulas' }))
+    await user.click(within(dialog).getByRole('button', { name: 'Simular hasta 10 jaulas' }))
 
     await waitFor(() => expect(start).toHaveBeenCalledTimes(cages.length))
-    expect(start.mock.calls.map(([id]) => id)).toEqual(cages.map((c) => c.cageId))
+    expect(start.mock.calls.map(([id]) => id).sort()).toEqual(cages.map((c) => c.cageId).sort())
   })
 })
