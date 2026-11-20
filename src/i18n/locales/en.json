@@ -385,7 +385,7 @@
     "demo": {
       "button": "Sign in as a regular user",
       "failed": "The demo account is not available right now.",
-      "adminShortcut": "Continue as Juanes (administrator)"
+      "adminShortcut": "Sign in as admin"
     }
   },
   "account": {
