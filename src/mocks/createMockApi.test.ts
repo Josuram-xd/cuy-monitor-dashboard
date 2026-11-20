@@ -112,3 +112,33 @@ describe('mock API', () => {
     await expect(api.guineaPigs.remove('nope', 2)).rejects.toMatchObject({ status: 404 })
   })
 })
+
+describe('mock station camera', () => {
+  it('goes from not configured to pending, then connected, and never keeps the password', async () => {
+    const api = createMockApi(undefined, 0)
+    expect((await api.cages.getCamera('cage-1')).status).toBe('NOT_CONFIGURED')
+
+    await api.cages.saveCamera('cage-1', {
+      type: 'RTSP',
+      host: '192.168.1.60',
+      username: 'cuy',
+      password: 'secreta',
+    })
+    const pending = await api.cages.getCamera('cage-1')
+    expect(pending).toMatchObject({
+      status: 'PENDING',
+      port: 554,
+      stream: 'stream1',
+      hasPassword: true,
+    })
+    expect(pending).not.toHaveProperty('password')
+    expect((await api.cages.getCamera('cage-1')).status).toBe('CONNECTED')
+  })
+
+  it('requires a password the first time an RTSP camera is saved', async () => {
+    const api = createMockApi(undefined, 0)
+    await expect(
+      api.cages.saveCamera('cage-1', { type: 'RTSP', host: '192.168.1.60', username: 'cuy' }),
+    ).rejects.toMatchObject({ status: 400 })
+  })
+})
