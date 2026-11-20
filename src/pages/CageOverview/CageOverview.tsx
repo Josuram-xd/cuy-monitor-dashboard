@@ -23,14 +23,14 @@ import { LazyWeightChart } from '../../charts/lazyCharts'
 import type { RangePreset } from '../../charts/timeRange'
 import { useAlerts } from '../../hooks/useAlerts'
 import { useCageWeight } from '../../hooks/useCageWeight'
-import { useCage } from '../../hooks/useCages'
+import { useCage, useCages } from '../../hooks/useCages'
 import { cagePath, useCageId } from '../../hooks/useCageId'
 import { useCageHealth } from '../../hooks/useCageHealth'
 import { useProfile } from '../../hooks/useProfile'
 import { useStartSimulation } from '../../hooks/useStartSimulation'
 import { useToast } from '../../components/Toast/useToast'
 import { ApiError } from '../../api/ApiError'
-import { useGuineaPigs } from '../../hooks/useGuineaPigs'
+import { useGuineaPigs, useGuineaPigsOfCages } from '../../hooks/useGuineaPigs'
 import { useNow } from '../../hooks/useNow'
 import { dateLocale, t } from '../../i18n'
 import type { CageHealth } from '../../types/CageHealth'
@@ -96,18 +96,32 @@ function GuineaPigsSection({ cageId, now }: { cageId: string; now: number }) {
   )
 }
 
-function OpenAlertsSection({ cageId, now }: { cageId: string; now: number }) {
-  const alerts = useAlerts('OPEN', cageId)
-  // same query as the grid, TanStack Query shares it
-  const guineaPigs = useGuineaPigs(cageId)
+function OpenAlertsSection({
+  cageId,
+  alerts,
+  now,
+}: {
+  cageId?: string
+  alerts: ReturnType<typeof useAlerts>
+  now: number
+}) {
+  const cages = useCages()
+  const latest = alerts.data?.slice(0, LATEST_ALERTS) ?? []
+  const currentCage = useCageId()
+  const localPigs = useGuineaPigs(currentCage)
+  const otherPigs = useGuineaPigsOfCages([
+    ...new Set(latest.map((alert) => alert.cageId).filter((id) => id !== currentCage)),
+  ])
+  const guineaPigs = [...(localPigs.data ?? []), ...otherPigs]
+  const cageNames = Object.fromEntries((cages.data ?? []).map((cage) => [cage.cageId, cage.name]))
 
   if (alerts.isPending) {
     return <Skeleton variant="line" count={2} />
   }
-  if (alerts.isError) {
+  if (!alerts.data) {
     return <ErrorState message={t('alerts.loadError')} onRetry={() => void alerts.refetch()} />
   }
-  if (alerts.data.length === 0) {
+  if (alerts.data.length === 0 && !alerts.isError) {
     return (
       <div className={styles.calm}>
         <Mascot mood="happy" size={120} />
@@ -116,11 +130,17 @@ function OpenAlertsSection({ cageId, now }: { cageId: string; now: number }) {
     )
   }
   return (
-    <AlertList
-      alerts={alerts.data.slice(0, LATEST_ALERTS)}
-      guineaPigs={guineaPigs.data}
-      now={now}
-    />
+    <>
+      {alerts.isError && (
+        <ErrorState message={t('alerts.loadError')} onRetry={() => void alerts.refetch()} />
+      )}
+      <AlertList
+        alerts={latest}
+        guineaPigs={guineaPigs}
+        cageNames={cageId ? undefined : cageNames}
+        now={now}
+      />
+    </>
   )
 }
 
@@ -188,6 +208,13 @@ function SensorMeasurement({
   const waitingForScale = !!session && !sessionWeight && !timedOut && !failed
   const observation = health.monitoring?.observation
   const observationAt = health.monitoring?.lastBehaviorAt
+  const lastAnalysis = Date.parse(observationAt ?? '')
+  let aiStatus = 'monitor.aiWaiting'
+  if (failed) {
+    aiStatus = 'monitor.aiUnavailable'
+  } else if (lastAnalysis >= connectedAt) {
+    aiStatus = serverNow - lastAnalysis <= 150_000 ? 'monitor.aiActive' : 'monitor.aiStale'
+  }
   const signals = [
     {
       key: 'scale',
@@ -288,6 +315,17 @@ function SensorMeasurement({
           </li>
         ))}
       </ul>
+      <footer className={styles.monitorFooter}>
+        <p role="status">{t(aiStatus)}</p>
+        {observationAt && lastAnalysis >= connectedAt && (
+          <small>
+            {t('monitor.lastAnalysis')}{' '}
+            <time dateTime={observationAt}>
+              {new Date(observationAt).toLocaleString(dateLocale())}
+            </time>
+          </small>
+        )}
+      </footer>
     </section>
   )
 }
@@ -298,7 +336,9 @@ export function CageOverview() {
   const health = useCageHealth(cageId)
   // the same queries as the sections: only to show how many there are next to each title
   const guineaPigCount = useGuineaPigs(cageId).data?.length
-  const openAlertCount = useAlerts('OPEN', cageId).data?.length
+  const alertCageId = health.data?.monitoring ? undefined : cageId
+  const openAlerts = useAlerts('OPEN', alertCageId)
+  const openAlertCount = openAlerts.data?.length
   const profile = useProfile()
   const now = useNow()
   const simulation = useStartSimulation(cageId)
@@ -396,15 +436,15 @@ export function CageOverview() {
         <Reveal delay={120} className={styles.cell}>
           <section className={styles.section} aria-labelledby="open-alerts-heading">
             <h2 id="open-alerts-heading" className={styles.sectionTitle}>
-              {t('alerts.openTitle')}
+              {t(alertCageId ? 'alerts.openTitle' : 'monitor.accountAlerts')}
               {openAlertCount !== undefined && (
                 <span className={styles.count}>{openAlertCount}</span>
               )}
             </h2>
             <div className={styles.panel}>
-              <OpenAlertsSection cageId={cageId} now={now} />
+              <OpenAlertsSection cageId={alertCageId} alerts={openAlerts} now={now} />
               <ButtonLink
-                to={`/alerts?cage=${encodeURIComponent(cageId)}`}
+                to={alertCageId ? `/alerts?cage=${encodeURIComponent(alertCageId)}` : '/alerts'}
                 variant="secondary"
                 className={styles.seeAll}
               >

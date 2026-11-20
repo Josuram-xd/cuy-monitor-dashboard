@@ -1,5 +1,11 @@
 {
   "monitor": {
+    "accountAlerts": "Alertas abiertas de mis jaulas",
+    "aiWaiting": "IA en espera de la primera observación de la cámara.",
+    "aiUnavailable": "No se pudo actualizar el estado de la IA.",
+    "aiActive": "La IA está monitoreando esta jaula.",
+    "aiStale": "La IA dejó de enviar observaciones. Revisa la cámara del teléfono.",
+    "lastAnalysis": "Última señal de la cámara:",
     "reading": "Leyendo báscula…",
     "readingHint": "Esperando un peso estable del Arduino. Mantén el peso quieto.",
     "readTimeout": "No se pudo leer el peso en 20 segundos. Comprueba el USB, cierra el monitor serie y verifica que el servicio de la báscula esté activo. Seguimos esperando la lectura.",

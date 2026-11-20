@@ -107,6 +107,40 @@ describe('CageOverview', () => {
     )
   })
 
+  it('keeps other cages alerts visible while starting a measurement and receiving camera observations', async () => {
+    const db = new MockDatabase()
+    db.alerts.unshift({
+      ...db.alerts[0],
+      id: 999,
+      cageId: 'cage-7f3a9c21',
+      message: 'Aviso de la otra jaula',
+    })
+    const api = createMockApi(db, 0)
+    const original = await api.cages.getHealth('cage-1')
+    const connectedAt = new Date(Date.now() - 10_000).toISOString()
+    let connected = false
+    let lastBehaviorAt: string | null = null
+    api.cages.setEquipment = async () => {
+      connected = true
+    }
+    api.cages.getHealth = async () => ({
+      ...original,
+      updatedAt: new Date().toISOString(),
+      monitoring: connected ? { connectedAt, lastAudioLabel: null, lastBehaviorAt } : null,
+    })
+    setApi(api)
+    renderInCage(<CageOverview />)
+    await screen.findByText(/quieta de lo normal/)
+    await userEvent.click(screen.getByRole('button', { name: 'Conectar equipo' }))
+    expect(await screen.findByText('Aviso de la otra jaula')).toBeInTheDocument()
+    expect(screen.getByRole('link', { name: 'Ver todas' })).toHaveAttribute('href', '/alerts')
+    expect(screen.getByText(/IA en espera/)).toBeInTheDocument()
+    lastBehaviorAt = new Date().toISOString()
+    await userEvent.click(screen.getByRole('button', { name: 'Iniciar medición' }))
+    expect(await screen.findByText('La IA está monitoreando esta jaula.')).toBeInTheDocument()
+    expect(screen.getByText('Aviso de la otra jaula')).toBeInTheDocument()
+  })
+
   it('stays calm when there are no open alerts', async () => {
     const db = new MockDatabase()
     db.alerts.length = 0
@@ -209,7 +243,7 @@ describe('CageOverview', () => {
     await screen.findByRole('list', { name: 'Tus cuyes' })
     const before = getHealth.mock.calls.length
 
-    await user.click(screen.getByRole('button', { name: 'Actualizar' }))
+    await user.click(await screen.findByRole('button', { name: 'Actualizar' }))
 
     await waitFor(() => expect(getHealth.mock.calls.length).toBeGreaterThan(before))
   })
