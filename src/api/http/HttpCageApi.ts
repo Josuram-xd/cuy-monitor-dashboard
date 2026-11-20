@@ -2,6 +2,7 @@ import type { Cage, CageInput } from '../../types/Cage'
 import type { CageHealth } from '../../types/CageHealth'
 import type { DateRange } from '../../types/DateRange'
 import type { CageWeight } from '../../types/WeightReading'
+import type { StationCamera, StationCameraInput } from '../../types/StationCamera'
 import type { CageApi } from '../DashboardApi'
 import type { HttpClient } from '../HttpClient'
 
@@ -47,6 +48,14 @@ export class HttpCageApi implements CageApi {
 
   startSimulation(cageId: string): Promise<void> {
     return this.http.post<void>(`${this.path(cageId)}/simulation`, undefined)
+  }
+
+  getCamera(cageId: string, signal?: AbortSignal): Promise<StationCamera> {
+    return this.http.get<StationCamera>(`${this.path(cageId)}/equipment/camera`, { signal })
+  }
+
+  saveCamera(cageId: string, body: StationCameraInput): Promise<void> {
+    return this.http.put<void>(`${this.path(cageId)}/equipment/camera`, body)
   }
 
   private path(cageId: string): string {

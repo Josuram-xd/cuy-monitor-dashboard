@@ -155,6 +155,59 @@
     "weightTitle": "Cage weight",
     "weightError": "We couldn't load the weight."
   },
+  "camera": {
+    "title": "Camera",
+    "configure": "Set up camera",
+    "change": "Change camera",
+    "loadError": "We could not load the camera. Check the connection and try again.",
+    "typeLabel": "Which camera do you use?",
+    "type": {
+      "RTSP": "Tapo camera (Wi-Fi)",
+      "PHONE": "Phone with IP Webcam"
+    },
+    "host": "Camera IP address",
+    "hostHint": "Something like 192.168.1.60. The guide below shows where to find it.",
+    "port": "Port",
+    "advanced": "Advanced options",
+    "username": "Camera username",
+    "password": "Camera password",
+    "passwordKeep": "Leave it empty to keep the one you saved.",
+    "quality": "Video quality",
+    "stream": {
+      "stream1": "High",
+      "stream2": "Low (for slow laptops)"
+    },
+    "save": "Save and test",
+    "invalid": "Check the details: the IP must be on your home network (for example 192.168.1.60).",
+    "notConnected": "Connect the equipment to this cage first.",
+    "saveFailed": "Could not save. Try again.",
+    "status": {
+      "NOT_CONFIGURED": "No camera set up yet.",
+      "PENDING": "Testing the camera from the farm laptop…",
+      "CONNECTED": "Camera connected.",
+      "AUTH_FAILED": "The camera rejected the username or password. Check the camera account in the Tapo app.",
+      "UNREACHABLE": "The laptop cannot find the camera. Check the IP and that both are on the same Wi-Fi.",
+      "FFMPEG_MISSING": "The laptop is missing a program to read the Tapo camera. Ask support for help or use the phone.",
+      "OFFLINE": "The farm laptop is not responding. Check that it is on and online."
+    },
+    "help": {
+      "title": "How do I connect the camera?",
+      "tapoTitle": "Tapo C200 camera",
+      "tapo1": "Set up the camera with the Tapo app and connect it to the same Wi-Fi as the laptop. Use a 2.4 GHz network: the C200 does not work on 5 GHz.",
+      "tapo2": "In the Tapo app tap the camera → Settings (gear) → Advanced settings → Camera account. Create a username and password. It is not your TP-Link account.",
+      "tapo3": "In Settings → Device info, copy the IP address (for example 192.168.1.60).",
+      "tapo4": "So the IP does not change, reserve it in your router (fixed IP or \"DHCP reservation\"). If you don't know how, ask whoever set up your internet.",
+      "tapo5": "Video quality: keep \"Low (for slow laptops)\" if the laptop is slow or you are not sure. \"High\" looks better, but it asks more of the laptop.",
+      "tapo6": "Here choose \"Tapo camera (Wi-Fi)\", type the IP, username and password, and tap \"Save and test\".",
+      "tapo7": "In a few seconds you will see \"Camera connected\" or what to check.",
+      "phoneTitle": "Phone with IP Webcam",
+      "phone1": "Open IP Webcam on the phone and tap \"Start server\".",
+      "phone2": "Copy the IP and port shown at the bottom of the screen (for example 192.168.1.50:8080).",
+      "phone3": "With the phone on the same Wi-Fi as the laptop, choose \"Phone with IP Webcam\", type the IP and port and tap \"Save and test\"."
+    },
+    "usernameRequired": "Type the camera username.",
+    "portInvalid": "The port must be a number between 1 and 65535."
+  },
   "alerts": {
     "title": "Alerts",
     "intro": "When a guinea pig behaves differently from usual, it shows up here. Mark it as reviewed once you have checked it.",

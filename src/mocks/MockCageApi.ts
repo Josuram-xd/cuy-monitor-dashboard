@@ -2,13 +2,28 @@ import type { CageApi } from '../api/DashboardApi'
 import type { Cage, CageInput } from '../types/Cage'
 import { MAX_CAGE_LOCATION_LENGTH, MAX_CAGE_NAME_LENGTH } from '../types/Cage'
 import type { CageHealth } from '../types/CageHealth'
+import type { StationCamera, StationCameraInput } from '../types/StationCamera'
 import type { DateRange } from '../types/DateRange'
 import { worstStatus } from '../types/HealthStatus'
 import type { CageWeight } from '../types/WeightReading'
 import { mockAudio } from './data'
 import { MockResource } from './MockResource'
 
+const NO_CAMERA: StationCamera = {
+  type: null,
+  host: null,
+  port: null,
+  username: null,
+  stream: null,
+  hasPassword: false,
+  status: 'NOT_CONFIGURED',
+  statusAt: null,
+}
+
 export class MockCageApi extends MockResource implements CageApi {
+  // the camera of each cage, in memory: PENDING right after saving, CONNECTED on the next read
+  private readonly cameras = new Map<string, StationCamera>()
+
   list(): Promise<Cage[]> {
     return this.respond(this.db.cages)
   }
@@ -110,6 +125,43 @@ export class MockCageApi extends MockResource implements CageApi {
   }
 
   // the same rules as the backend: trimmed name of 1 to 100, optional location up to 200
+  getCamera(cageId: string): Promise<StationCamera> {
+    if (!this.db.hasCage(cageId)) {
+      return this.notFound()
+    }
+    const camera = this.cameras.get(cageId) ?? NO_CAMERA
+    const answer = { ...camera }
+    if (camera.status === 'PENDING') {
+      camera.status = 'CONNECTED'
+      camera.statusAt = new Date().toISOString()
+    }
+    return this.respond(answer)
+  }
+
+  saveCamera(cageId: string, body: StationCameraInput): Promise<void> {
+    if (!this.db.hasCage(cageId)) {
+      return this.notFound()
+    }
+    const previous = this.cameras.get(cageId)
+    // like the backend: a blank password keeps the one saved, and an RTSP camera needs one the first time
+    const hasPassword = !!body.password || (!!previous?.hasPassword && body.type === 'RTSP')
+    if (body.type === 'RTSP' && !hasPassword) {
+      return this.fail(400, 'bad_request', { password: 'required' })
+    }
+    const rtsp = body.type === 'RTSP'
+    this.cameras.set(cageId, {
+      type: body.type,
+      host: body.host,
+      port: body.port ?? (rtsp ? 554 : 8080),
+      username: rtsp ? (body.username ?? null) : null,
+      stream: rtsp ? (body.stream ?? 'stream1') : null,
+      hasPassword: rtsp && hasPassword,
+      status: 'PENDING',
+      statusAt: null,
+    })
+    return this.respond(undefined)
+  }
+
   private validate(body: CageInput): { name: string; location: string | null } | undefined {
     const name = body.name.trim()
     const location = body.location?.trim() || null
