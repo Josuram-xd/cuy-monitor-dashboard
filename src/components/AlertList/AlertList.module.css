@@ -138,3 +138,12 @@
   font-size: var(--text-body-size);
   line-height: 1.55;
 }
+
+.select {
+  width: 20px;
+  height: 20px;
+  flex: none;
+  margin: 0;
+  accent-color: var(--color-primary-strong);
+  cursor: pointer;
+}

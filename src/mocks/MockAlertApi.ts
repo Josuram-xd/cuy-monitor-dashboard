@@ -35,6 +35,15 @@ export class MockAlertApi extends MockResource implements AlertApi {
     return this.respond(alert)
   }
 
+  delete(id: number): Promise<void> {
+    const index = this.db.alerts.findIndex((a) => a.id === id)
+    if (index < 0) {
+      return this.notFound()
+    }
+    this.db.alerts.splice(index, 1)
+    return this.respond(undefined)
+  }
+
   // the same rules as the backend (contract 3.9): last 7 days by default, at most 31, pages of 1 to 100
   history(filter: AlertHistoryFilter, page: number, size: number): Promise<AlertHistoryPage> {
     const to = filter.to ?? new Date().toISOString()

@@ -52,6 +52,34 @@ describe('Alerts', () => {
     expect(await within(history).findByText(/Lleva mucho más tiempo/)).toBeInTheDocument()
   })
 
+  it('shows five open alerts, the rest behind "Ver más", and deletes the selected ones', async () => {
+    const db = new MockDatabase()
+    const template = db.alerts.find((a) => a.status === 'OPEN')!
+    const others = db.alerts.filter((a) => a.status !== 'OPEN')
+    db.alerts.splice(
+      0,
+      db.alerts.length,
+      ...others,
+      ...Array.from({ length: 8 }, (_, i) => ({ ...template, id: 9000 + i })),
+    )
+    setup(db)
+    const open = await screen.findByRole('region', { name: /Alertas abiertas/ })
+
+    expect(await within(open).findAllByRole('checkbox')).toHaveLength(5)
+    await userEvent.click(within(open).getByRole('button', { name: 'Ver más (3)' }))
+    expect(within(open).getAllByRole('checkbox')).toHaveLength(8)
+
+    await userEvent.click(within(open).getByRole('button', { name: 'Seleccionar todas' }))
+    await userEvent.click(within(open).getByRole('button', { name: 'Deseleccionar' }))
+    expect(within(open).getByRole('button', { name: 'Eliminar (0)' })).toBeDisabled()
+    await userEvent.click(within(open).getByRole('button', { name: 'Seleccionar todas' }))
+    await userEvent.click(within(open).getByRole('button', { name: 'Eliminar (8)' }))
+    await userEvent.click(await screen.findByRole('button', { name: 'Sí, eliminar' }))
+
+    await vi.waitFor(() => expect(db.alerts.filter((a) => a.status === 'OPEN')).toHaveLength(0))
+    expect(await screen.findByText('No hay alertas abiertas.')).toBeInTheDocument()
+  })
+
   it('reviewed alerts have no button to mark them again', async () => {
     const db = new MockDatabase()
     db.alerts.forEach((a) => {

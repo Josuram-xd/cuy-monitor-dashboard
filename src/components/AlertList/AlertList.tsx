@@ -28,6 +28,9 @@ interface AlertListProps {
   // the list sits in the page of that one guinea pig: repeating its name in every item adds nothing,
   // so the title says what the alert is about (behavior, sound, weight) and the mark is left out
   ofOneGuineaPig?: boolean
+  // with both, each alert has a checkbox to pick it for deleting
+  selectedIds?: ReadonlySet<number>
+  onToggleSelected?: (alert: Alert) => void
 }
 
 // what the alert is about, so the ring on the left says it at a glance
@@ -54,6 +57,8 @@ export function AlertList({
   busyAlertId,
   cageNames,
   ofOneGuineaPig = false,
+  selectedIds,
+  onToggleSelected,
 }: AlertListProps) {
   // the system was asked for less motion: render the same tree, without the movement
   const still = useReducedMotion()
@@ -76,6 +81,15 @@ export function AlertList({
             layout={!still}
           >
             <div className={styles.top}>
+              {selectedIds && onToggleSelected && (
+                <input
+                  type="checkbox"
+                  className={styles.select}
+                  checked={selectedIds.has(alert.id)}
+                  onChange={() => onToggleSelected(alert)}
+                  aria-label={t('alerts.selectOne', { title: alertTitle(alert, guineaPig) })}
+                />
+              )}
               <span className={styles.ring} aria-hidden="true">
                 <Icon name={TYPE_ICONS[alert.type]} size={20} />
               </span>

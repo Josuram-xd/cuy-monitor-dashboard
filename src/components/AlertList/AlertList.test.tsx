@@ -78,7 +78,9 @@ describe('AlertList', () => {
   it('shows what the assistant wrote about the alert', () => {
     render(
       <AlertList
-        alerts={[alert({ aiNote: 'Revisa si come y si bebe agua.', aiNoteAt: '2026-10-05T14:20:04Z' })]}
+        alerts={[
+          alert({ aiNote: 'Revisa si come y si bebe agua.', aiNoteAt: '2026-10-05T14:20:04Z' }),
+        ]}
         guineaPigs={[chispa]}
         now={NOW}
       />,
@@ -89,7 +91,13 @@ describe('AlertList', () => {
   })
 
   it('shows the alert without a note while the assistant has not written one', () => {
-    render(<AlertList alerts={[alert({ aiNote: null, aiNoteAt: null })]} guineaPigs={[chispa]} now={NOW} />)
+    render(
+      <AlertList
+        alerts={[alert({ aiNote: null, aiNoteAt: null })]}
+        guineaPigs={[chispa]}
+        now={NOW}
+      />,
+    )
 
     // the alert itself is still there: a model that is off must not hide it
     expect(screen.getByText('Lleva mucho más tiempo quieta de lo normal')).toBeInTheDocument()

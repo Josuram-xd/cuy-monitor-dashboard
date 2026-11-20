@@ -30,3 +30,19 @@ export function useMarkAllAlertsReviewed() {
       ]),
   })
 }
+
+// "Eliminar" of the selected alerts: one call per alert (the backend has no bulk endpoint)
+export function useDeleteAlerts() {
+  const queryClient = useQueryClient()
+  return useMutation({
+    mutationFn: async (ids: number[]) => {
+      const api = await getDashboardApi()
+      await Promise.all(ids.map((id) => api.alerts.delete(id)))
+    },
+    onSettled: () =>
+      Promise.all([
+        queryClient.invalidateQueries({ queryKey: ['alerts'] }),
+        queryClient.invalidateQueries({ queryKey: ['cage'] }),
+      ]),
+  })
+}
