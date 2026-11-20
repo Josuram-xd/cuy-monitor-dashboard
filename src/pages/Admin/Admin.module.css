@@ -246,13 +246,11 @@
   border: 0;
 }
 
-/* what the admin wants to set up: a row of pills that scrolls sideways on a phone */
+/* what the admin wants to set up: pills that wrap, so every option stays in sight */
 .tabs {
   display: flex;
+  flex-wrap: wrap;
   gap: var(--space-2);
-  padding-bottom: var(--space-1);
-  overflow-x: auto;
-  scrollbar-width: thin;
 }
 
 .tab {
