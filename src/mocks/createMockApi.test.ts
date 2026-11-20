@@ -114,6 +114,15 @@ describe('mock API', () => {
 })
 
 describe('mock station camera', () => {
+  it('reports monitoring once the kit is connected, so the camera panel shows in demo mode', async () => {
+    const api = createMockApi(undefined, 0)
+    expect((await api.cages.getHealth('cage-1')).monitoring).toBeUndefined()
+    await api.cages.setEquipment('cage-1', true)
+    expect((await api.cages.getHealth('cage-1')).monitoring?.connectedAt).toBeTruthy()
+    await api.cages.setEquipment('cage-1', false)
+    expect((await api.cages.getHealth('cage-1')).monitoring).toBeUndefined()
+  })
+
   it('goes from not configured to pending, then connected, and never keeps the password', async () => {
     const api = createMockApi(undefined, 0)
     expect((await api.cages.getCamera('cage-1')).status).toBe('NOT_CONFIGURED')
@@ -128,7 +137,7 @@ describe('mock station camera', () => {
     expect(pending).toMatchObject({
       status: 'PENDING',
       port: 554,
-      stream: 'stream1',
+      stream: 'stream2',
       hasPassword: true,
     })
     expect(pending).not.toHaveProperty('password')

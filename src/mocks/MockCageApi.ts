@@ -23,6 +23,8 @@ const NO_CAMERA: StationCamera = {
 export class MockCageApi extends MockResource implements CageApi {
   // the camera of each cage, in memory: PENDING right after saving, CONNECTED on the next read
   private readonly cameras = new Map<string, StationCamera>()
+  // cages whose kit is connected: only then the real backend reports `monitoring` (and the camera panel shows)
+  private readonly connected = new Map<string, string>()
 
   list(): Promise<Cage[]> {
     return this.respond(this.db.cages)
@@ -98,13 +100,28 @@ export class MockCageApi extends MockResource implements CageApi {
       guineaPigs,
       audio: mockAudio,
       weight,
+      ...(this.connected.has(cageId) && {
+        monitoring: {
+          connectedAt: this.connected.get(cageId)!,
+          lastBehaviorAt: null,
+          lastAudioLabel: null,
+        },
+      }),
       updatedAt: new Date().toISOString(),
     })
   }
 
-  // no AI service in mock mode: accepted, and the fake data already has alerts to look at
-  setEquipment(): Promise<void> {
-    return this.fail(503, 'equipment_unavailable')
+  // no AI service in mock mode: only the connected flag changes, so the camera panel can be tried in the demo
+  setEquipment(cageId: string, connect: boolean): Promise<void> {
+    if (!this.db.hasCage(cageId)) {
+      return this.notFound()
+    }
+    if (connect) {
+      this.connected.set(cageId, new Date().toISOString())
+    } else {
+      this.connected.delete(cageId)
+    }
+    return this.respond(undefined)
   }
 
   startSimulation(cageId: string): Promise<void> {
@@ -124,7 +141,6 @@ export class MockCageApi extends MockResource implements CageApi {
     })
   }
 
-  // the same rules as the backend: trimmed name of 1 to 100, optional location up to 200
   getCamera(cageId: string): Promise<StationCamera> {
     if (!this.db.hasCage(cageId)) {
       return this.notFound()
@@ -154,7 +170,7 @@ export class MockCageApi extends MockResource implements CageApi {
       host: body.host,
       port: body.port ?? (rtsp ? 554 : 8080),
       username: rtsp ? (body.username ?? null) : null,
-      stream: rtsp ? (body.stream ?? 'stream1') : null,
+      stream: rtsp ? (body.stream ?? 'stream2') : null,
       hasPassword: rtsp && hasPassword,
       status: 'PENDING',
       statusAt: null,
@@ -162,6 +178,7 @@ export class MockCageApi extends MockResource implements CageApi {
     return this.respond(undefined)
   }
 
+  // the same rules as the backend: trimmed name of 1 to 100, optional location up to 200
   private validate(body: CageInput): { name: string; location: string | null } | undefined {
     const name = body.name.trim()
     const location = body.location?.trim() || null
