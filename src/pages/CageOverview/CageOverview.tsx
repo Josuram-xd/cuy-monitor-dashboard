@@ -1,4 +1,5 @@
 import { ScaleUsbCheck } from './ScaleUsbCheck'
+import { CameraSetup } from './CameraSetup'
 import { MarkColorDot } from '../../components/MarkColorDot/MarkColorDot'
 import { Suspense, useState } from 'react'
 import { useMutation } from '@tanstack/react-query'
@@ -423,6 +424,7 @@ export function CageOverview() {
           refresh={() => void health.refetch()}
         />
       )}
+      {health.data?.monitoring && <CameraSetup cageId={cageId} />}
       <div className={styles.columns}>
         <Reveal className={styles.cell}>
           <section className={styles.section} aria-labelledby="guinea-pigs-heading">
