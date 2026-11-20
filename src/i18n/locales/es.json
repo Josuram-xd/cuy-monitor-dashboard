@@ -205,6 +205,12 @@
       "FFMPEG_MISSING": "A la laptop le falta un programa para leer la cámara Tapo. Pide ayuda a soporte o usa el celular.",
       "OFFLINE": "La laptop de la granja no responde. Revisa que esté encendida y con internet."
     },
+    "progress": {
+      "search": "Buscando la cámara en la red…",
+      "login": "Iniciando sesión en la cámara…",
+      "video": "Esperando el primer video…",
+      "done": "Listo, la cámara está conectada."
+    },
     "help": {
       "title": "¿Cómo conecto la cámara?",
       "tapoTitle": "Cámara Tapo C200",

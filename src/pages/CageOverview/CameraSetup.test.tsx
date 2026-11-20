@@ -1,6 +1,6 @@
-import { screen, waitFor } from '@testing-library/react'
+import { act, screen, waitFor } from '@testing-library/react'
 import userEvent from '@testing-library/user-event'
-import { beforeEach, describe, expect, it, vi } from 'vitest'
+import { afterEach, beforeEach, describe, expect, it, vi } from 'vitest'
 import { getDashboardApi } from '../../api/apiProvider'
 import type { DashboardApi } from '../../api/DashboardApi'
 import { createMockApi } from '../../mocks/createMockApi'
@@ -160,5 +160,91 @@ describe('CameraSetup', () => {
     renderSetup()
 
     expect(await screen.findByText(text)).toBeInTheDocument()
+  })
+})
+
+describe('CameraSetup connecting progress', () => {
+  let status: StationCamera['status']
+
+  beforeEach(() => {
+    // the clock only moves when a test advances it, so every step lands on an exact tick
+    vi.useFakeTimers()
+    status = 'PENDING'
+    const api = createMockApi(undefined, 0)
+    api.cages.getCamera = async () => ({ ...SAVED_RTSP, status, statusAt: null })
+    setApi(api)
+  })
+
+  afterEach(() => vi.useRealTimers())
+
+  // lets the query resolve and the component render, without moving the clock
+  async function settle() {
+    for (let i = 0; i < 10; i++) await act(() => vi.advanceTimersByTimeAsync(0))
+  }
+  const advance = (ms: number) => act(() => vi.advanceTimersByTimeAsync(ms))
+  // the data-state of each step of the progress list, in order
+  const stepStates = () =>
+    Array.from(document.querySelectorAll('li[data-state]')).map((li) => li.getAttribute('data-state'))
+
+  it('walks through the steps on a timer and stops at the last one', async () => {
+    renderSetup()
+    await settle()
+
+    expect(screen.getByText('Buscando la cámara en la red…', { selector: 'li' })).toBeInTheDocument()
+    expect(stepStates()).toEqual(['current', 'pending', 'pending'])
+    await advance(2_500)
+    expect(stepStates()).toEqual(['done', 'current', 'pending'])
+    await advance(2_500)
+    expect(stepStates()).toEqual(['done', 'done', 'current'])
+    await advance(2_000)
+    expect(stepStates()).toEqual(['done', 'done', 'current'])
+  })
+
+  it('ends with every step checked and the success text when the camera connects', async () => {
+    renderSetup()
+    await settle()
+
+    status = 'CONNECTED'
+    // the status is asked again every 3 s: give it two rounds to land
+    await advance(6_000)
+    await settle()
+
+    expect(screen.getByText('Listo, la cámara está conectada.')).toBeInTheDocument()
+    expect(stepStates()).toEqual(['done', 'done', 'done'])
+  })
+
+  it('stops where it was and shows the error text when the camera cannot be reached', async () => {
+    renderSetup()
+    await settle()
+    await advance(2_500)
+
+    status = 'UNREACHABLE'
+    await advance(3_000)
+    await settle()
+
+    expect(
+      screen.getByText(
+        'La laptop no encuentra la cámara. Revisa la IP y que ambas estén en el mismo wifi.',
+      ),
+    ).toBeInTheDocument()
+    await advance(20_000)
+    expect(stepStates()).not.toContain('current')
+    expect(screen.queryByText('Listo, la cámara está conectada.')).not.toBeInTheDocument()
+  })
+})
+
+describe('CameraSetup form autofill', () => {
+  it('asks the browser not to autofill the camera username, and asks for a new password', async () => {
+    const api = createMockApi(undefined, 0)
+    api.cages.getCamera = async () => SAVED_RTSP
+    setApi(api)
+    renderSetup()
+    await userEvent.click(await screen.findByRole('button', { name: 'Cambiar cámara' }))
+
+    expect(screen.getByLabelText('Usuario de la cámara')).toHaveAttribute('autocomplete', 'off')
+    expect(screen.getByLabelText('Contraseña de la cámara')).toHaveAttribute(
+      'autocomplete',
+      'new-password',
+    )
   })
 })
