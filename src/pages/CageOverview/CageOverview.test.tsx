@@ -30,6 +30,53 @@ describe('CageOverview', () => {
     }
   })
 
+  it('tells, for each guinea pig, what the AI sees in its newest minute', async () => {
+    const api = createMockApi(undefined, 0)
+    const data = await api.cages.getHealth('cage-1')
+    const at = '2026-11-19T09:59:00Z'
+    const window = {
+      windowSeconds: 60,
+      feederVisits: 0,
+      watererVisits: 0,
+      detectionConfidence: 0.9,
+    }
+    api.cages.getHealth = async () => ({
+      ...data,
+      updatedAt: '2026-11-19T10:00:00Z',
+      monitoring: {
+        connectedAt: '2026-11-19T09:00:00Z',
+        lastAudioLabel: null,
+        lastBehaviorAt: at,
+        guineaPigs: [
+          {
+            guineaPigId: 1,
+            color: 'RED',
+            at,
+            window: { ...window, stillSeconds: 57 },
+            symptoms: ['VERY_STILL', 'NOT_EATING'],
+          },
+          {
+            guineaPigId: 2,
+            color: 'BLUE',
+            at,
+            window: { ...window, stillSeconds: 10, feederVisits: 2, watererVisits: 1 },
+            symptoms: [],
+          },
+        ],
+      },
+    })
+    setApi(api)
+    renderInCage(<CageOverview />)
+    const panel = within(await screen.findByRole('region', { name: 'Monitoreo de sensores' }))
+
+    expect(panel.getByRole('heading', { name: 'Lo que la IA ve en cada cuy' })).toBeInTheDocument()
+    expect(panel.getByText(/Casi no se mueve: estuvo quieto 57 de 60 segundos/)).toBeInTheDocument()
+    expect(panel.getByText('No fue al comedero, aunque normalmente sí va')).toBeInTheDocument()
+    expect(
+      panel.getByText(/sin síntomas en el último minuto: quieto 10 de 60 s, 2 visitas al comedero/),
+    ).toBeInTheDocument()
+  })
+
   it('starts a physical measurement using fresh server time and excludes older readings', async () => {
     const api = createMockApi(undefined, 0)
     const data = await api.cages.getHealth('cage-1')

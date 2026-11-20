@@ -35,7 +35,17 @@
     "waiting": "Waiting for new readings",
     "partial": "Partial measurement · {{count}} of 3 signals",
     "complete": "Measurement complete · 3 of 3 signals",
-    "offline": "Unable to refresh. The screen shows the last results received."
+    "offline": "Unable to refresh. The screen shows the last results received.",
+    "liveTitle": "What the AI sees in each guinea pig",
+    "symptomsLead": "shows in the last minute:",
+    "symptomsNone": "no symptoms in the last minute: still {{seconds}} of {{window}} s, {{feeder}} visits to the feeder and {{water}} to the water bottle.",
+    "detection": "detection {{confidence}} %",
+    "symptom": {
+      "UNUSUAL": "It moves differently from how it usually does",
+      "VERY_STILL": "It barely moves: still {{seconds}} of {{window}} seconds, much longer than normal for it",
+      "NOT_EATING": "It did not go to the feeder, though it usually does",
+      "APART": "It keeps apart from the group"
+    }
   },
   "app": {
     "title": "Guinea Pig Health Monitor",

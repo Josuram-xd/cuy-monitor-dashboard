@@ -18,6 +18,23 @@ export interface WeightHealth {
   lastMeasuredAt: string | null
 }
 
+// what stands out in a guinea pig's newest minute, compared with what is normal for it (backend BehaviorSymptom)
+export type BehaviorSymptom = 'UNUSUAL' | 'VERY_STILL' | 'NOT_EATING' | 'APART'
+
+export interface LiveObservation {
+  guineaPigId: number
+  color: string
+  at: string
+  window: {
+    windowSeconds: number
+    stillSeconds: number
+    feederVisits: number
+    watererVisits: number
+    detectionConfidence: number
+  }
+  symptoms: BehaviorSymptom[]
+}
+
 export interface CageHealth {
   cageId: string
   // worst status of its parts
@@ -35,6 +52,8 @@ export interface CageHealth {
     connectedAt: string
     lastBehaviorAt: string | null
     lastAudioLabel: 'NORMAL' | 'DISTRESS' | null
+    // the newest window of each guinea pig since the equipment was connected
+    guineaPigs?: LiveObservation[]
   } | null
   updatedAt: string
 }
