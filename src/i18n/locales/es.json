@@ -414,7 +414,7 @@
       "submitting": "Registrando…",
       "allUsed": "Ya hay un cuy con cada color de marca. No se pueden registrar más en esta jaula.",
       "photo": "Foto del cuy",
-      "photoHint": "Una foto de cerca, con buena luz: así lo reconoces en el panel.",
+      "photoHint": "Foto de cuerpo entero, desde arriba y con buena luz: así lo reconoces en el panel y la cámara lo identifica aunque no se vea su marca.",
       "photoPick": "Tomar o elegir foto",
       "photoChange": "Cambiar foto",
       "photoBusy": "Preparando la foto…",
