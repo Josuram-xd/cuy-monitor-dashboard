@@ -404,7 +404,7 @@
       "submitting": "Registering…",
       "allUsed": "There is already a guinea pig with each mark color. No more can be registered in this cage.",
       "photo": "Photo of the guinea pig",
-      "photoHint": "A close photo with good light: that is how you recognize it on the panel.",
+      "photoHint": "Full body, from above, with good light: that is how you recognize it on the panel and how the camera identifies it when its mark is hidden.",
       "photoPick": "Take or choose a photo",
       "photoChange": "Change photo",
       "photoBusy": "Preparing the photo…",
