@@ -6,6 +6,6 @@ export function useCageHealth(cageId: string) {
   return useQuery({
     queryKey: queryKeys.cageHealth(cageId),
     queryFn: async ({ signal }) => (await getDashboardApi()).cages.getHealth(cageId, signal),
-    refetchInterval: LIVE_REFRESH_MS,
+    refetchInterval: (query) => (query.state.data?.monitoring ? 5_000 : LIVE_REFRESH_MS),
   })
 }

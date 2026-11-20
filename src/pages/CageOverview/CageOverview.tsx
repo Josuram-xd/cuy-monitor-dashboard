@@ -1,4 +1,7 @@
+import { MarkColorDot } from '../../components/MarkColorDot/MarkColorDot'
 import { Suspense, useState } from 'react'
+import { useMutation } from '@tanstack/react-query'
+import { getDashboardApi } from '../../api/apiProvider'
 import { AlertList } from '../../components/AlertList/AlertList'
 import { Button, ButtonLink } from '../../components/Button/Button'
 import { CageStatusBanner } from '../../components/CageStatusBanner/CageStatusBanner'
@@ -29,7 +32,8 @@ import { useToast } from '../../components/Toast/useToast'
 import { ApiError } from '../../api/ApiError'
 import { useGuineaPigs } from '../../hooks/useGuineaPigs'
 import { useNow } from '../../hooks/useNow'
-import { t } from '../../i18n'
+import { dateLocale, t } from '../../i18n'
+import type { CageHealth } from '../../types/CageHealth'
 import styles from './CageOverview.module.css'
 import { severity } from '../../types/HealthStatus'
 
@@ -159,6 +163,118 @@ function WeightSection({ cageId }: { cageId: string }) {
   )
 }
 
+function SensorMeasurement({
+  health,
+  refresh,
+  failed,
+}: {
+  health: CageHealth
+  refresh: () => Promise<string | undefined>
+  failed: boolean
+}) {
+  const [start, setStart] = useState<number | null>(null)
+  const [starting, setStarting] = useState(false)
+  const connectedAt = Date.parse(health.monitoring!.connectedAt)
+  const measuredAt = Date.parse(health.weight.lastMeasuredAt ?? '')
+  const hasWeight = health.weight.lastGrams != null && measuredAt >= connectedAt
+  // The bridge normally sends every 10 s. Allow missed samples and network delay.
+  const freshWeight = hasWeight && Date.parse(health.updatedAt) - measuredAt < 45_000
+  const observation = health.monitoring?.observation
+  const observationAt = health.monitoring?.lastBehaviorAt
+  const signals = [
+    {
+      key: 'scale',
+      at: health.weight.lastMeasuredAt,
+      value:
+        health.weight.lastGrams == null
+          ? ''
+          : t('monitor.grams', { value: Math.max(0, health.weight.lastGrams) }),
+    },
+    { key: 'camera', at: health.monitoring?.lastBehaviorAt, value: t('monitor.window') },
+    {
+      key: 'microphone',
+      at: health.audio.lastEventAt,
+      value: health.monitoring?.lastAudioLabel
+        ? t(`monitor.${health.monitoring.lastAudioLabel}`)
+        : '',
+    },
+  ]
+  const received = (at?: string | null) => !!at && Date.parse(at) > (start ?? connectedAt)
+  const count = signals.filter(
+    (signal) => received(signal.at) && (signal.key !== 'scale' || freshWeight),
+  ).length
+  async function begin() {
+    setStarting(true)
+    try {
+      const serverTime = await refresh()
+      if (serverTime) setStart(Date.parse(serverTime))
+    } finally {
+      setStarting(false)
+    }
+  }
+  return (
+    <section className={styles.panel} aria-label={t('monitor.title')}>
+      <h2 className={styles.sectionTitle}>{t('monitor.title')}</h2>
+      <p>{t('monitor.hint')}</p>
+      <div>
+        <Button onClick={begin} disabled={starting}>
+          {t('monitor.start')}
+        </Button>
+      </div>
+      {!failed && !freshWeight && (
+        <p role="alert" className={styles.sensorNotice}>
+          {t(hasWeight ? 'monitor.scaleStale' : 'monitor.scaleMissing')}
+        </p>
+      )}
+      {!failed && freshWeight && <p role="status">{t('monitor.scaleActive')}</p>}
+      {observation && observationAt && received(observationAt) && (
+        <div>
+          <h3>{t('monitor.observation')}</h3>
+          <p>
+            <MarkColorDot color={observation.color} />
+            {' · '}
+            {t('monitor.stillEstimate', {
+              seconds: Math.round(observation.stillSeconds),
+              window: observation.windowSeconds,
+              confidence: Math.round(observation.detectionConfidence * 100),
+            })}
+          </p>
+          <time dateTime={observationAt}>
+            {new Date(observationAt).toLocaleString(dateLocale())}
+          </time>
+        </div>
+      )}
+      {failed && <p role="status">{t('monitor.offline')}</p>}
+      {start !== null && (
+        <p role="status">
+          {t(
+            count === 3 ? 'monitor.complete' : count === 0 ? 'monitor.waiting' : 'monitor.partial',
+            { count },
+          )}
+        </p>
+      )}
+      <ul>
+        {signals.map(({ key, at, value }) => (
+          <li key={key}>
+            <strong>{t(`monitor.${key}`)}</strong>
+            {' · '}
+            {at && received(at) && (key !== 'scale' || hasWeight) ? (
+              <>
+                {key === 'scale' && !freshWeight && t('monitor.lastWeight')}
+                {value}
+                {' · '}
+                <time dateTime={at}>{new Date(at).toLocaleString(dateLocale())}</time>
+              </>
+            ) : (
+              t('monitor.noData')
+            )}
+          </li>
+        ))}
+      </ul>
+    </section>
+  )
+}
+
 export function CageOverview() {
   const cageId = useCageId()
   const cage = useCage(cageId)
@@ -170,6 +286,18 @@ export function CageOverview() {
   const now = useNow()
   const simulation = useStartSimulation(cageId)
   const toast = useToast()
+  const equipment = useMutation({
+    mutationFn: async (connect: boolean) =>
+      (await getDashboardApi()).cages.setEquipment(cageId, connect),
+    onSuccess: () => health.refetch(),
+    onError: (error) =>
+      toast.show({
+        message: t(
+          error instanceof ApiError && error.status === 409 ? 'monitor.busy' : 'monitor.failed',
+        ),
+        tone: 'info',
+      }),
+  })
 
   function startSimulation() {
     simulation.mutate(undefined, {
@@ -203,15 +331,23 @@ export function CageOverview() {
           {cage.data?.location && <p className={styles.location}>{cage.data.location}</p>}
         </div>
         <div className={styles.headerActions}>
+          <Button
+            disabled={!health.data || equipment.isPending}
+            onClick={() => equipment.mutate(!health.data?.monitoring)}
+          >
+            {t(health.data?.monitoring ? 'monitor.disconnect' : 'monitor.connect')}
+          </Button>
           <RefreshButton queryKeys={[['cage', cageId], ['alerts']]} />
           {/* for practice: the AI analyses a drawn cage, see POST /cages/{id}/simulation */}
-          <Button
-            onClick={startSimulation}
-            disabled={simulation.isPending || guineaPigCount === 0}
-            title={t('cage.simulateHint')}
-          >
-            {t('cage.simulate')}
-          </Button>
+          {health.data && !health.data.monitoring && (
+            <Button
+              onClick={startSimulation}
+              disabled={simulation.isPending || guineaPigCount === 0}
+              title={t('cage.simulateHint')}
+            >
+              {t('cage.simulate')}
+            </Button>
+          )}
           <ButtonLink to={cagePath(cageId, '/guinea-pigs/new')} variant="primary">
             {t('cage.newGuineaPig')}
           </ButtonLink>
@@ -219,6 +355,17 @@ export function CageOverview() {
       </header>
       {/* no data or failed request: the banner shows UNKNOWN, never "Normal" */}
       <CageStatusBanner health={health.data} now={now} liveIndicator={<LiveIndicator />} />
+      {health.data?.monitoring && (
+        <SensorMeasurement
+          key={cageId}
+          health={health.data}
+          failed={health.isError}
+          refresh={async () => {
+            const result = await health.refetch()
+            return result.isSuccess ? result.data.updatedAt : undefined
+          }}
+        />
+      )}
       <div className={styles.columns}>
         <Reveal className={styles.cell}>
           <section className={styles.section} aria-labelledby="guinea-pigs-heading">

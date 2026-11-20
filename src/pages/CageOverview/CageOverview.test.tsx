@@ -30,6 +30,38 @@ describe('CageOverview', () => {
     }
   })
 
+  it('starts a physical measurement using fresh server time and excludes older readings', async () => {
+    const api = createMockApi(undefined, 0)
+    const data = await api.cages.getHealth('cage-1')
+    const old = '2026-11-18T10:00:00Z'
+    api.cages.getHealth = async () => ({
+      ...data,
+      updatedAt: '2026-11-19T10:00:00Z',
+      weight: { status: 'NORMAL', lastGrams: -2, lastMeasuredAt: old },
+      audio: { status: 'NORMAL', lastEventAt: old },
+      monitoring: {
+        connectedAt: '2026-11-17T10:00:00Z',
+        lastAudioLabel: 'NORMAL',
+        lastBehaviorAt: old,
+        observation: {
+          color: 'RED',
+          stillSeconds: 12,
+          windowSeconds: 60,
+          detectionConfidence: 0.9,
+        },
+      },
+    })
+    setApi(api)
+    renderInCage(<CageOverview />)
+    const panel = within(await screen.findByRole('region', { name: 'Monitoreo de sensores' }))
+    expect(panel.getByText(/0 g/)).toBeInTheDocument()
+    expect(panel.getByRole('alert')).toHaveTextContent('El peso dejó de actualizarse')
+    expect(panel.getByText(/12 de 60 segundos/)).toBeInTheDocument()
+    await userEvent.click(panel.getByRole('button', { name: 'Iniciar medición' }))
+    expect(await panel.findByText('Esperando lecturas nuevas')).toBeInTheDocument()
+    expect(panel.getAllByText(/Sin datos nuevos/)).toHaveLength(3)
+  })
+
   it('puts the guinea pigs that need attention first', async () => {
     renderInCage(<CageOverview />)
     const grid = await screen.findByRole('list', { name: 'Tus cuyes' })

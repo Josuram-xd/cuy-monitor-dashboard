@@ -25,5 +25,16 @@ export interface CageHealth {
   guineaPigs: CageGuineaPigStatus[]
   audio: AudioHealth
   weight: WeightHealth
+  monitoring?: {
+    observation?: {
+      color: string
+      windowSeconds: number
+      stillSeconds: number
+      detectionConfidence: number
+    } | null
+    connectedAt: string
+    lastBehaviorAt: string | null
+    lastAudioLabel: 'NORMAL' | 'DISTRESS' | null
+  } | null
   updatedAt: string
 }

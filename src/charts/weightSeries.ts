@@ -9,7 +9,7 @@ export interface WeightPoint {
 export function stableReadings(readings: WeightReading[]): WeightPoint[] {
   return readings
     .filter((reading) => reading.stable)
-    .map((reading) => ({ time: Date.parse(reading.measuredAt), grams: reading.grams }))
+    .map((reading) => ({ time: Date.parse(reading.measuredAt), grams: Math.max(0, reading.grams) }))
     .sort((a, b) => a.time - b.time)
 }
 
