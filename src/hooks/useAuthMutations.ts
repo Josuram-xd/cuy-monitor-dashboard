@@ -28,7 +28,7 @@ export function useGoogleLoginMutation() {
 
 export function useDemoLoginMutation() {
   return useMutation({
-    mutationFn: async () => (await getDashboardApi()).auth.demoLogin(),
+    mutationFn: async (admin?: boolean) => (await getDashboardApi()).auth.demoLogin(admin),
   })
 }
 
