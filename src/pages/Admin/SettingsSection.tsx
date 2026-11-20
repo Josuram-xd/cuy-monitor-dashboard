@@ -16,17 +16,22 @@ import { t } from '../../i18n'
 import type { AdminSetting } from '../../types/Admin'
 import styles from './Admin.module.css'
 
-const GROUPS = ['health', 'message', 'assistant'] as const
+export type SettingGroup = 'health' | 'message' | 'assistant'
+
+const ICONS = { health: 'activity', message: 'bell', assistant: 'info' } as const
 
 const label = (key: string) => t(`admin.settings.keys.${key}.label`)
 
 /**
- * "Reglas y mensajes": the health rules, the alert texts and the assistant's limit. The backend checks every
- * value against its range and applies them at once; the defaults are one button away.
+ * One group of "Reglas y mensajes" (the health rules, the alert texts or the assistant's limit), each in its own
+ * tab of the admin panel. The backend checks every value against its range and applies them at once; the
+ * defaults are one button away.
  */
 export function SettingsSection({
+  group,
   onAction = () => {},
 }: {
+  group: SettingGroup
   onAction?: (text: string, ok: boolean) => void
 }) {
   const settings = useAdminSettings()
@@ -42,7 +47,7 @@ export function SettingsSection({
     return <ErrorState message={t('admin.loadFailed')} onRetry={() => void settings.refetch()} />
   }
 
-  const all = settings.data
+  const all = settings.data.filter((s) => s.key.startsWith(`${group}.`))
   const valueOf = (s: AdminSetting) => draft[s.key] ?? s.value
   const changed = all.filter((s) => draft[s.key] !== undefined && draft[s.key].trim() !== s.value)
 
@@ -79,32 +84,25 @@ export function SettingsSection({
   }
 
   return (
-    <section className={styles.card} aria-labelledby="settings-heading">
+    <section className={styles.card} aria-labelledby={`settings-${group}-heading`}>
       <div className={styles.cardHeader}>
         <span className={styles.cardIcon} aria-hidden="true">
-          <Icon name="activity" size={22} />
+          <Icon name={ICONS[group]} size={22} />
         </span>
         <div>
-          <h2 id="settings-heading">{t('admin.settings.title')}</h2>
-          <p className={styles.intro}>{t('admin.settings.intro')}</p>
+          <h2 id={`settings-${group}-heading`}>{t(`admin.settings.groups.${group}`)}</h2>
+          <p className={styles.intro}>{t(`admin.settings.intros.${group}`)}</p>
         </div>
       </div>
 
-      <form onSubmit={save} noValidate>
-        {GROUPS.map((group) => (
-          <fieldset key={group} className={styles.settingGroup}>
-            <legend className={styles.addTitle}>{t(`admin.settings.groups.${group}`)}</legend>
-            {all
-              .filter((s) => s.key.startsWith(`${group}.`))
-              .map((s) => (
-                <SettingField
-                  key={s.key}
-                  setting={s}
-                  value={valueOf(s)}
-                  onChange={(value) => setDraft((current) => ({ ...current, [s.key]: value }))}
-                />
-              ))}
-          </fieldset>
+      <form onSubmit={save} noValidate className={styles.settingGroup}>
+        {all.map((s) => (
+          <SettingField
+            key={s.key}
+            setting={s}
+            value={valueOf(s)}
+            onChange={(value) => setDraft((current) => ({ ...current, [s.key]: value }))}
+          />
         ))}
         {update.isError && <FormError message={t('admin.settings.saveFailed')} />}
         <div className={styles.userActions}>
@@ -147,7 +145,10 @@ function SettingField({
   onChange: (value: string) => void
 }) {
   const help = t(`admin.settings.keys.${setting.key}.help`)
-  const byDefault = t('admin.settings.default', { value: setting.defaultValue })
+  const byDefault =
+    value.trim() === setting.defaultValue
+      ? t('admin.settings.isDefault')
+      : t('admin.settings.default', { value: setting.defaultValue })
   if (setting.kind === 'TEXT') {
     return (
       <TextField

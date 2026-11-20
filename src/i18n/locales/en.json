@@ -877,7 +877,23 @@
       "reset": "Back to the defaults",
       "resetTitle": "Back to the defaults?",
       "resetExplain": "Every rule, text and the assistant limit go back to how they came. It applies at once.",
-      "restored": "The defaults are back."
+      "restored": "The defaults are back.",
+      "intros": {
+        "health": "When a guinea pig goes to observed, alert or critical. It applies on saving, nothing restarts.",
+        "message": "What the breeder reads on each alert. It applies to new alerts on saving.",
+        "assistant": "How much the assistant can be asked. It applies on saving."
+      },
+      "isDefault": "This is the default value."
+    },
+    "tabs": {
+      "label": "What to set up",
+      "accounts": "Accounts",
+      "health": "Health rules",
+      "message": "Alert texts",
+      "assistant": "Assistant",
+      "catalog": "Catalog",
+      "actions": "Action log",
+      "ai": "AI log"
     }
   },
   "usb": {

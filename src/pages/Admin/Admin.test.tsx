@@ -20,7 +20,20 @@ function setup() {
   return { api }
 }
 
-const catalog = () => screen.findByRole('region', { name: 'Catálogo' })
+// the panel shows one section at a time, chosen from its nav bar
+async function openTab(name: string) {
+  const nav = await screen.findByRole('navigation', { name: 'Qué quieres configurar' })
+  await userEvent.click(within(nav).getByRole('button', { name }))
+}
+
+const catalog = async () => {
+  await openTab('Catálogo')
+  return screen.findByRole('region', { name: 'Catálogo' })
+}
+const actionLog = async () => {
+  await openTab('Registro de acciones')
+  return screen.findByRole('region', { name: 'Registro de acciones' })
+}
 const accounts = () => screen.findByRole('region', { name: 'Cuentas' })
 
 describe('Admin', () => {
@@ -80,7 +93,7 @@ describe('Admin', () => {
     await user.click(within(section).getByRole('button', { name: 'Añadir' }))
     await within(section).findByText('Cuy colombiano')
 
-    const log = screen.getByRole('region', { name: 'Registro de acciones' })
+    const log = await actionLog()
     expect(within(log).getByText('Añadiste «Cuy colombiano» al catálogo')).toBeInTheDocument()
   })
 
@@ -164,7 +177,7 @@ describe('Admin', () => {
     await waitFor(() => {
       expect(within(row).getByText('Administrador')).toBeInTheDocument()
     })
-    const log = screen.getByRole('region', { name: 'Registro de acciones' })
+    const log = await actionLog()
     expect(
       within(log).getByText('Hiciste administrador a Ana Quispe (ana@cuymonitor.local)'),
     ).toBeInTheDocument()
@@ -175,11 +188,17 @@ describe('Admin', () => {
     const user = userEvent.setup()
     const { api } = setup()
     const changeRole = vi.spyOn(api.admin, 'changeUserRole')
-    const row = (await within(await accounts()).findByText('Ana Quispe')).closest('li') as HTMLElement
+    const row = (await within(await accounts()).findByText('Ana Quispe')).closest(
+      'li',
+    ) as HTMLElement
 
     await user.click(within(row).getByRole('button', { name: /^Hacer administrador a / }))
-    await user.click(within(await screen.findByRole('dialog')).getByRole('button', { name: 'Continuar' }))
-    await user.click(within(await screen.findByRole('dialog')).getByRole('button', { name: 'Cancelar' }))
+    await user.click(
+      within(await screen.findByRole('dialog')).getByRole('button', { name: 'Continuar' }),
+    )
+    await user.click(
+      within(await screen.findByRole('dialog')).getByRole('button', { name: 'Cancelar' }),
+    )
 
     expect(changeRole).not.toHaveBeenCalled()
     expect(within(row).getByText('Criador')).toBeInTheDocument()
@@ -248,6 +267,7 @@ describe('Admin', () => {
   it('lists what the AI did, its advice included', async () => {
     setup()
 
+    await openTab('Registro de la IA')
     const region = await screen.findByRole('region', { name: 'Registro de la IA' })
     expect(await within(region).findByText(/revísalo y, si sigue así/)).toBeInTheDocument()
     expect(within(region).getByText('Recomendación')).toBeInTheDocument()
@@ -258,15 +278,18 @@ describe('Admin', () => {
     const user = userEvent.setup()
     const { api } = setup()
     const update = vi.spyOn(api.admin, 'updateSettings')
-    const region = await screen.findByRole('region', { name: 'Reglas y mensajes' })
+    await openTab('Reglas de salud')
+    const region = await screen.findByRole('region', { name: 'Reglas de salud' })
     const field = await within(region).findByLabelText('Minutos en observación antes de la alerta')
 
     await user.clear(field)
     await user.type(field, '20')
     await user.click(within(region).getByRole('button', { name: 'Guardar 1 cambios' }))
 
-    await waitFor(() => expect(update).toHaveBeenCalledWith({ 'health.observedToAlertMinutes': '20' }))
-    const log = screen.getByRole('region', { name: 'Registro de acciones' })
+    await waitFor(() =>
+      expect(update).toHaveBeenCalledWith({ 'health.observedToAlertMinutes': '20' }),
+    )
+    const log = await actionLog()
     expect(
       await within(log).findByText(/Minutos en observación antes de la alerta: «30» → «20»/),
     ).toBeInTheDocument()
@@ -276,12 +299,44 @@ describe('Admin', () => {
     const user = userEvent.setup()
     const { api } = setup()
     const reset = vi.spyOn(api.admin, 'resetSettings')
-    const region = await screen.findByRole('region', { name: 'Reglas y mensajes' })
+    await openTab('Reglas de salud')
+    const region = await screen.findByRole('region', { name: 'Reglas de salud' })
 
-    await user.click(within(region).getByRole('button', { name: 'Volver a los valores de fábrica' }))
+    await user.click(
+      within(region).getByRole('button', { name: 'Volver a los valores de fábrica' }),
+    )
     const dialog = await screen.findByRole('dialog')
-    await user.click(within(dialog).getByRole('button', { name: 'Volver a los valores de fábrica' }))
+    await user.click(
+      within(dialog).getByRole('button', { name: 'Volver a los valores de fábrica' }),
+    )
 
     await waitFor(() => expect(reset).toHaveBeenCalledTimes(1))
+  })
+})
+
+describe('Admin navigation', () => {
+  afterEach(() => {
+    mockSession.end()
+    localStorage.clear()
+  })
+
+  it('shows one section at a time, starting with the accounts', async () => {
+    setup()
+
+    expect(await screen.findByRole('region', { name: 'Cuentas' })).toBeInTheDocument()
+    expect(screen.queryByRole('region', { name: 'Catálogo' })).not.toBeInTheDocument()
+
+    await openTab('Textos de alertas')
+    const texts = await screen.findByRole('region', { name: 'Textos de las alertas' })
+    expect(within(texts).getByLabelText('Texto de una alerta')).toBeInTheDocument()
+    // the health rules are in their own tab, not mixed with the texts
+    expect(
+      within(texts).queryByLabelText('Minutos en observación antes de la alerta'),
+    ).not.toBeInTheDocument()
+    expect(screen.queryByRole('region', { name: 'Cuentas' })).not.toBeInTheDocument()
+    expect(screen.getByRole('button', { name: 'Textos de alertas' })).toHaveAttribute(
+      'aria-current',
+      'page',
+    )
   })
 })

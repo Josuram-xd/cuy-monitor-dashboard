@@ -245,3 +245,34 @@
   padding: 0;
   border: 0;
 }
+
+/* what the admin wants to set up: a row of pills that scrolls sideways on a phone */
+.tabs {
+  display: flex;
+  gap: var(--space-2);
+  padding-bottom: var(--space-1);
+  overflow-x: auto;
+  scrollbar-width: thin;
+}
+
+.tab {
+  flex: none;
+  padding: var(--space-2) var(--space-4);
+  border: 1px solid var(--color-border);
+  border-radius: var(--radius-full);
+  background: var(--color-surface);
+  color: var(--color-text);
+  font: inherit;
+  font-weight: 600;
+  cursor: pointer;
+}
+
+.tab:hover {
+  border-color: var(--color-primary);
+}
+
+.tab[aria-current='page'] {
+  border-color: var(--color-primary-strong);
+  background: var(--color-primary-strong);
+  color: var(--color-on-primary);
+}
