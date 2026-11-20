@@ -34,6 +34,8 @@ const Account = page(() => import('./pages/Account/Account'), 'Account')
 // only an admin ever opens it, so it stays out of everybody's bundle
 const Admin = page(() => import('./pages/Admin/Admin'), 'Admin')
 const Settings = page(() => import('./pages/Settings/Settings'), 'Settings')
+const Privacy = page(() => import('./pages/Legal/Legal'), 'Privacy')
+const Terms = page(() => import('./pages/Legal/Legal'), 'Terms')
 
 function lazyPage(Page: LazyExoticComponent<ComponentType>) {
   return (
@@ -44,6 +46,9 @@ function lazyPage(Page: LazyExoticComponent<ComponentType>) {
 }
 
 export const routes: RouteObject[] = [
+  // readable with or without a session: the register page links here
+  { path: 'privacy', element: lazyPage(Privacy) },
+  { path: 'terms', element: lazyPage(Terms) },
   {
     // login, registration and the verification code; with a session they redirect to "/"
     element: <PublicOnlyRoute />,
