@@ -29,8 +29,8 @@ export class HttpAuthApi implements AuthApi {
     return this.http.post<void>(`${BASE}/google`, body)
   }
 
-  demoLogin(): Promise<void> {
-    return this.http.post<void>(`${BASE}/demo`, undefined)
+  demoLogin(admin = false): Promise<void> {
+    return this.http.post<void>(`${BASE}/${admin ? 'demo-admin' : 'demo'}`, undefined)
   }
 
   verifyOtp(body: VerifyOtpRequest): Promise<void> {

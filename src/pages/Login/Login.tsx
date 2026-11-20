@@ -113,13 +113,8 @@ export function Login() {
           variant="secondary"
           fullWidth
           disabled={demo.isPending || login.isPending}
-          onClick={(event) => {
-            if (trimmedUsername !== 'juanes') setPassword('')
-            setUsername('juanes')
-            setSubmitted(false)
-            setTouched({ username: false, password: false })
-            event.currentTarget.form?.querySelector<HTMLInputElement>('input[name="password"]')?.focus()
-          }}
+          aria-busy={demo.isPending}
+          onClick={() => demo.mutate(true, { onSuccess: () => signIn() })}
         >
           {t('auth.demo.adminShortcut')}
         </Button>

@@ -90,8 +90,8 @@ export interface AuthApi {
   login(body: LoginRequest): Promise<LoginChallenge>
   // sign in or sign up with the ID token of Google's button; no code, the session arrives as cookies
   googleLogin(body: GoogleLoginRequest): Promise<void>
-  // "Iniciar como usuario normal": the public demo account, no password or code. 404 when it is off
-  demoLogin(): Promise<void>
+  // "Iniciar como usuario normal" (or "Entrar como admin" with admin): no password or code. 404 when it is off
+  demoLogin(admin?: boolean): Promise<void>
   // the answer is empty: the session arrives as HttpOnly cookies the page cannot read
   verifyOtp(body: VerifyOtpRequest): Promise<void>
   // ends the session on the server; it expires the cookies and revokes the tokens
