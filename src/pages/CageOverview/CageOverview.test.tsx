@@ -66,7 +66,11 @@ describe('CageOverview', () => {
     const clock = vi.spyOn(Date, 'now').mockReturnValue(Date.now() + 21_000)
     try {
       expect(
-        await panel.findByText(/El servidor no recibió un peso nuevo en 20 segundos/, {}, { timeout: 3000 }),
+        await panel.findByText(
+          /El servidor no recibió un peso nuevo en 20 segundos/,
+          {},
+          { timeout: 3000 },
+        ),
       ).toBeInTheDocument()
       const previous = await api.cages.getHealth('cage-1')
       const at = '2026-11-19T10:00:22Z'
@@ -139,6 +143,30 @@ describe('CageOverview', () => {
     await userEvent.click(screen.getByRole('button', { name: 'Iniciar medición' }))
     expect(await screen.findByText('La IA está monitoreando esta jaula.')).toBeInTheDocument()
     expect(screen.getByText('Aviso de la otra jaula')).toBeInTheDocument()
+  })
+
+  async function renderOverviewWithoutCamera() {
+    renderInCage(<CageOverview />)
+    await screen.findByText(/quieta de lo normal/)
+  }
+
+  it('shows the camera panel only while the equipment is connected', async () => {
+    await renderOverviewWithoutCamera()
+    expect(screen.queryByRole('region', { name: 'Cámara' })).not.toBeInTheDocument()
+
+    const api = createMockApi(undefined, 0)
+    const original = await api.cages.getHealth('cage-1')
+    api.cages.getHealth = async () => ({
+      ...original,
+      monitoring: {
+        connectedAt: new Date().toISOString(),
+        lastAudioLabel: null,
+        lastBehaviorAt: null,
+      },
+    })
+    setApi(api)
+    renderInCage(<CageOverview />)
+    expect(await screen.findByRole('region', { name: 'Cámara' })).toBeInTheDocument()
   })
 
   it('stays calm when there are no open alerts', async () => {
