@@ -110,6 +110,7 @@ function PhotoCard({ cageId, guineaPig }: { cageId: string; guineaPig: GuineaPig
       </h2>
       <PhotoField
         label={t('guineaPig.detail.photoField')}
+        hint={t('guineaPig.register.photoHint')}
         // once the new one is saved the list brings it back, so the picked preview is not needed
         value={photo.isSuccess ? null : picked}
         existingUrl={photoSrc(guineaPig.photoUrl)}
