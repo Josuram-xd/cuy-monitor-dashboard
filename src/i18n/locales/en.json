@@ -1,5 +1,15 @@
 {
   "monitor": {
+    "accountAlerts": "Open alerts across my cages",
+    "aiWaiting": "AI is waiting for the first camera observation.",
+    "aiUnavailable": "Could not refresh the AI monitoring status.",
+    "aiActive": "AI is monitoring this cage.",
+    "aiStale": "AI observations have stopped. Check the phone camera.",
+    "lastAnalysis": "Last camera signal:",
+    "reading": "Reading scale…",
+    "readingHint": "Waiting for a stable weight from the Arduino. Keep the weight still.",
+    "readTimeout": "No weight received in 20 seconds. Check the USB cable, close the serial monitor and check that the scale service is running. Still waiting for a reading.",
+    "measureAgain": "Measure again",
     "chooseCage": "Choose the cage for the equipment",
     "observation": "Latest camera observation",
     "stillEstimate": "Estimated stillness: {{seconds}} of {{window}} seconds. Detection confidence: {{confidence}}%.",

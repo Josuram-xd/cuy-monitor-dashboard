@@ -23,14 +23,14 @@ import { LazyWeightChart } from '../../charts/lazyCharts'
 import type { RangePreset } from '../../charts/timeRange'
 import { useAlerts } from '../../hooks/useAlerts'
 import { useCageWeight } from '../../hooks/useCageWeight'
-import { useCage } from '../../hooks/useCages'
+import { useCage, useCages } from '../../hooks/useCages'
 import { cagePath, useCageId } from '../../hooks/useCageId'
 import { useCageHealth } from '../../hooks/useCageHealth'
 import { useProfile } from '../../hooks/useProfile'
 import { useStartSimulation } from '../../hooks/useStartSimulation'
 import { useToast } from '../../components/Toast/useToast'
 import { ApiError } from '../../api/ApiError'
-import { useGuineaPigs } from '../../hooks/useGuineaPigs'
+import { useGuineaPigs, useGuineaPigsOfCages } from '../../hooks/useGuineaPigs'
 import { useNow } from '../../hooks/useNow'
 import { dateLocale, t } from '../../i18n'
 import type { CageHealth } from '../../types/CageHealth'
@@ -96,18 +96,32 @@ function GuineaPigsSection({ cageId, now }: { cageId: string; now: number }) {
   )
 }
 
-function OpenAlertsSection({ cageId, now }: { cageId: string; now: number }) {
-  const alerts = useAlerts('OPEN', cageId)
-  // same query as the grid, TanStack Query shares it
-  const guineaPigs = useGuineaPigs(cageId)
+function OpenAlertsSection({
+  cageId,
+  alerts,
+  now,
+}: {
+  cageId?: string
+  alerts: ReturnType<typeof useAlerts>
+  now: number
+}) {
+  const cages = useCages()
+  const latest = alerts.data?.slice(0, LATEST_ALERTS) ?? []
+  const currentCage = useCageId()
+  const localPigs = useGuineaPigs(currentCage)
+  const otherPigs = useGuineaPigsOfCages([
+    ...new Set(latest.map((alert) => alert.cageId).filter((id) => id !== currentCage)),
+  ])
+  const guineaPigs = [...(localPigs.data ?? []), ...otherPigs]
+  const cageNames = Object.fromEntries((cages.data ?? []).map((cage) => [cage.cageId, cage.name]))
 
   if (alerts.isPending) {
     return <Skeleton variant="line" count={2} />
   }
-  if (alerts.isError) {
+  if (!alerts.data) {
     return <ErrorState message={t('alerts.loadError')} onRetry={() => void alerts.refetch()} />
   }
-  if (alerts.data.length === 0) {
+  if (alerts.data.length === 0 && !alerts.isError) {
     return (
       <div className={styles.calm}>
         <Mascot mood="happy" size={120} />
@@ -116,11 +130,17 @@ function OpenAlertsSection({ cageId, now }: { cageId: string; now: number }) {
     )
   }
   return (
-    <AlertList
-      alerts={alerts.data.slice(0, LATEST_ALERTS)}
-      guineaPigs={guineaPigs.data}
-      now={now}
-    />
+    <>
+      {alerts.isError && (
+        <ErrorState message={t('alerts.loadError')} onRetry={() => void alerts.refetch()} />
+      )}
+      <AlertList
+        alerts={latest}
+        guineaPigs={guineaPigs}
+        cageNames={cageId ? undefined : cageNames}
+        now={now}
+      />
+    </>
   )
 }
 
@@ -166,21 +186,35 @@ function WeightSection({ cageId }: { cageId: string }) {
 function SensorMeasurement({
   health,
   refresh,
+  updatedLocallyAt,
   failed,
 }: {
   health: CageHealth
-  refresh: () => Promise<string | undefined>
+  refresh: () => void
+  updatedLocallyAt: number
   failed: boolean
 }) {
-  const [start, setStart] = useState<number | null>(null)
-  const [starting, setStarting] = useState(false)
+  const [session, setSession] = useState<{ startedAt: number; serverStart: number } | null>(null)
+  const now = useNow(1_000)
+  // Anchor freshness to the server clock even when the phone clock is wrong.
+  const serverTime = Date.parse(health.updatedAt)
+  const serverNow = serverTime + Math.max(0, now - updatedLocallyAt)
   const connectedAt = Date.parse(health.monitoring!.connectedAt)
   const measuredAt = Date.parse(health.weight.lastMeasuredAt ?? '')
   const hasWeight = health.weight.lastGrams != null && measuredAt >= connectedAt
-  // The bridge normally sends every 10 s. Allow missed samples and network delay.
-  const freshWeight = hasWeight && Date.parse(health.updatedAt) - measuredAt < 45_000
+  const freshWeight = hasWeight && serverNow - measuredAt < 45_000
+  const sessionWeight = freshWeight && (!session || measuredAt > session.serverStart)
+  const timedOut = session && now - session.startedAt >= 20_000
+  const waitingForScale = !!session && !sessionWeight && !timedOut && !failed
   const observation = health.monitoring?.observation
   const observationAt = health.monitoring?.lastBehaviorAt
+  const lastAnalysis = Date.parse(observationAt ?? '')
+  let aiStatus = 'monitor.aiWaiting'
+  if (failed) {
+    aiStatus = 'monitor.aiUnavailable'
+  } else if (lastAnalysis >= connectedAt) {
+    aiStatus = serverNow - lastAnalysis <= 150_000 ? 'monitor.aiActive' : 'monitor.aiStale'
+  }
   const signals = [
     {
       key: 'scale',
@@ -199,35 +233,45 @@ function SensorMeasurement({
         : '',
     },
   ]
-  const received = (at?: string | null) => !!at && Date.parse(at) > (start ?? connectedAt)
+  const received = (at?: string | null) =>
+    !!at && Date.parse(at) > (session?.serverStart ?? connectedAt)
   const count = signals.filter(
     (signal) => received(signal.at) && (signal.key !== 'scale' || freshWeight),
   ).length
-  async function begin() {
-    setStarting(true)
-    try {
-      const serverTime = await refresh()
-      if (serverTime) setStart(Date.parse(serverTime))
-    } finally {
-      setStarting(false)
-    }
+  function begin() {
+    const startedAt = Date.now()
+    setSession({ startedAt, serverStart: serverTime + Math.max(0, startedAt - updatedLocallyAt) })
+    refresh()
   }
   return (
     <section className={styles.panel} aria-label={t('monitor.title')}>
       <h2 className={styles.sectionTitle}>{t('monitor.title')}</h2>
       <p>{t('monitor.hint')}</p>
       <div>
-        <Button onClick={begin} disabled={starting}>
-          {t('monitor.start')}
+        <Button onClick={begin} disabled={waitingForScale}>
+          {t(
+            waitingForScale
+              ? 'monitor.reading'
+              : session
+                ? 'monitor.measureAgain'
+                : 'monitor.start',
+          )}
         </Button>
       </div>
-      {!failed && !freshWeight && (
+      {waitingForScale && <p role="status">{t('monitor.readingHint')}</p>}
+      {!failed && !sessionWeight && !waitingForScale && (
         <p role="alert" className={styles.sensorNotice}>
-          {t(hasWeight ? 'monitor.scaleStale' : 'monitor.scaleMissing')}
+          {t(
+            session && !received(health.weight.lastMeasuredAt)
+              ? 'monitor.readTimeout'
+              : hasWeight
+                ? 'monitor.scaleStale'
+                : 'monitor.scaleMissing',
+          )}
         </p>
       )}
-      {!failed && freshWeight && <p role="status">{t('monitor.scaleActive')}</p>}
-      {observation && observationAt && received(observationAt) && (
+      {!failed && sessionWeight && <p role="status">{t('monitor.scaleActive')}</p>}
+      {observation && observationAt && Date.parse(observationAt) >= connectedAt && (
         <div>
           <h3>{t('monitor.observation')}</h3>
           <p>
@@ -245,7 +289,7 @@ function SensorMeasurement({
         </div>
       )}
       {failed && <p role="status">{t('monitor.offline')}</p>}
-      {start !== null && (
+      {session && !failed && (
         <p role="status">
           {t(
             count === 3 ? 'monitor.complete' : count === 0 ? 'monitor.waiting' : 'monitor.partial',
@@ -271,6 +315,17 @@ function SensorMeasurement({
           </li>
         ))}
       </ul>
+      <footer className={styles.monitorFooter}>
+        <p role="status">{t(aiStatus)}</p>
+        {observationAt && lastAnalysis >= connectedAt && (
+          <small>
+            {t('monitor.lastAnalysis')}{' '}
+            <time dateTime={observationAt}>
+              {new Date(observationAt).toLocaleString(dateLocale())}
+            </time>
+          </small>
+        )}
+      </footer>
     </section>
   )
 }
@@ -281,7 +336,9 @@ export function CageOverview() {
   const health = useCageHealth(cageId)
   // the same queries as the sections: only to show how many there are next to each title
   const guineaPigCount = useGuineaPigs(cageId).data?.length
-  const openAlertCount = useAlerts('OPEN', cageId).data?.length
+  const alertCageId = health.data?.monitoring ? undefined : cageId
+  const openAlerts = useAlerts('OPEN', alertCageId)
+  const openAlertCount = openAlerts.data?.length
   const profile = useProfile()
   const now = useNow()
   const simulation = useStartSimulation(cageId)
@@ -357,13 +414,11 @@ export function CageOverview() {
       <CageStatusBanner health={health.data} now={now} liveIndicator={<LiveIndicator />} />
       {health.data?.monitoring && (
         <SensorMeasurement
-          key={cageId}
+          key={cageId + health.data.monitoring.connectedAt}
+          updatedLocallyAt={health.dataUpdatedAt}
           health={health.data}
           failed={health.isError}
-          refresh={async () => {
-            const result = await health.refetch()
-            return result.isSuccess ? result.data.updatedAt : undefined
-          }}
+          refresh={() => void health.refetch()}
         />
       )}
       <div className={styles.columns}>
@@ -381,15 +436,15 @@ export function CageOverview() {
         <Reveal delay={120} className={styles.cell}>
           <section className={styles.section} aria-labelledby="open-alerts-heading">
             <h2 id="open-alerts-heading" className={styles.sectionTitle}>
-              {t('alerts.openTitle')}
+              {t(alertCageId ? 'alerts.openTitle' : 'monitor.accountAlerts')}
               {openAlertCount !== undefined && (
                 <span className={styles.count}>{openAlertCount}</span>
               )}
             </h2>
             <div className={styles.panel}>
-              <OpenAlertsSection cageId={cageId} now={now} />
+              <OpenAlertsSection cageId={alertCageId} alerts={openAlerts} now={now} />
               <ButtonLink
-                to={`/alerts?cage=${encodeURIComponent(cageId)}`}
+                to={alertCageId ? `/alerts?cage=${encodeURIComponent(alertCageId)}` : '/alerts'}
                 variant="secondary"
                 className={styles.seeAll}
               >

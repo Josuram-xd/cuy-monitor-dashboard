@@ -1,4 +1,4 @@
-import { screen, waitFor, within } from '@testing-library/react'
+import { act, screen, waitFor, within } from '@testing-library/react'
 import userEvent from '@testing-library/user-event'
 import { beforeEach, describe, expect, it, vi } from 'vitest'
 import { ApiError } from '../../api/ApiError'
@@ -58,8 +58,32 @@ describe('CageOverview', () => {
     expect(panel.getByRole('alert')).toHaveTextContent('El peso dejó de actualizarse')
     expect(panel.getByText(/12 de 60 segundos/)).toBeInTheDocument()
     await userEvent.click(panel.getByRole('button', { name: 'Iniciar medición' }))
+    expect(panel.getByRole('button', { name: 'Leyendo báscula…' })).toBeDisabled()
     expect(await panel.findByText('Esperando lecturas nuevas')).toBeInTheDocument()
+    expect(panel.getByText(/12 de 60 segundos/)).toBeInTheDocument()
     expect(panel.getAllByText(/Sin datos nuevos/)).toHaveLength(3)
+
+    const clock = vi.spyOn(Date, 'now').mockReturnValue(Date.now() + 21_000)
+    try {
+      expect(
+        await panel.findByText(/No se pudo leer el peso en 20 segundos/, {}, { timeout: 3000 }),
+      ).toBeInTheDocument()
+      const previous = await api.cages.getHealth('cage-1')
+      const at = '2026-11-19T10:00:22Z'
+      api.cages.getHealth = async () => ({
+        ...previous,
+        updatedAt: at,
+        weight: { status: 'NORMAL', lastGrams: 0, lastMeasuredAt: at },
+      })
+      await act(async () => {
+        await screen.getByRole('button', { name: 'Actualizar' }).click()
+      })
+      expect(await panel.findByText('Báscula recibiendo peso.')).toBeInTheDocument()
+      expect(panel.queryByRole('alert')).not.toBeInTheDocument()
+      expect(panel.getByText(/0 g/)).toBeInTheDocument()
+    } finally {
+      clock.mockRestore()
+    }
   })
 
   it('puts the guinea pigs that need attention first', async () => {
@@ -81,6 +105,40 @@ describe('CageOverview', () => {
       'href',
       '/alerts?cage=cage-1',
     )
+  })
+
+  it('keeps other cages alerts visible while starting a measurement and receiving camera observations', async () => {
+    const db = new MockDatabase()
+    db.alerts.unshift({
+      ...db.alerts[0],
+      id: 999,
+      cageId: 'cage-7f3a9c21',
+      message: 'Aviso de la otra jaula',
+    })
+    const api = createMockApi(db, 0)
+    const original = await api.cages.getHealth('cage-1')
+    const connectedAt = new Date(Date.now() - 10_000).toISOString()
+    let connected = false
+    let lastBehaviorAt: string | null = null
+    api.cages.setEquipment = async () => {
+      connected = true
+    }
+    api.cages.getHealth = async () => ({
+      ...original,
+      updatedAt: new Date().toISOString(),
+      monitoring: connected ? { connectedAt, lastAudioLabel: null, lastBehaviorAt } : null,
+    })
+    setApi(api)
+    renderInCage(<CageOverview />)
+    await screen.findByText(/quieta de lo normal/)
+    await userEvent.click(screen.getByRole('button', { name: 'Conectar equipo' }))
+    expect(await screen.findByText('Aviso de la otra jaula')).toBeInTheDocument()
+    expect(screen.getByRole('link', { name: 'Ver todas' })).toHaveAttribute('href', '/alerts')
+    expect(screen.getByText(/IA en espera/)).toBeInTheDocument()
+    lastBehaviorAt = new Date().toISOString()
+    await userEvent.click(screen.getByRole('button', { name: 'Iniciar medición' }))
+    expect(await screen.findByText('La IA está monitoreando esta jaula.')).toBeInTheDocument()
+    expect(screen.getByText('Aviso de la otra jaula')).toBeInTheDocument()
   })
 
   it('stays calm when there are no open alerts', async () => {
@@ -185,7 +243,7 @@ describe('CageOverview', () => {
     await screen.findByRole('list', { name: 'Tus cuyes' })
     const before = getHealth.mock.calls.length
 
-    await user.click(screen.getByRole('button', { name: 'Actualizar' }))
+    await user.click(await screen.findByRole('button', { name: 'Actualizar' }))
 
     await waitFor(() => expect(getHealth.mock.calls.length).toBeGreaterThan(before))
   })
