@@ -8,7 +8,7 @@
     "lastAnalysis": "Last camera signal:",
     "reading": "Reading scale…",
     "readingHint": "Waiting for a stable weight from the Arduino. Keep the weight still.",
-    "readTimeout": "No weight received in 20 seconds. Check the USB cable, close the serial monitor and check that the scale service is running. Still waiting for a reading.",
+    "readTimeout": "The server has received no new weight in 20 seconds. Still waiting. Use the USB check to inspect the Arduino on this computer.",
     "measureAgain": "Measure again",
     "chooseCage": "Choose the cage for the equipment",
     "observation": "Latest camera observation",
@@ -797,5 +797,22 @@
       "resetExplain": "Every rule, text and the assistant limit go back to how they came. It applies at once.",
       "restored": "The defaults are back."
     }
+  },
+  "usb": {
+    "button": "Check Arduino over USB",
+    "hint": "Run this check on the computer connected to the Arduino.",
+    "checking": "Select the Arduino port. Waiting for USB data…",
+    "raw": "Arduino and HX711 detected. The sketch sends raw readings. Calibrate the scale and upload weight_sensor to send grams.",
+    "sensor": "Arduino detected. The HX711 reports it is not responding. Check DT, SCK, power and ground.",
+    "unselected": "No port selected. If the Arduino is missing from the list, check the USB cable and driver.",
+    "denied": "The browser blocked USB access.",
+    "unsupported": "Open this check in desktop Chrome or Edge on the computer connected to the Arduino.",
+    "busy": "Could not open the selected port. The serial monitor or scale service may be using it.",
+    "silent": "Port opened but no data arrived. Check the sketch and its 115200 baud rate.",
+    "valid": "A stable weight arrived over USB. If it is missing from the dashboard, check the forwarding service and connected cage.",
+    "unstable": "The scale sends grams over USB but the weight is still unstable.",
+    "negative": "The scale is sending negative grams. Check tare and calibration.",
+    "unknown": "Unrecognized USB data. Check the sketch and baud rate.",
+    "lost": "Communication with the USB port was interrupted."
   }
 }

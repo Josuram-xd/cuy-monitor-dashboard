@@ -8,7 +8,7 @@
     "lastAnalysis": "Última señal de la cámara:",
     "reading": "Leyendo báscula…",
     "readingHint": "Esperando un peso estable del Arduino. Mantén el peso quieto.",
-    "readTimeout": "No se pudo leer el peso en 20 segundos. Comprueba el USB, cierra el monitor serie y verifica que el servicio de la báscula esté activo. Seguimos esperando la lectura.",
+    "readTimeout": "El servidor no recibió un peso nuevo en 20 segundos. Seguimos esperando. Usa la comprobación USB para revisar el Arduino en este computador.",
     "measureAgain": "Volver a medir",
     "chooseCage": "Elige la jaula que usará el equipo",
     "observation": "Última observación de la cámara",
@@ -809,5 +809,22 @@
       "resetExplain": "Todas las reglas, los textos y el límite del asistente vuelven a como venían. Se aplica al instante.",
       "restored": "Volvieron los valores de fábrica."
     }
+  },
+  "usb": {
+    "button": "Comprobar Arduino por USB",
+    "hint": "Usa esta prueba en el computador al que está conectado el Arduino.",
+    "checking": "Selecciona el puerto del Arduino. Esperando datos por USB…",
+    "raw": "Arduino y HX711 detectados. El sketch envía lecturas crudas. Calibra la báscula y carga weight_sensor para enviar gramos.",
+    "sensor": "Arduino detectado. El HX711 informa que no responde. Revisa DT, SCK, alimentación y tierra.",
+    "unselected": "No se seleccionó un puerto. Si el Arduino no aparece en la lista, revisa el cable USB y el controlador.",
+    "denied": "El navegador bloqueó el acceso al puerto USB.",
+    "unsupported": "Abre esta prueba en Chrome o Edge de escritorio en el computador conectado al Arduino.",
+    "busy": "El puerto seleccionado no se pudo abrir. Puede estar ocupado por el monitor serie o por el servicio de la báscula.",
+    "silent": "Puerto abierto, sin datos durante la prueba. Revisa el sketch y que use 115200 baudios.",
+    "valid": "Se recibió un peso estable por USB. Si sigue faltando en el dashboard, revisa el servicio de envío y la jaula conectada.",
+    "unstable": "La báscula entrega gramos por USB, pero el peso aún no es estable.",
+    "negative": "La báscula envía gramos negativos. Revisa la tara y la calibración.",
+    "unknown": "Llegaron datos por USB en un formato desconocido. Revisa el sketch y los baudios.",
+    "lost": "Se interrumpió la comunicación con el puerto USB."
   }
 }

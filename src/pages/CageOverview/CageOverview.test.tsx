@@ -66,7 +66,7 @@ describe('CageOverview', () => {
     const clock = vi.spyOn(Date, 'now').mockReturnValue(Date.now() + 21_000)
     try {
       expect(
-        await panel.findByText(/No se pudo leer el peso en 20 segundos/, {}, { timeout: 3000 }),
+        await panel.findByText(/El servidor no recibió un peso nuevo en 20 segundos/, {}, { timeout: 3000 }),
       ).toBeInTheDocument()
       const previous = await api.cages.getHealth('cage-1')
       const at = '2026-11-19T10:00:22Z'

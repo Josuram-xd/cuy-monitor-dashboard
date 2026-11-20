@@ -1,3 +1,4 @@
+import { ScaleUsbCheck } from './ScaleUsbCheck'
 import { MarkColorDot } from '../../components/MarkColorDot/MarkColorDot'
 import { Suspense, useState } from 'react'
 import { useMutation } from '@tanstack/react-query'
@@ -271,6 +272,7 @@ function SensorMeasurement({
         </p>
       )}
       {!failed && sessionWeight && <p role="status">{t('monitor.scaleActive')}</p>}
+      {!freshWeight && <ScaleUsbCheck />}
       {observation && observationAt && Date.parse(observationAt) >= connectedAt && (
         <div>
           <h3>{t('monitor.observation')}</h3>
