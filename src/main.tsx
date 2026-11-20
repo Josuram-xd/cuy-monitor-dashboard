@@ -13,6 +13,17 @@ import './styles/global.css'
 import { queryClient } from './queryClient'
 import App from './App.tsx'
 
+// A tab opened before a deployment may request a chunk from its previous build.
+window.addEventListener('vite:preloadError', (event) => {
+  const key = 'last-chunk-reload'
+  try {
+    if (!navigator.onLine || sessionStorage.getItem(key) === import.meta.url) return
+    sessionStorage.setItem(key, import.meta.url)
+  } catch { return }
+  event.preventDefault()
+  window.location.reload()
+})
+
 // before the first paint, so a dark preference never flashes light
 const preferences = loadPreferences()
 applyTheme(preferences.theme)
