@@ -80,6 +80,33 @@
         "title": "You see it on the dashboard",
         "text": "Here you see the status of each guinea pig and the alerts. When you take care of one, mark it as reviewed."
       }
+    },
+    "admin": {
+      "title": "For admins",
+      "intro": "Besides your cages, you look after the whole system from Administration. Each part has its own tab.",
+      "open": "Go to Administration",
+      "steps": {
+        "accounts": {
+          "title": "Accounts",
+          "text": "You see how many cages, guinea pigs and open alerts each account has and when it last sent data. You can make someone an admin (it asks twice), remove that role, or disable and enable an account without deleting its guinea pigs."
+        },
+        "rules": {
+          "title": "Health rules",
+          "text": "You decide when a guinea pig goes to observed, alert or critical and when the weight warns. Each field shows its range and default; it applies on saving."
+        },
+        "texts": {
+          "title": "Alert texts and assistant",
+          "text": "You change what the breeder reads on each alert and how many questions each account can ask Cuchi. \"Back to the defaults\" puts everything back."
+        },
+        "catalog": {
+          "title": "Catalog",
+          "text": "You add or hide breeds and mark colors. A hidden option stays on the guinea pigs that already use it."
+        },
+        "logs": {
+          "title": "Logs",
+          "text": "The action log keeps what you changed and whether it worked; the AI log shows what the AI analysed in each cage and the notes it wrote."
+        }
+      }
     }
   },
   "common": {
@@ -667,12 +694,17 @@
     "suggestion": {
       "observed": "What does “Under watch” mean?",
       "alert": "What do I do about an alert?",
-      "register": "How do I register a guinea pig?"
+      "register": "How do I register a guinea pig?",
+      "adminDisable": "What happens if I disable an account?",
+      "adminRules": "What changes if I raise the minutes before an alert?",
+      "adminCatalog": "How do I add a breed to the catalog?"
     },
     "error": {
       "unavailable": "Cuchi can't answer right now. Try again in a few minutes.",
       "tooMany": "You asked many questions in a row. Wait a few minutes and try again."
-    }
+    },
+    "subtitleAdmin": "I explain the app, your guinea pigs and the admin panel",
+    "greetingAdmin": "Hi! I'm Cuchi. As an admin, I can explain the panel: accounts, health rules, alert texts, the catalog and the logs. Also how your guinea pigs are doing."
   },
   "admin": {
     "title": "Monitoring",

@@ -1,6 +1,7 @@
 import { useEffect, useId, useRef, useState, type FormEvent, type KeyboardEvent } from 'react'
 import { errorMessageKey } from '../../api/errorMessages'
 import { useAskAssistant } from '../../hooks/useAskAssistant'
+import { useProfile } from '../../hooks/useProfile'
 import { currentLanguage, t } from '../../i18n'
 import {
   ASSISTANT_MAX_MESSAGES,
@@ -18,6 +19,13 @@ const SUGGESTIONS = [
   'assistant.suggestion.register',
 ]
 
+// an admin also looks after the system: Cuchi offers help with the admin panel (the backend adds its guide)
+const ADMIN_SUGGESTIONS = [
+  'assistant.suggestion.adminDisable',
+  'assistant.suggestion.adminRules',
+  'assistant.suggestion.adminCatalog',
+]
+
 // "Cuchi", the help assistant: a button over every private page that opens a small chat.
 // The conversation lives only here (the backend keeps none) and is gone when the session ends.
 export function AssistantChat() {
@@ -26,6 +34,8 @@ export function AssistantChat() {
   const [draft, setDraft] = useState('')
   const [errorKey, setErrorKey] = useState<string | null>(null)
   const ask = useAskAssistant()
+  const admin = useProfile().data?.role === 'ADMIN'
+  const suggestions = admin ? ADMIN_SUGGESTIONS : SUGGESTIONS
   const titleId = useId()
   const inputRef = useRef<HTMLTextAreaElement>(null)
   const listRef = useRef<HTMLOListElement>(null)
@@ -100,7 +110,9 @@ export function AssistantChat() {
               <h2 id={titleId} className={styles.title}>
                 {t('assistant.title')}
               </h2>
-              <p className={styles.subtitle}>{t('assistant.subtitle')}</p>
+              <p className={styles.subtitle}>
+                {t(admin ? 'assistant.subtitleAdmin' : 'assistant.subtitle')}
+              </p>
             </div>
             <button
               type="button"
@@ -113,7 +125,9 @@ export function AssistantChat() {
           </header>
 
           <ol ref={listRef} className={styles.messages} aria-live="polite">
-            <li className={cx(styles.bubble, styles.assistant)}>{t('assistant.greeting')}</li>
+            <li className={cx(styles.bubble, styles.assistant)}>
+              {t(admin ? 'assistant.greetingAdmin' : 'assistant.greeting')}
+            </li>
             {messages.map((message, index) => (
               <li
                 key={index}
@@ -143,7 +157,7 @@ export function AssistantChat() {
 
           {messages.length === 0 && (
             <div className={styles.suggestions}>
-              {SUGGESTIONS.map((key) => (
+              {suggestions.map((key) => (
                 <button
                   key={key}
                   type="button"

@@ -80,6 +80,33 @@
         "title": "Tú lo ves en el panel",
         "text": "Aquí ves el estado de cada cuy y las alertas. Cuando atiendas una, márcala como revisada."
       }
+    },
+    "admin": {
+      "title": "Para administradores",
+      "intro": "Además de tus jaulas, cuidas el sistema completo desde Administración. Cada parte tiene su pestaña.",
+      "open": "Ir a Administración",
+      "steps": {
+        "accounts": {
+          "title": "Cuentas",
+          "text": "Ves cuántas jaulas, cuyes y alertas abiertas tiene cada cuenta y cuándo recibió datos. Puedes hacer administrador a alguien (te pide confirmar dos veces), quitarle el rol, o deshabilitar y volver a habilitar una cuenta sin borrar sus cuyes."
+        },
+        "rules": {
+          "title": "Reglas de salud",
+          "text": "Decides cuándo un cuy pasa a observado, alerta o crítico y cuándo avisa el peso. Cada campo dice su rango y su valor de fábrica; se aplica al guardar."
+        },
+        "texts": {
+          "title": "Textos de alertas y asistente",
+          "text": "Cambias lo que lee el criador en cada alerta y cuántas preguntas puede hacerle cada cuenta a Cuchi. «Volver a los valores de fábrica» restaura todo."
+        },
+        "catalog": {
+          "title": "Catálogo",
+          "text": "Agregas u ocultas razas y colores de marca. Una opción oculta se queda en los cuyes que ya la usan."
+        },
+        "logs": {
+          "title": "Registros",
+          "text": "El registro de acciones guarda lo que cambiaste y si funcionó; el registro de la IA muestra lo que analizó la IA en cada jaula y las notas que escribió."
+        }
+      }
     }
   },
   "common": {
@@ -681,12 +708,17 @@
     "suggestion": {
       "observed": "¿Qué significa «En observación»?",
       "alert": "¿Qué hago si hay una alerta?",
-      "register": "¿Cómo registro un cuy?"
+      "register": "¿Cómo registro un cuy?",
+      "adminDisable": "¿Qué pasa si deshabilito una cuenta?",
+      "adminRules": "¿Qué cambia si subo los minutos antes de la alerta?",
+      "adminCatalog": "¿Cómo agrego una raza al catálogo?"
     },
     "error": {
       "unavailable": "Cuchi no puede responder ahora. Inténtalo en unos minutos.",
       "tooMany": "Hiciste muchas preguntas seguidas. Espera unos minutos y vuelve a intentarlo."
-    }
+    },
+    "subtitleAdmin": "Te explico la app, tus cuyes y el panel de administración",
+    "greetingAdmin": "¡Hola! Soy Cuchi. Como administrador, puedo explicarte el panel: las cuentas, las reglas de salud, los textos de las alertas, el catálogo y los registros. También el estado de tus cuyes."
   },
   "admin": {
     "title": "Monitoreo",
