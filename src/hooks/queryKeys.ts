@@ -14,6 +14,8 @@ export const queryKeys = {
   // under the cage, so its refresh button also refreshes the camera status
   stationCamera: (cageId: string) => ['cage', cageId, 'camera'] as const,
   guineaPigs: (cageId: string) => ['cage', cageId, 'guinea-pigs'] as const,
+  // under the cage, so starting or stopping the video also refreshes the cage
+  simulationStatus: (cageId: string) => ['cage', cageId, 'simulation'] as const,
   // under the cage too, so the refresh button of the cage also refreshes its charts
   cageWeight: (cageId: string, preset: RangePreset) => ['cage', cageId, 'weight', preset] as const,
   guineaPigHistory: (id: number, preset: RangePreset) =>
