@@ -393,7 +393,8 @@
     },
     "demo": {
       "button": "Iniciar sesión como usuario normal",
-      "failed": "La cuenta de prueba no está disponible ahora."
+      "failed": "La cuenta de prueba no está disponible ahora.",
+      "adminShortcut": "Continuar como Juanes (administrador)"
     }
   },
   "account": {
