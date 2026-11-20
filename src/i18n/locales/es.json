@@ -195,7 +195,10 @@
     },
     "catalogError": "No pudimos cargar las listas de colores y razas.",
     "weightTitle": "Peso de la jaula",
-    "weightError": "No pudimos cargar el peso."
+    "weightError": "No pudimos cargar el peso.",
+    "switchLabel": "Qué estás viendo",
+    "switchReal": "Equipo real",
+    "switchSimulation": "Simulación con video"
   },
   "camera": {
     "title": "Cámara",
@@ -255,7 +258,9 @@
     },
     "usernameRequired": "Escribe el usuario de la cámara.",
     "passwordRequired": "Escribe la contraseña de la cámara.",
-    "portInvalid": "El puerto debe ser un número entre 1 y 65535."
+    "portInvalid": "El puerto debe ser un número entre 1 y 65535.",
+    "livePicture": "Imagen de la cámara",
+    "noPicture": "Todavía no llega imagen de la cámara"
   },
   "alerts": {
     "title": "Alertas",
@@ -605,7 +610,21 @@
     },
     "simulateAll": "Simular hasta 10 jaulas",
     "simulateAllTitle": "¿Iniciar la simulación en hasta {{count}} jaulas?",
-    "simulateAllExplain": "Se eligen jaulas con cuyes de distintos estados, incluidas las críticas cuando las hay. La jaula con el equipo físico queda fuera. La simulación dura unos 35 minutos."
+    "simulateAllExplain": "Se eligen jaulas con cuyes de distintos estados, incluidas las críticas cuando las hay. La jaula con el equipo físico queda fuera. La simulación dura unos 35 minutos.",
+    "simulationCage": "Jaula de simulación"
+  },
+  "simulation": {
+    "start": "Iniciar simulación",
+    "stop": "Detener simulación",
+    "stepLoading": "Cargando el video…",
+    "stepWatching": "La IA está mirando el video. Los primeros resultados llegan en un minuto.",
+    "stepRunning": "Simulación en marcha. El peso y el sonido son simulados.",
+    "credit": "Video: {{title}}, de {{author}} ({{license}})",
+    "sourceLink": "Ver el video original",
+    "licenseLink": "Ver la licencia",
+    "explain": "Esta jaula usa un video de cuyes de internet con marcas de color pintadas. Los datos no son de tus cuyes.",
+    "busy": "Ya hay otras simulaciones en marcha. Inténtalo en unos minutos.",
+    "unavailable": "La simulación con video no está disponible ahora."
   },
   "toast": {
     "cageCreated": "Jaula «{{name}}» creada",

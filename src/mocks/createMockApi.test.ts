@@ -1,6 +1,7 @@
 import { afterEach, beforeEach, describe, expect, it, vi } from 'vitest'
 import type { DashboardApi } from '../api/DashboardApi'
-import { createMockApi } from './createMockApi'
+import { createDemoMockApi, createMockApi } from './createMockApi'
+import { MockDatabase } from './MockDatabase'
 
 const PHOTO = { photo: '/9j/4AAQ', photoContentType: 'image/jpeg' as const }
 
@@ -124,6 +125,61 @@ describe('mock station camera', () => {
     expect((await api.cages.getHealth('cage-1')).monitoring?.connectedAt).toBeTruthy()
     await api.cages.setEquipment('cage-1', false)
     expect((await api.cages.getHealth('cage-1')).monitoring).toBeUndefined()
+  })
+
+  it('flags the kit cage as monitored only while the kit is connected', async () => {
+    const api = createMockApi(undefined, 0)
+    expect((await api.cages.get('cage-1')).monitored).toBe(false)
+    await api.cages.setEquipment('cage-1', true)
+    expect((await api.cages.get('cage-1')).monitored).toBe(true)
+    await api.cages.setEquipment('cage-1', false)
+    expect((await api.cages.get('cage-1')).monitored).toBe(false)
+  })
+
+  it('creates the simulation cage once, with a guinea pig per clip color', async () => {
+    const api = createMockApi(undefined, 0)
+    const first = await api.cages.createSimulationCage()
+    const second = await api.cages.createSimulationCage()
+
+    expect(first).toMatchObject({ name: 'Simulación', simulated: true, monitored: false })
+    expect(first.cageId).toMatch(/^sim-[0-9a-f]{8}$/)
+    expect(second.cageId).toBe(first.cageId)
+    const pigs = await api.guineaPigs.list(first.cageId)
+    expect(pigs.map((g) => g.markColor)).toEqual(['RED', 'BLUE', 'GREEN'])
+  })
+
+  it('runs the video of the simulation cage, reports its credit, and stops it', async () => {
+    const api = createMockApi(undefined, 0)
+    const { cageId } = await api.cages.createSimulationCage()
+
+    await api.cages.startSimulation(cageId)
+    await api.cages.startSimulation(cageId)
+    const running = await api.cages.getSimulationStatus(cageId)
+    expect(running).toMatchObject({ running: true, framesSent: 0, frameCount: 180 })
+    expect(running.credit?.license).toBe('CC BY 4.0')
+
+    await api.cages.stopSimulation(cageId)
+    expect((await api.cages.getSimulationStatus(cageId)).running).toBe(false)
+  })
+
+  it('answers 409 when two videos already run', async () => {
+    const db = new MockDatabase()
+    // one simulation cage per account, so the second one is put in the database directly
+    db.cages.push({ ...structuredClone(db.cages[0]), cageId: 'sim-00000001', simulated: true })
+    db.cages.push({ ...structuredClone(db.cages[0]), cageId: 'sim-00000002', simulated: true })
+    const api = createMockApi(db, 0)
+    await api.cages.startSimulation('sim-00000001')
+    await api.cages.startSimulation('sim-00000002')
+    db.cages.push({ ...structuredClone(db.cages[0]), cageId: 'sim-00000003', simulated: true })
+    await expect(api.cages.startSimulation('sim-00000003')).rejects.toMatchObject({ status: 409 })
+  })
+
+  it('the demo has the kit connected and a simulation cage', async () => {
+    const api = createDemoMockApi()
+    const cages = await api.cages.list()
+
+    expect(cages.find((c) => c.simulated)?.cageId).toBe('sim-demo1234')
+    expect(cages.find((c) => c.cageId === 'cage-1')?.monitored).toBe(true)
   })
 
   it('goes from not configured to pending, then connected, and never keeps the password', async () => {

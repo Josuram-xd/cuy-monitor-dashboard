@@ -1,5 +1,8 @@
 import { ScaleUsbCheck } from './ScaleUsbCheck'
 import { CameraSetup } from './CameraSetup'
+import { SimulationPanel } from './SimulationPanel'
+import { CageSwitch } from '../../components/CageSwitch/CageSwitch'
+import { LiveSnapshot } from '../../components/LiveSnapshot/LiveSnapshot'
 import { MarkColorDot } from '../../components/MarkColorDot/MarkColorDot'
 import { Suspense, useState } from 'react'
 import { useMutation } from '@tanstack/react-query'
@@ -29,6 +32,7 @@ import { useCage, useCages } from '../../hooks/useCages'
 import { cagePath, useCageId } from '../../hooks/useCageId'
 import { useCageHealth } from '../../hooks/useCageHealth'
 import { useProfile } from '../../hooks/useProfile'
+import { useSimulationStatus, useStopSimulation } from '../../hooks/useSimulation'
 import { useStartSimulation } from '../../hooks/useStartSimulation'
 import { useToast } from '../../components/Toast/useToast'
 import { ApiError } from '../../api/ApiError'
@@ -394,6 +398,10 @@ export function CageOverview() {
   const profile = useProfile()
   const now = useNow()
   const simulation = useStartSimulation(cageId)
+  // a simulation cage plays its own video instead of a drawn cage (see SimulationPanel)
+  const isSimulation = !!cage.data?.simulated
+  const videoStatus = useSimulationStatus(cageId, isSimulation)
+  const stopping = useStopSimulation(cageId)
   const toast = useToast()
   const equipment = useMutation({
     mutationFn: async (connect: boolean) =>
@@ -422,6 +430,25 @@ export function CageOverview() {
         }),
     })
   }
+  function startVideo() {
+    simulation.mutate(undefined, {
+      onError: (error) =>
+        toast.show({
+          message: t(
+            error instanceof ApiError && error.status === 409
+              ? 'simulation.busy'
+              : 'simulation.unavailable',
+          ),
+          tone: 'info',
+        }),
+    })
+  }
+
+  function stopVideo() {
+    stopping.mutate(undefined, {
+      onError: () => toast.show({ message: t('toast.simulationFailed'), tone: 'info' }),
+    })
+  }
   // the name they picked, if they picked one: the greeting is exactly where it belongs
   const firstName = profile.data?.displayName.split(' ')[0]
 
@@ -440,15 +467,17 @@ export function CageOverview() {
           {cage.data?.location && <p className={styles.location}>{cage.data.location}</p>}
         </div>
         <div className={styles.headerActions}>
-          <Button
-            disabled={!health.data || equipment.isPending}
-            onClick={() => equipment.mutate(!health.data?.monitoring)}
-          >
-            {t(health.data?.monitoring ? 'monitor.disconnect' : 'monitor.connect')}
-          </Button>
+          {!isSimulation && (
+            <Button
+              disabled={!health.data || equipment.isPending}
+              onClick={() => equipment.mutate(!health.data?.monitoring)}
+            >
+              {t(health.data?.monitoring ? 'monitor.disconnect' : 'monitor.connect')}
+            </Button>
+          )}
           <RefreshButton queryKeys={[['cage', cageId], ['alerts']]} />
           {/* for practice: the AI analyses a drawn cage, see POST /cages/{id}/simulation */}
-          {health.data && !health.data.monitoring && (
+          {health.data && !health.data.monitoring && !isSimulation && (
             <Button
               onClick={startSimulation}
               disabled={simulation.isPending || guineaPigCount === 0}
@@ -457,22 +486,38 @@ export function CageOverview() {
               {t('cage.simulate')}
             </Button>
           )}
+          {isSimulation &&
+            (videoStatus.data?.running ? (
+              <Button onClick={stopVideo} disabled={stopping.isPending}>
+                {t('simulation.stop')}
+              </Button>
+            ) : (
+              <Button onClick={startVideo} disabled={simulation.isPending}>
+                {t('simulation.start')}
+              </Button>
+            ))}
           <ButtonLink to={cagePath(cageId, '/guinea-pigs/new')} variant="primary">
             {t('cage.newGuineaPig')}
           </ButtonLink>
         </div>
       </header>
+      <CageSwitch cageId={cageId} />
+      {isSimulation && <SimulationPanel status={videoStatus.data} />}
       {/* no data or failed request: the banner shows UNKNOWN, never "Normal" */}
       <CageStatusBanner health={health.data} now={now} liveIndicator={<LiveIndicator />} />
       {health.data?.monitoring && (
-        <SensorMeasurement
-          key={cageId + health.data.monitoring.connectedAt}
-          updatedLocallyAt={health.dataUpdatedAt}
-          health={health.data}
-          failed={health.isError}
-          refresh={() => void health.refetch()}
-        />
+        <div className={styles.monitorRow}>
+          <LiveSnapshot cageId={cageId} />
+          <SensorMeasurement
+            key={cageId + health.data.monitoring.connectedAt}
+            updatedLocallyAt={health.dataUpdatedAt}
+            health={health.data}
+            failed={health.isError}
+            refresh={() => void health.refetch()}
+          />
+        </div>
       )}
+      {isSimulation && <LiveSnapshot cageId={cageId} />}
       {health.data?.monitoring && <CameraSetup cageId={cageId} />}
       <div className={styles.columns}>
         <Reveal className={styles.cell}>

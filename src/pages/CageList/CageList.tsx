@@ -5,7 +5,7 @@ import { getDashboardApi } from '../../api/apiProvider'
 import { cagePath } from '../../hooks/useCageId'
 import { queryKeys } from '../../hooks/queryKeys'
 import { Navigate, useNavigate } from 'react-router'
-import { Button } from '../../components/Button/Button'
+import { Button, ButtonLink } from '../../components/Button/Button'
 import { CageCard } from '../../components/CageCard/CageCard'
 import {
   CreateCageDialog,
@@ -23,6 +23,7 @@ import { useToast } from '../../components/Toast/useToast'
 import { useCages } from '../../hooks/useCages'
 import { useNow } from '../../hooks/useNow'
 import { useProfile } from '../../hooks/useProfile'
+import { useSimulationCage } from '../../hooks/useSimulation'
 import { DEMO_LIMIT, useStartSimulations } from '../../hooks/useStartSimulation'
 import { t } from '../../i18n'
 import type { Cage } from '../../types/Cage'
@@ -46,7 +47,9 @@ export function CageList() {
   const firstName = profile.data?.displayName.split(' ')[0]
   const close = () => setDialog(null)
   const simulations = useStartSimulations()
+  const simulationCage = useSimulationCage()
   const toast = useToast()
+  const ownSimulationCage = cages.data?.find((cage) => cage.simulated)
 
   const navigate = useNavigate()
   const cache = useQueryClient()
@@ -76,6 +79,14 @@ export function CageList() {
         close()
         toast.show({ message: t('toast.simulationFailed'), tone: 'info' })
       },
+    })
+  }
+
+  // the video simulation cage: made the first time, then the same one is opened
+  function openSimulationCage() {
+    simulationCage.mutate(undefined, {
+      onSuccess: (cage) => navigate(cagePath(cage.cageId)),
+      onError: () => toast.show({ message: t('simulation.unavailable'), tone: 'info' }),
     })
   }
 
@@ -146,6 +157,15 @@ export function CageList() {
               disabled={simulations.isPending}
             >
               {t('cages.simulateAll')}
+            </Button>
+          )}
+          {ownSimulationCage ? (
+            <ButtonLink to={cagePath(ownSimulationCage.cageId)}>
+              {t('cages.simulationCage')}
+            </ButtonLink>
+          ) : (
+            <Button disabled={!cages.data || simulationCage.isPending} onClick={openSimulationCage}>
+              {t('cages.simulationCage')}
             </Button>
           )}
           <Button onClick={() => setDialog({ kind: 'create' })}>

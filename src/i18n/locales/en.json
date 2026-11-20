@@ -190,7 +190,10 @@
     },
     "catalogError": "We couldn't load the lists of colors and breeds.",
     "weightTitle": "Cage weight",
-    "weightError": "We couldn't load the weight."
+    "weightError": "We couldn't load the weight.",
+    "switchLabel": "What you are viewing",
+    "switchReal": "Real equipment",
+    "switchSimulation": "Video simulation"
   },
   "camera": {
     "title": "Camera",
@@ -250,7 +253,9 @@
     },
     "usernameRequired": "Type the camera username.",
     "passwordRequired": "Type the camera password.",
-    "portInvalid": "The port must be a number between 1 and 65535."
+    "portInvalid": "The port must be a number between 1 and 65535.",
+    "livePicture": "Camera picture",
+    "noPicture": "No camera picture yet"
   },
   "alerts": {
     "title": "Alerts",
@@ -593,7 +598,21 @@
     },
     "simulateAll": "Simulate up to 10 cages",
     "simulateAllTitle": "Start the simulation in up to {{count}} cages?",
-    "simulateAllExplain": "Cages with animals in different health states are selected, including critical cages when available. The cage using physical equipment is excluded. The simulation runs for about 35 minutes."
+    "simulateAllExplain": "Cages with animals in different health states are selected, including critical cages when available. The cage using physical equipment is excluded. The simulation runs for about 35 minutes.",
+    "simulationCage": "Simulation cage"
+  },
+  "simulation": {
+    "start": "Start simulation",
+    "stop": "Stop simulation",
+    "stepLoading": "Loading the video…",
+    "stepWatching": "The AI is watching the video. First results arrive in a minute.",
+    "stepRunning": "Simulation running. Weight and sound are simulated.",
+    "credit": "Video: {{title}} by {{author}} ({{license}})",
+    "sourceLink": "See the original video",
+    "licenseLink": "See the license",
+    "explain": "This cage uses an internet guinea pig video with painted colour marks. The data is not from your guinea pigs.",
+    "busy": "Other simulations are running. Try again in a few minutes.",
+    "unavailable": "The video simulation is not available right now."
   },
   "toast": {
     "cageCreated": "Cage “{{name}}” created",

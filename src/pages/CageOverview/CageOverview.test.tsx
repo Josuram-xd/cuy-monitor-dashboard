@@ -4,7 +4,7 @@ import { beforeEach, describe, expect, it, vi } from 'vitest'
 import { ApiError } from '../../api/ApiError'
 import { getDashboardApi } from '../../api/apiProvider'
 import type { DashboardApi } from '../../api/DashboardApi'
-import { createMockApi } from '../../mocks/createMockApi'
+import { createDemoMockApi, createMockApi } from '../../mocks/createMockApi'
 import { MockDatabase } from '../../mocks/MockDatabase'
 import { renderInCage } from '../../test/render'
 import { CageOverview } from './CageOverview'
@@ -352,5 +352,32 @@ describe('CageOverview', () => {
       'aria-checked',
       'true',
     )
+  })
+})
+
+describe('CageOverview with the video simulation and the real kit', () => {
+  it('a simulation cage starts and stops its video, shows the credit, and has no kit to connect', async () => {
+    const user = userEvent.setup()
+    setApi(createDemoMockApi(0))
+    renderInCage(<CageOverview />, { cageId: 'sim-demo1234' })
+
+    await user.click(await screen.findByRole('button', { name: 'Iniciar simulación' }))
+    expect(await screen.findByRole('button', { name: 'Detener simulación' })).toBeInTheDocument()
+    expect(screen.queryByRole('button', { name: 'Conectar equipo' })).not.toBeInTheDocument()
+    expect(screen.queryByRole('button', { name: 'Simulación' })).not.toBeInTheDocument()
+    expect(await screen.findByRole('link', { name: 'Ver la licencia' })).toBeInTheDocument()
+    expect(screen.getByRole('img', { name: 'Imagen de la cámara' })).toBeInTheDocument()
+
+    await user.click(screen.getByRole('button', { name: 'Detener simulación' }))
+    expect(await screen.findByRole('button', { name: 'Iniciar simulación' })).toBeInTheDocument()
+  })
+
+  it('the real kit cage shows its live camera picture next to the sensors', async () => {
+    setApi(createDemoMockApi(0))
+    renderInCage(<CageOverview />)
+
+    expect(await screen.findByRole('img', { name: 'Imagen de la cámara' })).toBeInTheDocument()
+    expect(screen.getByRole('region', { name: 'Monitoreo de sensores' })).toBeInTheDocument()
+    expect(screen.queryByRole('link', { name: 'Ver la licencia' })).not.toBeInTheDocument()
   })
 })

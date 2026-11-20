@@ -4,6 +4,8 @@ import { beforeEach, describe, expect, it, vi } from 'vitest'
 import { ApiError } from '../../api/ApiError'
 import { getDashboardApi } from '../../api/apiProvider'
 import { createMockApi } from '../../mocks/createMockApi'
+import { ToastProvider } from '../../components/Toast/ToastProvider'
+import { mockSimulationCage } from '../../mocks/data'
 import { MockDatabase } from '../../mocks/MockDatabase'
 import { renderWithProviders } from '../../test/render'
 import { selectDemoCages } from '../../hooks/useStartSimulation'
@@ -141,6 +143,52 @@ describe('CageList', () => {
     expect(ids).toEqual(expect.arrayContaining(['critical', 'alert', 'observed', '0']))
     expect(ids).not.toContain('empty')
     expect(ids).not.toContain('hardware')
+  })
+
+  it('leaves the simulation cage out of the demo selection', async () => {
+    const api = createMockApi(new MockDatabase(), 0)
+    const base = await api.cages.getHealth('cage-1')
+    const ids = selectDemoCages([{ ...base, cageId: 'sim-demo1234' }, { ...base, cageId: 'cage-9' }])
+    expect(ids).toEqual(['cage-9'])
+  })
+
+  it('opens the simulation cage, creating it the first time', async () => {
+    const user = userEvent.setup()
+    const { db } = setup()
+    await user.click(await screen.findByRole('button', { name: 'Jaula de simulación' }))
+
+    const link = await screen.findByRole('link', { name: 'Jaula de simulación' })
+    const created = db.cages.find((c) => c.simulated)!
+    expect(link).toHaveAttribute('href', `/cages/${created.cageId}`)
+    expect(db.cages.filter((c) => c.simulated)).toHaveLength(1)
+  })
+
+  it('links to the simulation cage the account already has', async () => {
+    const db = new MockDatabase()
+    db.cages.push(structuredClone(mockSimulationCage))
+    setup(db)
+
+    expect(await screen.findByRole('link', { name: 'Jaula de simulación' })).toHaveAttribute(
+      'href',
+      '/cages/sim-demo1234',
+    )
+  })
+
+  it('tells when the simulation is not available', async () => {
+    const user = userEvent.setup()
+    const api = createMockApi(new MockDatabase(), 0)
+    vi.mocked(getDashboardApi).mockResolvedValue(api)
+    vi.spyOn(api.cages, 'createSimulationCage').mockRejectedValue(new ApiError(503, 'unavailable'))
+    renderWithProviders(
+      <ToastProvider>
+        <CageList />
+      </ToastProvider>,
+    )
+    await user.click(await screen.findByRole('button', { name: 'Jaula de simulación' }))
+
+    expect(
+      await screen.findByText('La simulación con video no está disponible ahora.'),
+    ).toBeInTheDocument()
   })
 
   it('connects the cage chosen on the home page', async () => {
