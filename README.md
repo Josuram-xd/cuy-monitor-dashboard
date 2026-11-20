@@ -49,6 +49,10 @@ Todos escritos a mano en TypeScript: no hay librería que los aporte.
 | **Singleton** (perezoso) | `apiProvider.ts` | `api ??= ...` crea la implementación una sola vez, al primer uso, y la reutiliza |
 | **Facade** | `src/api/DashboardApi.ts` | Una interfaz agrupa las siete sub-APIs, así que las pantallas piden `api.alerts` sin saber cuántos clientes hay detrás |
 | **Adapter** | `src/api/HttpClient.ts` | Envuelve `fetch` y traduce lo que devuelve: cabeceras, cookies de sesión y errores HTTP convertidos en `ApiError` |
+| **Iterator** | `src/pages/CageOverview/scaleUsb.ts` `serialLines()` | Convierte el flujo de bytes del puerto USB en líneas, una a una, con `for await`; la decisión sobre la báscula queda aparte |
+| **Command** | `src/pages/Admin/userCommands.ts` | Cada acción sobre una cuenta (hacer o quitar administrador, habilitar o deshabilitar) es un objeto con sus textos y su ejecución; `UsersSection` lo confirma y lo ejecuta |
+| **Chain of Responsibility** | `src/api/errorMessages.ts` | Una lista ordenada de reglas: cada una devuelve el mensaje si le toca el error, o lo pasa a la siguiente |
+| **Mediator** | `src/pages/Admin/Admin.tsx` | Las secciones solo informan a la página con `onAction`; la página actualiza el registro de acciones y las secciones no se conocen entre sí |
 
 ### Por qué importa
 
