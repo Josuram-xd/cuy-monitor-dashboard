@@ -514,7 +514,9 @@
       "wrongPassword": "The current password is not correct."
     },
     "settings": "Settings",
-    "admin": "Admin"
+    "admin": "Admin",
+    "switchLanguage": "Español",
+    "switchLanguageLabel": "Cambiar a español"
   },
   "cages": {
     "title": "Your cages",

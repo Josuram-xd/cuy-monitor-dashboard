@@ -7,6 +7,7 @@ import { getDashboardApi } from '../../api/apiProvider'
 import { UnauthorizedNotifier } from '../../api/UnauthorizedNotifier'
 import { AuthProvider } from '../../auth/AuthProvider'
 import { createMockApi } from '../../mocks/createMockApi'
+import { PreferencesProvider } from '../../preferences/PreferencesProvider'
 import { AppLayout } from './AppLayout'
 
 vi.mock('../../api/apiProvider', () => ({ getDashboardApi: vi.fn() }))
@@ -37,7 +38,9 @@ function renderAt(path: string) {
       client={new QueryClient({ defaultOptions: { queries: { retry: false } } })}
     >
       <AuthProvider notifier={new UnauthorizedNotifier()} onLogout={vi.fn()}>
-        <RouterProvider router={router} />
+        <PreferencesProvider>
+          <RouterProvider router={router} />
+        </PreferencesProvider>
       </AuthProvider>
     </QueryClientProvider>,
   )

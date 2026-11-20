@@ -524,7 +524,9 @@
       "wrongPassword": "La contraseña actual no es correcta."
     },
     "settings": "Ajustes",
-    "admin": "Administración"
+    "admin": "Administración",
+    "switchLanguage": "English",
+    "switchLanguageLabel": "Switch to English"
   },
   "cages": {
     "title": "Tus jaulas",

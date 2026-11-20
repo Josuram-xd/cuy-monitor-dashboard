@@ -2,14 +2,18 @@ import { useEffect, useId, useRef, useState } from 'react'
 import { Link } from 'react-router'
 import { useAuth } from '../../auth/useAuth'
 import { useProfile } from '../../hooks/useProfile'
+import { usePreferences } from '../../preferences/usePreferences'
 import { t } from '../../i18n'
 import { ProfilePhoto } from '../ProfilePhoto/ProfilePhoto'
 import { Button } from '../Button/Button'
+import { Icon } from '../Icon/Icon'
 import styles from './UserMenu.module.css'
 
 export function UserMenu() {
   const { logout } = useAuth()
   const me = useProfile()
+  const { language, setLanguage } = usePreferences()
+  const other = language === 'es' ? 'en' : 'es'
   const [open, setOpen] = useState(false)
   const rootRef = useRef<HTMLDivElement>(null)
   const avatarRef = useRef<HTMLButtonElement>(null)
@@ -72,6 +76,18 @@ export function UserMenu() {
               {t('account.admin')}
             </Link>
           )}
+          {/* one click to the other language, named in that language (like a campus menu); the same choice
+              as Ajustes → Preferencias, kept on this device */}
+          <button
+            type="button"
+            className={styles.item}
+            lang={other}
+            aria-label={t('account.switchLanguageLabel')}
+            onClick={() => setLanguage(other)}
+          >
+            <Icon name="globe" size={18} />
+            {t('account.switchLanguage')}
+          </button>
           {/* no confirmation: logging out is harmless and quick to undo */}
           <Button fullWidth onClick={() => logout('logout')}>
             {t('account.logout')}
