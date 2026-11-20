@@ -1,4 +1,4 @@
-import { beforeEach, describe, expect, it } from 'vitest'
+import { afterEach, beforeEach, describe, expect, it, vi } from 'vitest'
 import type { DashboardApi } from '../api/DashboardApi'
 import { createMockApi } from './createMockApi'
 
@@ -114,6 +114,9 @@ describe('mock API', () => {
 })
 
 describe('mock station camera', () => {
+  // only the clock is faked: the mock's delays keep running on real timers
+  afterEach(() => vi.useRealTimers())
+
   it('reports monitoring once the kit is connected, so the camera panel shows in demo mode', async () => {
     const api = createMockApi(undefined, 0)
     expect((await api.cages.getHealth('cage-1')).monitoring).toBeUndefined()
@@ -124,6 +127,7 @@ describe('mock station camera', () => {
   })
 
   it('goes from not configured to pending, then connected, and never keeps the password', async () => {
+    vi.useFakeTimers({ toFake: ['Date'] })
     const api = createMockApi(undefined, 0)
     expect((await api.cages.getCamera('cage-1')).status).toBe('NOT_CONFIGURED')
 
@@ -141,6 +145,10 @@ describe('mock station camera', () => {
       hasPassword: true,
     })
     expect(pending).not.toHaveProperty('password')
+    // still testing a few seconds later, connected after the mock's pending window
+    vi.setSystemTime(Date.now() + 5_000)
+    expect((await api.cages.getCamera('cage-1')).status).toBe('PENDING')
+    vi.setSystemTime(Date.now() + 4_000)
     expect((await api.cages.getCamera('cage-1')).status).toBe('CONNECTED')
   })
 

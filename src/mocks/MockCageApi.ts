@@ -9,6 +9,9 @@ import type { CageWeight } from '../types/WeightReading'
 import { mockAudio } from './data'
 import { MockResource } from './MockResource'
 
+// how long the mock keeps a saved camera PENDING, so the connecting progress can be seen in demo mode
+const MOCK_PENDING_MS = 8_000
+
 const NO_CAMERA: StationCamera = {
   type: null,
   host: null,
@@ -25,6 +28,8 @@ export class MockCageApi extends MockResource implements CageApi {
   private readonly cameras = new Map<string, StationCamera>()
   // cages whose kit is connected: only then the real backend reports `monitoring` (and the camera panel shows)
   private readonly connected = new Map<string, string>()
+  // when each PENDING camera turns CONNECTED
+  private readonly pendingUntil = new Map<string, number>()
 
   list(): Promise<Cage[]> {
     return this.respond(this.db.cages)
@@ -145,13 +150,12 @@ export class MockCageApi extends MockResource implements CageApi {
     if (!this.db.hasCage(cageId)) {
       return this.notFound()
     }
-    const camera = this.cameras.get(cageId) ?? NO_CAMERA
-    const answer = { ...camera }
-    if (camera.status === 'PENDING') {
+    const camera = this.cameras.get(cageId)
+    if (camera?.status === 'PENDING' && Date.now() >= (this.pendingUntil.get(cageId) ?? 0)) {
       camera.status = 'CONNECTED'
       camera.statusAt = new Date().toISOString()
     }
-    return this.respond(answer)
+    return this.respond({ ...(camera ?? NO_CAMERA) })
   }
 
   saveCamera(cageId: string, body: StationCameraInput): Promise<void> {
@@ -175,6 +179,7 @@ export class MockCageApi extends MockResource implements CageApi {
       status: 'PENDING',
       statusAt: null,
     })
+    this.pendingUntil.set(cageId, Date.now() + MOCK_PENDING_MS)
     return this.respond(undefined)
   }
 
