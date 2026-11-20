@@ -82,6 +82,39 @@ describe('CameraSetup', () => {
     expect(body).not.toHaveProperty('password')
   })
 
+  it('saves the phone with only its address and port, no username or password', async () => {
+    const api = createMockApi(undefined, 0)
+    api.cages.saveCamera = vi.fn(async () => undefined)
+    setApi(api)
+    renderSetup()
+    await userEvent.click(await screen.findByRole('button', { name: 'Configurar cámara' }))
+    await userEvent.click(screen.getByRole('radio', { name: 'Celular con IP Webcam' }))
+    await userEvent.type(screen.getByLabelText('Dirección IP de la cámara'), '192.168.1.50')
+    await userEvent.type(screen.getByLabelText('Puerto'), '8080')
+    await userEvent.click(screen.getByRole('button', { name: 'Guardar y probar' }))
+
+    await waitFor(() => expect(api.cages.saveCamera).toHaveBeenCalledTimes(1))
+    expect(vi.mocked(api.cages.saveCamera).mock.calls[0][1]).toEqual({
+      type: 'PHONE',
+      host: '192.168.1.50',
+      port: 8080,
+    })
+  })
+
+  it('asks for the password when none is saved yet', async () => {
+    const api = createMockApi(undefined, 0)
+    api.cages.saveCamera = vi.fn(async () => undefined)
+    setApi(api)
+    renderSetup()
+    await userEvent.click(await screen.findByRole('button', { name: 'Configurar cámara' }))
+    await userEvent.type(screen.getByLabelText('Dirección IP de la cámara'), '192.168.1.60')
+    await userEvent.type(screen.getByLabelText('Usuario de la cámara'), 'cuy')
+    await userEvent.click(screen.getByRole('button', { name: 'Guardar y probar' }))
+
+    expect(await screen.findByText('Escribe la contraseña de la cámara.')).toBeInTheDocument()
+    expect(api.cages.saveCamera).not.toHaveBeenCalled()
+  })
+
   it('never prefills the saved password', async () => {
     const api = createMockApi(undefined, 0)
     api.cages.getCamera = async () => SAVED_RTSP

@@ -83,7 +83,9 @@ function CameraForm({
     portNumber === undefined ||
     (Number.isInteger(portNumber) && portNumber >= 1 && portNumber <= 65535)
   const usernameOk = username.trim().length > 0
-  const valid = hostOk && portOk && (!rtsp || usernameOk)
+  // the backend keeps a saved password; without one (first RTSP save, or after a phone) it is required
+  const passwordOk = camera.hasPassword || password.length > 0
+  const valid = hostOk && portOk && (!rtsp || (usernameOk && passwordOk))
 
   function submit() {
     setSubmitted(true)
@@ -154,6 +156,7 @@ function CameraForm({
           <PasswordField
             label={t('camera.password')}
             hint={camera.hasPassword ? t('camera.passwordKeep') : undefined}
+            error={submitted && !passwordOk ? t('camera.passwordRequired') : undefined}
             value={password}
             autoComplete="new-password"
             maxLength={64}
