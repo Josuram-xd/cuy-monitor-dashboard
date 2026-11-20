@@ -19,6 +19,21 @@ export function identifyScaleLine(line: string) {
   return null
 }
 
+// Iterator: yields one trimmed line at a time from a serial byte stream; a partial line waits for the next chunk
+export async function* serialLines(reader: {
+  read(): Promise<ReadableStreamReadResult<Uint8Array>>
+}): AsyncGenerator<string> {
+  const decoder = new TextDecoder()
+  let pending = ''
+  while (true) {
+    const { value, done } = await reader.read()
+    if (done) break
+    const lines = (pending + decoder.decode(value, { stream: true })).split('\n')
+    pending = (lines.pop() ?? '').slice(-512)
+    for (const line of lines) yield line.trim()
+  }
+}
+
 export async function checkScaleUsb(signal: AbortSignal) {
   const serial = (navigator as SerialBrowser).serial
   if (!serial) return 'unsupported'
@@ -42,20 +57,19 @@ export async function checkScaleUsb(signal: AbortSignal) {
     }
     signal.addEventListener('abort', cancel)
     const timer = setTimeout(cancel, 8000)
-    const decoder = new TextDecoder()
-    let pending = ''
     let sawBytes = false
+    // counts the chunks that arrived, even when they hold no full line yet
+    const counted = {
+      read: async () => {
+        const result = await reader.read()
+        if (!result.done) sawBytes = true
+        return result
+      },
+    }
     try {
-      while (true) {
-        const { value, done } = await reader.read()
-        if (done) break
-        sawBytes = true
-        const lines = (pending + decoder.decode(value, { stream: true })).split('\n')
-        pending = (lines.pop() ?? '').slice(-512)
-        for (const line of lines) {
-          const result = identifyScaleLine(line.trim())
-          if (result) return result
-        }
+      for await (const line of serialLines(counted)) {
+        const result = identifyScaleLine(line)
+        if (result) return result
       }
       return sawBytes ? 'unknown' : 'silent'
     } finally {

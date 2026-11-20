@@ -1,4 +1,4 @@
-// The admin's own actions (promote, demote, switch on or off), shown in "Registro de acciones".
+// The admin's own actions (promote, demote, switch on or off, catalog changes), shown in "Registro de acciones".
 // shortcut: kept in this browser only (localStorage), so another device or a cleared browser starts empty;
 // a backend table of admin actions is the upgrade if the log has to be shared or audited.
 const KEY = 'cuy-monitor.admin-actions'

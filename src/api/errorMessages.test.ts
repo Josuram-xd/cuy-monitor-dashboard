@@ -19,6 +19,13 @@ describe('errorMessageKey', () => {
     expect(errorMessageKey(error, context)).toBe(key)
   })
 
+  it('tries the context rule before the generic one for the same status', () => {
+    expect(errorMessageKey(new ApiError(429, 'too_many'), 'assistant')).toBe(
+      'assistant.error.tooMany',
+    )
+    expect(errorMessageKey(new ApiError(429, 'too_many'), 'general')).toBe('errors.tooManyRequests')
+  })
+
   it('never exposes anything that is not an ApiError', () => {
     expect(errorMessageKey(new TypeError('boom'))).toBe('errors.generic')
   })

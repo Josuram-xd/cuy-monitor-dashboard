@@ -40,6 +40,7 @@ export function Admin() {
         <h1 className={styles.title}>{t('admin.title')}</h1>
         <p className={styles.subtitle}>{t('admin.subtitle')}</p>
       </header>
+      {/* Mediator: the sections only report to this page; it updates the action log */}
       <UsersSection
         myUsername={me.data.username}
         onAction={(text, ok) => setActions(recordAction(text, ok))}
@@ -47,7 +48,7 @@ export function Admin() {
       <SettingsSection onAction={(text, ok) => setActions(recordAction(text, ok))} />
       <ActionLogSection actions={actions} />
       <AiLogSection />
-      <CatalogSection />
+      <CatalogSection onAction={(text, ok) => setActions(recordAction(text, ok))} />
     </div>
   )
 }

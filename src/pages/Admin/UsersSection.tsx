@@ -12,13 +12,14 @@ import {
   useSetUserEnabledMutation,
 } from '../../hooks/useAdmin'
 import { t } from '../../i18n'
-import type { AdminUser } from '../../types/Admin'
 import styles from './Admin.module.css'
-
-type Pending =
-  // making someone an admin asks twice: step 1 explains, step 2 is the final yes
-  | { kind: 'role'; user: AdminUser; makeAdmin: boolean; step?: 1 | 2 }
-  | { kind: 'enabled'; user: AdminUser; enable: boolean }
+import {
+  demoteCommand,
+  disableCommand,
+  enableCommand,
+  promoteCommand,
+  type UserCommand,
+} from './userCommands'
 
 /** The accounts. Your own row has no buttons: the backend refuses those changes, and so does this. */
 export function UsersSection({
@@ -33,93 +34,33 @@ export function UsersSection({
   const changeRole = useChangeUserRoleMutation()
   const setEnabled = useSetUserEnabledMutation()
   const toast = useToast()
-  const [pending, setPending] = useState<Pending | null>(null)
+  const [pending, setPending] = useState<UserCommand | null>(null)
 
   const busy = changeRole.isPending || setEnabled.isPending
 
   function confirm() {
     if (!pending) return
-    if (pending.kind === 'role' && pending.makeAdmin && pending.step !== 2) {
-      setPending({ ...pending, step: 2 })
+    if (pending.next) {
+      setPending(pending.next)
       return
     }
-    const { user } = pending
-    const who = `${user.fullName} (${user.email})`
-    const done = (message: string) => {
-      setPending(null)
-      toast.show({ message })
-      onAction(t(actionKey(pending), { who }), true)
-    }
+    const who = `${pending.user.fullName} (${pending.user.email})`
     // the backend has the last word on both rules (your own account, the last admin): a 400 is shown as is
-    const onError = () => {
-      setPending(null)
-      toast.show({ message: t('admin.users.failed') })
-      onAction(t(actionKey(pending), { who }), false)
-    }
-
-    if (pending.kind === 'role') {
-      const role = pending.makeAdmin ? 'ADMIN' : 'BREEDER'
-      changeRole.mutate(
-        { id: user.id, role },
-        {
-          onSuccess: () =>
-            done(
-              pending.makeAdmin
-                ? t('admin.users.promoted', { name: user.fullName })
-                : t('admin.users.demoted', { name: user.fullName }),
-            ),
-          onError,
-        },
-      )
-      return
-    }
-
-    setEnabled.mutate(
-      { id: user.id, enabled: pending.enable },
+    pending.execute(
+      { changeRole: changeRole.mutate, setEnabled: setEnabled.mutate },
       {
-        onSuccess: () =>
-          done(
-            pending.enable
-              ? t('admin.users.enabled', { name: user.fullName })
-              : t('admin.users.disabled', { name: user.fullName }),
-          ),
-        onError,
+        onSuccess: () => {
+          setPending(null)
+          toast.show({ message: pending.successMessage })
+          onAction(t(pending.logKey, { who }), true)
+        },
+        onError: () => {
+          setPending(null)
+          toast.show({ message: t('admin.users.failed') })
+          onAction(t(pending.logKey, { who }), false)
+        },
       },
     )
-  }
-
-  function dialogTitle(p: Pending): string {
-    if (p.kind === 'role' && p.makeAdmin && p.step === 2) {
-      return t('admin.users.promoteFinalTitle', { name: p.user.fullName })
-    }
-    if (p.kind === 'role') {
-      return p.makeAdmin
-        ? t('admin.users.promoteTitle', { name: p.user.fullName })
-        : t('admin.users.demoteTitle', { name: p.user.fullName })
-    }
-    return p.enable
-      ? t('admin.users.enableTitle', { name: p.user.fullName })
-      : t('admin.users.disableTitle', { name: p.user.fullName })
-  }
-
-  function dialogConfirm(p: Pending): string {
-    if (p.kind === 'role' && p.makeAdmin && p.step !== 2) {
-      return t('admin.users.continue')
-    }
-    if (p.kind === 'role') {
-      return p.makeAdmin ? t('admin.users.promote') : t('admin.users.demote')
-    }
-    return p.enable ? t('admin.users.enable') : t('admin.users.disable')
-  }
-
-  function dialogExplain(p: Pending): string {
-    if (p.kind === 'role' && p.makeAdmin && p.step === 2) {
-      return t('admin.users.promoteFinalExplain', { email: p.user.email })
-    }
-    if (p.kind === 'role') {
-      return p.makeAdmin ? t('admin.users.promoteExplain') : t('admin.users.demoteExplain')
-    }
-    return p.enable ? t('admin.users.enableExplain') : t('admin.users.disableExplain')
   }
 
   if (users.isPending) return <Skeleton count={3} />
@@ -179,7 +120,7 @@ export function UsersSection({
                 <div className={styles.userActions}>
                   <Button
                     onClick={() =>
-                      setPending({ kind: 'role', user, makeAdmin: user.role !== 'ADMIN' })
+                      setPending(user.role === 'ADMIN' ? demoteCommand(user) : promoteCommand(user))
                     }
                     disabled={busy}
                     aria-label={t(
@@ -190,7 +131,9 @@ export function UsersSection({
                     {user.role === 'ADMIN' ? t('admin.users.demote') : t('admin.users.promote')}
                   </Button>
                   <Button
-                    onClick={() => setPending({ kind: 'enabled', user, enable: disabled })}
+                    onClick={() =>
+                      setPending(disabled ? enableCommand(user) : disableCommand(user))
+                    }
                     disabled={busy}
                     aria-label={t(disabled ? 'admin.users.enableOne' : 'admin.users.disableOne', {
                       name: user.fullName,
@@ -207,23 +150,16 @@ export function UsersSection({
 
       {pending && (
         <ConfirmDialog
-          title={dialogTitle(pending)}
-          confirmLabel={dialogConfirm(pending)}
+          title={pending.title}
+          confirmLabel={pending.confirmLabel}
           busy={busy}
-          danger={pending.kind === 'enabled' && !pending.enable}
+          danger={pending.danger}
           onConfirm={confirm}
           onCancel={() => setPending(null)}
         >
-          <p>{dialogExplain(pending)}</p>
+          <p>{pending.explain}</p>
         </ConfirmDialog>
       )}
     </section>
   )
-}
-
-function actionKey(p: Pending): string {
-  if (p.kind === 'role') {
-    return p.makeAdmin ? 'admin.actions.promoted' : 'admin.actions.demoted'
-  }
-  return p.enable ? 'admin.actions.enabled' : 'admin.actions.disabled'
 }
