@@ -109,7 +109,7 @@ describe('RegisterGuineaPig', () => {
     await addPhoto()
 
     expect(
-      await screen.findByText('Esa imagen no sirve: usa una foto JPG, PNG o WebP.'),
+      await screen.findByText('Ese archivo no es una foto. Elige una imagen.'),
     ).toBeInTheDocument()
   })
 

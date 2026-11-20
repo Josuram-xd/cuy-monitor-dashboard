@@ -3,7 +3,6 @@
 export const MAX_PHOTO_BYTES = 300 * 1024
 const MAX_SIDE = 1024
 const QUALITIES = [0.85, 0.75, 0.65, 0.55, 0.45]
-const ACCEPTED = ['image/jpeg', 'image/png', 'image/webp']
 
 export interface PreparedPhoto {
   // base64 without the "data:" prefix, what the backend asks for
@@ -13,10 +12,12 @@ export interface PreparedPhoto {
   dataUrl: string
 }
 
-export class PhotoProblem extends Error {
-  readonly reason: 'type' | 'unreadable' | 'tooBig'
+export type PhotoProblemReason = 'type' | 'heic' | 'unreadable' | 'tooBig'
 
-  constructor(reason: 'type' | 'unreadable' | 'tooBig') {
+export class PhotoProblem extends Error {
+  readonly reason: PhotoProblemReason
+
+  constructor(reason: PhotoProblemReason) {
     super(reason)
     this.reason = reason
   }
@@ -43,11 +44,25 @@ function loadImage(file: Blob): Promise<HTMLImageElement> {
   })
 }
 
+// HEIC is what an iPhone saves; most browsers outside Safari cannot open it
+function isHeic(file: File): boolean {
+  return /hei[cf]/i.test(file.type) || /\.hei[cf]$/i.test(file.name)
+}
+
+// What is sent is always a new JPEG drawn on a canvas, so any picture the browser can open will do
+// (GIF, AVIF, BMP, or a file the system gave no type). Not SVG: it can carry a script, and an
+// image the browser cannot open is told apart from one that is not an image at all.
 export async function preparePhoto(file: File): Promise<PreparedPhoto> {
-  if (!ACCEPTED.includes(file.type)) {
+  const notAnImage = file.type !== '' && !file.type.startsWith('image/')
+  if (notAnImage || file.type === 'image/svg+xml') {
     throw new PhotoProblem('type')
   }
-  const image = await loadImage(file)
+  let image: HTMLImageElement
+  try {
+    image = await loadImage(file)
+  } catch (failure) {
+    throw isHeic(file) ? new PhotoProblem('heic') : failure
+  }
   const scale = Math.min(1, MAX_SIDE / Math.max(image.naturalWidth, image.naturalHeight))
   const canvas = document.createElement('canvas')
   canvas.width = Math.max(1, Math.round(image.naturalWidth * scale))
