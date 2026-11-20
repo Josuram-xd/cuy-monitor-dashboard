@@ -108,6 +108,21 @@ export function Login() {
         >
           {t('auth.demo.button')}
         </Button>
+        <Button
+          type="button"
+          variant="secondary"
+          fullWidth
+          disabled={demo.isPending || login.isPending}
+          onClick={(event) => {
+            if (trimmedUsername !== 'juanes') setPassword('')
+            setUsername('juanes')
+            setSubmitted(false)
+            setTouched({ username: false, password: false })
+            event.currentTarget.form?.querySelector<HTMLInputElement>('input[name="password"]')?.focus()
+          }}
+        >
+          {t('auth.demo.adminShortcut')}
+        </Button>
         {demo.isError && <FormError message={t('auth.demo.failed')} />}
       </form>
       <GoogleSignIn text="signin_with" />
