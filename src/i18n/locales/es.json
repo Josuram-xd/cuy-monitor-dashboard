@@ -892,7 +892,23 @@
       "reset": "Volver a los valores de fábrica",
       "resetTitle": "¿Volver a los valores de fábrica?",
       "resetExplain": "Todas las reglas, los textos y el límite del asistente vuelven a como venían. Se aplica al instante.",
-      "restored": "Volvieron los valores de fábrica."
+      "restored": "Volvieron los valores de fábrica.",
+      "intros": {
+        "health": "Cuándo un cuy pasa a observado, alerta o crítico. Se aplica al guardar, sin reiniciar nada.",
+        "message": "Lo que lee el criador en cada alerta. Se aplica a las alertas nuevas al guardar.",
+        "assistant": "Cuánto se le puede preguntar al asistente. Se aplica al guardar."
+      },
+      "isDefault": "Es el valor de fábrica."
+    },
+    "tabs": {
+      "label": "Qué quieres configurar",
+      "accounts": "Cuentas",
+      "health": "Reglas de salud",
+      "message": "Textos de alertas",
+      "assistant": "Asistente",
+      "catalog": "Catálogo",
+      "actions": "Registro de acciones",
+      "ai": "Registro de la IA"
     }
   },
   "usb": {
