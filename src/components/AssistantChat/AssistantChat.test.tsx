@@ -5,6 +5,7 @@ import { ApiError } from '../../api/ApiError'
 import { getDashboardApi } from '../../api/apiProvider'
 import type { DashboardApi } from '../../api/DashboardApi'
 import { createMockApi } from '../../mocks/createMockApi'
+import { mockSession } from '../../mocks/mockSession'
 import { renderWithProviders } from '../../test/render'
 import { AssistantChat } from './AssistantChat'
 
@@ -24,6 +25,26 @@ describe('AssistantChat', () => {
     await user.click(screen.getByRole('button', { name: 'Abrir la ayuda de Cuchi' }))
     return user
   }
+
+  it('greets an admin with help for the admin panel', async () => {
+    // in mock mode a signed-in account is an admin
+    mockSession.start()
+    try {
+      await openChat()
+
+      expect(
+        await screen.findByText(/Como administrador, puedo explicarte el panel/),
+      ).toBeInTheDocument()
+      expect(
+        screen.getByRole('button', { name: '¿Qué pasa si deshabilito una cuenta?' }),
+      ).toBeInTheDocument()
+      expect(
+        screen.queryByRole('button', { name: '¿Cómo registro un cuy?' }),
+      ).not.toBeInTheDocument()
+    } finally {
+      mockSession.end()
+    }
+  })
 
   it('opens with a greeting and suggestions, and closes again', async () => {
     const user = await openChat()
