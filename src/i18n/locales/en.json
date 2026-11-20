@@ -406,9 +406,10 @@
       "photoPreview": "Chosen photo",
       "photoRequired": "Add a photo of the guinea pig.",
       "photoProblem": {
-        "type": "That image won't work: use a JPG, PNG or WebP photo.",
+        "type": "That file is not a photo. Pick a picture.",
         "unreadable": "We couldn't open that photo. Try another one.",
-        "tooBig": "The photo is too big even when reduced. Try another one."
+        "tooBig": "The photo is too big even when reduced. Try another one.",
+        "heic": "That photo is HEIC (the iPhone format) and this browser can't open it. Share it as JPG or pick another one."
       },
       "photoRemove": "Remove photo"
     },
@@ -544,7 +545,8 @@
       "confirm": "Yes, deactivate"
     },
     "error": {
-      "wrongPassword": "The current password is not correct."
+      "wrongPassword": "The current password is not correct.",
+      "demoReadOnly": "The demo account can't be changed: its profile, photo and password stay as they are."
     },
     "settings": "Settings",
     "admin": "Admin",

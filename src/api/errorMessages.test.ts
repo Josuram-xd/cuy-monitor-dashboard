@@ -13,6 +13,9 @@ describe('errorMessageKey', () => {
       'auth.error.weakPassword',
     ],
     [new ApiError(400, 'bad_request'), 'general', 'errors.invalidData'],
+    // the demo account is read-only: its 403 is not "another account's cage"
+    [new ApiError(403, 'forbidden'), 'account', 'account.error.demoReadOnly'],
+    [new ApiError(403, 'forbidden'), 'cage', 'errors.forbidden'],
     [new ApiError(0, 'network_error'), 'login', 'errors.network'],
     [new ApiError(500, 'unknown_error'), 'general', 'errors.generic'],
   ] as const)('maps %o on %s to %s', (error, context, key) => {

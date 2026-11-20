@@ -83,7 +83,7 @@ export function PhotoField({
           id={id}
           className={styles.input}
           type="file"
-          accept="image/jpeg,image/png,image/webp"
+          accept="image/*"
           aria-describedby={message ? messageId : undefined}
           aria-invalid={message ? true : undefined}
           onChange={(event) => void handleChange(event)}

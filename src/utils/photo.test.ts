@@ -42,10 +42,47 @@ describe('preparePhoto', () => {
     vi.unstubAllGlobals()
   })
 
-  it('refuses what is not a JPG, PNG or WebP', async () => {
+  it('refuses what is not a picture, and SVG', async () => {
     await expect(
       preparePhoto(new File(['<svg/>'], 'a.svg', { type: 'image/svg+xml' })),
     ).rejects.toEqual(new PhotoProblem('type'))
+    await expect(
+      preparePhoto(new File(['%PDF'], 'a.pdf', { type: 'application/pdf' })),
+    ).rejects.toEqual(new PhotoProblem('type'))
+  })
+
+  it('takes any picture the browser can open, even one the system gave no type', async () => {
+    fakeImage(800, 600)
+    fakeCanvas(() => 100 * 1024)
+
+    for (const file of [
+      new File(['x'], 'foto', { type: '' }),
+      new File(['x'], 'foto.gif', { type: 'image/gif' }),
+      new File(['x'], 'foto.avif', { type: 'image/avif' }),
+    ]) {
+      expect((await preparePhoto(file)).contentType).toBe('image/jpeg')
+    }
+  })
+
+  it('says a HEIC photo the browser cannot open is HEIC, not just unreadable', async () => {
+    vi.stubGlobal(
+      'Image',
+      class {
+        onerror: (() => void) | null = null
+        set src(_: string) {
+          queueMicrotask(() => this.onerror?.())
+        }
+      },
+    )
+    URL.createObjectURL = vi.fn(() => 'blob:photo')
+    URL.revokeObjectURL = vi.fn()
+
+    await expect(preparePhoto(new File(['x'], 'IMG_0001.HEIC', { type: '' }))).rejects.toEqual(
+      new PhotoProblem('heic'),
+    )
+    await expect(preparePhoto(new File(['x'], 'roto.jpg', { type: 'image/jpeg' }))).rejects.toEqual(
+      new PhotoProblem('unreadable'),
+    )
   })
 
   it('makes a big phone photo at most 1024 px and under 300 KB, as JPEG', async () => {

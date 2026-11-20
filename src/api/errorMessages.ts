@@ -34,6 +34,8 @@ const RULES: readonly ErrorRule[] = [
   (e, c) => (e.status === 404 && c === 'cage' ? 'cages.error.alreadyGone' : undefined),
   (e, c) => (c === 'assistant' && e.status === 429 ? 'assistant.error.tooMany' : undefined),
   (e, c) => (c === 'assistant' && e.status === 503 ? 'assistant.error.unavailable' : undefined),
+  // the public demo account can not change its profile, photo or password
+  (e, c) => (e.status === 403 && c === 'account' ? 'account.error.demoReadOnly' : undefined),
   // the cage access proxy of the backend refused it: it is another account's cage
   (e) => (e.status === 403 ? 'errors.forbidden' : undefined),
   (e, c) => (e.status === 409 && c === 'register' ? 'auth.error.userExists' : undefined),

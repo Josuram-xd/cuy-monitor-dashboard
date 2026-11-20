@@ -416,9 +416,10 @@
       "photoPreview": "Foto elegida",
       "photoRequired": "Agrega una foto del cuy.",
       "photoProblem": {
-        "type": "Esa imagen no sirve: usa una foto JPG, PNG o WebP.",
+        "type": "Ese archivo no es una foto. Elige una imagen.",
         "unreadable": "No pudimos abrir esa foto. Prueba con otra.",
-        "tooBig": "La foto es demasiado grande incluso reducida. Prueba con otra."
+        "tooBig": "La foto es demasiado grande incluso reducida. Prueba con otra.",
+        "heic": "Esa foto está en HEIC (formato del iPhone) y este navegador no la abre. Compártela como JPG o elige otra."
       },
       "photoRemove": "Quitar foto"
     },
@@ -554,7 +555,8 @@
       "confirm": "Sí, desactivar"
     },
     "error": {
-      "wrongPassword": "La contraseña actual no es correcta."
+      "wrongPassword": "La contraseña actual no es correcta.",
+      "demoReadOnly": "La cuenta de prueba no se puede modificar: su perfil, foto y contraseña quedan como están."
     },
     "settings": "Ajustes",
     "admin": "Administración",

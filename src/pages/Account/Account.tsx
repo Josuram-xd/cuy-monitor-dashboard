@@ -26,6 +26,14 @@ import type { User } from '../../types/User'
 import type { PreparedPhoto } from '../../utils/photo'
 import styles from './Account.module.css'
 
+// the clear reason when there is one (demo account, no connection), the photo's own message otherwise
+function photoErrorKey(error: unknown): string {
+  const key = errorMessageKey(error, 'account')
+  return key === 'errors.generic' || key === 'errors.invalidData'
+    ? 'account.profile.photoFailed'
+    : key
+}
+
 // The photo has its own endpoint, so it saves the moment it is picked instead of waiting for the
 // form: that also means a failed upload cannot take the name change down with it.
 function PhotoCard({ user }: { user: User }) {
@@ -39,7 +47,8 @@ function PhotoCard({ user }: { user: User }) {
     if (next) {
       photo.mutate(
         { photo: next.base64, photoContentType: next.contentType },
-        { onSuccess: () => setDone('saved') },
+        // back to the saved photo: the new one was not stored, so it must not look like it was
+        { onSuccess: () => setDone('saved'), onError: () => setPicked(null) },
       )
     }
   }
@@ -64,7 +73,7 @@ function PhotoCard({ user }: { user: User }) {
         onRemove={handleRemove}
         busy={photo.isPending}
       />
-      {photo.isError && <FormError message={t('account.profile.photoFailed')} />}
+      {photo.isError && <FormError message={t(photoErrorKey(photo.error))} />}
       {done && (
         <p className={styles.success} role="status">
           {t(done === 'saved' ? 'account.profile.photoSaved' : 'account.profile.photoRemoved')}
@@ -88,9 +97,7 @@ function ProfileCard({ user }: { user: User }) {
       ? t('account.profile.nameTooLong')
       : undefined
   const nicknameError =
-    trimmedNickname.length > NICKNAME_MAX_LENGTH
-      ? t('account.profile.nicknameTooLong')
-      : undefined
+    trimmedNickname.length > NICKNAME_MAX_LENGTH ? t('account.profile.nicknameTooLong') : undefined
 
   function handleSubmit(event: FormEvent) {
     event.preventDefault()
