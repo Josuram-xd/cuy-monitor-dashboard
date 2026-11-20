@@ -17,6 +17,10 @@ export class HttpAlertApi implements AlertApi {
     return this.http.patch<Alert>(`/api/v1/alerts/${id}`, { status: 'REVIEWED' })
   }
 
+  delete(id: number): Promise<void> {
+    return this.http.delete<void>(`/api/v1/alerts/${id}`)
+  }
+
   history(
     filter: AlertHistoryFilter,
     page: number,

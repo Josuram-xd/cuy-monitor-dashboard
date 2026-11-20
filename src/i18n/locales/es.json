@@ -217,7 +217,19 @@
       "WEIGHT": "Peso"
     },
     "aiNote": "Qué dice Cuchi",
-    "aiNoteWriting": "Cuchi está leyendo esta alerta…"
+    "aiNoteWriting": "Cuchi está leyendo esta alerta…",
+    "showMore": "Ver más ({{count}})",
+    "showLess": "Ver menos",
+    "selectAll": "Seleccionar todas",
+    "deselectAll": "Deseleccionar",
+    "selectOne": "Seleccionar la alerta de {{title}}",
+    "deleteSelected": "Eliminar ({{count}})",
+    "deleteTitle_one": "¿Eliminar {{count}} alerta?",
+    "deleteTitle_many": "¿Eliminar {{count}} alertas?",
+    "deleteTitle_other": "¿Eliminar {{count}} alertas?",
+    "deleteText": "Se borran para siempre y ya no aparecen en el historial.",
+    "deleteConfirm": "Sí, eliminar",
+    "deleteError": "No pudimos eliminar las alertas. Inténtalo otra vez."
   },
   "realtime": {
     "connecting": "Conectando…",
@@ -505,7 +517,10 @@
     "allReviewed_one": "{{count}} alerta marcada como revisada",
     "allReviewed_many": "{{count}} alertas marcadas como revisadas",
     "allReviewed_other": "{{count}} alertas marcadas como revisadas",
-    "simulationsStarted": "Simulación en marcha en {{count}} jaulas: la IA ya las está mirando."
+    "simulationsStarted": "Simulación en marcha en {{count}} jaulas: la IA ya las está mirando.",
+    "deleted_one": "{{count}} alerta eliminada",
+    "deleted_many": "{{count}} alertas eliminadas",
+    "deleted_other": "{{count}} alertas eliminadas"
   },
   "settings": {
     "title": "Ajustes",

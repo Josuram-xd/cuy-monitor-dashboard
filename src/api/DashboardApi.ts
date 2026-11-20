@@ -74,6 +74,8 @@ export interface AlertApi {
   // without cageId: the alerts of every cage of the account
   list(status?: AlertStatus, cageId?: string, signal?: AbortSignal): Promise<Alert[]>
   markReviewed(id: number): Promise<Alert>
+  // removes it for good, whatever its status
+  delete(id: number): Promise<void>
   // one page of the history, newest first; page counts from 0
   history(
     filter: AlertHistoryFilter,
